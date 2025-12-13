@@ -2,7 +2,7 @@ import { DomainApi } from "@/api/domain-api";
 import * as HttpApiBuilder from "@effect/platform/HttpApiBuilder";
 import * as Layer from "effect/Layer";
 import * as Effect from "effect/Effect";
-import { TodosService } from "./todos-service";
+import { TodosService } from "./todos-service.js";
 
 export const TodosApiLive = HttpApiBuilder.group(
   DomainApi,
@@ -40,3 +40,4 @@ export const TodosApiLive = HttpApiBuilder.group(
         }),
       ),
 ).pipe(Layer.provide(TodosService.Default));
+

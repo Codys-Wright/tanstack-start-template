@@ -19,10 +19,17 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
-    "noUncheckedSideEffectImports": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@shadcn": ["./src/features/ui/shadcn"],
+      "@shadcn/*": ["./src/features/ui/shadcn/*"],
+      "@ui/shadcn/*": ["./src/features/ui/shadcn/*"],
+      "@/utils": ["./src/features/ui/shadcn/lib/utils"],
+      "@/ui": ["./src/features/ui/shadcn/components/ui"],
+      "@/components": ["./src/features/ui/shadcn/components"],
+      "@/lib": ["./src/features/ui/shadcn/lib"],
+      "@/hooks": ["./src/features/ui/shadcn/hooks"]
     },
 
     "plugins": [

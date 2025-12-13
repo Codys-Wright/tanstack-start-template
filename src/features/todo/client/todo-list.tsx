@@ -1,6 +1,6 @@
 import { Result, useAtomRefresh, useAtomValue } from "@effect-atom/atom-react";
-import { todosAtom } from "./atoms";
-import { TodoItem } from "./todo-item";
+import { todosAtom } from "./todos-atoms.js";
+import { TodoItem } from "./todo-item.js";
 
 export function TodoList() {
   const result = useAtomValue(todosAtom);
@@ -42,3 +42,4 @@ export function TodoList() {
     </div>
   );
 }
+

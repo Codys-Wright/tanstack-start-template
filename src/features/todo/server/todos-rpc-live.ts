@@ -1,9 +1,9 @@
 import * as Layer from "effect/Layer";
 import * as Effect from "effect/Effect";
-import { DomainRpc } from "@/api/domain-rpc";
-import { TodosService } from "./todos-service";
+import { TodosRpc } from "../domain/todo-rpc.js";
+import { TodosService } from "./todos-service.js";
 
-export const TodosRpcLive = DomainRpc.toLayer(
+export const TodosRpcLive = TodosRpc.toLayer(
   Effect.gen(function* () {
     const todos = yield* TodosService;
 
@@ -20,3 +20,4 @@ export const TodosRpcLive = DomainRpc.toLayer(
     };
   }),
 ).pipe(Layer.provide(TodosService.Default));
+

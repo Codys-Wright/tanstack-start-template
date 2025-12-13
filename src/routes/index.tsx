@@ -5,9 +5,9 @@ import { createFileRoute } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 import * as Effect from "effect/Effect";
 import { serverRuntime } from "./api/$";
-import { TodosService } from "./api/-lib/todos-service";
+import { TodosService } from "@/features/todo/server";
 import { App } from "./-index/app";
-import { todosAtom } from "./-index/atoms";
+import { todosAtom } from "@/features/todo/client";
 
 const listTodos = createServerFn({ method: "GET" }).handler(async () => {
   const todos = await serverRuntime.runPromiseExit(

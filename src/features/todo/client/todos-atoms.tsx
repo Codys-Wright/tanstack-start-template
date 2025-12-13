@@ -4,7 +4,7 @@ import {
   Todo,
   TodoId,
   UpdateTodoInput,
-} from "@/api/todo-schema";
+} from "../domain/todo-schema.js";
 import { serializable } from "@/lib/atom-utils";
 import { Atom, Result } from "@effect-atom/atom-react";
 import * as RpcClientError from "@effect/rpc/RpcClientError";
@@ -16,7 +16,7 @@ import * as Schema from "effect/Schema";
 
 const TodosSchema = Schema.Array(Todo);
 
-class Api extends Effect.Service<Api>()("@app/index/Api", {
+class Api extends Effect.Service<Api>()("@features/todo/Api", {
   dependencies: [ApiClient.Default],
   effect: Effect.gen(function* () {
     const { rpc } = yield* ApiClient;
@@ -48,7 +48,7 @@ export const todosAtom = (() => {
     )
     .pipe(
       serializable({
-        key: "@app/index/todos",
+        key: "@features/todo/todos",
         schema: Result.Schema({
           success: TodosSchema,
           error: RpcClientError.RpcClientError,
@@ -120,3 +120,4 @@ export const deleteTodoAtom = runtime.fn<TodoId>()(
     get.set(todosAtom, { _tag: "Delete", id });
   }),
 );
+

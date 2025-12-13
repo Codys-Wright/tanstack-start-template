@@ -1,5 +1,4 @@
-import { CreateTodoForm } from "./create-todo-form";
-import { TodoList } from "./todo-list";
+import { CreateTodoForm, TodoList } from "@/features/todo/client";
 
 export function App() {
   return (

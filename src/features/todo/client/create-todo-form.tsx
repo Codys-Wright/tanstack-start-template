@@ -1,6 +1,6 @@
 import { Result, useAtom } from "@effect-atom/atom-react";
 import { useState } from "react";
-import { createTodoAtom } from "./atoms";
+import { createTodoAtom } from "./todos-atoms.js";
 
 export function CreateTodoForm() {
   const [title, setTitle] = useState("");
@@ -43,3 +43,4 @@ export function CreateTodoForm() {
     </div>
   );
 }
+

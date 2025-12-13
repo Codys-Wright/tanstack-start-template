@@ -8,7 +8,7 @@ import {
   TodoId,
   TodoNotFound,
   UpdateTodoInput,
-} from "@/api/todo-schema";
+} from "../domain/todo-schema.js";
 
 export class TodosService extends Effect.Service<TodosService>()(
   "TodosService",
@@ -93,3 +93,4 @@ export class TodosService extends Effect.Service<TodosService>()(
     }),
   },
 ) {}
+

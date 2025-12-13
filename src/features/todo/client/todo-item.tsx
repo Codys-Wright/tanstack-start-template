@@ -1,8 +1,8 @@
-import type { Todo } from "@/api/todo-schema";
+import type { Todo } from "../domain/todo-schema.js";
 import { Result, useAtom, useAtomRefresh } from "@effect-atom/atom-react";
 import * as Option from "effect/Option";
 import { useState } from "react";
-import { deleteTodoAtom, todosAtom, updateTodoAtom } from "./atoms";
+import { deleteTodoAtom, todosAtom, updateTodoAtom } from "./todos-atoms.js";
 
 export function TodoItem({ todo }: { readonly todo: Todo }) {
   const [isEditing, setIsEditing] = useState(false);
@@ -127,3 +127,4 @@ export function TodoItem({ todo }: { readonly todo: Todo }) {
     </li>
   );
 }
+
