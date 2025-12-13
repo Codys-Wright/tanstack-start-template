@@ -8,6 +8,7 @@ import {
   TodoNotFound,
   UpdateTodoInput,
 } from "./todo-schema.js";
+import { CurrentUserRpcMiddleware } from "@/features/auth/policy";
 
 export class TodosRpc extends RpcGroup.make(
   Rpc.make("list", {
@@ -36,5 +37,7 @@ export class TodosRpc extends RpcGroup.make(
     error: TodoNotFound,
     payload: { id: TodoId },
   }),
-).prefix("todos_") {}
+)
+  .prefix("todos_")
+  .middleware(CurrentUserRpcMiddleware) {}
 

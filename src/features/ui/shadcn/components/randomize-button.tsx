@@ -6,18 +6,17 @@ import { useThemeSystem } from "./theme-system-provider.js"
 import { randomizeThemeParams } from "../lib/randomize.js"
 
 /**
- * Button component that randomizes all theme parameters (theme, font, radius)
+ * Button component that randomizes all theme parameters (theme, radius)
  */
 export function RandomizeButton() {
-  const { setThemeName, setFontName, setRadius } = useThemeSystem()
+  const { setThemeName, setRadius } = useThemeSystem()
 
   const handleRandomize = React.useCallback(() => {
     const randomized = randomizeThemeParams()
     
     setThemeName(randomized.theme || "neutral")
-    setFontName(randomized.font || "inter")
     setRadius(randomized.radius || "default")
-  }, [setThemeName, setFontName, setRadius])
+  }, [setThemeName, setRadius])
 
   return (
     <Button onClick={handleRandomize} variant="outline" size="sm">

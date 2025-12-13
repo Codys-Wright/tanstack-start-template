@@ -11,8 +11,9 @@ export function CreateTodoForm() {
     e.preventDefault();
     if (!title.trim()) return;
 
-    create({ title: title.trim() });
+    const trimmedTitle = title.trim();
     setTitle("");
+    create({ title: trimmedTitle });
   };
 
   const hasError = Result.isFailure(createResult);

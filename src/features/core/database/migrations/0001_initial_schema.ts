@@ -4,7 +4,6 @@ import * as Effect from "effect/Effect";
 export default Effect.gen(function* () {
   const sql = yield* SqlClient.SqlClient;
 
-  // Initial schema migration - add your tables here
   yield* sql`
     CREATE TABLE IF NOT EXISTS users (
       id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -16,4 +15,3 @@ export default Effect.gen(function* () {
 
   yield* sql`CREATE INDEX IF NOT EXISTS idx_users_email ON users (email)`;
 });
-

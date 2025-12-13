@@ -18,6 +18,13 @@ const config = defineConfig({
     tanstackStart(),
     viteReact(),
   ],
+  optimizeDeps: {
+    exclude: ['cpu-features', 'pg'],
+  },
+  ssr: {
+    external: ['cpu-features', 'pg'],
+    noExternal: [],
+  },
 })
 
 export default config

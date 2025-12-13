@@ -1,7 +1,7 @@
 import * as Layer from "effect/Layer";
 import * as Effect from "effect/Effect";
-import { TodosRpc } from "../domain/todo-rpc.js";
-import { TodosService } from "./todos-service.js";
+import { TodosRpc } from "../domain/todo-rpc";
+import { TodosService } from "./todos-service";
 
 export const TodosRpcLive = TodosRpc.toLayer(
   Effect.gen(function* () {
@@ -20,4 +20,3 @@ export const TodosRpcLive = TodosRpc.toLayer(
     };
   }),
 ).pipe(Layer.provide(TodosService.Default));
-

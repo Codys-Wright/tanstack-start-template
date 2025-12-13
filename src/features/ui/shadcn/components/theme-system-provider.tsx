@@ -2,35 +2,38 @@
 
 import * as React from "react"
 import { getTheme, type ThemeDefinition } from "../lib/themes.js"
-import { getFont, getDefaultFont } from "../lib/fonts.js"
 import { useTheme } from "./theme-provider.js"
+import { useAtomValue, useAtomSet } from "@effect-atom/atom-react"
+import { themeNameAtom, radiusAtom } from "../atoms/theme-atoms.js"
 
 type ThemeSystemProviderProps = {
   children: React.ReactNode
   themeName?: string
-  fontName?: string
   radius?: string
 }
 
 /**
  * ThemeSystemProvider dynamically injects CSS variables for theme switching at runtime.
  * Works alongside ThemeProvider to handle both light/dark mode and color theme switching.
- * Also handles font and radius switching.
+ * Also handles radius switching.
  */
 export function ThemeSystemProvider({
   children,
   themeName = "neutral",
-  fontName,
   radius,
 }: ThemeSystemProviderProps) {
   const { theme: colorMode } = useTheme()
   const theme = React.useMemo(() => getTheme(themeName), [themeName])
-  const font = React.useMemo(
-    () => (fontName ? getFont(fontName) : getDefaultFont()),
-    [fontName]
-  )
+  
+  // Track if this is the first render to avoid overwriting script-injected theme
+  const isFirstRender = React.useRef(true)
+  
+  // Track the last theme we applied to detect if atoms reset
+  const lastAppliedTheme = React.useRef<string | null>(null)
 
   // Use useLayoutEffect for synchronous CSS var updates to prevent flash
+  // Note: ThemeScript already injects initial CSS before React hydration,
+  // so this just updates when theme changes
   React.useLayoutEffect(() => {
     if (typeof window === "undefined") {
       return
@@ -46,19 +49,28 @@ export function ThemeSystemProvider({
       if (!styleElement) {
         styleElement = document.createElement("style")
         styleElement.id = styleId
-        // Insert after the last stylesheet to ensure our variables override
-        const stylesheets = Array.from(document.head.querySelectorAll("link[rel='stylesheet']"))
-        if (stylesheets.length > 0) {
-          const lastStylesheet = stylesheets[stylesheets.length - 1]
-          document.head.insertBefore(styleElement, lastStylesheet.nextSibling)
-        } else {
-          document.head.appendChild(styleElement)
-        }
+        // Insert at the beginning to ensure our variables are available early
+        document.head.insertBefore(styleElement, document.head.firstChild)
       }
 
       const { light: lightVars, dark: darkVars } = theme.cssVars
+      
+      // Get radius value
+      const radiusMap: Record<string, string> = {
+        none: "0",
+        sm: "0.125rem",
+        default: "0.625rem",
+        md: "0.75rem",
+        lg: "1rem",
+        xl: "1.5rem",
+        "2xl": "2rem",
+      }
+      const radiusValue = radius ? (radiusMap[radius] || radiusMap.default) : radiusMap.default
 
+      // Generate the new CSS
       let cssText = ":root {\n"
+      // Add radius variable first
+      cssText += `  --radius: ${radiusValue};\n`
       // Always set light vars as default
       Object.entries(lightVars).forEach(([key, value]) => {
         if (value) {
@@ -76,15 +88,26 @@ export function ThemeSystemProvider({
       })
       cssText += "}\n"
 
-      styleElement.textContent = cssText
+      // Atoms now load synchronously from localStorage, so they should match the script
+      // Just check if CSS already matches to avoid unnecessary updates
+      const currentContent = styleElement.textContent || ""
+      if (currentContent === cssText) {
+        isFirstRender.current = false
+        lastAppliedTheme.current = themeName
+        return
+      }
       
-      // Force a reflow to ensure styles are applied
-      void styleElement.offsetHeight
-    }
-
-    // Update font CSS variable
-    if (font) {
-      document.documentElement.style.setProperty("--font-sans", font.family)
+      // Track the theme we're applying
+      lastAppliedTheme.current = themeName
+      
+      // Only update if the CSS has actually changed to avoid unnecessary DOM updates
+      if (currentContent !== cssText) {
+        styleElement.textContent = cssText
+        // Force a reflow to ensure styles are applied
+        void styleElement.offsetHeight
+      }
+      
+      isFirstRender.current = false
     }
 
     // Update radius CSS variable
@@ -101,7 +124,7 @@ export function ThemeSystemProvider({
       const radiusValue = radiusMap[radius] || radiusMap.default
       document.documentElement.style.setProperty("--radius", radiusValue)
     }
-  }, [theme, colorMode, font, radius])
+  }, [theme, colorMode, radius])
 
   return <>{children}</>
 }
@@ -112,8 +135,6 @@ export function ThemeSystemProvider({
 type ThemeSystemContextType = {
   themeName: string
   setThemeName: (name: string) => void
-  fontName: string
-  setFontName: (name: string) => void
   radius: string
   setRadius: (radius: string) => void
 }
@@ -121,8 +142,6 @@ type ThemeSystemContextType = {
 const ThemeSystemContext = React.createContext<ThemeSystemContextType>({
   themeName: "neutral",
   setThemeName: () => {},
-  fontName: "inter",
-  setFontName: () => {},
   radius: "default",
   setRadius: () => {},
 })
@@ -130,84 +149,39 @@ const ThemeSystemContext = React.createContext<ThemeSystemContextType>({
 export function ThemeSystemProviderWithContext({
   children,
   defaultThemeName = "neutral",
-  defaultFontName = "inter",
   defaultRadius = "default",
-  storageKey = "vite-ui-theme-name",
-  fontStorageKey = "vite-ui-font-name",
-  radiusStorageKey = "vite-ui-radius",
 }: {
   children: React.ReactNode
   defaultThemeName?: string
-  defaultFontName?: string
   defaultRadius?: string
-  storageKey?: string
-  fontStorageKey?: string
-  radiusStorageKey?: string
 }) {
-  const [themeName, setThemeNameState] = React.useState<string>(() => {
-    if (typeof window === "undefined") {
-      return defaultThemeName
-    }
-    return (
-      (localStorage.getItem(storageKey) as string) || defaultThemeName
-    )
-  })
-
-  const [fontName, setFontNameState] = React.useState<string>(() => {
-    if (typeof window === "undefined") {
-      return defaultFontName
-    }
-    return (
-      (localStorage.getItem(fontStorageKey) as string) || defaultFontName
-    )
-  })
-
-  const [radius, setRadiusState] = React.useState<string>(() => {
-    if (typeof window === "undefined") {
-      return defaultRadius
-    }
-    return (
-      (localStorage.getItem(radiusStorageKey) as string) || defaultRadius
-    )
-  })
+  // Use Effect Atom for theme state with localStorage persistence
+  const themeName = useAtomValue(themeNameAtom)
+  const radius = useAtomValue(radiusAtom)
+  
+  const setThemeNameAtom = useAtomSet(themeNameAtom)
+  const setRadiusAtom = useAtomSet(radiusAtom)
 
   const setThemeName = React.useCallback(
     (name: string) => {
-      if (typeof window !== "undefined") {
-        localStorage.setItem(storageKey, name)
-      }
-      setThemeNameState(name)
+      setThemeNameAtom(name)
     },
-    [storageKey]
-  )
-
-  const setFontName = React.useCallback(
-    (name: string) => {
-      if (typeof window !== "undefined") {
-        localStorage.setItem(fontStorageKey, name)
-      }
-      setFontNameState(name)
-    },
-    [fontStorageKey]
+    [setThemeNameAtom]
   )
 
   const setRadius = React.useCallback(
     (radiusValue: string) => {
-      if (typeof window !== "undefined") {
-        localStorage.setItem(radiusStorageKey, radiusValue)
-      }
-      setRadiusState(radiusValue)
+      setRadiusAtom(radiusValue)
     },
-    [radiusStorageKey]
+    [setRadiusAtom]
   )
 
   return (
     <ThemeSystemContext.Provider
-      value={{ themeName, setThemeName, fontName, setFontName, radius, setRadius }}
+      value={{ themeName, setThemeName, radius, setRadius }}
     >
       <ThemeSystemProvider
         themeName={themeName}
-        fontName={fontName}
         radius={radius}
       >
         {children}

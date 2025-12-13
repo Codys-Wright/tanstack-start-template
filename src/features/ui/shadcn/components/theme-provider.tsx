@@ -1,11 +1,12 @@
-import { createContext, useContext, useEffect, useState } from "react"
+import { createContext, useContext, useEffect } from "react"
+import { useAtomValue, useAtomSet } from "@effect-atom/atom-react"
+import { colorModeAtom } from "../atoms/theme-atoms"
 
 type Theme = "dark" | "light" | "system"
 
 type ThemeProviderProps = {
   children: React.ReactNode
   defaultTheme?: Theme
-  storageKey?: string
 }
 
 type ThemeProviderState = {
@@ -23,15 +24,11 @@ const ThemeProviderContext = createContext<ThemeProviderState>(initialState)
 export function ThemeProvider({
   children,
   defaultTheme = "system",
-  storageKey = "vite-ui-theme",
   ...props
 }: ThemeProviderProps) {
-  const [theme, setTheme] = useState<Theme>(() => {
-    if (typeof window === "undefined") {
-      return defaultTheme
-    }
-    return (localStorage.getItem(storageKey) as Theme) || defaultTheme
-  })
+  // Use Effect Atom for color mode with localStorage persistence
+  const theme = useAtomValue(colorModeAtom)
+  const setThemeAtom = useAtomSet(colorModeAtom)
 
   useEffect(() => {
     if (typeof window === "undefined") {
@@ -56,12 +53,9 @@ export function ThemeProvider({
   }, [theme])
 
   const value = {
-    theme,
-    setTheme: (theme: Theme) => {
-      if (typeof window !== "undefined") {
-        localStorage.setItem(storageKey, theme)
-      }
-      setTheme(theme)
+    theme: theme as Theme,
+    setTheme: (newTheme: Theme) => {
+      setThemeAtom(newTheme)
     },
   }
 

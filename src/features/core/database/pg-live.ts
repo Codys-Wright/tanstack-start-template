@@ -99,4 +99,3 @@ export const withTransactionRollback = <A, E, R>(self: Effect.Effect<A, E, R>) =
         Effect.catchIf(Schema.is(TransactionRollback), (error) => Effect.succeed(error.value as A)),
       );
   });
-

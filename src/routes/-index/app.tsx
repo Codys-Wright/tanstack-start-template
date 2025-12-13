@@ -9,6 +9,9 @@ export function App() {
           <h1 className="text-3xl font-bold">Todo App</h1>
           <ThemeDropdown />
         </div>
+        <p className="text-muted-foreground mb-4">
+          Use the navigation above to test theme persistence across different pages.
+        </p>
         <CreateTodoForm />
         <TodoList />
       </div>

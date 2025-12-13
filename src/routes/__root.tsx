@@ -3,6 +3,8 @@ import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 import { TanStackDevtools } from "@tanstack/react-devtools";
 import { RegistryProvider } from "@effect-atom/atom-react";
 import { ThemeProvider, ThemeSystemProviderWithContext } from "@shadcn";
+import { Navigation } from "@/components/navigation";
+import { getThemeScriptContent } from "@/features/ui/shadcn/components/theme-script";
 import appCss from "../styles.css?url";
 
 export const Route = createRootRoute({
@@ -24,7 +26,7 @@ export const Route = createRootRoute({
         rel: "stylesheet",
         href: appCss,
       },
-      // Preload Google Fonts for dynamic font switching
+      // Preload Google Fonts
       {
         rel: "preconnect",
         href: "https://fonts.googleapis.com",
@@ -41,18 +43,39 @@ export const Route = createRootRoute({
     ],
   }),
 
+  // No loader needed - script handles initial theme injection
+  // Atoms will load from localStorage on client
+
   shellComponent: RootDocument,
 });
 
 function RootDocument({ children }: { children: React.ReactNode }) {
+  // Generate blocking theme script - must be first to prevent FOUC
+  const themeScript = getThemeScriptContent({
+    defaultThemeName: "neutral",
+    defaultRadius: "default",
+    storageKey: "vite-ui-theme-name",
+    radiusStorageKey: "vite-ui-radius",
+    themeStorageKey: "vite-ui-theme",
+  });
+
   return (
-    <html lang="en">
+    <html
+      lang="en"
+      suppressHydrationWarning
+    >
       <head>
+        {/* Blocking theme script - runs synchronously before any rendering */}
+        <script
+          dangerouslySetInnerHTML={{ __html: themeScript }}
+          suppressHydrationWarning
+        />
         <HeadContent />
       </head>
       <body>
-        <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
-          <ThemeSystemProviderWithContext defaultThemeName="neutral" storageKey="vite-ui-theme-name">
+        <ThemeProvider>
+          <ThemeSystemProviderWithContext>
+            <Navigation />
             <RegistryProvider defaultIdleTTL={60_000}>{children}</RegistryProvider>
             <TanStackDevtools
               config={{

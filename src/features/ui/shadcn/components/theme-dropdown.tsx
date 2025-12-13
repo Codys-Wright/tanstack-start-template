@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { Moon, Sun, Palette, Type, CornerDownLeft, Shuffle } from "lucide-react"
+import { Moon, Sun, Palette, CornerDownLeft, Shuffle } from "lucide-react"
 import { Button } from "./ui/button"
 import {
   DropdownMenu,
@@ -17,22 +17,19 @@ import {
 import { useTheme } from "./theme-provider"
 import { useThemeSystem } from "./theme-system-provider"
 import { themes } from "../lib/themes"
-import { FONTS } from "../lib/fonts"
 import { RADII, randomizeThemeParams } from "../lib/randomize"
 
 export function ThemeDropdown() {
   const { theme: colorMode, setTheme } = useTheme()
-  const { themeName, setThemeName, fontName, setFontName, radius, setRadius } =
+  const { themeName, setThemeName, radius, setRadius } =
     useThemeSystem()
 
   const handleRandomize = React.useCallback(() => {
     const randomized = randomizeThemeParams()
     setThemeName(randomized.theme || "neutral")
-    setFontName(randomized.font || "inter")
     setRadius(randomized.radius || "default")
-  }, [setThemeName, setFontName, setRadius])
+  }, [setThemeName, setRadius])
 
-  const currentFont = FONTS.find((f) => f.value === fontName) || FONTS[0]
   const currentRadius = RADII.find((r) => r.name === radius) || RADII[2] // default
 
   return (
@@ -90,28 +87,6 @@ export function ThemeDropdown() {
         })}
 
         <DropdownMenuSeparator />
-
-        {/* Font Selector */}
-        <DropdownMenuSub>
-          <DropdownMenuSubTrigger>
-            <Type className="mr-2 h-4 w-4" />
-            <span>Font</span>
-            <span className="ml-auto text-xs text-muted-foreground">
-              {currentFont.name}
-            </span>
-          </DropdownMenuSubTrigger>
-          <DropdownMenuSubContent>
-            {FONTS.map((font) => (
-              <DropdownMenuItem
-                key={font.value}
-                onClick={() => setFontName(font.value)}
-              >
-                <span>{font.name}</span>
-                {fontName === font.value && <span className="ml-auto">✓</span>}
-              </DropdownMenuItem>
-            ))}
-          </DropdownMenuSubContent>
-        </DropdownMenuSub>
 
         {/* Radius Selector */}
         <DropdownMenuSub>
