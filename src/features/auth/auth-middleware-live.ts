@@ -8,4 +8,3 @@ export const CurrentUserRpcMiddlewareLive = Layer.succeed(
   CurrentUserRpcMiddleware,
   CurrentUserRpcMiddleware.of(() => Effect.succeed({ userId: STATIC_USER_ID })),
 );
-
