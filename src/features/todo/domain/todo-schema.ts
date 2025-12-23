@@ -9,8 +9,9 @@ export const Todo = Schema.Struct({
   id: TodoId,
   title: Schema.String,
   completed: Schema.Boolean,
-  ownerId: UserId,
+  userId: UserId, // Changed from ownerId to match DB column (user_id)
   createdAt: Schema.DateTimeUtc,
+  updatedAt: Schema.DateTimeUtc, // Added to match DB
 });
 export type Todo = typeof Todo.Type;
 

@@ -127,7 +127,7 @@ export const TodoItem = memo(function TodoItem({
                 {todo.title}
               </button>
               <Badge variant="outline" className="font-mono text-xs w-fit">
-                Owner: {todo.ownerId.substring(0, 8)}...
+                Owner: {todo.userId.substring(0, 8)}...
               </Badge>
             </div>
             <Button
@@ -172,7 +172,7 @@ export const TodoItem = memo(function TodoItem({
     prevProps.todo.id === nextProps.todo.id &&
     prevProps.todo.title === nextProps.todo.title &&
     prevProps.todo.completed === nextProps.todo.completed &&
-    prevProps.todo.ownerId === nextProps.todo.ownerId
+    prevProps.todo.userId === nextProps.todo.userId
   );
 });
 

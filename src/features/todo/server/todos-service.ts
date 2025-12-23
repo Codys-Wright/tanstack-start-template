@@ -1,108 +1,93 @@
-import * as Option from "effect/Option";
-import * as DateTime from "effect/DateTime";
-import * as Ref from "effect/Ref";
 import * as Effect from "effect/Effect";
+import * as Option from "effect/Option";
 import type { UserId } from "@/features/auth/domain/auth.user-id";
 import {
-  CreateTodoInput,
-  Todo,
-  TodoId,
-  TodoNotFound,
-  UpdateTodoInput,
+	CreateTodoInput,
+	TodoId,
+	TodoNotFound,
+	UpdateTodoInput,
 } from "../domain/todo-schema.js";
+import { TodoRepository } from "./todo.repository.js";
 
+/**
+ * TodosService - Business logic layer for todos.
+ * Delegates to TodoRepository for database operations.
+ */
 export class TodosService extends Effect.Service<TodosService>()(
-  "TodosService",
-  {
-    effect: Effect.gen(function* () {
-      const todosRef = yield* Ref.make<Map<TodoId, Todo>>(new Map());
+	"TodosService",
+	{
+		dependencies: [TodoRepository.Default],
+		effect: Effect.gen(function* () {
+			const repo = yield* TodoRepository;
 
-      const generateId = (): TodoId => {
-        const id = crypto.randomUUID();
-        return id as TodoId;
-      };
+			const list = (userId: UserId) =>
+				Effect.gen(function* () {
+					yield* Effect.log(`[TodosService.list] Fetching todos for user: ${userId}`);
+					const todos = yield* repo.findByUserId({ userId });
+					yield* Effect.log(`[TodosService.list] Found ${todos.length} todos`);
+					return todos;
+				});
 
-      const list = (ownerId: UserId) =>
-        Effect.gen(function* () {
-          yield* Effect.log(`[TodosService.list] Fetching todos for owner: ${ownerId}`);
-          const todos = yield* Ref.get(todosRef);
-          const allTodos = Array.from(todos.values());
-          const filtered = allTodos.filter((todo) => todo.ownerId === ownerId);
-          yield* Effect.log(`[TodosService.list] Total todos: ${allTodos.length}, Filtered: ${filtered.length}`);
-          return filtered;
-        });
+			const getById = (id: TodoId, userId: UserId) =>
+				repo.findById({ id, userId }).pipe(
+					Effect.tap(() => Effect.log(`[TodosService.getById] Found todo: ${id}`)),
+					Effect.mapError(() => new TodoNotFound({ id })),
+					Effect.tapError(() =>
+						Effect.log(`[TodosService.getById] Todo not found: ${id}`),
+					),
+				);
 
-      const getById = (id: TodoId, ownerId: UserId) =>
-        Effect.gen(function* () {
-          const todos = yield* Ref.get(todosRef);
-          const todo = todos.get(id);
-          if (!todo) {
-            return yield* new TodoNotFound({ id });
-          }
-          // Verify ownership
-          if (todo.ownerId !== ownerId) {
-            return yield* new TodoNotFound({ id });
-          }
-          return todo;
-        });
+			const create = (input: CreateTodoInput, userId: UserId) =>
+				Effect.gen(function* () {
+					yield* Effect.log(
+						`[TodosService.create] Creating todo "${input.title}" for user: ${userId}`,
+					);
+					const todo = yield* repo.insert({
+						userId,
+						title: input.title,
+						completed: false,
+					});
+					yield* Effect.log(`[TodosService.create] Created todo with id: ${todo.id}`);
+					return todo;
+				});
 
-      const create = (input: CreateTodoInput, ownerId: UserId) =>
-        Effect.gen(function* () {
-          yield* Effect.log(`[TodosService.create] Creating todo "${input.title}" for owner: ${ownerId}`);
-          const id = generateId();
-          const now = yield* DateTime.now;
-          const todo: Todo = {
-            id,
-            title: input.title,
-            completed: false,
-            ownerId,
-            createdAt: now,
-          };
-          yield* Ref.update(todosRef, (todos) => {
-            const newTodos = new Map(todos);
-            newTodos.set(id, todo);
-            return newTodos;
-          });
-          yield* Effect.log(`[TodosService.create] Successfully created todo with id: ${id}`);
-          return todo;
-        });
+			const update = (id: TodoId, input: UpdateTodoInput, userId: UserId) =>
+				Effect.gen(function* () {
+					yield* Effect.log(`[TodosService.update] Updating todo: ${id}`);
+					const updated = yield* repo.update({
+						id,
+						userId,
+						title: Option.getOrUndefined(input.title),
+						completed: Option.getOrUndefined(input.completed),
+					});
+					yield* Effect.log(`[TodosService.update] Updated todo: ${id}`);
+					return updated;
+				}).pipe(
+					Effect.mapError(() => new TodoNotFound({ id })),
+					Effect.tapError(() =>
+						Effect.log(`[TodosService.update] Todo not found: ${id}`),
+					),
+				);
 
-      const update = (id: TodoId, input: UpdateTodoInput, ownerId: UserId) =>
-        Effect.gen(function* () {
-          const existing = yield* getById(id, ownerId);
-          const updated: Todo = {
-            ...existing,
-            title: Option.getOrElse(input.title, () => existing.title),
-            completed: Option.getOrElse(
-              input.completed,
-              () => existing.completed,
-            ),
-          };
-          yield* Ref.update(todosRef, (todos) => {
-            const newTodos = new Map(todos);
-            newTodos.set(id, updated);
-            return newTodos;
-          });
-          return updated;
-        });
+			const remove = (id: TodoId, userId: UserId) =>
+				Effect.gen(function* () {
+					yield* Effect.log(`[TodosService.remove] Deleting todo: ${id}`);
+					yield* repo.delete({ id, userId });
+					yield* Effect.log(`[TodosService.remove] Deleted todo: ${id}`);
+				}).pipe(
+					Effect.mapError(() => new TodoNotFound({ id })),
+					Effect.tapError(() =>
+						Effect.log(`[TodosService.remove] Todo not found: ${id}`),
+					),
+				);
 
-      const remove = (id: TodoId, ownerId: UserId) =>
-        Effect.gen(function* () {
-          yield* getById(id, ownerId);
-          yield* Ref.update(todosRef, (todos) => {
-            const newTodos = new Map(todos);
-            newTodos.delete(id);
-            return newTodos;
-          });
-        });
-
-      return {
-        list,
-        getById,
-        create,
-        update,
-        remove,
-      } as const;
-    }),
-  },
+			return {
+				list,
+				getById,
+				create,
+				update,
+				remove,
+			} as const;
+		}),
+	},
 ) {}
