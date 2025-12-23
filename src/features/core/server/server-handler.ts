@@ -13,9 +13,12 @@ import * as Logger from "effect/Logger";
 import * as Context from "effect/Context";
 import { DomainRpc, DomainApi } from "@/features/core/domain";
 import { TodosRpcLive, TodosApiLive } from "@/features/todo/server";
-import { AuthenticationHttpMiddlewareLive } from "@/features/auth/server/http-auth-middleware";
-import { AuthenticationRpcMiddlewareLive } from "@/features/auth/server/rpc-auth-middleware";
-import { BetterAuthRouter, Auth } from "@/features/auth";
+import {
+	AuthenticationHttpMiddlewareLive,
+	AuthenticationRpcMiddlewareLive,
+	Auth,
+	BetterAuthRouter,
+} from "@/features/auth/server";
 import { serverRuntime } from "./server-runtime.js";
 
 class RpcLogger extends RpcMiddleware.Tag<RpcLogger>()("RpcLogger", {

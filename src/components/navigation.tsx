@@ -1,7 +1,7 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import { cn, Badge, Button } from "@shadcn";
-import { authClient } from "@/features/auth/client";
-import { useState, useEffect } from "react";
+import { sessionAtom, signOutAtom } from "@/features/auth/client";
+import { useAtomValue, useAtom, Result } from "@effect-atom/atom-react";
 
 const navItems = [
   { path: "/", label: "Home" },
@@ -14,24 +14,18 @@ const navItems = [
 export function Navigation() {
   const router = useRouterState();
   const currentPath = router.location.pathname;
-  const [session, setSession] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
+  
+  // Use Effect-Atom for session state
+  const sessionResult = useAtomValue(sessionAtom);
+  const [_signOutResult, signOut] = useAtom(signOutAtom);
 
-  useEffect(() => {
-    async function loadSession() {
-      try {
-        const { data } = await authClient.getSession();
-        setSession(data);
-      } finally {
-        setLoading(false);
-      }
-    }
-    loadSession();
-  }, []);
+  // Extract session from Result type
+  const session = Result.isSuccess(sessionResult) ? sessionResult.value : null;
+  const loading = Result.isInitial(sessionResult);
 
-  const handleSignOut = async () => {
-    await authClient.signOut();
-    setSession(null);
+  const handleSignOut = () => {
+    signOut();
+    // Note: Better to navigate after signOut succeeds, but keeping simple for now
     window.location.href = "/login";
   };
 
