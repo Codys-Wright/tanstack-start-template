@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TestRouteImport } from './routes/test'
 import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as LoginRouteImport } from './routes/login'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ApiSplatRouteImport } from './routes/api/$'
@@ -23,6 +24,11 @@ const TestRoute = TestRouteImport.update({
 const SettingsRoute = SettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AboutRoute = AboutRouteImport.update({
@@ -44,6 +50,7 @@ const ApiSplatRoute = ApiSplatRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/login': typeof LoginRoute
   '/settings': typeof SettingsRoute
   '/test': typeof TestRoute
   '/api/$': typeof ApiSplatRoute
@@ -51,6 +58,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/login': typeof LoginRoute
   '/settings': typeof SettingsRoute
   '/test': typeof TestRoute
   '/api/$': typeof ApiSplatRoute
@@ -59,21 +67,23 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/login': typeof LoginRoute
   '/settings': typeof SettingsRoute
   '/test': typeof TestRoute
   '/api/$': typeof ApiSplatRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/about' | '/settings' | '/test' | '/api/$'
+  fullPaths: '/' | '/about' | '/login' | '/settings' | '/test' | '/api/$'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about' | '/settings' | '/test' | '/api/$'
-  id: '__root__' | '/' | '/about' | '/settings' | '/test' | '/api/$'
+  to: '/' | '/about' | '/login' | '/settings' | '/test' | '/api/$'
+  id: '__root__' | '/' | '/about' | '/login' | '/settings' | '/test' | '/api/$'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
+  LoginRoute: typeof LoginRoute
   SettingsRoute: typeof SettingsRoute
   TestRoute: typeof TestRoute
   ApiSplatRoute: typeof ApiSplatRoute
@@ -93,6 +103,13 @@ declare module '@tanstack/react-router' {
       path: '/settings'
       fullPath: '/settings'
       preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/about': {
@@ -122,6 +139,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
+  LoginRoute: LoginRoute,
   SettingsRoute: SettingsRoute,
   TestRoute: TestRoute,
   ApiSplatRoute: ApiSplatRoute,
