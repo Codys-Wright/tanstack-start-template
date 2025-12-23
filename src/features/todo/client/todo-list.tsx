@@ -13,8 +13,9 @@ export function TodoList() {
         .onInitial(() => (
           <p className="text-muted-foreground">Loading todos...</p>
         ))
-        .onSuccess((todos) =>
-          todos.length === 0 ? (
+        .onSuccess((todos) => {
+          console.log("[TodoList] Successfully loaded todos:", todos);
+          return todos.length === 0 ? (
             <p className="text-muted-foreground">
               No todos yet. Add one above!
             </p>
@@ -24,23 +25,29 @@ export function TodoList() {
                 <TodoItem key={todo.id} todo={todo} />
               ))}
             </ul>
-          ),
-        )
-        .onFailure(() => (
-          <Alert variant="destructive">
-            <AlertTitle>Something went wrong loading todos.</AlertTitle>
-            <AlertDescription>
-              <Button
-                onClick={refreshTodos}
-                variant="outline"
-                size="sm"
-                className="mt-2"
-              >
-                Retry
-              </Button>
-            </AlertDescription>
-          </Alert>
-        ))
+          );
+        })
+        .onFailure((error) => {
+          console.error("[TodoList] Failed to load todos:", error);
+          return (
+            <Alert variant="destructive">
+              <AlertTitle>Something went wrong loading todos.</AlertTitle>
+              <AlertDescription>
+                <div className="mb-2 text-sm">
+                  Error: {String(error)}
+                </div>
+                <Button
+                  onClick={refreshTodos}
+                  variant="outline"
+                  size="sm"
+                  className="mt-2"
+                >
+                  Retry
+                </Button>
+              </AlertDescription>
+            </Alert>
+          );
+        })
         .render()}
     </div>
   );
