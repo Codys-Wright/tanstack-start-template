@@ -1,23 +1,15 @@
 import * as HttpApiError from "@effect/platform/HttpApiError";
 import * as RpcMiddleware from "@effect/rpc/RpcMiddleware";
-import * as Context from "effect/Context";
-import * as Schema from "effect/Schema";
+import { Authentication } from "./domain/authentication.js";
 
-export const UserId = Schema.UUID.pipe(Schema.brand("UserId"));
-export type UserId = typeof UserId.Type;
-
-export class CurrentUser extends Context.Tag("CurrentUser")<
-  CurrentUser,
-  {
-    readonly userId: UserId;
-  }
->() {}
-
-export class CurrentUserRpcMiddleware extends RpcMiddleware.Tag<CurrentUserRpcMiddleware>()(
-  "CurrentUserRpcMiddleware",
+/**
+ * RPC middleware that validates authentication and provides Authentication context.
+ * Used to protect RPC endpoints requiring authenticated users.
+ */
+export class AuthenticationRpcMiddleware extends RpcMiddleware.Tag<AuthenticationRpcMiddleware>()(
+  "AuthenticationRpcMiddleware",
   {
     failure: HttpApiError.Unauthorized,
-    provides: CurrentUser,
+    provides: Authentication,
   },
 ) {}
-

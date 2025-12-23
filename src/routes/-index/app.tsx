@@ -10,7 +10,8 @@ export function App() {
           <ThemeDropdown />
         </div>
         <p className="text-muted-foreground mb-4">
-          Use the navigation above to test theme persistence across different pages.
+          Use the navigation above to test theme persistence across different
+          pages.
         </p>
         <CreateTodoForm />
         <TodoList />

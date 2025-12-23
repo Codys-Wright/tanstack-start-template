@@ -1,22 +1,23 @@
+import * as HttpApiError from "@effect/platform/HttpApiError";
 import * as HttpApiMiddleware from "@effect/platform/HttpApiMiddleware";
 import * as HttpApiSecurity from "@effect/platform/HttpApiSecurity";
 import * as HttpServerRequest from "@effect/platform/HttpServerRequest";
 import * as Effect from "effect/Effect";
 import * as Layer from "effect/Layer";
 import * as Schema from "effect/Schema";
-import { AuthContext, Unauthorized } from "../domain/auth-context.js";
-import type { UserId } from "../policy.js";
+import { Authentication } from "../domain/authentication.js";
+import type { UserId } from "../domain/user-id.js";
 import { Auth } from "./service.js";
 
 /**
- * HTTP API middleware that validates Better Auth session and provides AuthContext.
+ * HTTP API middleware that validates Better Auth session and provides Authentication context.
  * Uses cookie-based authentication to validate sessions with Better Auth.
  */
-export class AuthorizationMiddleware extends HttpApiMiddleware.Tag<AuthorizationMiddleware>()(
-  "AuthorizationMiddleware",
+export class AuthenticationHttpMiddleware extends HttpApiMiddleware.Tag<AuthenticationHttpMiddleware>()(
+  "AuthenticationHttpMiddleware",
   {
-    failure: Unauthorized,
-    provides: AuthContext,
+    failure: HttpApiError.Unauthorized,
+    provides: Authentication,
     security: {
       cookieAuth: HttpApiSecurity.apiKey({
         in: "cookie",
@@ -27,15 +28,15 @@ export class AuthorizationMiddleware extends HttpApiMiddleware.Tag<Authorization
 ) {}
 
 /**
- * Live implementation of AuthorizationMiddleware.
+ * Live implementation of AuthenticationHttpMiddleware.
  * Requires Auth service to validate sessions with Better Auth.
  */
-export const AuthorizationMiddlewareLive = Layer.effect(
-  AuthorizationMiddleware,
+export const AuthenticationHttpMiddlewareLive = Layer.effect(
+  AuthenticationHttpMiddleware,
   Effect.gen(function* () {
     const auth = yield* Auth;
 
-    return AuthorizationMiddleware.of({
+    return AuthenticationHttpMiddleware.of({
       // Handler for cookie-based authentication
       cookieAuth: () =>
         Effect.gen(function* () {
@@ -46,9 +47,7 @@ export const AuthorizationMiddlewareLive = Layer.effect(
               authorization: Schema.optional(Schema.String),
             }),
           ).pipe(
-            Effect.mapError(
-              () => new Unauthorized({ details: "Failed to parse headers" }),
-            ),
+            Effect.mapError(() => new HttpApiError.Unauthorized()),
           );
 
           // Forward to Better Auth
@@ -63,20 +62,15 @@ export const AuthorizationMiddlewareLive = Layer.effect(
           // Get session from Better Auth
           const session = yield* Effect.tryPromise({
             try: () => auth.api.getSession({ headers: forwardedHeaders }),
-            catch: (cause) => new Unauthorized({ details: String(cause) }),
+            catch: () => new HttpApiError.Unauthorized(),
           });
 
           if (!session) {
-            return yield* Effect.fail(
-              new Unauthorized({
-                details: "Missing or invalid authentication",
-              }),
-            );
+            return yield* Effect.fail(new HttpApiError.Unauthorized());
           }
 
-          // Return the authenticated user context value
-          // Note: Better Auth user.id is a string, we assert it as UserId
-          return AuthContext.of({ userId: session.user.id as UserId });
+          // Return Authentication context
+          return { userId: session.user.id as UserId };
         }),
     });
   }),

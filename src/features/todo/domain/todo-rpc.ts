@@ -1,6 +1,7 @@
 import * as Rpc from "@effect/rpc/Rpc";
 import * as RpcGroup from "@effect/rpc/RpcGroup";
 import * as Schema from "effect/Schema";
+import { AuthenticationRpcMiddleware } from "@/features/auth/policy";
 import {
   CreateTodoInput,
   Todo,
@@ -8,7 +9,6 @@ import {
   TodoNotFound,
   UpdateTodoInput,
 } from "./todo-schema.js";
-import { CurrentUserRpcMiddleware } from "@/features/auth/policy";
 
 export class TodosRpc extends RpcGroup.make(
   Rpc.make("list", {
@@ -39,5 +39,4 @@ export class TodosRpc extends RpcGroup.make(
   }),
 )
   .prefix("todos_")
-  .middleware(CurrentUserRpcMiddleware) {}
-
+  .middleware(AuthenticationRpcMiddleware) {}

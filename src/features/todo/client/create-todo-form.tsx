@@ -31,10 +31,7 @@ export function CreateTodoForm() {
           disabled={createResult.waiting}
           className="flex-1"
         />
-        <Button
-          type="submit"
-          disabled={createResult.waiting || !title.trim()}
-        >
+        <Button type="submit" disabled={createResult.waiting || !title.trim()}>
           {createResult.waiting ? "Adding..." : "Add"}
         </Button>
       </form>
@@ -48,4 +45,3 @@ export function CreateTodoForm() {
     </div>
   );
 }
-

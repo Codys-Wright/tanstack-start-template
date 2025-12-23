@@ -1,40 +1,38 @@
+import * as HttpApiError from "@effect/platform/HttpApiError";
 import * as Effect from "effect/Effect";
 import * as Layer from "effect/Layer";
-import { AuthContext, Unauthorized } from "../domain/auth-context.js";
-import { CurrentUserRpcMiddleware } from "../policy.js";
-import type { UserId } from "../policy.js";
+import type { UserId } from "../domain/user-id.js";
+import { AuthenticationRpcMiddleware } from "../policy.js";
 import { Auth } from "./service.js";
 
 /**
- * Live implementation of CurrentUserRpcMiddleware.
+ * Live implementation of AuthenticationRpcMiddleware.
  * For RPC calls, we attempt to get the session from Better Auth.
  * 
  * Note: RPC authentication in SSR context may require different handling
  * depending on whether RPC calls are server-side only or from the browser.
  * Currently this implementation attempts to validate with Better Auth.
  */
-export const CurrentUserRpcMiddlewareLive = Layer.effect(
-  CurrentUserRpcMiddleware,
+export const AuthenticationRpcMiddlewareLive = Layer.effect(
+  AuthenticationRpcMiddleware,
   Effect.gen(function* () {
     const auth = yield* Auth;
 
-    return CurrentUserRpcMiddleware.of(() =>
+    return AuthenticationRpcMiddleware.of(() =>
       Effect.gen(function* () {
         // Attempt to get session from Better Auth
         // In SSR context, this might need to access request headers differently
         const session = yield* Effect.tryPromise({
           try: () => auth.api.getSession({ headers: new Headers() }),
-          catch: (cause) => new Unauthorized({ details: String(cause) }),
+          catch: () => new HttpApiError.Unauthorized(),
         });
 
         if (!session) {
-          return yield* Effect.fail(
-            new Unauthorized({ details: "Missing or invalid authentication" }),
-          );
+          return yield* Effect.fail(new HttpApiError.Unauthorized());
         }
 
-        // Return authenticated user context
-        return AuthContext.of({ userId: session.user.id as UserId });
+        // Return Authentication context
+        return { userId: session.user.id as UserId };
       }),
     );
   }),

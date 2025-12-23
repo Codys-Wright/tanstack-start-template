@@ -7,6 +7,7 @@ import {
 } from "../domain/todo-schema.js";
 import { serializable } from "@/features/core/client";
 import { Atom, Result } from "@effect-atom/atom-react";
+import * as HttpApiError from "@effect/platform/HttpApiError";
 import * as RpcClientError from "@effect/rpc/RpcClientError";
 import * as Arr from "effect/Array";
 import * as Data from "effect/Data";
@@ -51,7 +52,10 @@ export const todosAtom = (() => {
         key: "@features/todo/todos",
         schema: Result.Schema({
           success: TodosSchema,
-          error: RpcClientError.RpcClientError,
+          error: Schema.Union(
+            HttpApiError.Unauthorized,
+            RpcClientError.RpcClientError,
+          ),
         }),
       }),
     );

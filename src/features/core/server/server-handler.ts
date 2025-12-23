@@ -13,8 +13,8 @@ import * as Logger from "effect/Logger";
 import * as Context from "effect/Context";
 import { DomainRpc, DomainApi } from "@/features/core/domain";
 import { TodosRpcLive, TodosApiLive } from "@/features/todo/server";
-import { AuthorizationMiddlewareLive } from "@/features/auth/server/http-auth-middleware";
-import { CurrentUserRpcMiddlewareLive } from "@/features/auth/server/rpc-auth-middleware";
+import { AuthenticationHttpMiddlewareLive } from "@/features/auth/server/http-auth-middleware";
+import { AuthenticationRpcMiddlewareLive } from "@/features/auth/server/rpc-auth-middleware";
 import { BetterAuthRouter, Auth } from "@/features/auth";
 import { serverRuntime } from "./server-runtime.js";
 
@@ -54,7 +54,7 @@ const RpcRouter = RpcServer.layerHttpRouter({
 }).pipe(
   Layer.provide(TodosRpcLive),
   Layer.provide(RpcLoggerLive),
-  Layer.provide(CurrentUserRpcMiddlewareLive),
+  Layer.provide(AuthenticationRpcMiddlewareLive),
   Layer.provide(RpcSerialization.layerNdjson),
 );
 
@@ -63,7 +63,7 @@ const HttpApiRouter = HttpLayerRouter.addHttpApi(DomainApi, {
   openapiPath: "/api/openapi.json", // Built-in OpenAPI endpoint
 }).pipe(
   Layer.provide(TodosApiLive),
-  Layer.provide(AuthorizationMiddlewareLive), // Provide auth middleware
+  Layer.provide(AuthenticationHttpMiddlewareLive), // Provide real auth middleware
   Layer.provide(HttpServer.layerContext),
 );
 
