@@ -3,7 +3,7 @@ import { useAtomRefresh, useAtomSet } from "@effect-atom/atom-react";
 import * as Option from "effect/Option";
 import { useState, memo, useCallback } from "react";
 import { todosAtom, updateTodoAtom, deleteTodoAtom } from "./todos-atoms.js";
-import { Checkbox, Input, Button, Alert, AlertDescription } from "@shadcn";
+import { Checkbox, Input, Button, Alert, AlertDescription, Badge } from "@shadcn";
 
 export const TodoItem = memo(function TodoItem({
   todo,
@@ -114,16 +114,22 @@ export const TodoItem = memo(function TodoItem({
           </div>
         ) : (
           <>
-            <span
-              className={`flex-1 cursor-pointer ${
-                todo.completed
-                  ? "line-through text-muted-foreground"
-                  : "text-foreground"
-              }`}
-              onDoubleClick={() => setIsEditing(true)}
-            >
-              {todo.title}
-            </span>
+            <div className="flex-1 flex flex-col gap-1">
+              <button
+                type="button"
+                className={`text-left cursor-pointer ${
+                  todo.completed
+                    ? "line-through text-muted-foreground"
+                    : "text-foreground"
+                }`}
+                onDoubleClick={() => setIsEditing(true)}
+              >
+                {todo.title}
+              </button>
+              <Badge variant="outline" className="font-mono text-xs w-fit">
+                Owner: {todo.ownerId.substring(0, 8)}...
+              </Badge>
+            </div>
             <Button
               onClick={() => setIsEditing(true)}
               disabled={isLoading}
@@ -165,7 +171,8 @@ export const TodoItem = memo(function TodoItem({
   return (
     prevProps.todo.id === nextProps.todo.id &&
     prevProps.todo.title === nextProps.todo.title &&
-    prevProps.todo.completed === nextProps.todo.completed
+    prevProps.todo.completed === nextProps.todo.completed &&
+    prevProps.todo.ownerId === nextProps.todo.ownerId
   );
 });
 
