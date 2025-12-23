@@ -1,5 +1,7 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { cn } from "@shadcn";
+import { cn, Badge, Button } from "@shadcn";
+import { authClient } from "@/features/auth/client";
+import { useState, useEffect } from "react";
 
 const navItems = [
   { path: "/", label: "Home" },
@@ -12,6 +14,26 @@ const navItems = [
 export function Navigation() {
   const router = useRouterState();
   const currentPath = router.location.pathname;
+  const [session, setSession] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadSession() {
+      try {
+        const { data } = await authClient.getSession();
+        setSession(data);
+      } finally {
+        setLoading(false);
+      }
+    }
+    loadSession();
+  }, []);
+
+  const handleSignOut = async () => {
+    await authClient.signOut();
+    setSession(null);
+    window.location.href = "/login";
+  };
 
   return (
     <nav className="border-b bg-card">
@@ -35,6 +57,38 @@ export function Navigation() {
                 </Link>
               );
             })}
+          </div>
+
+          <div className="flex items-center gap-3">
+            {loading ? (
+              <Badge variant="outline">Loading...</Badge>
+            ) : session?.user ? (
+              <>
+                <div className="flex flex-col items-end gap-1">
+                  <Badge variant="default" className="font-mono text-xs">
+                    User ID: {session.user.id.substring(0, 8)}...
+                  </Badge>
+                  {session.user.email && (
+                    <span className="text-xs text-muted-foreground">
+                      {session.user.email}
+                    </span>
+                  )}
+                </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleSignOut}
+                >
+                  Sign Out
+                </Button>
+              </>
+            ) : (
+              <Link to="/login">
+                <Button variant="default" size="sm">
+                  Sign In
+                </Button>
+              </Link>
+            )}
           </div>
         </div>
       </div>
