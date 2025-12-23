@@ -1,6 +1,8 @@
 import * as HttpServerResponse from "@effect/platform/HttpServerResponse";
 import * as HttpServer from "@effect/platform/HttpServer";
 import * as HttpLayerRouter from "@effect/platform/HttpLayerRouter";
+import * as HttpApiSwagger from "@effect/platform/HttpApiSwagger";
+import * as HttpApiScalar from "@effect/platform/HttpApiScalar";
 import * as RpcSerialization from "@effect/rpc/RpcSerialization";
 import * as RpcServer from "@effect/rpc/RpcServer";
 import * as Layer from "effect/Layer";
@@ -55,18 +57,49 @@ const RpcRouter = RpcServer.layerHttpRouter({
   Layer.provide(RpcSerialization.layerNdjson),
 );
 
-const HttpApiRouter = HttpLayerRouter.addHttpApi(DomainApi).pipe(
-  Layer.provide(TodosApiLive),
-  Layer.provide(HttpServer.layerContext),
-);
+// HttpApi router - FIXED
+const HttpApiRouter = HttpLayerRouter.addHttpApi(DomainApi, {
+  openapiPath: "/api/openapi.json", // Built-in OpenAPI endpoint
+}).pipe(Layer.provide(TodosApiLive), Layer.provide(HttpServer.layerContext));
+
+// Scalar UI (modern OpenAPI docs) at /api/docs
+const ScalarDocs = HttpApiScalar.layerHttpLayerRouter({
+  api: DomainApi,
+  path: "/api/docs",
+  scalar: {
+    theme: "moon",
+    layout: "modern",
+    darkMode: true,
+    defaultOpenAllTags: true,
+  },
+});
+
+// Swagger UI (classic OpenAPI docs) at /api/swagger
+const SwaggerDocs = HttpApiSwagger.layerHttpLayerRouter({
+  api: DomainApi,
+  path: "/api/swagger",
+});
 
 const HealthRoute = HttpLayerRouter.use((router) =>
   router.add("GET", "/api/health", HttpServerResponse.text("OK")),
 );
 
-const AllRoutes = Layer.mergeAll(RpcRouter, HttpApiRouter, HealthRoute, BetterAuthRouter).pipe(
-  Layer.provide(Auth.Default),
+// Merge all routes - includes both Scalar and Swagger UIs
+const AllRoutes = Layer.mergeAll(
+  RpcRouter,
+  HttpApiRouter,
+  ScalarDocs, // Modern Scalar UI at /api/docs
+  SwaggerDocs, // Classic Swagger UI at /api/swagger
+  HealthRoute,
+  BetterAuthRouter,
+).pipe(
+  Layer.provideMerge(Auth.Default),
   Layer.provide(Logger.pretty),
+  // Apply CORS globally if needed
+  // Layer.provide(HttpLayerRouter.cors({
+  //   allowedOrigins: ["http://localhost:3000"],
+  //   credentials: true
+  // }))
 );
 
 const memoMap = Effect.runSync(Layer.makeMemoMap);
@@ -80,11 +113,15 @@ if (globalHmr.__EFFECT_DISPOSE__) {
   globalHmr.__EFFECT_DISPOSE__ = undefined;
 }
 
-const { handler, dispose } = HttpLayerRouter.toWebHandler(AllRoutes, { memoMap });
+const { handler, dispose } = HttpLayerRouter.toWebHandler(AllRoutes, {
+  memoMap,
+});
 
 globalHmr.__EFFECT_DISPOSE__ = async () => {
   await dispose();
   await serverRuntime.dispose();
 };
 
-export const effectHandler = ({ request }: { request: Request }) => handler(request, Context.empty() as any);
+// Revert to original pattern - the Context.empty() is needed for TanStack Start integration
+export const effectHandler = ({ request }: { request: Request }) =>
+  handler(request, Context.empty() as any);
