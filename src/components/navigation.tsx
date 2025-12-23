@@ -6,6 +6,7 @@ const navItems = [
   { path: "/about", label: "About" },
   { path: "/settings", label: "Settings" },
   { path: "/test", label: "Test Page" },
+  { path: "/auth-test", label: "Auth Test" },
 ];
 
 export function Navigation() {
