@@ -2,13 +2,14 @@ import { dehydrate } from "@/features/core/client";
 import { Result } from "@effect-atom/atom-react";
 import { HydrationBoundary } from "@effect-atom/atom-react/ReactHydration";
 import { createFileRoute } from "@tanstack/react-router";
+import { createServerFn } from "@tanstack/react-start";
+import { getRequestHeaders } from "@tanstack/react-start/server";
 import * as Effect from "effect/Effect";
 import { serverRuntime } from "@/features/core/server";
 import { TodosService } from "@/features/todo/server/todos-service";
 import { BetterAuthService } from "@/features/auth/server";
 import { App } from "./-index/app";
 import { todosAtom } from "@/features/todo/client";
-import { createServerFn } from "@tanstack/react-start";
 import type { UserId } from "@/features/auth/domain/auth.user-id";
 
 const getTodos = createServerFn().handler(async () => {
@@ -20,9 +21,18 @@ const getTodos = createServerFn().handler(async () => {
       const auth = yield* BetterAuthService;
       yield* Effect.log("[getTodos] Got BetterAuthService");
       
-      // Try to get session
+      // Get request headers for session validation
+      const requestHeaders = getRequestHeaders();
+      const cookieHeader = requestHeaders.get("cookie") || "";
+      yield* Effect.log(`[getTodos] Got request headers, cookie present: ${!!cookieHeader}`);
+      
+      // Try to get session with proper headers
       const session = yield* Effect.tryPromise({
-        try: () => auth.api.getSession(),
+        try: () => auth.api.getSession({
+          headers: new Headers({
+            cookie: cookieHeader,
+          }),
+        }),
         catch: (error) => error,
       }).pipe(
         Effect.tap(() => Effect.log("[getTodos] Session fetch completed")),
