@@ -18,12 +18,11 @@ export const AuthenticationRpcMiddlewareLive = Layer.effect(
   Effect.gen(function* () {
     const auth = yield* Auth;
 
-    return AuthenticationRpcMiddleware.of(() =>
+    return AuthenticationRpcMiddleware.of((options) =>
       Effect.gen(function* () {
-        // Attempt to get session from Better Auth
-        // In SSR context, this might need to access request headers differently
+        // Get session from Better Auth using the actual request headers
         const session = yield* Effect.tryPromise({
-          try: () => auth.api.getSession({ headers: new Headers() }),
+          try: () => auth.api.getSession({ headers: options.headers }),
           catch: () => new HttpApiError.Unauthorized(),
         });
 
