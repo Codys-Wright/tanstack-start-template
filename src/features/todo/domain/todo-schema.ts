@@ -1,5 +1,6 @@
 import * as HttpApiSchema from "@effect/platform/HttpApiSchema";
 import * as Schema from "effect/Schema";
+import { UserId } from "@/features/auth/domain/user-id";
 
 export const TodoId = Schema.String.pipe(Schema.brand("TodoId"));
 export type TodoId = typeof TodoId.Type;
@@ -8,6 +9,7 @@ export const Todo = Schema.Struct({
   id: TodoId,
   title: Schema.String,
   completed: Schema.Boolean,
+  ownerId: UserId,
   createdAt: Schema.DateTimeUtc,
 });
 export type Todo = typeof Todo.Type;
