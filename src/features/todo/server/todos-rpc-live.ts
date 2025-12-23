@@ -15,7 +15,7 @@ export const TodosRpcLive = TodosRpc.toLayer(
           yield* Effect.log(
             `[RPC] Listing todos for user: ${currentUser.userId}`,
           );
-          return yield* todos.list;
+          return yield* todos.list(currentUser.userId);
         }),
 
       todos_getById: ({ id }) =>
@@ -24,7 +24,7 @@ export const TodosRpcLive = TodosRpc.toLayer(
           yield* Effect.log(
             `[RPC] Getting todo ${id} for user: ${currentUser.userId}`,
           );
-          return yield* todos.getById(id);
+          return yield* todos.getById(id, currentUser.userId);
         }),
 
       todos_create: ({ input }) =>
@@ -33,8 +33,7 @@ export const TodosRpcLive = TodosRpc.toLayer(
           yield* Effect.log(
             `[RPC] Creating todo for user: ${currentUser.userId}`,
           );
-          console.log("hello");
-          return yield* todos.create(input);
+          return yield* todos.create(input, currentUser.userId);
         }),
 
       todos_update: ({ id, input }) =>
@@ -43,7 +42,7 @@ export const TodosRpcLive = TodosRpc.toLayer(
           yield* Effect.log(
             `[RPC] Updating todo ${id} for user: ${currentUser.userId}`,
           );
-          return yield* todos.update(id, input);
+          return yield* todos.update(id, input, currentUser.userId);
         }),
 
       todos_remove: ({ id }) =>
@@ -52,7 +51,7 @@ export const TodosRpcLive = TodosRpc.toLayer(
           yield* Effect.log(
             `[RPC] Removing todo ${id} for user: ${currentUser.userId}`,
           );
-          return yield* todos.remove(id);
+          return yield* todos.remove(id, currentUser.userId);
         }),
     });
   }),

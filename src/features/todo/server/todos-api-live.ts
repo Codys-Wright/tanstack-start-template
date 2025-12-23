@@ -17,7 +17,7 @@ export const TodosApiLive = HttpApiBuilder.group(
             `[HTTP API] Listing todos for user: ${currentUser.userId}`,
           );
           const todos = yield* TodosService;
-          return yield* todos.list;
+          return yield* todos.list(currentUser.userId);
         }),
       )
       .handle("getById", ({ path }) =>
@@ -27,7 +27,7 @@ export const TodosApiLive = HttpApiBuilder.group(
             `[HTTP API] Getting todo ${path.id} for user: ${currentUser.userId}`,
           );
           const todos = yield* TodosService;
-          return yield* todos.getById(path.id);
+          return yield* todos.getById(path.id, currentUser.userId);
         }),
       )
       .handle("create", ({ payload }) =>
@@ -37,7 +37,7 @@ export const TodosApiLive = HttpApiBuilder.group(
             `[HTTP API] Creating todo for user: ${currentUser.userId}`,
           );
           const todos = yield* TodosService;
-          return yield* todos.create(payload);
+          return yield* todos.create(payload, currentUser.userId);
         }),
       )
       .handle("update", ({ path, payload }) =>
@@ -47,7 +47,7 @@ export const TodosApiLive = HttpApiBuilder.group(
             `[HTTP API] Updating todo ${path.id} for user: ${currentUser.userId}`,
           );
           const todos = yield* TodosService;
-          return yield* todos.update(path.id, payload);
+          return yield* todos.update(path.id, payload, currentUser.userId);
         }),
       )
       .handle("remove", ({ path }) =>
@@ -57,7 +57,7 @@ export const TodosApiLive = HttpApiBuilder.group(
             `[HTTP API] Removing todo ${path.id} for user: ${currentUser.userId}`,
           );
           const todos = yield* TodosService;
-          return yield* todos.remove(path.id);
+          return yield* todos.remove(path.id, currentUser.userId);
         }),
       ),
 ).pipe(Layer.provide(TodosService.Default));
