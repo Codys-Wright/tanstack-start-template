@@ -24,10 +24,12 @@ export class TodosService extends Effect.Service<TodosService>()(
 
       const list = (ownerId: UserId) =>
         Effect.gen(function* () {
+          yield* Effect.log(`[TodosService.list] Fetching todos for owner: ${ownerId}`);
           const todos = yield* Ref.get(todosRef);
-          return Array.from(todos.values()).filter(
-            (todo) => todo.ownerId === ownerId,
-          );
+          const allTodos = Array.from(todos.values());
+          const filtered = allTodos.filter((todo) => todo.ownerId === ownerId);
+          yield* Effect.log(`[TodosService.list] Total todos: ${allTodos.length}, Filtered: ${filtered.length}`);
+          return filtered;
         });
 
       const getById = (id: TodoId, ownerId: UserId) =>
@@ -46,6 +48,7 @@ export class TodosService extends Effect.Service<TodosService>()(
 
       const create = (input: CreateTodoInput, ownerId: UserId) =>
         Effect.gen(function* () {
+          yield* Effect.log(`[TodosService.create] Creating todo "${input.title}" for owner: ${ownerId}`);
           const id = generateId();
           const now = yield* DateTime.now;
           const todo: Todo = {
@@ -60,6 +63,7 @@ export class TodosService extends Effect.Service<TodosService>()(
             newTodos.set(id, todo);
             return newTodos;
           });
+          yield* Effect.log(`[TodosService.create] Successfully created todo with id: ${id}`);
           return todo;
         });
 
