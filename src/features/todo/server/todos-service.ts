@@ -2,6 +2,7 @@ import * as Option from "effect/Option";
 import * as DateTime from "effect/DateTime";
 import * as Ref from "effect/Ref";
 import * as Effect from "effect/Effect";
+import type { UserId } from "@/features/auth/domain/user-id";
 import {
   CreateTodoInput,
   Todo,
@@ -21,22 +22,29 @@ export class TodosService extends Effect.Service<TodosService>()(
         return id as TodoId;
       };
 
-      const list = Effect.gen(function* () {
-        const todos = yield* Ref.get(todosRef);
-        return Array.from(todos.values());
-      });
+      const list = (ownerId: UserId) =>
+        Effect.gen(function* () {
+          const todos = yield* Ref.get(todosRef);
+          return Array.from(todos.values()).filter(
+            (todo) => todo.ownerId === ownerId,
+          );
+        });
 
-      const getById = (id: TodoId) =>
+      const getById = (id: TodoId, ownerId: UserId) =>
         Effect.gen(function* () {
           const todos = yield* Ref.get(todosRef);
           const todo = todos.get(id);
           if (!todo) {
             return yield* new TodoNotFound({ id });
           }
+          // Verify ownership
+          if (todo.ownerId !== ownerId) {
+            return yield* new TodoNotFound({ id });
+          }
           return todo;
         });
 
-      const create = (input: CreateTodoInput) =>
+      const create = (input: CreateTodoInput, ownerId: UserId) =>
         Effect.gen(function* () {
           const id = generateId();
           const now = yield* DateTime.now;
@@ -44,6 +52,7 @@ export class TodosService extends Effect.Service<TodosService>()(
             id,
             title: input.title,
             completed: false,
+            ownerId,
             createdAt: now,
           };
           yield* Ref.update(todosRef, (todos) => {
@@ -54,9 +63,9 @@ export class TodosService extends Effect.Service<TodosService>()(
           return todo;
         });
 
-      const update = (id: TodoId, input: UpdateTodoInput) =>
+      const update = (id: TodoId, input: UpdateTodoInput, ownerId: UserId) =>
         Effect.gen(function* () {
-          const existing = yield* getById(id);
+          const existing = yield* getById(id, ownerId);
           const updated: Todo = {
             ...existing,
             title: Option.getOrElse(input.title, () => existing.title),
@@ -73,9 +82,9 @@ export class TodosService extends Effect.Service<TodosService>()(
           return updated;
         });
 
-      const remove = (id: TodoId) =>
+      const remove = (id: TodoId, ownerId: UserId) =>
         Effect.gen(function* () {
-          yield* getById(id);
+          yield* getById(id, ownerId);
           yield* Ref.update(todosRef, (todos) => {
             const newTodos = new Map(todos);
             newTodos.delete(id);
