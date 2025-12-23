@@ -2,10 +2,9 @@ import * as HttpLayerRouter from "@effect/platform/HttpLayerRouter";
 import * as HttpServerRequest from "@effect/platform/HttpServerRequest";
 import * as HttpServerResponse from "@effect/platform/HttpServerResponse";
 import * as Effect from "effect/Effect";
-import * as Layer from "effect/Layer";
 import { Readable } from "node:stream";
 import type { ReadableStream as WebReadableStream } from "stream/web";
-import { Auth, AuthEnv, AuthKysely } from "./index.js";
+import { Auth } from "./index.js";
 
 export const betterAuthHandler = (req: HttpServerRequest.HttpServerRequest) =>
   Effect.gen(function* () {

@@ -13,7 +13,8 @@ import * as Logger from "effect/Logger";
 import * as Context from "effect/Context";
 import { DomainRpc, DomainApi } from "@/features/core/domain";
 import { TodosRpcLive, TodosApiLive } from "@/features/todo/server";
-import { CurrentUserRpcMiddlewareLive } from "@/features/auth/auth-middleware-live";
+import { AuthorizationMiddlewareLive } from "@/features/auth/server/http-auth-middleware";
+import { CurrentUserRpcMiddlewareLive } from "@/features/auth/server/rpc-auth-middleware";
 import { BetterAuthRouter, Auth } from "@/features/auth";
 import { serverRuntime } from "./server-runtime.js";
 
@@ -60,7 +61,11 @@ const RpcRouter = RpcServer.layerHttpRouter({
 // HttpApi router - FIXED
 const HttpApiRouter = HttpLayerRouter.addHttpApi(DomainApi, {
   openapiPath: "/api/openapi.json", // Built-in OpenAPI endpoint
-}).pipe(Layer.provide(TodosApiLive), Layer.provide(HttpServer.layerContext));
+}).pipe(
+  Layer.provide(TodosApiLive),
+  Layer.provide(AuthorizationMiddlewareLive), // Provide auth middleware
+  Layer.provide(HttpServer.layerContext),
+);
 
 // Scalar UI (modern OpenAPI docs) at /api/docs
 const ScalarDocs = HttpApiScalar.layerHttpLayerRouter({
