@@ -1,3 +1,6 @@
 [submodule "reference/better-auth-effect"]
 	path = reference/better-auth-effect
 	url = https://github.com/artimath/better-auth-effect.git
+[submodule "reference/better-auth-ui"]
+	path = reference/better-auth-ui
+	url = https://github.com/better-auth-ui/better-auth-ui.git
