@@ -1,7 +1,7 @@
 import { Result, useAtomRefresh, useAtomValue } from "@effect-atom/atom-react";
 import { todosAtom } from "./todos-atoms.js";
 import { TodoItem } from "./todo-item.js";
-import { Alert, AlertDescription, AlertTitle, Button } from "@shadcn";
+import { Alert, Button } from "@shadcn";
 
 export function TodoList() {
   const result = useAtomValue(todosAtom);
@@ -31,8 +31,8 @@ export function TodoList() {
           console.error("[TodoList] Failed to load todos:", error);
           return (
             <Alert variant="destructive">
-              <AlertTitle>Something went wrong loading todos.</AlertTitle>
-              <AlertDescription>
+              <Alert.Title>Something went wrong loading todos.</Alert.Title>
+              <Alert.Description>
                 <div className="mb-2 text-sm">
                   Error: {String(error)}
                 </div>
@@ -44,7 +44,7 @@ export function TodoList() {
                 >
                   Retry
                 </Button>
-              </AlertDescription>
+              </Alert.Description>
             </Alert>
           );
         })

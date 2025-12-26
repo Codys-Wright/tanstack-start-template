@@ -3,7 +3,7 @@ import { useAtomRefresh, useAtomSet } from "@effect-atom/atom-react";
 import * as Option from "effect/Option";
 import { useState, memo, useCallback } from "react";
 import { todosAtom, updateTodoAtom, deleteTodoAtom } from "./todos-atoms.js";
-import { Checkbox, Input, Button, Alert, AlertDescription, Badge } from "@shadcn";
+import { Checkbox, Input, Button, Alert, Badge } from "@shadcn";
 
 export const TodoItem = memo(function TodoItem({
   todo,
@@ -152,7 +152,7 @@ export const TodoItem = memo(function TodoItem({
       </div>
       {hasError && (
         <Alert variant="destructive" className="mt-2">
-          <AlertDescription>
+          <Alert.Description>
             Operation failed.{" "}
             <Button
               onClick={refreshTodos}
@@ -161,7 +161,7 @@ export const TodoItem = memo(function TodoItem({
             >
               Refresh
             </Button>
-          </AlertDescription>
+          </Alert.Description>
         </Alert>
       )}
     </li>

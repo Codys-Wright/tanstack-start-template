@@ -1,7 +1,7 @@
 import { Result, useAtom } from "@effect-atom/atom-react";
 import { useState } from "react";
 import { createTodoAtom } from "./todos-atoms.js";
-import { Input, Button, Alert, AlertDescription } from "@shadcn";
+import { Input, Button, Alert } from "@shadcn";
 
 export function CreateTodoForm() {
   const [title, setTitle] = useState("");
@@ -37,9 +37,9 @@ export function CreateTodoForm() {
       </form>
       {hasError && (
         <Alert variant="destructive" className="mt-2">
-          <AlertDescription>
+          <Alert.Description>
             Failed to create todo. Please try again.
-          </AlertDescription>
+          </Alert.Description>
         </Alert>
       )}
     </div>
