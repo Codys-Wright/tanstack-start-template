@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button, Input, Card, CardContent, CardHeader, CardTitle } from "@shadcn";
+import { Button, Input, Card } from "@shadcn";
 import { authClient } from "./auth.client";
 
 export function LoginForm() {
@@ -38,10 +38,10 @@ export function LoginForm() {
 
   return (
     <Card className="w-full max-w-md">
-      <CardHeader>
-        <CardTitle>Sign In</CardTitle>
-      </CardHeader>
-      <CardContent>
+      <Card.Header>
+        <Card.Title>Sign In</Card.Title>
+      </Card.Header>
+      <Card.Content>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label htmlFor="email" className="block text-sm font-medium mb-1">
@@ -83,7 +83,7 @@ export function LoginForm() {
             {loading ? "Signing in..." : "Sign In"}
           </Button>
         </form>
-      </CardContent>
+      </Card.Content>
     </Card>
   );
 }

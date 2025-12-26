@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useState } from "react";
-import { Button, Input, Card, CardContent, CardHeader, CardTitle } from "@shadcn";
+import { Button, Input, Card } from "@shadcn";
 import { Link } from "@tanstack/react-router";
 import { useAtom, Result } from "@effect-atom/atom-react";
 import { signInAtom } from "./auth.atoms";
@@ -37,10 +37,10 @@ export function SignInForm() {
 
   return (
     <Card className="w-full max-w-md">
-      <CardHeader>
-        <CardTitle>Sign In</CardTitle>
-      </CardHeader>
-      <CardContent>
+      <Card.Header>
+        <Card.Title>Sign In</Card.Title>
+      </Card.Header>
+      <Card.Content>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label htmlFor="email" className="block text-sm font-medium mb-1">
@@ -89,7 +89,7 @@ export function SignInForm() {
             Sign up
           </Link>
         </div>
-      </CardContent>
+      </Card.Content>
     </Card>
   );
 }
