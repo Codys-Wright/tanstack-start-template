@@ -4,7 +4,7 @@ import { MinusIcon } from "lucide-react"
 
 import { cn } from "@/features/ui/shadcn/lib/utils"
 
-function InputOTP({
+function InputOTPRoot({
   className,
   containerClassName,
   ...props
@@ -72,4 +72,12 @@ function InputOTPSeparator({ ...props }: React.ComponentProps<"div">) {
   )
 }
 
-export { InputOTP, InputOTPGroup, InputOTPSlot, InputOTPSeparator }
+export const InputOTP: React.FC<React.ComponentProps<typeof OTPInput> & { containerClassName?: string }> & {
+  Group: typeof InputOTPGroup
+  Slot: typeof InputOTPSlot
+  Separator: typeof InputOTPSeparator
+} = Object.assign(InputOTPRoot, {
+  Group: InputOTPGroup,
+  Slot: InputOTPSlot,
+  Separator: InputOTPSeparator,
+})

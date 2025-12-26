@@ -2,7 +2,7 @@ import * as React from "react"
 
 import { cn } from "@/features/ui/shadcn/lib/utils"
 
-function Card({ className, ...props }: React.ComponentProps<"div">) {
+function CardRoot({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="card"
@@ -81,12 +81,18 @@ function CardFooter({ className, ...props }: React.ComponentProps<"div">) {
   )
 }
 
-export {
-  Card,
-  CardHeader,
-  CardFooter,
-  CardTitle,
-  CardAction,
-  CardDescription,
-  CardContent,
-}
+export const Card: React.FC<React.ComponentProps<"div">> & {
+  Header: typeof CardHeader
+  Footer: typeof CardFooter
+  Title: typeof CardTitle
+  Action: typeof CardAction
+  Description: typeof CardDescription
+  Content: typeof CardContent
+} = Object.assign(CardRoot, {
+  Header: CardHeader,
+  Footer: CardFooter,
+  Title: CardTitle,
+  Action: CardAction,
+  Description: CardDescription,
+  Content: CardContent,
+})

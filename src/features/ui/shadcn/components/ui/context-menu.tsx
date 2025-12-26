@@ -6,7 +6,7 @@ import { CheckIcon, ChevronRightIcon, CircleIcon } from "lucide-react"
 
 import { cn } from "@/features/ui/shadcn/lib/utils"
 
-function ContextMenu({
+function ContextMenuRoot({
   ...props
 }: React.ComponentProps<typeof ContextMenuPrimitive.Root>) {
   return <ContextMenuPrimitive.Root data-slot="context-menu" {...props} />
@@ -233,20 +233,34 @@ function ContextMenuShortcut({
   )
 }
 
-export {
-  ContextMenu,
-  ContextMenuTrigger,
-  ContextMenuContent,
-  ContextMenuItem,
-  ContextMenuCheckboxItem,
-  ContextMenuRadioItem,
-  ContextMenuLabel,
-  ContextMenuSeparator,
-  ContextMenuShortcut,
-  ContextMenuGroup,
-  ContextMenuPortal,
-  ContextMenuSub,
-  ContextMenuSubContent,
-  ContextMenuSubTrigger,
-  ContextMenuRadioGroup,
-}
+export const ContextMenu: React.FC<React.ComponentProps<typeof ContextMenuPrimitive.Root>> & {
+  Trigger: typeof ContextMenuTrigger
+  Content: typeof ContextMenuContent
+  Item: typeof ContextMenuItem
+  CheckboxItem: typeof ContextMenuCheckboxItem
+  RadioItem: typeof ContextMenuRadioItem
+  Label: typeof ContextMenuLabel
+  Separator: typeof ContextMenuSeparator
+  Shortcut: typeof ContextMenuShortcut
+  Group: typeof ContextMenuGroup
+  Portal: typeof ContextMenuPortal
+  Sub: typeof ContextMenuSub
+  SubContent: typeof ContextMenuSubContent
+  SubTrigger: typeof ContextMenuSubTrigger
+  RadioGroup: typeof ContextMenuRadioGroup
+} = Object.assign(ContextMenuRoot, {
+  Trigger: ContextMenuTrigger,
+  Content: ContextMenuContent,
+  Item: ContextMenuItem,
+  CheckboxItem: ContextMenuCheckboxItem,
+  RadioItem: ContextMenuRadioItem,
+  Label: ContextMenuLabel,
+  Separator: ContextMenuSeparator,
+  Shortcut: ContextMenuShortcut,
+  Group: ContextMenuGroup,
+  Portal: ContextMenuPortal,
+  Sub: ContextMenuSub,
+  SubContent: ContextMenuSubContent,
+  SubTrigger: ContextMenuSubTrigger,
+  RadioGroup: ContextMenuRadioGroup,
+})

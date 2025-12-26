@@ -40,7 +40,7 @@ function useCarousel() {
   return context
 }
 
-function Carousel({
+function CarouselRoot({
   orientation = "horizontal",
   opts,
   setApi,
@@ -229,11 +229,17 @@ function CarouselNext({
   )
 }
 
-export {
-  type CarouselApi,
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselPrevious,
-  CarouselNext,
-}
+export const Carousel: React.FC<React.ComponentProps<"div"> & CarouselProps> & {
+  Content: typeof CarouselContent
+  Item: typeof CarouselItem
+  Previous: typeof CarouselPrevious
+  Next: typeof CarouselNext
+} = Object.assign(CarouselRoot, {
+  Content: CarouselContent,
+  Item: CarouselItem,
+  Previous: CarouselPrevious,
+  Next: CarouselNext,
+})
+
+// Also export the type
+export type { CarouselApi }

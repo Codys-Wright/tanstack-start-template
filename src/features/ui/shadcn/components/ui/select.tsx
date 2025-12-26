@@ -4,7 +4,7 @@ import { CheckIcon, ChevronDownIcon, ChevronUpIcon } from "lucide-react"
 
 import { cn } from "@/features/ui/shadcn/lib/utils"
 
-function Select({
+function SelectRoot({
   ...props
 }: React.ComponentProps<typeof SelectPrimitive.Root>) {
   return <SelectPrimitive.Root data-slot="select" {...props} />
@@ -174,15 +174,24 @@ function SelectScrollDownButton({
   )
 }
 
-export {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectScrollDownButton,
-  SelectScrollUpButton,
-  SelectSeparator,
-  SelectTrigger,
-  SelectValue,
-}
+export const Select: React.FC<React.ComponentProps<typeof SelectPrimitive.Root>> & {
+  Content: typeof SelectContent
+  Group: typeof SelectGroup
+  Item: typeof SelectItem
+  Label: typeof SelectLabel
+  ScrollDownButton: typeof SelectScrollDownButton
+  ScrollUpButton: typeof SelectScrollUpButton
+  Separator: typeof SelectSeparator
+  Trigger: typeof SelectTrigger
+  Value: typeof SelectValue
+} = Object.assign(SelectRoot, {
+  Content: SelectContent,
+  Group: SelectGroup,
+  Item: SelectItem,
+  Label: SelectLabel,
+  ScrollDownButton: SelectScrollDownButton,
+  ScrollUpButton: SelectScrollUpButton,
+  Separator: SelectSeparator,
+  Trigger: SelectTrigger,
+  Value: SelectValue,
+})

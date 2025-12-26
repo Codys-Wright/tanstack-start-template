@@ -4,7 +4,7 @@ import { XIcon } from "lucide-react"
 
 import { cn } from "@/features/ui/shadcn/lib/utils"
 
-function Sheet({ ...props }: React.ComponentProps<typeof SheetPrimitive.Root>) {
+function SheetRoot({ ...props }: React.ComponentProps<typeof SheetPrimitive.Root>) {
   return <SheetPrimitive.Root data-slot="sheet" {...props} />
 }
 
@@ -125,13 +125,20 @@ function SheetDescription({
   )
 }
 
-export {
-  Sheet,
-  SheetTrigger,
-  SheetClose,
-  SheetContent,
-  SheetHeader,
-  SheetFooter,
-  SheetTitle,
-  SheetDescription,
-}
+export const Sheet: React.FC<React.ComponentProps<typeof SheetPrimitive.Root>> & {
+  Trigger: typeof SheetTrigger
+  Close: typeof SheetClose
+  Content: typeof SheetContent
+  Header: typeof SheetHeader
+  Footer: typeof SheetFooter
+  Title: typeof SheetTitle
+  Description: typeof SheetDescription
+} = Object.assign(SheetRoot, {
+  Trigger: SheetTrigger,
+  Close: SheetClose,
+  Content: SheetContent,
+  Header: SheetHeader,
+  Footer: SheetFooter,
+  Title: SheetTitle,
+  Description: SheetDescription,
+})

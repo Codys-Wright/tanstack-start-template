@@ -8,7 +8,7 @@ import {
 import { cn } from "@/features/ui/shadcn/lib/utils"
 import { buttonVariants, type Button } from "@/features/ui/shadcn/components/ui/button"
 
-function Pagination({ className, ...props }: React.ComponentProps<"nav">) {
+function PaginationRoot({ className, ...props }: React.ComponentProps<"nav">) {
   return (
     <nav
       role="navigation"
@@ -116,12 +116,18 @@ function PaginationEllipsis({
   )
 }
 
-export {
-  Pagination,
-  PaginationContent,
-  PaginationLink,
-  PaginationItem,
-  PaginationPrevious,
-  PaginationNext,
-  PaginationEllipsis,
-}
+export const Pagination: React.FC<React.ComponentProps<"nav">> & {
+  Content: typeof PaginationContent
+  Link: typeof PaginationLink
+  Item: typeof PaginationItem
+  Previous: typeof PaginationPrevious
+  Next: typeof PaginationNext
+  Ellipsis: typeof PaginationEllipsis
+} = Object.assign(PaginationRoot, {
+  Content: PaginationContent,
+  Link: PaginationLink,
+  Item: PaginationItem,
+  Previous: PaginationPrevious,
+  Next: PaginationNext,
+  Ellipsis: PaginationEllipsis,
+})

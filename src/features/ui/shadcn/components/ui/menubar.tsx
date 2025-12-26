@@ -4,7 +4,7 @@ import { CheckIcon, ChevronRightIcon, CircleIcon } from "lucide-react"
 
 import { cn } from "@/features/ui/shadcn/lib/utils"
 
-function Menubar({
+function MenubarRoot({
   className,
   ...props
 }: React.ComponentProps<typeof MenubarPrimitive.Root>) {
@@ -254,21 +254,36 @@ function MenubarSubContent({
   )
 }
 
-export {
-  Menubar,
-  MenubarPortal,
-  MenubarMenu,
-  MenubarTrigger,
-  MenubarContent,
-  MenubarGroup,
-  MenubarSeparator,
-  MenubarLabel,
-  MenubarItem,
-  MenubarShortcut,
-  MenubarCheckboxItem,
-  MenubarRadioGroup,
-  MenubarRadioItem,
-  MenubarSub,
-  MenubarSubTrigger,
-  MenubarSubContent,
-}
+export const Menubar: React.FC<React.ComponentProps<typeof MenubarPrimitive.Root>> & {
+  Portal: typeof MenubarPortal
+  Menu: typeof MenubarMenu
+  Trigger: typeof MenubarTrigger
+  Content: typeof MenubarContent
+  Group: typeof MenubarGroup
+  Separator: typeof MenubarSeparator
+  Label: typeof MenubarLabel
+  Item: typeof MenubarItem
+  Shortcut: typeof MenubarShortcut
+  CheckboxItem: typeof MenubarCheckboxItem
+  RadioGroup: typeof MenubarRadioGroup
+  RadioItem: typeof MenubarRadioItem
+  Sub: typeof MenubarSub
+  SubTrigger: typeof MenubarSubTrigger
+  SubContent: typeof MenubarSubContent
+} = Object.assign(MenubarRoot, {
+  Portal: MenubarPortal,
+  Menu: MenubarMenu,
+  Trigger: MenubarTrigger,
+  Content: MenubarContent,
+  Group: MenubarGroup,
+  Separator: MenubarSeparator,
+  Label: MenubarLabel,
+  Item: MenubarItem,
+  Shortcut: MenubarShortcut,
+  CheckboxItem: MenubarCheckboxItem,
+  RadioGroup: MenubarRadioGroup,
+  RadioItem: MenubarRadioItem,
+  Sub: MenubarSub,
+  SubTrigger: MenubarSubTrigger,
+  SubContent: MenubarSubContent,
+})

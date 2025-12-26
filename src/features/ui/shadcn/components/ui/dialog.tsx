@@ -5,7 +5,7 @@ import { cva, type VariantProps } from "class-variance-authority"
 
 import { cn } from "@/features/ui/shadcn/lib/utils"
 
-function Dialog({
+function DialogRoot({
   ...props
 }: React.ComponentProps<typeof DialogPrimitive.Root>) {
   return <DialogPrimitive.Root data-slot="dialog" {...props} />
@@ -148,15 +148,24 @@ function DialogDescription({
   )
 }
 
-export {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogOverlay,
-  DialogPortal,
-  DialogTitle,
-  DialogTrigger,
-}
+export const Dialog: React.FC<React.ComponentProps<typeof DialogPrimitive.Root>> & {
+  Close: typeof DialogClose
+  Content: typeof DialogContent
+  Description: typeof DialogDescription
+  Footer: typeof DialogFooter
+  Header: typeof DialogHeader
+  Overlay: typeof DialogOverlay
+  Portal: typeof DialogPortal
+  Title: typeof DialogTitle
+  Trigger: typeof DialogTrigger
+} = Object.assign(DialogRoot, {
+  Close: DialogClose,
+  Content: DialogContent,
+  Description: DialogDescription,
+  Footer: DialogFooter,
+  Header: DialogHeader,
+  Overlay: DialogOverlay,
+  Portal: DialogPortal,
+  Title: DialogTitle,
+  Trigger: DialogTrigger,
+})

@@ -34,7 +34,7 @@ function useChart() {
   return context
 }
 
-function ChartContainer({
+function ChartContainerRoot({
   id,
   className,
   children,
@@ -347,11 +347,19 @@ function getPayloadConfigFromPayload(
     : config[key as keyof typeof config]
 }
 
-export {
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-  ChartLegend,
-  ChartLegendContent,
-  ChartStyle,
-}
+export const Chart: React.FC<React.ComponentProps<"div"> & { config: ChartConfig; children: React.ComponentProps<typeof RechartsPrimitive.ResponsiveContainer>["children"] }> & {
+  Tooltip: typeof RechartsPrimitive.Tooltip
+  TooltipContent: typeof ChartTooltipContent
+  Legend: typeof RechartsPrimitive.Legend
+  LegendContent: typeof ChartLegendContent
+  Style: typeof ChartStyle
+} = Object.assign(ChartContainerRoot, {
+  Tooltip: RechartsPrimitive.Tooltip,
+  TooltipContent: ChartTooltipContent,
+  Legend: RechartsPrimitive.Legend,
+  LegendContent: ChartLegendContent,
+  Style: ChartStyle,
+})
+
+// Keep ChartContainer as an alias for backward compatibility
+export { ChartContainerRoot as ChartContainer }

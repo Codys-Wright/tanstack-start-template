@@ -4,7 +4,7 @@ import * as AlertDialogPrimitive from "@radix-ui/react-alert-dialog"
 import { cn } from "@/features/ui/shadcn/lib/utils"
 import { buttonVariants } from "@/features/ui/shadcn/components/ui/button"
 
-function AlertDialog({
+function AlertDialogRoot({
   ...props
 }: React.ComponentProps<typeof AlertDialogPrimitive.Root>) {
   return <AlertDialogPrimitive.Root data-slot="alert-dialog" {...props} />
@@ -140,16 +140,26 @@ function AlertDialogCancel({
   )
 }
 
-export {
-  AlertDialog,
-  AlertDialogPortal,
-  AlertDialogOverlay,
-  AlertDialogTrigger,
-  AlertDialogContent,
-  AlertDialogHeader,
-  AlertDialogFooter,
-  AlertDialogTitle,
-  AlertDialogDescription,
-  AlertDialogAction,
-  AlertDialogCancel,
-}
+export const AlertDialog: React.FC<React.ComponentProps<typeof AlertDialogPrimitive.Root>> & {
+  Portal: typeof AlertDialogPortal
+  Overlay: typeof AlertDialogOverlay
+  Trigger: typeof AlertDialogTrigger
+  Content: typeof AlertDialogContent
+  Header: typeof AlertDialogHeader
+  Footer: typeof AlertDialogFooter
+  Title: typeof AlertDialogTitle
+  Description: typeof AlertDialogDescription
+  Action: typeof AlertDialogAction
+  Cancel: typeof AlertDialogCancel
+} = Object.assign(AlertDialogRoot, {
+  Portal: AlertDialogPortal,
+  Overlay: AlertDialogOverlay,
+  Trigger: AlertDialogTrigger,
+  Content: AlertDialogContent,
+  Header: AlertDialogHeader,
+  Footer: AlertDialogFooter,
+  Title: AlertDialogTitle,
+  Description: AlertDialogDescription,
+  Action: AlertDialogAction,
+  Cancel: AlertDialogCancel,
+})

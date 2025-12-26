@@ -2,7 +2,7 @@ import * as React from "react"
 
 import { cn } from "@/features/ui/shadcn/lib/utils"
 
-function Table({ className, ...props }: React.ComponentProps<"table">) {
+function TableRoot({ className, ...props }: React.ComponentProps<"table">) {
   return (
     <div
       data-slot="table-container"
@@ -102,13 +102,20 @@ function TableCaption({
   )
 }
 
-export {
-  Table,
-  TableHeader,
-  TableBody,
-  TableFooter,
-  TableHead,
-  TableRow,
-  TableCell,
-  TableCaption,
-}
+export const Table: React.FC<React.ComponentProps<"table">> & {
+  Header: typeof TableHeader
+  Body: typeof TableBody
+  Footer: typeof TableFooter
+  Head: typeof TableHead
+  Row: typeof TableRow
+  Cell: typeof TableCell
+  Caption: typeof TableCaption
+} = Object.assign(TableRoot, {
+  Header: TableHeader,
+  Body: TableBody,
+  Footer: TableFooter,
+  Head: TableHead,
+  Row: TableRow,
+  Cell: TableCell,
+  Caption: TableCaption,
+})

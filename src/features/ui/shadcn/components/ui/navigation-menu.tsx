@@ -5,7 +5,7 @@ import { ChevronDownIcon } from "lucide-react"
 
 import { cn } from "@/features/ui/shadcn/lib/utils"
 
-function NavigationMenu({
+function NavigationMenuRoot({
   className,
   children,
   viewport = true,
@@ -155,14 +155,23 @@ function NavigationMenuIndicator({
   )
 }
 
-export {
-  NavigationMenu,
-  NavigationMenuList,
-  NavigationMenuItem,
-  NavigationMenuContent,
-  NavigationMenuTrigger,
-  NavigationMenuLink,
-  NavigationMenuIndicator,
-  NavigationMenuViewport,
-  navigationMenuTriggerStyle,
-}
+export const NavigationMenu: React.FC<React.ComponentProps<typeof NavigationMenuPrimitive.Root> & { viewport?: boolean }> & {
+  List: typeof NavigationMenuList
+  Item: typeof NavigationMenuItem
+  Content: typeof NavigationMenuContent
+  Trigger: typeof NavigationMenuTrigger
+  Link: typeof NavigationMenuLink
+  Indicator: typeof NavigationMenuIndicator
+  Viewport: typeof NavigationMenuViewport
+} = Object.assign(NavigationMenuRoot, {
+  List: NavigationMenuList,
+  Item: NavigationMenuItem,
+  Content: NavigationMenuContent,
+  Trigger: NavigationMenuTrigger,
+  Link: NavigationMenuLink,
+  Indicator: NavigationMenuIndicator,
+  Viewport: NavigationMenuViewport,
+})
+
+// Also export the utility
+export { navigationMenuTriggerStyle }

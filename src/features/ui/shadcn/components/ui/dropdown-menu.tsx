@@ -4,7 +4,7 @@ import { CheckIcon, ChevronRightIcon, CircleIcon } from "lucide-react"
 
 import { cn } from "@/features/ui/shadcn/lib/utils"
 
-function DropdownMenu({
+function DropdownMenuRoot({
   ...props
 }: React.ComponentProps<typeof DropdownMenuPrimitive.Root>) {
   return <DropdownMenuPrimitive.Root data-slot="dropdown-menu" {...props} />
@@ -236,20 +236,34 @@ function DropdownMenuSubContent({
   )
 }
 
-export {
-  DropdownMenu,
-  DropdownMenuPortal,
-  DropdownMenuTrigger,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuLabel,
-  DropdownMenuItem,
-  DropdownMenuCheckboxItem,
-  DropdownMenuRadioGroup,
-  DropdownMenuRadioItem,
-  DropdownMenuSeparator,
-  DropdownMenuShortcut,
-  DropdownMenuSub,
-  DropdownMenuSubTrigger,
-  DropdownMenuSubContent,
-}
+export const DropdownMenu: React.FC<React.ComponentProps<typeof DropdownMenuPrimitive.Root>> & {
+  Portal: typeof DropdownMenuPortal
+  Trigger: typeof DropdownMenuTrigger
+  Content: typeof DropdownMenuContent
+  Group: typeof DropdownMenuGroup
+  Label: typeof DropdownMenuLabel
+  Item: typeof DropdownMenuItem
+  CheckboxItem: typeof DropdownMenuCheckboxItem
+  RadioGroup: typeof DropdownMenuRadioGroup
+  RadioItem: typeof DropdownMenuRadioItem
+  Separator: typeof DropdownMenuSeparator
+  Shortcut: typeof DropdownMenuShortcut
+  Sub: typeof DropdownMenuSub
+  SubTrigger: typeof DropdownMenuSubTrigger
+  SubContent: typeof DropdownMenuSubContent
+} = Object.assign(DropdownMenuRoot, {
+  Portal: DropdownMenuPortal,
+  Trigger: DropdownMenuTrigger,
+  Content: DropdownMenuContent,
+  Group: DropdownMenuGroup,
+  Label: DropdownMenuLabel,
+  Item: DropdownMenuItem,
+  CheckboxItem: DropdownMenuCheckboxItem,
+  RadioGroup: DropdownMenuRadioGroup,
+  RadioItem: DropdownMenuRadioItem,
+  Separator: DropdownMenuSeparator,
+  Shortcut: DropdownMenuShortcut,
+  Sub: DropdownMenuSub,
+  SubTrigger: DropdownMenuSubTrigger,
+  SubContent: DropdownMenuSubContent,
+})
