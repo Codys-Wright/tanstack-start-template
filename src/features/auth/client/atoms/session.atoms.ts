@@ -104,6 +104,129 @@ class AuthApi extends Effect.Service<AuthApi>()("@features/auth/AuthApi", {
 						`Sign up failed: ${error instanceof Error ? error.message : error}`,
 					),
 			}),
+
+	forgotPassword: (email: string) =>
+		Effect.tryPromise({
+			try: async () => {
+				const result = await authClient.requestPasswordReset({
+					email,
+					redirectTo: `${window.location.origin}/auth/reset-password`,
+				});
+				if (result.error) {
+					throw new Error(result.error.message || "Password reset request failed");
+				}
+				return result.data;
+			},
+			catch: (error) =>
+				new Error(
+					`Password reset request failed: ${error instanceof Error ? error.message : String(error)}`,
+				),
+		}),
+
+	resetPassword: (newPassword: string, token: string) =>
+		Effect.tryPromise({
+			try: async () => {
+				const result = await authClient.resetPassword({
+					newPassword,
+					token,
+				});
+				if (result.error) {
+					throw new Error(result.error.message || "Password reset failed");
+				}
+				return result.data;
+			},
+			catch: (error) =>
+				new Error(
+					`Password reset failed: ${error instanceof Error ? error.message : String(error)}`,
+				),
+		}),
+
+	verifyTwoFactor: (code: string, trustDevice?: boolean) =>
+		Effect.tryPromise({
+			try: async () => {
+				const result = await authClient.twoFactor.verifyOtp({
+					code,
+					trustDevice: trustDevice ?? false,
+				});
+				if (result.error) {
+					throw new Error(result.error.message || "2FA verification failed");
+				}
+				return result.data;
+			},
+			catch: (error) =>
+				new Error(
+					`2FA verification failed: ${error instanceof Error ? error.message : String(error)}`,
+				),
+		}),
+
+		recoverAccount: (code: string) =>
+		Effect.tryPromise({
+			try: async () => {
+				const result = await authClient.twoFactor.verifyBackupCode({
+					code,
+				});
+				if (result.error) {
+					throw new Error(result.error.message || "Account recovery failed");
+				}
+				return result.data;
+			},
+			catch: (error) =>
+				new Error(
+					`Account recovery failed: ${error instanceof Error ? error.message : String(error)}`,
+				),
+		}),
+
+	updateName: (name: string) =>
+		Effect.tryPromise({
+			try: async () => {
+				const result = await authClient.updateUser({
+					name,
+				});
+				if (result.error) {
+					throw new Error(result.error.message || "Failed to update name");
+				}
+				return result.data;
+			},
+			catch: (error) =>
+				new Error(
+					`Failed to update name: ${error instanceof Error ? error.message : String(error)}`,
+				),
+		}),
+
+	updateImage: (image: string) =>
+		Effect.tryPromise({
+			try: async () => {
+				const result = await authClient.updateUser({
+					image,
+				});
+				if (result.error) {
+					throw new Error(result.error.message || "Failed to update avatar");
+				}
+				return result.data;
+			},
+			catch: (error) =>
+				new Error(
+					`Failed to update avatar: ${error instanceof Error ? error.message : String(error)}`,
+				),
+		}),
+
+	changeEmail: (newEmail: string) =>
+		Effect.tryPromise({
+			try: async () => {
+				const result = await authClient.changeEmail({
+					newEmail,
+					callbackURL: `${window.location.origin}/account/settings`,
+				});
+				if (result.error) {
+					throw new Error(result.error.message || "Failed to change email");
+				}
+				return result.data;
+			},
+			catch: (error) =>
+				new Error(
+					`Failed to change email: ${error instanceof Error ? error.message : String(error)}`,
+				),
+		}),
 	})),
 }) {}
 
@@ -231,5 +354,128 @@ export const signUpAtom = authRuntime.fn<SignUpInput>()(
 		get.set(sessionAtom, freshSession);
 
 		return signUpResponse;
+	}),
+);
+
+/**
+ * forgotPasswordAtom - Atom effect for requesting password reset
+ *
+ * On success:
+ * 1. Sends password reset email to user
+ * 2. User can then use the link in email to reset their password
+ */
+export const forgotPasswordAtom = authRuntime.fn<{ email: string }>()(
+	Effect.fnUntraced(function* (input) {
+		const api = yield* AuthApi;
+		return yield* api.forgotPassword(input.email);
+	}),
+);
+
+/**
+ * resetPasswordAtom - Atom effect for resetting password with token
+ *
+ * On success:
+ * 1. Updates user's password
+ * 2. User can then sign in with new password
+ */
+export const resetPasswordAtom = authRuntime.fn<{ newPassword: string; token: string }>()(
+	Effect.fnUntraced(function* (input) {
+		const api = yield* AuthApi;
+		return yield* api.resetPassword(input.newPassword, input.token);
+	}),
+);
+
+/**
+ * verifyTwoFactorAtom - Atom effect for verifying 2FA code
+ *
+ * On success:
+ * 1. Verifies OTP code
+ * 2. Updates sessionAtom with fresh session data
+ * 3. Optionally trusts the device for future logins
+ */
+export const verifyTwoFactorAtom = authRuntime.fn<{ code: string; trustDevice?: boolean }>()(
+	Effect.fnUntraced(function* (input, get) {
+		const api = yield* AuthApi;
+		const result = yield* api.verifyTwoFactor(input.code, input.trustDevice);
+
+		// After successful 2FA verification, fetch fresh session
+		const freshSession = yield* api.getSession();
+		get.set(sessionAtom, freshSession);
+
+		return result;
+	}),
+);
+
+/**
+ * recoverAccountAtom - Atom effect for account recovery using backup codes
+ *
+ * On success:
+ * 1. Uses backup code to recover account
+ * 2. Updates sessionAtom with fresh session data
+ */
+export const recoverAccountAtom = authRuntime.fn<{ code: string }>()(
+	Effect.fnUntraced(function* (input, get) {
+		const api = yield* AuthApi;
+		const result = yield* api.recoverAccount(input.code);
+
+		// After successful recovery, fetch fresh session
+		const freshSession = yield* api.getSession();
+		get.set(sessionAtom, freshSession);
+
+		return result;
+	}),
+);
+
+/**
+ * updateNameAtom - Atom effect for updating user name
+ *
+ * On success:
+ * 1. Updates user name
+ * 2. Updates sessionAtom with fresh session data
+ */
+export const updateNameAtom = authRuntime.fn<{ name: string }>()(
+	Effect.fnUntraced(function* (input, get) {
+		const api = yield* AuthApi;
+		const result = yield* api.updateName(input.name);
+
+		// After successful update, fetch fresh session
+		const freshSession = yield* api.getSession();
+		get.set(sessionAtom, freshSession);
+
+		return result;
+	}),
+);
+
+/**
+ * updateImageAtom - Atom effect for updating user avatar
+ *
+ * On success:
+ * 1. Updates user avatar
+ * 2. Updates sessionAtom with fresh session data
+ */
+export const updateImageAtom = authRuntime.fn<{ image: string }>()(
+	Effect.fnUntraced(function* (input, get) {
+		const api = yield* AuthApi;
+		const result = yield* api.updateImage(input.image);
+
+		// After successful update, fetch fresh session
+		const freshSession = yield* api.getSession();
+		get.set(sessionAtom, freshSession);
+
+		return result;
+	}),
+);
+
+/**
+ * changeEmailAtom - Atom effect for changing user email
+ *
+ * On success:
+ * 1. Initiates email change process
+ * 2. User must verify new email via link
+ */
+export const changeEmailAtom = authRuntime.fn<{ newEmail: string }>()(
+	Effect.fnUntraced(function* (input) {
+		const api = yield* AuthApi;
+		return yield* api.changeEmail(input.newEmail);
 	}),
 );

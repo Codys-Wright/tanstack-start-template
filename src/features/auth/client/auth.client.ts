@@ -1,14 +1,18 @@
 import { createAuthClient } from "better-auth/react";
-import { organizationClient } from "better-auth/client/plugins";
+import {
+  adminClient,
+  organizationClient,
+  twoFactorClient,
+} from "better-auth/client/plugins";
 import { passkeyClient } from "@better-auth/passkey/client";
-import { twoFactorClient } from "better-auth/client/plugins";
 
 /**
- * Better Auth client for React components with organization, passkey, and 2FA support.
+ * Better Auth client for React components with admin, organization, passkey, and 2FA support.
  *
  * Features:
  * - Email/password authentication
  * - Google OAuth
+ * - Admin operations (create users, ban, impersonate, etc.)
  * - Organizations with members and invitations
  * - Teams within organizations
  * - Passkeys (WebAuthn)
@@ -28,6 +32,12 @@ import { twoFactorClient } from "better-auth/client/plugins";
  * // Create organization
  * await authClient.organization.create({ name: "My Org" });
  *
+ * // Admin: Ban user
+ * await authClient.admin.banUser({
+ *   userId: "user-id",
+ *   banReason: "Spamming",
+ * });
+ *
  * // Get session
  * const { data: session } = await authClient.getSession();
  *
@@ -36,8 +46,17 @@ import { twoFactorClient } from "better-auth/client/plugins";
  * ```
  */
 export const authClient = createAuthClient({
-	baseURL: typeof window !== "undefined" ? window.location.origin : "",
-	plugins: [organizationClient(), passkeyClient(), twoFactorClient()],
+  baseURL: typeof window !== "undefined" ? window.location.origin : "",
+  plugins: [
+    adminClient(),
+    organizationClient({
+      teams: {
+        enabled: true,
+      },
+    }),
+    passkeyClient(),
+    twoFactorClient(),
+  ],
 });
 
 // Export inferred types from the client

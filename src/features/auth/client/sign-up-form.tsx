@@ -1,134 +1,298 @@
-import { useEffect } from "react";
-import { useState } from "react";
-import { Button, Input, Card } from "@shadcn";
-import { Link } from "@tanstack/react-router";
-import { useAtom, Result } from "@effect-atom/atom-react";
-import { signUpAtom } from "./auth.atoms";
-import type { SignUpInput } from "../domain";
+import { Button, Card, Input, cn } from "@shadcn"
+import { Link } from "@tanstack/react-router"
+import { Result, useAtom } from "@effect-atom/atom-react"
+import { useForm } from "@tanstack/react-form"
+import { Loader2Icon } from "lucide-react"
+import { useEffect } from "react"
+import * as Schema from "effect/Schema"
 
-export function SignUpForm() {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+import { signUpAtom } from "./atoms/session.atoms.js"
+import type { SignUpInput } from "../domain/index.js"
 
-  const [signUpResult, signUp] = useAtom(signUpAtom);
+// Define the form schema using Effect Schema
+const SignUpSchema = Schema.Struct({
+	name: Schema.String,
+	email: Schema.String,
+	password: Schema.String,
+	confirmPassword: Schema.String,
+})
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!name.trim() || !email.trim() || !password.trim()) return;
-    if (password !== confirmPassword) return;
+export interface SignUpFormProps {
+	className?: string
+	redirectTo?: string
+}
 
-    const input: SignUpInput = {
-      name: name.trim(),
-      email: email.trim(),
-      password,
-      callbackURL: "/",
-    };
+export function SignUpForm({ className, redirectTo = "/" }: SignUpFormProps) {
+	const [signUpResult, signUp] = useAtom(signUpAtom)
 
-    signUp(input);
-  };
+	const form = useForm({
+		defaultValues: {
+			name: "",
+			email: "",
+			password: "",
+			confirmPassword: "",
+		},
+		onSubmit: async ({ value }) => {
+			try {
+				// Validate passwords match
+				if (value.password !== value.confirmPassword) {
+					// Validation errors are handled by field validators
+					return
+				}
 
-  // Handle success/error states
-  useEffect(() => {
-    if (Result.isSuccess(signUpResult)) {
-      // Redirect will happen via callbackURL
-      window.location.href = "/";
-    }
-  }, [signUpResult]);
+				// Validate using Effect Schema
+				const validated = Schema.decodeSync(SignUpSchema)(value)
 
-  const hasError = Result.isFailure(signUpResult);
-  const passwordsMatch = password === confirmPassword;
-  const isFormValid = name.trim() && email.trim() && password.trim() && passwordsMatch;
+				const input: SignUpInput = {
+					email: validated.email,
+					password: validated.password,
+					name: validated.name,
+					callbackURL: redirectTo,
+				}
 
-  return (
-    <Card className="w-full max-w-md">
-      <Card.Header>
-        <Card.Title>Sign Up</Card.Title>
-      </Card.Header>
-      <Card.Content>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label htmlFor="name" className="block text-sm font-medium mb-1">
-              Name
-            </label>
-            <Input
-              id="name"
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="Your name"
-              required
-              disabled={signUpResult.waiting}
-            />
-          </div>
+				signUp(input)
+			} catch {
+				// Validation errors are handled by field validators
+				// This shouldn't be reached in normal flow
+			}
+		},
+	})
 
-          <div>
-            <label htmlFor="email" className="block text-sm font-medium mb-1">
-              Email
-            </label>
-            <Input
-              id="email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="you@example.com"
-              required
-              disabled={signUpResult.waiting}
-            />
-          </div>
+	// Handle successful sign up
+	useEffect(() => {
+		if (Result.isSuccess(signUpResult)) {
+			window.location.href = redirectTo
+		}
+	}, [signUpResult, redirectTo])
 
-          <div>
-            <label htmlFor="password" className="block text-sm font-medium mb-1">
-              Password
-            </label>
-            <Input
-              id="password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="••••••••"
-              required
-              disabled={signUpResult.waiting}
-            />
-          </div>
+	const isLoading = Result.isInitial(signUpResult) && signUpResult.waiting
+	const error = Result.builder(signUpResult)
+		.onFailure((failure) => failure)
+		.orNull()
 
-          <div>
-            <label htmlFor="confirmPassword" className="block text-sm font-medium mb-1">
-              Confirm Password
-            </label>
-            <Input
-              id="confirmPassword"
-              type="password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              placeholder="••••••••"
-              required
-              disabled={signUpResult.waiting}
-            />
-            {confirmPassword && !passwordsMatch && (
-              <p className="text-sm text-red-600 mt-1">Passwords do not match</p>
-            )}
-          </div>
+	return (
+		<Card className={cn("w-full max-w-sm", className)}>
+			<Card.Header>
+				<Card.Title>Create Account</Card.Title>
+				<Card.Description>Sign up to get started</Card.Description>
+			</Card.Header>
 
-          {hasError && (
-            <div className="text-sm text-red-600 bg-red-50 p-2 rounded">
-              Failed to sign up. Please try again.
-            </div>
-          )}
+			<Card.Content>
+				<form
+					onSubmit={(e) => {
+						e.preventDefault()
+						void form.handleSubmit()
+					}}
+					className="space-y-4"
+				>
+					{/* Name Field */}
+					<form.Field
+						name="name"
+						validators={{
+							onChange: ({ value }) => {
+								if (!value) return "Name is required"
+								return undefined
+							},
+						}}
+					>
+						{(field) => (
+							<div className="space-y-1">
+								<label htmlFor={field.name} className="text-sm font-medium">
+									Full Name
+								</label>
+								<Input
+									id={field.name}
+									type="text"
+									name={field.name}
+									value={field.state.value}
+									onChange={(e) => field.handleChange(e.currentTarget.value)}
+									onBlur={field.handleBlur}
+									placeholder="John Doe"
+									disabled={isLoading}
+									autoComplete="name"
+									required
+									className={cn(
+										field.state.meta.errors.length > 0 && "border-destructive",
+									)}
+								/>
+								{field.state.meta.errors.length > 0 && (
+									<p className="text-xs text-destructive">
+										{field.state.meta.errors.join(", ")}
+									</p>
+								)}
+							</div>
+						)}
+					</form.Field>
 
-          <Button type="submit" disabled={signUpResult.waiting || !isFormValid} className="w-full">
-            {signUpResult.waiting ? "Signing up..." : "Sign Up"}
-          </Button>
-        </form>
+					{/* Email Field */}
+					<form.Field
+						name="email"
+						validators={{
+							onChange: ({ value }) => {
+								if (!value) return "Email is required"
+								if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+									return "Invalid email format"
+								}
+								return undefined
+							},
+						}}
+					>
+						{(field) => (
+							<div className="space-y-1">
+								<label htmlFor={field.name} className="text-sm font-medium">
+									Email
+								</label>
+								<Input
+									id={field.name}
+									type="email"
+									name={field.name}
+									value={field.state.value}
+									onChange={(e) => field.handleChange(e.currentTarget.value)}
+									onBlur={field.handleBlur}
+									placeholder="you@example.com"
+									disabled={isLoading}
+									autoComplete="email"
+									required
+									className={cn(
+										field.state.meta.errors.length > 0 && "border-destructive",
+									)}
+								/>
+								{field.state.meta.errors.length > 0 && (
+									<p className="text-xs text-destructive">
+										{field.state.meta.errors.join(", ")}
+									</p>
+								)}
+							</div>
+						)}
+					</form.Field>
 
-        <div className="mt-4 text-center text-sm text-muted-foreground">
-          Already have an account?{" "}
-          <Link to="/sign-in" className="text-primary hover:underline">
-            Sign in
-          </Link>
-        </div>
-      </Card.Content>
-    </Card>
-  );
+					{/* Password Field */}
+					<form.Field
+						name="password"
+						validators={{
+							onChange: ({ value }) => {
+								if (!value) return "Password is required"
+								if (value.length < 8) {
+									return "Password must be at least 8 characters"
+								}
+								return undefined
+							},
+						}}
+					>
+						{(field) => (
+							<div className="space-y-1">
+								<label htmlFor={field.name} className="text-sm font-medium">
+									Password
+								</label>
+								<Input
+									id={field.name}
+									type="password"
+									name={field.name}
+									value={field.state.value}
+									onChange={(e) => field.handleChange(e.currentTarget.value)}
+									onBlur={field.handleBlur}
+									placeholder="••••••••"
+									disabled={isLoading}
+									autoComplete="new-password"
+									required
+									className={cn(
+										field.state.meta.errors.length > 0 && "border-destructive",
+									)}
+								/>
+								{field.state.meta.errors.length > 0 && (
+									<p className="text-xs text-destructive">
+										{field.state.meta.errors.join(", ")}
+									</p>
+								)}
+							</div>
+						)}
+					</form.Field>
+
+					{/* Confirm Password Field */}
+					<form.Field
+						name="confirmPassword"
+						validators={{
+							onChange: ({ value }) => {
+								if (!value) return "Confirm password is required"
+								const password = form.getFieldValue("password")
+								if (value !== password) {
+									return "Passwords do not match"
+								}
+								return undefined
+							},
+						}}
+					>
+						{(field) => (
+							<div className="space-y-1">
+								<label htmlFor={field.name} className="text-sm font-medium">
+									Confirm Password
+								</label>
+								<Input
+									id={field.name}
+									type="password"
+									name={field.name}
+									value={field.state.value}
+									onChange={(e) => field.handleChange(e.currentTarget.value)}
+									onBlur={field.handleBlur}
+									placeholder="••••••••"
+									disabled={isLoading}
+									autoComplete="new-password"
+									required
+									className={cn(
+										field.state.meta.errors.length > 0 && "border-destructive",
+									)}
+								/>
+								{field.state.meta.errors.length > 0 && (
+									<p className="text-xs text-destructive">
+										{field.state.meta.errors.join(", ")}
+									</p>
+								)}
+							</div>
+						)}
+					</form.Field>
+
+				{/* Error Message */}
+				{error && (
+					<div className="bg-destructive/10 border border-destructive/30 rounded p-3 text-sm text-destructive">
+						{error instanceof Error ? error.message : "Failed to sign up. Please try again."}
+					</div>
+				)}
+
+					{/* Submit Button */}
+					<form.Subscribe selector={(state) => state.isSubmitting}>
+						{(isSubmitting) => (
+							<Button
+								type="submit"
+								disabled={isLoading || isSubmitting}
+								className="w-full"
+							>
+								{isLoading || isSubmitting ? (
+									<>
+										<Loader2Icon className="mr-2 size-4 animate-spin" />
+										Creating account...
+									</>
+								) : (
+									"Sign Up"
+								)}
+							</Button>
+						)}
+					</form.Subscribe>
+				</form>
+
+				{/* Footer Links */}
+				<div className="mt-4 text-center text-sm text-muted-foreground">
+					<p>
+						Already have an account?{" "}
+						<Link
+							to="/auth/$authView"
+							params={{ authView: "sign-in" }}
+							className="text-primary hover:underline"
+						>
+							Sign in
+						</Link>
+					</p>
+				</div>
+			</Card.Content>
+		</Card>
+	)
 }

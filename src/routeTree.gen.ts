@@ -10,29 +10,21 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TestRouteImport } from './routes/test'
-import { Route as SignUpRouteImport } from './routes/sign-up'
-import { Route as SignInRouteImport } from './routes/sign-in'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as SplatRouteImport } from './routes/$'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as OrganizationOrganizationViewRouteImport } from './routes/organization/$organizationView'
 import { Route as AuthCallbackRouteImport } from './routes/auth/callback'
+import { Route as AuthAuthViewRouteImport } from './routes/auth/$authView'
 import { Route as ApiSplatRouteImport } from './routes/api/$'
+import { Route as AccountAccountViewRouteImport } from './routes/account/$accountView'
 
 const TestRoute = TestRouteImport.update({
   id: '/test',
   path: '/test',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SignUpRoute = SignUpRouteImport.update({
-  id: '/sign-up',
-  path: '/sign-up',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SignInRoute = SignInRouteImport.update({
-  id: '/sign-in',
-  path: '/sign-in',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SettingsRoute = SettingsRouteImport.update({
@@ -43,6 +35,11 @@ const SettingsRoute = SettingsRouteImport.update({
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AboutRoute = AboutRouteImport.update({
@@ -60,9 +57,20 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const OrganizationOrganizationViewRoute =
+  OrganizationOrganizationViewRouteImport.update({
+    id: '/organization/$organizationView',
+    path: '/organization/$organizationView',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const AuthCallbackRoute = AuthCallbackRouteImport.update({
   id: '/auth/callback',
   path: '/auth/callback',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthAuthViewRoute = AuthAuthViewRouteImport.update({
+  id: '/auth/$authView',
+  path: '/auth/$authView',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiSplatRoute = ApiSplatRouteImport.update({
@@ -70,43 +78,54 @@ const ApiSplatRoute = ApiSplatRouteImport.update({
   path: '/api/$',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AccountAccountViewRoute = AccountAccountViewRouteImport.update({
+  id: '/account/$accountView',
+  path: '/account/$accountView',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/$': typeof SplatRoute
   '/about': typeof AboutRoute
+  '/admin': typeof AdminRoute
   '/login': typeof LoginRoute
   '/settings': typeof SettingsRoute
-  '/sign-in': typeof SignInRoute
-  '/sign-up': typeof SignUpRoute
   '/test': typeof TestRoute
+  '/account/$accountView': typeof AccountAccountViewRoute
   '/api/$': typeof ApiSplatRoute
+  '/auth/$authView': typeof AuthAuthViewRoute
   '/auth/callback': typeof AuthCallbackRoute
+  '/organization/$organizationView': typeof OrganizationOrganizationViewRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/$': typeof SplatRoute
   '/about': typeof AboutRoute
+  '/admin': typeof AdminRoute
   '/login': typeof LoginRoute
   '/settings': typeof SettingsRoute
-  '/sign-in': typeof SignInRoute
-  '/sign-up': typeof SignUpRoute
   '/test': typeof TestRoute
+  '/account/$accountView': typeof AccountAccountViewRoute
   '/api/$': typeof ApiSplatRoute
+  '/auth/$authView': typeof AuthAuthViewRoute
   '/auth/callback': typeof AuthCallbackRoute
+  '/organization/$organizationView': typeof OrganizationOrganizationViewRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/$': typeof SplatRoute
   '/about': typeof AboutRoute
+  '/admin': typeof AdminRoute
   '/login': typeof LoginRoute
   '/settings': typeof SettingsRoute
-  '/sign-in': typeof SignInRoute
-  '/sign-up': typeof SignUpRoute
   '/test': typeof TestRoute
+  '/account/$accountView': typeof AccountAccountViewRoute
   '/api/$': typeof ApiSplatRoute
+  '/auth/$authView': typeof AuthAuthViewRoute
   '/auth/callback': typeof AuthCallbackRoute
+  '/organization/$organizationView': typeof OrganizationOrganizationViewRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -114,50 +133,58 @@ export interface FileRouteTypes {
     | '/'
     | '/$'
     | '/about'
+    | '/admin'
     | '/login'
     | '/settings'
-    | '/sign-in'
-    | '/sign-up'
     | '/test'
+    | '/account/$accountView'
     | '/api/$'
+    | '/auth/$authView'
     | '/auth/callback'
+    | '/organization/$organizationView'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/$'
     | '/about'
+    | '/admin'
     | '/login'
     | '/settings'
-    | '/sign-in'
-    | '/sign-up'
     | '/test'
+    | '/account/$accountView'
     | '/api/$'
+    | '/auth/$authView'
     | '/auth/callback'
+    | '/organization/$organizationView'
   id:
     | '__root__'
     | '/'
     | '/$'
     | '/about'
+    | '/admin'
     | '/login'
     | '/settings'
-    | '/sign-in'
-    | '/sign-up'
     | '/test'
+    | '/account/$accountView'
     | '/api/$'
+    | '/auth/$authView'
     | '/auth/callback'
+    | '/organization/$organizationView'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   SplatRoute: typeof SplatRoute
   AboutRoute: typeof AboutRoute
+  AdminRoute: typeof AdminRoute
   LoginRoute: typeof LoginRoute
   SettingsRoute: typeof SettingsRoute
-  SignInRoute: typeof SignInRoute
-  SignUpRoute: typeof SignUpRoute
   TestRoute: typeof TestRoute
+  AccountAccountViewRoute: typeof AccountAccountViewRoute
   ApiSplatRoute: typeof ApiSplatRoute
+  AuthAuthViewRoute: typeof AuthAuthViewRoute
   AuthCallbackRoute: typeof AuthCallbackRoute
+  OrganizationOrganizationViewRoute: typeof OrganizationOrganizationViewRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -167,20 +194,6 @@ declare module '@tanstack/react-router' {
       path: '/test'
       fullPath: '/test'
       preLoaderRoute: typeof TestRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/sign-up': {
-      id: '/sign-up'
-      path: '/sign-up'
-      fullPath: '/sign-up'
-      preLoaderRoute: typeof SignUpRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/sign-in': {
-      id: '/sign-in'
-      path: '/sign-in'
-      fullPath: '/sign-in'
-      preLoaderRoute: typeof SignInRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/settings': {
@@ -195,6 +208,13 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/about': {
@@ -218,11 +238,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/organization/$organizationView': {
+      id: '/organization/$organizationView'
+      path: '/organization/$organizationView'
+      fullPath: '/organization/$organizationView'
+      preLoaderRoute: typeof OrganizationOrganizationViewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/auth/callback': {
       id: '/auth/callback'
       path: '/auth/callback'
       fullPath: '/auth/callback'
       preLoaderRoute: typeof AuthCallbackRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth/$authView': {
+      id: '/auth/$authView'
+      path: '/auth/$authView'
+      fullPath: '/auth/$authView'
+      preLoaderRoute: typeof AuthAuthViewRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/$': {
@@ -232,6 +266,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiSplatRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/account/$accountView': {
+      id: '/account/$accountView'
+      path: '/account/$accountView'
+      fullPath: '/account/$accountView'
+      preLoaderRoute: typeof AccountAccountViewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -239,13 +280,15 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   SplatRoute: SplatRoute,
   AboutRoute: AboutRoute,
+  AdminRoute: AdminRoute,
   LoginRoute: LoginRoute,
   SettingsRoute: SettingsRoute,
-  SignInRoute: SignInRoute,
-  SignUpRoute: SignUpRoute,
   TestRoute: TestRoute,
+  AccountAccountViewRoute: AccountAccountViewRoute,
   ApiSplatRoute: ApiSplatRoute,
+  AuthAuthViewRoute: AuthAuthViewRoute,
   AuthCallbackRoute: AuthCallbackRoute,
+  OrganizationOrganizationViewRoute: OrganizationOrganizationViewRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

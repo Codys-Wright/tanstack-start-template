@@ -26,7 +26,7 @@ function OAuthCallback() {
 			navigate({ to: "/" });
 		} else if (Result.isFailure(sessionResult)) {
 			// OAuth failed, redirect to sign in
-			navigate({ to: "/sign-in" });
+			navigate({ to: "/auth/$authView", params: { authView: "sign-in" } });
 		}
 	}, [sessionResult, navigate]);
 

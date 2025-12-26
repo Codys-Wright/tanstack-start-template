@@ -1,59 +1,106 @@
-import { cn, Skeleton } from "@shadcn";
-import type { User } from "../../../domain/index.js";
-import { UserAvatar } from "./user-avatar.js";
+import { cn, Skeleton } 
+from "@shadcn"
+import { UserAvatar, type UserAvatarClassNames } from "./user-avatar.js"
+import type { User } from "../../../domain/index.js"
 
-export interface UserViewProps {
-	user?: User | null;
-	isPending?: boolean;
-	size?: "sm" | "default" | "lg";
-	showEmail?: boolean;
-	className?: string;
-	avatarClassName?: string;
+export interface UserViewClassNames {
+	base?: string
+	avatar?: UserAvatarClassNames
+	content?: string
+	title?: string
+	subtitle?: string
+	skeleton?: string
 }
 
-export function UserView({
-	user,
-	isPending,
-	size = "default",
-	showEmail = true,
-	className,
-	avatarClassName,
-}: UserViewProps) {
-	const textSizes = {
-		sm: "text-xs",
-		default: "text-sm",
-		lg: "text-base",
-	};
+export interface UserViewProps {
+	className?: string
+	classNames?: UserViewClassNames
+	isPending?: boolean
+	size?: "sm" | "default" | "lg" | null
+	user?: User | null
+}
 
+/**
+ * Displays user information with avatar and details in a compact view
+ *
+ * Renders a user's profile information with appropriate fallbacks:
+ * - Shows avatar alongside user name and email when available
+ * - Shows loading skeletons when isPending is true
+ * - Falls back to generic "User" text when neither name nor email is available
+ * - Supports customization through classNames prop
+ */
+export function UserView({
+	className,
+	classNames,
+	isPending,
+	size,
+	user,
+}: UserViewProps) {
 	return (
-		<div className={cn("flex items-center gap-3", className)}>
+		<div
+			className={cn("flex items-center gap-2", className, classNames?.base)}
+		>
 			<UserAvatar
-				user={user}
+				className={cn(size !== "sm" && "my-0.5")}
+				classNames={classNames?.avatar}
 				isPending={isPending}
 				size={size}
-				className={avatarClassName}
+				user={user}
 			/>
-			<div className="flex flex-col min-w-0">
+
+			<div
+				className={cn(
+					"grid flex-1 text-start leading-tight",
+					classNames?.content,
+				)}
+			>
 				{isPending ? (
 					<>
-						<Skeleton className="h-4 w-24 mb-1" />
-						{showEmail && <Skeleton className="h-3 w-32" />}
+						<Skeleton
+							className={cn(
+								"max-w-full",
+								size === "lg" ? "h-4.5 w-32" : "h-3.5 w-24",
+								classNames?.title,
+								classNames?.skeleton,
+							)}
+						/>
+						{size !== "sm" && (
+							<Skeleton
+								className={cn(
+									"mt-1.5 max-w-full",
+									size === "lg" ? "h-3.5 w-40" : "h-3 w-32",
+									classNames?.subtitle,
+									classNames?.skeleton,
+								)}
+							/>
+						)}
 					</>
 				) : (
 					<>
-						<span className={cn("font-medium truncate", textSizes[size])}>
-							{user?.name || "Anonymous"}
+						<span
+							className={cn(
+								"truncate font-semibold",
+								size === "lg" ? "text-base" : "text-sm",
+								classNames?.title,
+							)}
+						>
+							{user?.name || user?.email || "User"}
 						</span>
-						{showEmail && user?.email && (
+
+						{size !== "sm" && user?.name && (
 							<span
-								className={cn("text-muted-foreground truncate", textSizes[size])}
+								className={cn(
+									"truncate opacity-70",
+									size === "lg" ? "text-sm" : "text-xs",
+									classNames?.subtitle,
+								)}
 							>
-								{user.email}
+								{user?.email}
 							</span>
 						)}
 					</>
 				)}
 			</div>
 		</div>
-	);
+	)
 }

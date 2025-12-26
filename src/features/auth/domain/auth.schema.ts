@@ -1,97 +1,142 @@
+import { faker } from "@faker-js/faker";
 import * as Schema from "effect/Schema";
-import { UserId } from "./auth.user-id.js";
-
-/**
- * User schema matching Better Auth OpenAPI spec.
- * Represents the authenticated user's profile data.
- */
-export const User = Schema.Struct({
-  id: UserId,
-  name: Schema.String,
-  email: Schema.String,
-  emailVerified: Schema.Boolean,
-  image: Schema.NullOr(Schema.String),
-  createdAt: Schema.DateTimeUtc,
-  updatedAt: Schema.DateTimeUtc,
-});
-export type User = typeof User.Type;
-
-/**
- * Session schema matching Better Auth OpenAPI spec.
- * Represents an active authentication session.
- */
-export const Session = Schema.Struct({
-  id: Schema.String,
-  expiresAt: Schema.DateTimeUtc,
-  token: Schema.String,
-  createdAt: Schema.DateTimeUtc,
-  updatedAt: Schema.DateTimeUtc,
-  ipAddress: Schema.optional(Schema.String),
-  userAgent: Schema.optional(Schema.String),
-  userId: UserId,
-});
-export type Session = typeof Session.Type;
+import { User } from "./user.schema.js";
+import { Session } from "./session.schema.js";
 
 /**
  * Response from GET /api/auth/get-session
  * Returns null when not authenticated, or session + user data when authenticated.
  */
 export const SessionData = Schema.NullOr(
-  Schema.Struct({
-    session: Session,
-    user: User,
-  }),
+	Schema.Struct({
+		session: Session,
+		user: User,
+	}),
 );
 export type SessionData = typeof SessionData.Type;
 
 /**
  * Response from POST /api/auth/sign-in/email
  */
-export const SignInResponse = Schema.Struct({
-  redirect: Schema.Literal(false),
-  token: Schema.String,
-  user: User,
-  url: Schema.NullOr(Schema.String),
-});
-export type SignInResponse = typeof SignInResponse.Type;
+export class SignInResponse extends Schema.Class<SignInResponse>("SignInResponse")({
+	redirect: Schema.Literal(false),
+	token: Schema.String,
+	user: User,
+	url: Schema.NullOr(Schema.String),
+}) {}
 
 /**
  * Input for POST /api/auth/sign-in/email
  */
-export const SignInInput = Schema.Struct({
-  email: Schema.String,
-  password: Schema.String,
-  callbackURL: Schema.optional(Schema.String),
-  rememberMe: Schema.optional(Schema.Boolean),
-});
-export type SignInInput = typeof SignInInput.Type;
+export class SignInInput extends Schema.Class<SignInInput>("SignInInput")({
+	email: Schema.String.pipe(
+		Schema.pattern(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, {
+			message: () => "Invalid email address",
+		}),
+	).annotations({
+		arbitrary: () => (fc: any) => fc.constant(null).map(() => faker.internet.email()),
+	}),
+	password: Schema.String.pipe(
+		Schema.minLength(8, {
+			message: () => "Password must be at least 8 characters",
+		}),
+	).annotations({
+		arbitrary: () => (fc: any) => fc.constant(null).map(() => faker.internet.password({ length: 12 })),
+	}),
+	callbackURL: Schema.optional(Schema.String),
+	rememberMe: Schema.optional(Schema.Boolean),
+}) {}
 
 /**
  * Response from POST /api/auth/sign-up/email
  */
-export const SignUpResponse = Schema.Struct({
-  token: Schema.NullOr(Schema.String),
-  user: User,
-});
-export type SignUpResponse = typeof SignUpResponse.Type;
+export class SignUpResponse extends Schema.Class<SignUpResponse>("SignUpResponse")({
+	token: Schema.NullOr(Schema.String),
+	user: User,
+}) {}
 
 /**
  * Input for POST /api/auth/sign-up/email
  */
-export const SignUpInput = Schema.Struct({
-  name: Schema.String,
-  email: Schema.String,
-  password: Schema.String,
-  image: Schema.optional(Schema.String),
-  callbackURL: Schema.optional(Schema.String),
-  rememberMe: Schema.optional(Schema.Boolean),
-});
-export type SignUpInput = typeof SignUpInput.Type;
+export class SignUpInput extends Schema.Class<SignUpInput>("SignUpInput")({
+	name: Schema.String.pipe(
+		Schema.nonEmptyString({
+			message: () => "Name is required",
+		}),
+	).annotations({
+		arbitrary: () => (fc: any) => fc.constant(null).map(() => faker.person.fullName()),
+	}),
+	email: Schema.String.pipe(
+		Schema.pattern(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, {
+			message: () => "Invalid email address",
+		}),
+	).annotations({
+		arbitrary: () => (fc: any) => fc.constant(null).map(() => faker.internet.email()),
+	}),
+	password: Schema.String.pipe(
+		Schema.minLength(8, {
+			message: () => "Password must be at least 8 characters",
+		}),
+	).annotations({
+		arbitrary: () => (fc: any) => fc.constant(null).map(() => faker.internet.password({ length: 12 })),
+	}),
+	image: Schema.optional(Schema.String),
+	callbackURL: Schema.optional(Schema.String),
+	rememberMe: Schema.optional(Schema.Boolean),
+}) {}
 
 /**
  * Response from POST /api/auth/sign-out
  */
-export const SignOutResponse = Schema.Struct({
-  success: Schema.Boolean,
-});
-export type SignOutResponse = typeof SignOutResponse.Type;
+export class SignOutResponse extends Schema.Class<SignOutResponse>("SignOutResponse")({
+	success: Schema.Boolean,
+}) {}
+
+/**
+ * Input for POST /api/auth/forgot-password
+ */
+export class ForgotPasswordInput extends Schema.Class<ForgotPasswordInput>("ForgotPasswordInput")({
+	email: Schema.String.pipe(
+		Schema.pattern(/^[^\s@]+@[^\s@]+\.[^\s@]+$/),
+	).annotations({
+		arbitrary: () => (fc: any) => fc.constant(null).map(() => faker.internet.email()),
+	}),
+	redirectTo: Schema.optional(Schema.String),
+}) {}
+
+/**
+ * Input for POST /api/auth/reset-password
+ */
+export class ResetPasswordInput extends Schema.Class<ResetPasswordInput>("ResetPasswordInput")({
+	newPassword: Schema.String.pipe(
+		Schema.minLength(8),
+	).annotations({
+		arbitrary: () => (fc: any) => fc.constant(null).map(() => faker.internet.password({ length: 12 })),
+	}),
+	token: Schema.String,
+}) {}
+
+/**
+ * Input for POST /api/auth/change-email
+ */
+export class ChangeEmailInput extends Schema.Class<ChangeEmailInput>("ChangeEmailInput")({
+	newEmail: Schema.String.pipe(
+		Schema.pattern(/^[^\s@]+@[^\s@]+\.[^\s@]+$/),
+	).annotations({
+		arbitrary: () => (fc: any) => fc.constant(null).map(() => faker.internet.email()),
+	}),
+	callbackURL: Schema.optional(Schema.String),
+}) {}
+
+/**
+ * Input for POST /api/auth/change-password
+ */
+export class ChangePasswordInput extends Schema.Class<ChangePasswordInput>("ChangePasswordInput")({
+	currentPassword: Schema.String,
+	newPassword: Schema.String.pipe(
+		Schema.minLength(8),
+	).annotations({
+		arbitrary: () => (fc: any) => fc.constant(null).map(() => faker.internet.password({ length: 12 })),
+	}),
+	revokeOtherSessions: Schema.optional(Schema.Boolean),
+}) {}

@@ -1,7 +1,7 @@
 import { betterAuth } from "better-auth";
 import type { BetterAuthOptions } from "better-auth";
 import { getMigrations } from "better-auth/db";
-import { openAPI } from "better-auth/plugins";
+import { admin, openAPI } from "better-auth/plugins";
 import { organization } from "better-auth/plugins/organization";
 import { passkey } from "@better-auth/passkey";
 import { twoFactor } from "better-auth/plugins/two-factor";
@@ -48,6 +48,18 @@ export const makeBetterAuthOptions = (params: {
 		db: params.db,
 		type: "postgres" as const,
 		casing: "camel" as const,
+		schema: {
+			user: {
+				additionalFields: {
+					fake: {
+						type: "boolean",
+						defaultValue: false,
+						required: false,
+						input: false, // Don't allow setting via input, only programmatically
+					},
+				},
+			},
+		},
 	},
 
 	socialProviders:
@@ -62,6 +74,13 @@ export const makeBetterAuthOptions = (params: {
 
 	plugins: [
 		openAPI(),
+
+		admin({
+			defaultRole: "user",
+			adminRoles: ["admin"],
+			impersonationSessionDuration: 60 * 60, // 1 hour
+			defaultBanExpiresIn: undefined, // Bans never expire by default
+		}),
 
 		organization({
 			allowUserToCreateOrganization: true,

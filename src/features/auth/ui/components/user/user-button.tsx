@@ -1,4 +1,5 @@
-import { Button, cn, DropdownMenu, Skeleton } from "@shadcn";
+import { Button, cn, DropdownMenu, Skeleton } 
+from "@shadcn";
 import { Result, useAtom, useAtomValue } from "@effect-atom/atom-react";
 import { Link } from "@tanstack/react-router";
 import { ChevronsUpDown, LogOutIcon, SettingsIcon } from "lucide-react";
@@ -39,7 +40,7 @@ export function UserButton({ size = "icon", className }: UserButtonProps) {
 	if (!isSignedIn) {
 		return (
 			<Button asChild variant="outline" className={className}>
-				<Link to="/sign-in">Sign In</Link>
+				<Link to="/auth/$authView" params={{ authView: "sign-in" }}>Sign In</Link>
 			</Button>
 		);
 	}
@@ -57,7 +58,7 @@ export function UserButton({ size = "icon", className }: UserButtonProps) {
 					</Button>
 				) : (
 					<Button variant="ghost" className={cn("h-auto py-2 px-3", className)}>
-						<UserView user={user} showEmail={false} />
+						<UserView user={user} size="sm" />
 						<ChevronsUpDown className="ml-2 size-4" />
 					</Button>
 				)}
@@ -71,7 +72,7 @@ export function UserButton({ size = "icon", className }: UserButtonProps) {
 			<DropdownMenu.Separator />
 
 			<DropdownMenu.Item asChild>
-				<Link to="/settings" className="flex items-center gap-2">
+				<Link to="/account/$accountView" params={{ accountView: "settings" }} className="flex items-center gap-2">
 					<SettingsIcon className="size-4" />
 					Account Settings
 				</Link>
