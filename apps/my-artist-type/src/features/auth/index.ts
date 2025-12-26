@@ -5,12 +5,12 @@ export * from "./domain/index.js";
 export * from "./client/atoms/index.js";
 export { authClient } from "./client/auth.client.js";
 export type {
-	AuthClient,
-	Invitation,
-	Member,
-	Organization,
-	Session,
-	Team,
+  AuthClient,
+  Invitation,
+  Member,
+  Organization,
+  Session,
+  Team,
 } from "./client/auth.client.js";
 
 // UI components

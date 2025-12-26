@@ -1,0 +1,19 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "moduleResolution": "bundler",
+    "target": "ES2022",
+    "module": "ESNext",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "skipLibCheck": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"],
+      "@shadcn": ["./src/features/ui/shadcn"],
+      "@shadcn/*": ["./src/features/ui/shadcn/*"],
+      "@/components/ui": ["./src/features/ui/shadcn/components/ui"],
+      "@/components/ui/*": ["./src/features/ui/shadcn/components/ui/*"],
+      "@shadcn-ui": ["packages/ui/shadcn/src/index.ts"]
+    }
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "../../dist/out-tsc/apps/my-artist-type",
+    "declaration": true,
+    "declarationDir": "../../dist/out-tsc/types",
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"],
+      "@shadcn": ["./src/features/ui/shadcn"],
+      "@shadcn/*": ["./src/features/ui/shadcn/*"],
+      "@/components/ui": ["./src/features/ui/shadcn/components/ui"],
+      "@/components/ui/*": ["./src/features/ui/shadcn/components/ui/*"]
+    }
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx"
+  ],
+  "exclude": [
+    "src/**/*.spec.ts",
+    "src/**/*.test.ts",
+    "src/**/*.spec.tsx",
+    "src/**/*.test.tsx"
+  ],
+  "nx": {
+    "projectType": "application"
+  }
+}

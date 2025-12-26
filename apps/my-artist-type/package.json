@@ -1,0 +1,202 @@
+{
+  "name": "my-artist-type",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "prepare": "effect-language-service patch",
+    "dev": "vite dev --port 3000",
+    "dev:experiment": "nx exec -- dotenv -- tsx ./src/features/experiment/server.ts",
+    "build": "nx exec -- vite build",
+    "preview": "vite preview",
+    "test": "nx exec -- vitest",
+    "typecheck": "nx exec -- tsc --noEmit",
+    "db:migrate": "nx exec -- dotenv -- tsx ./src/features/core/database/scripts/migrator.ts",
+    "db:reset": "nx exec -- dotenv -- tsx ./src/features/core/database/scripts/reset-database.ts",
+    "db:add-fake-column": "nx exec -- dotenv -- bun run ./src/features/auth/database/scripts/add-fake-column.ts",
+    "db:seed": "nx exec -- dotenv -- bun run ./src/features/auth/database/scripts/seed-users.ts",
+    "db:clean": "nx exec -- dotenv -- bun run ./src/features/auth/database/scripts/cleanup-fake-users.ts",
+    "admin:set": "nx exec -- dotenv -- bun run ./src/features/auth/database/scripts/make-admin.ts",
+    "auth:migrate": "nx exec -- dotenv -- pnpx @better-auth/cli migrate --config ./src/features/auth/auth.ts",
+    "auth:generate": "nx exec -- dotenv -- pnpx @better-auth/cli generate --config ./src/features/auth/auth.ts --output ./src/features/auth/database/migrations/better-auth-schema.sql -y"
+  },
+  "dependencies": {
+    "@better-auth/passkey": "workspace:*",
+    "@effect-atom/atom": "workspace:*",
+    "@effect-atom/atom-react": "workspace:*",
+    "@effect/language-service": "workspace:*",
+    "@effect/platform": "workspace:*",
+    "@effect/platform-browser": "workspace:*",
+    "@effect/platform-node": "workspace:*",
+    "@effect/rpc": "workspace:*",
+    "@effect/sql": "workspace:*",
+    "@effect/sql-pg": "workspace:*",
+    "@faker-js/faker": "workspace:*",
+    "@hookform/resolvers": "workspace:*",
+    "@radix-ui/react-accordion": "workspace:*",
+    "@radix-ui/react-alert-dialog": "workspace:*",
+    "@radix-ui/react-aspect-ratio": "workspace:*",
+    "@radix-ui/react-avatar": "workspace:*",
+    "@radix-ui/react-checkbox": "workspace:*",
+    "@radix-ui/react-collapsible": "workspace:*",
+    "@radix-ui/react-context-menu": "workspace:*",
+    "@radix-ui/react-dialog": "workspace:*",
+    "@radix-ui/react-dropdown-menu": "workspace:*",
+    "@radix-ui/react-hover-card": "workspace:*",
+    "@radix-ui/react-label": "workspace:*",
+    "@radix-ui/react-menubar": "workspace:*",
+    "@radix-ui/react-navigation-menu": "workspace:*",
+    "@radix-ui/react-popover": "workspace:*",
+    "@radix-ui/react-progress": "workspace:*",
+    "@radix-ui/react-radio-group": "workspace:*",
+    "@radix-ui/react-scroll-area": "workspace:*",
+    "@radix-ui/react-select": "workspace:*",
+    "@radix-ui/react-separator": "workspace:*",
+    "@radix-ui/react-slider": "workspace:*",
+    "@radix-ui/react-slot": "workspace:*",
+    "@radix-ui/react-switch": "workspace:*",
+    "@radix-ui/react-tabs": "workspace:*",
+    "@radix-ui/react-toggle": "workspace:*",
+    "@radix-ui/react-toggle-group": "workspace:*",
+    "@radix-ui/react-tooltip": "workspace:*",
+    "@tailwindcss/vite": "workspace:*",
+    "@tanstack/react-devtools": "workspace:*",
+    "@tanstack/react-form": "workspace:*",
+    "@tanstack/react-router": "workspace:*",
+    "@tanstack/react-router-devtools": "workspace:*",
+    "@tanstack/react-router-ssr-query": "workspace:*",
+    "@tanstack/react-start": "workspace:*",
+    "@tanstack/router-plugin": "workspace:*",
+    "bcryptjs": "workspace:*",
+    "better-auth": "workspace:*",
+    "browser-image-compression": "workspace:*",
+    "class-variance-authority": "workspace:*",
+    "clsx": "workspace:*",
+    "cmdk": "workspace:*",
+    "date-fns": "workspace:*",
+    "effect": "workspace:*",
+    "effect-better-auth": "workspace:*",
+    "embla-carousel-react": "workspace:*",
+    "faker": "workspace:*",
+    "input-otp": "workspace:*",
+    "kysely": "workspace:*",
+    "lucide-react": "workspace:*",
+    "next-themes": "workspace:*",
+    "nitro": "workspace:*",
+    "react": "workspace:*",
+    "react-day-picker": "workspace:*",
+    "react-dom": "workspace:*",
+    "react-hook-form": "workspace:*",
+    "react-resizable-panels": "workspace:*",
+    "recharts": "workspace:*",
+    "resend": "workspace:*",
+    "sonner": "workspace:*",
+    "tailwind-merge": "workspace:*",
+    "tailwindcss": "workspace:*",
+    "vaul": "workspace:*",
+    "vite-tsconfig-paths": "workspace:*",
+    "zod": "workspace:*"
+  },
+  "devDependencies": {
+    "@effect/vitest": "workspace:*",
+    "@nx/vite": "workspace:*",
+    "@nx/vitest": "workspace:*",
+    "@nx/web": "workspace:*",
+    "@tanstack/devtools-vite": "workspace:*",
+    "@testcontainers/postgresql": "workspace:*",
+    "@testing-library/dom": "workspace:*",
+    "@testing-library/react": "workspace:*",
+    "@types/bcryptjs": "workspace:*",
+    "@types/node": "workspace:*",
+    "@types/pg": "workspace:*",
+    "@types/react": "workspace:*",
+    "@types/react-dom": "workspace:*",
+    "@vitejs/plugin-react": "workspace:*",
+    "@vitest/ui": "workspace:*",
+    "dotenv-cli": "workspace:*",
+    "jiti": "workspace:*",
+    "jsdom": "workspace:*",
+    "nx": "workspace:*",
+    "pg": "workspace:*",
+    "tsx": "workspace:*",
+    "tw-animate-css": "workspace:*",
+    "typescript": "workspace:*",
+    "vite": "workspace:*",
+    "vitest": "workspace:*",
+    "web-vitals": "workspace:*"
+  },
+  "patchedDependencies": {
+    "srvx@0.9.7@0.9.7": "patches/srvx@0.9.7.patch",
+    "nitro@3.0.1-alpha.1@3.0.1-alpha.1": "patches/nitro@3.0.1-alpha.1.patch"
+  },
+  "nx": {
+    "includedScripts": [
+      "dev",
+      "dev:experiment",
+      "build",
+      "preview",
+      "test",
+      "typecheck",
+      "db:migrate",
+      "db:reset",
+      "db:add-fake-column",
+      "db:seed",
+      "db:clean",
+      "admin:set",
+      "auth:migrate",
+      "auth:generate"
+    ],
+    "targets": {
+      "build": {
+        "cache": true,
+        "inputs": [
+          "default",
+          "^default"
+        ],
+        "outputs": [
+          "{projectRoot}/.output"
+        ]
+      },
+      "test": {
+        "cache": true,
+        "inputs": [
+          "default",
+          "^default"
+        ]
+      },
+      "typecheck": {
+        "cache": true,
+        "inputs": [
+          "default",
+          "^default"
+        ]
+      },
+      "dev:experiment": {
+        "cache": false
+      },
+      "db:migrate": {
+        "cache": false
+      },
+      "db:reset": {
+        "cache": false
+      },
+      "db:add-fake-column": {
+        "cache": false
+      },
+      "db:seed": {
+        "cache": false
+      },
+      "db:clean": {
+        "cache": false
+      },
+      "admin:set": {
+        "cache": false
+      },
+      "auth:migrate": {
+        "cache": false
+      },
+      "auth:generate": {
+        "cache": false
+      }
+    }
+  }
+}

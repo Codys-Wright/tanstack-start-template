@@ -1,0 +1,53 @@
+{
+  "name": "@shadcn-ui",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "nx exec -- vite build",
+    "test": "nx exec -- vitest",
+    "typecheck": "nx exec -- tsc --noEmit"
+  },
+  "nx": {
+    "includedScripts": [
+      "build",
+      "test",
+      "typecheck"
+    ],
+    "targets": {
+      "build": {
+        "cache": true,
+        "inputs": [
+          "default",
+          "^default"
+        ],
+        "outputs": [
+          "{projectRoot}/dist"
+        ]
+      },
+      "test": {
+        "cache": true,
+        "inputs": [
+          "default",
+          "^default"
+        ]
+      },
+      "typecheck": {
+        "cache": true,
+        "inputs": [
+          "default",
+          "^default"
+        ]
+      }
+    }
+  }
+}
