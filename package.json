@@ -16,7 +16,6 @@
     "format": "prettier --write \"**/*.{js,ts,mjs,jsx,tsx,json,md,css,html,yaml,yml,mdx}\"",
     "format:check": "prettier --check \"**/*.{js,ts,mjs,jsx,tsx,json,md,css,html,yaml,yml,mdx}\"",
     "coverage": "vitest --coverage",
-    "prepare": "husky",
     "check": "tsc -b tsconfig.json",
     "check:recursive": "bun --bun -r tsx --eval \"import { $ } from 'bun'; const packages = (await $`bun workspaces list`.text()).trim().split('\\n').filter(p => p && p !== '.'); for (const pkg of packages) await $`bun --cwd ${pkg} run tsc -b tsconfig.json`.catch(() => {})\"",
     "check:fast": "bun run lint && bun run check",
