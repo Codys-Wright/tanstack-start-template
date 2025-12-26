@@ -42,3 +42,69 @@ Run:
 - btca ask -t <tech> -q "<question>"
 
 Available <tech>: svelte, tailwindcss, opentui, runed, effect, shiki
+
+## ShadCN Component Pattern
+
+All compound UI components use a **namespace pattern** via `Object.assign()`. This provides a cleaner API and better discoverability.
+
+### Pattern Example
+
+```tsx
+// Import only the root component
+import { Card, Dialog, DropdownMenu } from "@shadcn"
+
+// Access sub-components via dot notation
+<Card>
+  <Card.Header>
+    <Card.Title>Title</Card.Title>
+    <Card.Description>Description</Card.Description>
+  </Card.Header>
+  <Card.Content>Content here</Card.Content>
+  <Card.Footer>Footer</Card.Footer>
+</Card>
+
+<Dialog>
+  <Dialog.Trigger asChild>
+    <Button>Open</Button>
+  </Dialog.Trigger>
+  <Dialog.Content>
+    <Dialog.Header>
+      <Dialog.Title>Title</Dialog.Title>
+    </Dialog.Header>
+  </Dialog.Content>
+</Dialog>
+
+<DropdownMenu>
+  <DropdownMenu.Trigger asChild>
+    <Button>Menu</Button>
+  </DropdownMenu.Trigger>
+  <DropdownMenu.Content>
+    <DropdownMenu.Item>Item 1</DropdownMenu.Item>
+    <DropdownMenu.Separator />
+    <DropdownMenu.Item>Item 2</DropdownMenu.Item>
+  </DropdownMenu.Content>
+</DropdownMenu>
+```
+
+### Component Reference
+
+| Component | Common Sub-components |
+|-----------|----------------------|
+| `Card` | `.Header`, `.Title`, `.Description`, `.Content`, `.Footer`, `.Action` |
+| `Dialog` | `.Trigger`, `.Content`, `.Header`, `.Title`, `.Description`, `.Footer`, `.Close` |
+| `DropdownMenu` | `.Trigger`, `.Content`, `.Item`, `.Separator`, `.Label`, `.Group` |
+| `AlertDialog` | `.Trigger`, `.Content`, `.Header`, `.Title`, `.Description`, `.Footer`, `.Action`, `.Cancel` |
+| `Tabs` | `.List`, `.Trigger`, `.Content` |
+| `Avatar` | `.Image`, `.Fallback` |
+| `Alert` | `.Title`, `.Description` |
+| `Sheet` | `.Trigger`, `.Content`, `.Header`, `.Title`, `.Description`, `.Footer`, `.Close` |
+| `Popover` | `.Trigger`, `.Content`, `.Anchor` |
+| `Table` | `.Header`, `.Body`, `.Row`, `.Head`, `.Cell`, `.Footer`, `.Caption` |
+| `Select` | `.Trigger`, `.Value`, `.Content`, `.Item`, `.Group`, `.Label`, `.Separator` |
+| `Accordion` | `.Item`, `.Trigger`, `.Content` |
+| `Form` | `.Control`, `.Label`, `.Error`, `.FieldInput`, `.FieldTextarea`, `.FieldSelect` |
+
+### Simple Components (No Sub-components)
+
+These are used directly without dot notation:
+`Button`, `Input`, `Textarea`, `Checkbox`, `Switch`, `Label`, `Badge`, `Separator`, `Skeleton`, `Spinner`, `Progress`, `Slider`, `Toggle`, `Kbd`
