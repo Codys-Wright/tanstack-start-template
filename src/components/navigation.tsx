@@ -1,7 +1,6 @@
+import { cn } from "@shadcn";
 import { Link, useRouterState } from "@tanstack/react-router";
-import { cn, Badge, Button } from "@shadcn";
-import { sessionAtom, signOutAtom } from "@/features/auth/client";
-import { useAtomValue, useAtom, Result } from "@effect-atom/atom-react";
+import { UserButton } from "@/features/auth";
 
 const navItems = [
   { path: "/", label: "Home" },
@@ -14,20 +13,6 @@ const navItems = [
 export function Navigation() {
   const router = useRouterState();
   const currentPath = router.location.pathname;
-  
-  // Use Effect-Atom for session state
-  const sessionResult = useAtomValue(sessionAtom);
-  const [_signOutResult, signOut] = useAtom(signOutAtom);
-
-  // Extract session from Result type
-  const session = Result.isSuccess(sessionResult) ? sessionResult.value : null;
-  const loading = Result.isInitial(sessionResult);
-
-  const handleSignOut = () => {
-    signOut();
-    // Note: Better to navigate after signOut succeeds, but keeping simple for now
-    window.location.href = "/login";
-  };
 
   return (
     <nav className="border-b bg-card">
@@ -54,35 +39,7 @@ export function Navigation() {
           </div>
 
           <div className="flex items-center gap-3">
-            {loading ? (
-              <Badge variant="outline">Loading...</Badge>
-            ) : session?.user ? (
-              <>
-                <div className="flex flex-col items-end gap-1">
-                  <Badge variant="default" className="font-mono text-xs">
-                    User ID: {session.user.id.substring(0, 8)}...
-                  </Badge>
-                  {session.user.email && (
-                    <span className="text-xs text-muted-foreground">
-                      {session.user.email}
-                    </span>
-                  )}
-                </div>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={handleSignOut}
-                >
-                  Sign Out
-                </Button>
-              </>
-            ) : (
-               <Link to="/sign-in">
-                 <Button variant="default" size="sm">
-                   Sign In
-                 </Button>
-               </Link>
-            )}
+            <UserButton size="default" />
           </div>
         </div>
       </div>
