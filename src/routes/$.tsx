@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowLeft, Home, Search } from "lucide-react";
-import { Button, Card, CardContent } from "@shadcn";
+import { Button, Card } from "@shadcn";
 
 export const Route = createFileRoute("/$")({
 	component: NotFoundPage,
@@ -12,7 +12,7 @@ function NotFoundPage() {
 	return (
 		<div className="min-h-screen flex items-center justify-center p-4">
 			<Card className="w-full max-w-2xl border-border/40 shadow-lg">
-				<CardContent className="p-12">
+				<Card.Content className="p-12">
 					<div className="flex flex-col items-center text-center space-y-6">
 						{/* 404 Number */}
 						<div className="relative">
@@ -80,7 +80,7 @@ function NotFoundPage() {
 							</div>
 						</div>
 					</div>
-				</CardContent>
+				</Card.Content>
 			</Card>
 		</div>
 	);
