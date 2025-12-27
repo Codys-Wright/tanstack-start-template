@@ -1,5 +1,6 @@
 // import { CreateTodoForm, TodoList } from "../../features/todo/client";
 import { ThemeDropdown } from "@theme";
+import { TestComponent } from "../../components/test-component";
 
 export function App() {
   return (
@@ -15,8 +16,8 @@ export function App() {
         </p>
         {/* <CreateTodoForm />
         <TodoList /> */}
-        <div className="text-center py-8">
-          <p className="text-muted-foreground">Todo components are commented out to avoid auth dependencies.</p>
+        <div className="space-y-4">
+          <TestComponent />
         </div>
       </div>
     </div>
