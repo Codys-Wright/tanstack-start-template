@@ -2,14 +2,8 @@ import * as SqlClient from "@effect/sql/SqlClient";
 import * as SqlSchema from "@effect/sql/SqlSchema";
 import * as Effect from "effect/Effect";
 import * as Schema from "effect/Schema";
-import { PgLive } from "../../core/database";
-import type { UserId } from "../../../packages/auth/src";
-import {
-  CreateTodoInput,
-  Todo,
-  TodoId,
-  UpdateTodoInput,
-} from "../domain/todo-schema.js";
+import { PgLive } from "@core";
+import { Todo } from "../domain/todo-schema.js";
 
 /**
  * TodoRepository - Database access layer for todos using Effect SQL.

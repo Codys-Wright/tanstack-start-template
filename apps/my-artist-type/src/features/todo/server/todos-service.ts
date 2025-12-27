@@ -23,7 +23,7 @@ export class TodosService extends Effect.Service<TodosService>()(
       const list = (userId: UserId) =>
         Effect.gen(function* () {
           yield* Effect.log(
-            `[TodosService.list] Fetching todos for user: ${userId}`
+            `[TodosService.list] Fetching todos for user: ${userId}`,
           );
           const todos = yield* repo.findByUserId({ userId });
           yield* Effect.log(`[TodosService.list] Found ${todos.length} todos`);
@@ -33,18 +33,18 @@ export class TodosService extends Effect.Service<TodosService>()(
       const getById = (id: TodoId, userId: UserId) =>
         repo.findById({ id, userId }).pipe(
           Effect.tap(() =>
-            Effect.log(`[TodosService.getById] Found todo: ${id}`)
+            Effect.log(`[TodosService.getById] Found todo: ${id}`),
           ),
           Effect.mapError(() => new TodoNotFound({ id })),
           Effect.tapError(() =>
-            Effect.log(`[TodosService.getById] Todo not found: ${id}`)
-          )
+            Effect.log(`[TodosService.getById] Todo not found: ${id}`),
+          ),
         );
 
       const create = (input: CreateTodoInput, userId: UserId) =>
         Effect.gen(function* () {
           yield* Effect.log(
-            `[TodosService.create] Creating todo "${input.title}" for user: ${userId}`
+            `[TodosService.create] Creating todo "${input.title}" for user: ${userId}`,
           );
           const todo = yield* repo.insert({
             userId,
@@ -52,7 +52,7 @@ export class TodosService extends Effect.Service<TodosService>()(
             completed: false,
           });
           yield* Effect.log(
-            `[TodosService.create] Created todo with id: ${todo.id}`
+            `[TodosService.create] Created todo with id: ${todo.id}`,
           );
           return todo;
         });
@@ -71,8 +71,8 @@ export class TodosService extends Effect.Service<TodosService>()(
         }).pipe(
           Effect.mapError(() => new TodoNotFound({ id })),
           Effect.tapError(() =>
-            Effect.log(`[TodosService.update] Todo not found: ${id}`)
-          )
+            Effect.log(`[TodosService.update] Todo not found: ${id}`),
+          ),
         );
 
       const remove = (id: TodoId, userId: UserId) =>
@@ -83,8 +83,8 @@ export class TodosService extends Effect.Service<TodosService>()(
         }).pipe(
           Effect.mapError(() => new TodoNotFound({ id })),
           Effect.tapError(() =>
-            Effect.log(`[TodosService.remove] Todo not found: ${id}`)
-          )
+            Effect.log(`[TodosService.remove] Todo not found: ${id}`),
+          ),
         );
 
       return {
@@ -93,7 +93,7 @@ export class TodosService extends Effect.Service<TodosService>()(
         create,
         update,
         remove,
-      } as const;
+      };
     }),
-  }
+  },
 ) {}
