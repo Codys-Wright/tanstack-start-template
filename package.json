@@ -171,10 +171,7 @@
     "packages/auth/server",
     "packages/auth/database",
     "packages/auth/domain",
-    "packages/core/client",
-    "packages/core/server",
     "packages/core/database",
-    "packages/core/domain",
     "packages/ui/shadcn",
     "packages/ui/theme"
   ]
