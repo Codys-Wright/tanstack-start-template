@@ -1,50 +1,16 @@
 {
-  "include": ["**/*.ts", "**/*.tsx"],
-  "compilerOptions": {
-    "target": "ES2022",
-    "jsx": "react-jsx",
-    "module": "ESNext",
-    "lib": ["ES2022", "DOM", "DOM.Iterable"],
-    "types": ["vite/client"],
-
-    /* Bundler mode */
-    "moduleResolution": "bundler",
-    "allowImportingTsExtensions": true,
-    "verbatimModuleSyntax": false,
-    "noEmit": true,
-
-    /* Linting */
-    "skipLibCheck": true,
-    "strict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true,
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["./src/*"],
-      "@shadcn": ["./src/features/ui/shadcn"],
-      "@shadcn/*": ["./src/features/ui/shadcn/*"],
-      "@/components/ui": ["./src/features/ui/shadcn/components/ui"],
-      "@/components/ui/*": ["./src/features/ui/shadcn/components/ui/*"]
+  "extends": "./tsconfig.base.json",
+  "compileOnSave": false,
+  "files": [],
+  "references": [
+    {
+      "path": "./apps/my-artist-type"
     },
-
-    "plugins": [
-      {
-        "name": "@effect/language-service",
-        "quickinfoEffectParameters": "always",
-        "namespaceImportPackages": ["effect", "@effect/*"],
-        "topLevelNamedReexports": "follow",
-        "diagnosticSeverity": {
-          "importFromBarrel": "error"
-        },
-        "importAliases": {
-          "Array": "Arr",
-          "Function": "Func",
-          "Boolean": "Bool",
-          "Number": "Num",
-          "String": "Str"
-        }
-      }
-    ]
-  }
+    {
+      "path": "./packages/ui/shadcn"
+    },
+    {
+      "path": "./packages/ui/theme"
+    }
+  ]
 }
