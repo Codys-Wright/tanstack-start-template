@@ -10,5 +10,5 @@ export class DomainApi extends HttpApi.make("api")
       title: "TanStack Start API",
       description: "API for the TanStack Start application",
       version: "1.0.0",
-    }),
+    })
   ) {}

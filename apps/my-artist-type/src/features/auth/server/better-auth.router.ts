@@ -16,7 +16,9 @@ export const betterAuthHandler = (req: HttpServerRequest.HttpServerRequest) =>
     const url =
       req.url.startsWith("http://") || req.url.startsWith("https://")
         ? req.url
-        : `${protocol}://${host}${req.url.startsWith("/") ? req.url : `/${req.url}`}`;
+        : `${protocol}://${host}${
+            req.url.startsWith("/") ? req.url : `/${req.url}`
+          }`;
 
     let bodyInit: BodyInit | null = null;
     if (req.method !== "GET" && req.method !== "HEAD") {
@@ -48,16 +50,16 @@ export const betterAuthHandler = (req: HttpServerRequest.HttpServerRequest) =>
 
     return HttpServerResponse.raw(stream).pipe(
       HttpServerResponse.setStatus(webResponse.status),
-      HttpServerResponse.setHeaders(responseHeaders),
+      HttpServerResponse.setHeaders(responseHeaders)
     );
   }).pipe(
     Effect.catchAll((error) =>
       Effect.logError(error).pipe(
         Effect.zipRight(
-          HttpServerResponse.text("Auth handler error", { status: 500 }),
-        ),
-      ),
-    ),
+          HttpServerResponse.text("Auth handler error", { status: 500 })
+        )
+      )
+    )
   );
 
 export const BetterAuthRouter = HttpLayerRouter.addAll([

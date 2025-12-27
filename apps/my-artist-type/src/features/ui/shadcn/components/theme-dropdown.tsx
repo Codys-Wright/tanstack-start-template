@@ -1,26 +1,25 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import { Moon, Sun, Palette, CornerDownLeft, Shuffle } from "lucide-react"
-import { Button } from "./ui/button"
-import { DropdownMenu } from "./ui/dropdown-menu"
-import { useTheme } from "./theme-provider"
-import { useThemeSystem } from "./theme-system-provider"
-import { themes } from "../lib/themes"
-import { RADII, randomizeThemeParams } from "../lib/randomize"
+import * as React from "react";
+import { Moon, Sun, Palette, CornerDownLeft, Shuffle } from "lucide-react";
+import { Button } from "./ui/button";
+import { DropdownMenu } from "./ui/dropdown-menu";
+import { useTheme } from "./theme-provider";
+import { useThemeSystem } from "./theme-system-provider";
+import { themes } from "../lib/themes";
+import { RADII, randomizeThemeParams } from "../lib/randomize";
 
 export function ThemeDropdown() {
-  const { theme: colorMode, setTheme } = useTheme()
-  const { themeName, setThemeName, radius, setRadius } =
-    useThemeSystem()
+  const { theme: colorMode, setTheme } = useTheme();
+  const { themeName, setThemeName, radius, setRadius } = useThemeSystem();
 
   const handleRandomize = React.useCallback(() => {
-    const randomized = randomizeThemeParams()
-    setThemeName(randomized.theme || "neutral")
-    setRadius(randomized.radius || "default")
-  }, [setThemeName, setRadius])
+    const randomized = randomizeThemeParams();
+    setThemeName(randomized.theme || "neutral");
+    setRadius(randomized.radius || "default");
+  }, [setThemeName, setRadius]);
 
-  const currentRadius = RADII.find((r) => r.name === radius) || RADII[2] // default
+  const currentRadius = RADII.find((r) => r.name === radius) || RADII[2]; // default
 
   return (
     <DropdownMenu>
@@ -57,7 +56,8 @@ export function ThemeDropdown() {
         <DropdownMenu.Label>Theme</DropdownMenu.Label>
         {Object.entries(themes).map(([name, theme]) => {
           // Get the primary color from the theme for the indicator
-          const primaryColor = theme.cssVars.light.primary || "oklch(0.205 0 0)"
+          const primaryColor =
+            theme.cssVars.light.primary || "oklch(0.205 0 0)";
           return (
             <DropdownMenu.Item
               key={name}
@@ -73,7 +73,7 @@ export function ThemeDropdown() {
               <span>{name}</span>
               {themeName === name && <span className="ml-auto">✓</span>}
             </DropdownMenu.Item>
-          )
+          );
         })}
 
         <DropdownMenu.Separator />
@@ -110,6 +110,5 @@ export function ThemeDropdown() {
         </DropdownMenu.Item>
       </DropdownMenu.Content>
     </DropdownMenu>
-  )
+  );
 }
-

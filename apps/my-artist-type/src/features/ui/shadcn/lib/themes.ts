@@ -92,7 +92,7 @@ function createColoredTheme(
   colorOverrides: {
     light: Partial<ThemeDefinition["cssVars"]["light"]>;
     dark: Partial<ThemeDefinition["cssVars"]["dark"]>;
-  },
+  }
 ): ThemeDefinition {
   return {
     name,

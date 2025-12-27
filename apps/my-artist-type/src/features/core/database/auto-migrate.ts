@@ -29,7 +29,7 @@ export class AutoMigration extends Effect.Service<AutoMigration>()(
         yield* Effect.log("[AutoMigration] No new migrations to apply.");
       } else {
         yield* Effect.log(
-          `[AutoMigration] Applied ${migrations.length} migration(s):`,
+          `[AutoMigration] Applied ${migrations.length} migration(s):`
         );
         for (const [id, name] of migrations) {
           yield* Effect.log(`  - ${id.toString().padStart(4, "0")}_${name}`);
@@ -46,14 +46,14 @@ export class AutoMigration extends Effect.Service<AutoMigration>()(
       Effect.provide(PgLive),
       // Log errors but don't crash the app
       Effect.tapError((error) =>
-        Effect.logError(`[AutoMigration] Migration failed: ${error}`),
+        Effect.logError(`[AutoMigration] Migration failed: ${error}`)
       ),
       // Convert failures to defects (crash on migration errors)
       // This ensures we don't start the app with an outdated schema
-      Effect.orDie,
+      Effect.orDie
     ),
     dependencies: [],
-  },
+  }
 ) {}
 
 // Export the migration logic for direct use in server initialization
@@ -68,7 +68,7 @@ export const runAutoMigration = Effect.gen(function* () {
     yield* Effect.log("[AutoMigration] No new migrations to apply.");
   } else {
     yield* Effect.log(
-      `[AutoMigration] Applied ${migrations.length} migration(s):`,
+      `[AutoMigration] Applied ${migrations.length} migration(s):`
     );
     for (const [id, name] of migrations) {
       yield* Effect.log(`  - ${id.toString().padStart(4, "0")}_${name}`);
@@ -79,7 +79,7 @@ export const runAutoMigration = Effect.gen(function* () {
 }).pipe(
   Effect.provide(PgLive),
   Effect.tapError((error) =>
-    Effect.logError(`[AutoMigration] Migration failed: ${error}`),
+    Effect.logError(`[AutoMigration] Migration failed: ${error}`)
   ),
-  Effect.orDie,
+  Effect.orDie
 );

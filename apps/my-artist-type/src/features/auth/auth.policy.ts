@@ -11,5 +11,5 @@ export class RpcAuthenticationMiddleware extends RpcMiddleware.Tag<RpcAuthentica
   {
     failure: HttpApiError.Unauthorized,
     provides: AuthContext,
-  },
+  }
 ) {}

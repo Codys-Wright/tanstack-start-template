@@ -25,7 +25,7 @@ const getTodos = createServerFn().handler(async () => {
       const requestHeaders = getRequestHeaders();
       const cookieHeader = requestHeaders.get("cookie") || "";
       yield* Effect.log(
-        `[getTodos] Got request headers, cookie present: ${!!cookieHeader}`,
+        `[getTodos] Got request headers, cookie present: ${!!cookieHeader}`
       );
 
       // Try to get session with proper headers
@@ -40,17 +40,19 @@ const getTodos = createServerFn().handler(async () => {
       }).pipe(
         Effect.tap(() => Effect.log("[getTodos] Session fetch completed")),
         Effect.tapError((error) =>
-          Effect.logError(`[getTodos] Failed to get session: ${String(error)}`),
-        ),
+          Effect.logError(`[getTodos] Failed to get session: ${String(error)}`)
+        )
       );
 
       yield* Effect.log(
-        `[getTodos] Session result: ${session ? "authenticated" : "not authenticated"}`,
+        `[getTodos] Session result: ${
+          session ? "authenticated" : "not authenticated"
+        }`
       );
 
       if (!session?.user?.id) {
         yield* Effect.log(
-          "[getTodos] No authenticated user, returning empty array",
+          "[getTodos] No authenticated user, returning empty array"
         );
         return [];
       }
@@ -65,16 +67,16 @@ const getTodos = createServerFn().handler(async () => {
       // Fetch todos for this user
       const userTodos = yield* service.list(userId);
       yield* Effect.log(
-        `[getTodos] Successfully fetched ${userTodos.length} todos`,
+        `[getTodos] Successfully fetched ${userTodos.length} todos`
       );
 
       return userTodos;
     }).pipe(
       Effect.tapError((error) =>
-        Effect.logError(`[getTodos] Effect error: ${String(error)}`),
+        Effect.logError(`[getTodos] Effect error: ${String(error)}`)
       ),
-      Effect.tap(() => Effect.log("[getTodos] Effect completed successfully")),
-    ),
+      Effect.tap(() => Effect.log("[getTodos] Effect completed successfully"))
+    )
   );
 
   Effect.runSync(Effect.log(`[getTodos] Final exit state: ${todos._tag}`));

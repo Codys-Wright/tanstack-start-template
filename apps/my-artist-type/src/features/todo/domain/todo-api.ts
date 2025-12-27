@@ -15,23 +15,23 @@ export class TodosApiGroup extends HttpApiGroup.make("todos")
     HttpApiEndpoint.get("getById", "/todos/:id")
       .setPath(Schema.Struct({ id: TodoId }))
       .addSuccess(Todo)
-      .addError(TodoNotFound),
+      .addError(TodoNotFound)
   )
   .add(
     HttpApiEndpoint.post("create", "/todos")
       .setPayload(CreateTodoInput)
-      .addSuccess(Todo),
+      .addSuccess(Todo)
   )
   .add(
     HttpApiEndpoint.patch("update", "/todos/:id")
       .setPath(Schema.Struct({ id: TodoId }))
       .setPayload(UpdateTodoInput)
       .addSuccess(Todo)
-      .addError(TodoNotFound),
+      .addError(TodoNotFound)
   )
   .add(
     HttpApiEndpoint.del("remove", "/todos/:id")
       .setPath(Schema.Struct({ id: TodoId }))
       .addSuccess(Schema.Void)
-      .addError(TodoNotFound),
+      .addError(TodoNotFound)
   ) {}

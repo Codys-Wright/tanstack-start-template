@@ -13,13 +13,13 @@ import { DomainRpc } from "../domain/domain-rpc.js";
 
 export const addRpcErrorLogging = <Client>(client: Client): Client => {
   const isStream = (
-    u: unknown,
+    u: unknown
   ): u is Stream.Stream<unknown, unknown, unknown> =>
     hasProperty(u, Stream.StreamTypeId);
 
   const wrapCall = <F extends (...args: Array<any>) => any>(
     fn: F,
-    path: ReadonlyArray<string>,
+    path: ReadonlyArray<string>
   ): F => {
     const rpcId = path.join(".");
     const logCause = (cause: unknown) =>
@@ -79,7 +79,7 @@ export class ApiClient extends Effect.Service<ApiClient>()("ApiClient", {
           HttpClient.retryTransient({
             times: 3,
             schedule: Schedule.exponential("1 second"),
-          }),
+          })
         ),
     });
 
@@ -89,4 +89,3 @@ export class ApiClient extends Effect.Service<ApiClient>()("ApiClient", {
     };
   }),
 }) {}
-

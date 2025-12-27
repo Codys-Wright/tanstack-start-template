@@ -1,14 +1,14 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import * as HoverCardPrimitive from "@radix-ui/react-hover-card"
+import * as React from "react";
+import * as HoverCardPrimitive from "@radix-ui/react-hover-card";
 
-import { cn } from "@/features/ui/shadcn/lib/utils"
+import { cn } from "@/features/ui/shadcn/lib/utils";
 
 function HoverCardRoot({
   ...props
 }: React.ComponentProps<typeof HoverCardPrimitive.Root>) {
-  return <HoverCardPrimitive.Root data-slot="hover-card" {...props} />
+  return <HoverCardPrimitive.Root data-slot="hover-card" {...props} />;
 }
 
 function HoverCardTrigger({
@@ -16,7 +16,7 @@ function HoverCardTrigger({
 }: React.ComponentProps<typeof HoverCardPrimitive.Trigger>) {
   return (
     <HoverCardPrimitive.Trigger data-slot="hover-card-trigger" {...props} />
-  )
+  );
 }
 
 function HoverCardContent({
@@ -38,13 +38,15 @@ function HoverCardContent({
         {...props}
       />
     </HoverCardPrimitive.Portal>
-  )
+  );
 }
 
-export const HoverCard: React.FC<React.ComponentProps<typeof HoverCardPrimitive.Root>> & {
-  Trigger: typeof HoverCardTrigger
-  Content: typeof HoverCardContent
+export const HoverCard: React.FC<
+  React.ComponentProps<typeof HoverCardPrimitive.Root>
+> & {
+  Trigger: typeof HoverCardTrigger;
+  Content: typeof HoverCardContent;
 } = Object.assign(HoverCardRoot, {
   Trigger: HoverCardTrigger,
   Content: HoverCardContent,
-})
+});

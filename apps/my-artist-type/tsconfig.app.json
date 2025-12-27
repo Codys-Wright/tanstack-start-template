@@ -33,5 +33,13 @@
     "src/**/*.spec.jsx",
     "src/**/*.test.jsx"
   ],
-  "include": ["src/**/*.js", "src/**/*.jsx", "src/**/*.ts", "src/**/*.tsx"]
+  "include": ["src/**/*.js", "src/**/*.jsx", "src/**/*.ts", "src/**/*.tsx"],
+  "references": [
+    {
+      "path": "../../packages/ui/theme/tsconfig.lib.json"
+    },
+    {
+      "path": "../../packages/ui/shadcn/tsconfig.lib.json"
+    }
+  ]
 }

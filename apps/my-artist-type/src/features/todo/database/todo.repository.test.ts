@@ -7,7 +7,7 @@ import { randomUUID } from "node:crypto";
 import { TodoRepository } from "./todo.repository.js";
 
 const Live = TodoRepository.DefaultWithoutDependencies.pipe(
-  Layer.provideMerge(PgTest),
+  Layer.provideMerge(PgTest)
 );
 
 const makeUserId = () => randomUUID() as UserId;
@@ -32,7 +32,7 @@ it.layer(Live, { timeout: "30 seconds" })("TodoRepository", (it) => {
         expect(created.id).toBeDefined();
         expect(created.createdAt).toBeDefined();
         expect(created.updatedAt).toBeDefined();
-      }),
+      })
     );
   });
 
@@ -53,7 +53,7 @@ it.layer(Live, { timeout: "30 seconds" })("TodoRepository", (it) => {
 
         expect(found).toHaveLength(1);
         expect(found[0].title).toBe("User's Todo");
-      }),
+      })
     );
 
     it.effect(
@@ -65,7 +65,7 @@ it.layer(Live, { timeout: "30 seconds" })("TodoRepository", (it) => {
         const found = yield* repo.findByUserId({ userId });
 
         expect(found).toHaveLength(0);
-      }),
+      })
     );
 
     it.effect(
@@ -93,7 +93,7 @@ it.layer(Live, { timeout: "30 seconds" })("TodoRepository", (it) => {
         const user2Todos = yield* repo.findByUserId({ userId: userId2 });
         expect(user2Todos).toHaveLength(1);
         expect(user2Todos[0].title).toBe("User2 Todo");
-      }),
+      })
     );
   });
 
@@ -120,7 +120,7 @@ it.layer(Live, { timeout: "30 seconds" })("TodoRepository", (it) => {
         expect(updated.title).toBe("Updated Title");
         expect(updated.completed).toBe(true);
         expect(updated.id).toBe(created.id);
-      }),
+      })
     );
 
     it.effect(
@@ -142,7 +142,7 @@ it.layer(Live, { timeout: "30 seconds" })("TodoRepository", (it) => {
             userId: userId2,
             title: "Hacked Title",
             completed: true,
-          }),
+          })
         );
 
         expect(result._tag).toBe("Left"); // Should fail
@@ -152,7 +152,7 @@ it.layer(Live, { timeout: "30 seconds" })("TodoRepository", (it) => {
         expect(found).toHaveLength(1);
         expect(found[0].title).toBe("Protected Todo");
         expect(found[0].completed).toBe(false);
-      }),
+      })
     );
   });
 
@@ -176,7 +176,7 @@ it.layer(Live, { timeout: "30 seconds" })("TodoRepository", (it) => {
 
         const found = yield* repo.findByUserId({ userId });
         expect(found).toHaveLength(0);
-      }),
+      })
     );
 
     it.effect(
@@ -201,7 +201,7 @@ it.layer(Live, { timeout: "30 seconds" })("TodoRepository", (it) => {
         const found = yield* repo.findByUserId({ userId: userId1 });
         expect(found).toHaveLength(1);
         expect(found[0].id).toBe(todo.id);
-      }),
+      })
     );
   });
 
@@ -225,7 +225,7 @@ it.layer(Live, { timeout: "30 seconds" })("TodoRepository", (it) => {
 
         expect(found.title).toBe("My Todo");
         expect(found.id).toBe(created.id);
-      }),
+      })
     );
 
     it.effect(
@@ -238,11 +238,11 @@ it.layer(Live, { timeout: "30 seconds" })("TodoRepository", (it) => {
           repo.findById({
             id: "nonexistent-id",
             userId,
-          }),
+          })
         );
 
         expect(result._tag).toBe("Left");
-      }),
+      })
     );
 
     it.effect(
@@ -262,12 +262,11 @@ it.layer(Live, { timeout: "30 seconds" })("TodoRepository", (it) => {
           repo.findById({
             id: todo.id,
             userId: userId2,
-          }),
+          })
         );
 
         expect(result._tag).toBe("Left");
-      }),
+      })
     );
   });
 });
-

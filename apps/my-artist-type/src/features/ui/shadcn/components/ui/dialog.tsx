@@ -1,32 +1,32 @@
-import * as React from "react"
-import * as DialogPrimitive from "@radix-ui/react-dialog"
-import { XIcon } from "lucide-react"
-import { cva, type VariantProps } from "class-variance-authority"
+import * as React from "react";
+import * as DialogPrimitive from "@radix-ui/react-dialog";
+import { XIcon } from "lucide-react";
+import { cva, type VariantProps } from "class-variance-authority";
 
-import { cn } from "@/features/ui/shadcn/lib/utils"
+import { cn } from "@/features/ui/shadcn/lib/utils";
 
 function DialogRoot({
   ...props
 }: React.ComponentProps<typeof DialogPrimitive.Root>) {
-  return <DialogPrimitive.Root data-slot="dialog" {...props} />
+  return <DialogPrimitive.Root data-slot="dialog" {...props} />;
 }
 
 function DialogTrigger({
   ...props
 }: React.ComponentProps<typeof DialogPrimitive.Trigger>) {
-  return <DialogPrimitive.Trigger data-slot="dialog-trigger" {...props} />
+  return <DialogPrimitive.Trigger data-slot="dialog-trigger" {...props} />;
 }
 
 function DialogPortal({
   ...props
 }: React.ComponentProps<typeof DialogPrimitive.Portal>) {
-  return <DialogPrimitive.Portal data-slot="dialog-portal" {...props} />
+  return <DialogPrimitive.Portal data-slot="dialog-portal" {...props} />;
 }
 
 function DialogClose({
   ...props
 }: React.ComponentProps<typeof DialogPrimitive.Close>) {
-  return <DialogPrimitive.Close data-slot="dialog-close" {...props} />
+  return <DialogPrimitive.Close data-slot="dialog-close" {...props} />;
 }
 
 function DialogOverlay({
@@ -42,7 +42,7 @@ function DialogOverlay({
       )}
       {...props}
     />
-  )
+  );
 }
 
 const dialogContentVariants = cva(
@@ -63,8 +63,8 @@ const dialogContentVariants = cva(
       size: "default",
       variant: "default",
     },
-  },
-)
+  }
+);
 
 function DialogContent({
   className,
@@ -74,7 +74,7 @@ function DialogContent({
   variant,
   ...props
 }: React.ComponentProps<typeof DialogPrimitive.Content> & {
-  showCloseButton?: boolean
+  showCloseButton?: boolean;
 } & VariantProps<typeof dialogContentVariants>) {
   return (
     <DialogPortal data-slot="dialog-portal">
@@ -96,7 +96,7 @@ function DialogContent({
         )}
       </DialogPrimitive.Content>
     </DialogPortal>
-  )
+  );
 }
 
 function DialogHeader({ className, ...props }: React.ComponentProps<"div">) {
@@ -106,7 +106,7 @@ function DialogHeader({ className, ...props }: React.ComponentProps<"div">) {
       className={cn("flex flex-col gap-2 text-center sm:text-left", className)}
       {...props}
     />
-  )
+  );
 }
 
 function DialogFooter({ className, ...props }: React.ComponentProps<"div">) {
@@ -119,7 +119,7 @@ function DialogFooter({ className, ...props }: React.ComponentProps<"div">) {
       )}
       {...props}
     />
-  )
+  );
 }
 
 function DialogTitle({
@@ -132,7 +132,7 @@ function DialogTitle({
       className={cn("text-lg leading-none font-semibold", className)}
       {...props}
     />
-  )
+  );
 }
 
 function DialogDescription({
@@ -145,19 +145,21 @@ function DialogDescription({
       className={cn("text-muted-foreground text-sm", className)}
       {...props}
     />
-  )
+  );
 }
 
-export const Dialog: React.FC<React.ComponentProps<typeof DialogPrimitive.Root>> & {
-  Close: typeof DialogClose
-  Content: typeof DialogContent
-  Description: typeof DialogDescription
-  Footer: typeof DialogFooter
-  Header: typeof DialogHeader
-  Overlay: typeof DialogOverlay
-  Portal: typeof DialogPortal
-  Title: typeof DialogTitle
-  Trigger: typeof DialogTrigger
+export const Dialog: React.FC<
+  React.ComponentProps<typeof DialogPrimitive.Root>
+> & {
+  Close: typeof DialogClose;
+  Content: typeof DialogContent;
+  Description: typeof DialogDescription;
+  Footer: typeof DialogFooter;
+  Header: typeof DialogHeader;
+  Overlay: typeof DialogOverlay;
+  Portal: typeof DialogPortal;
+  Title: typeof DialogTitle;
+  Trigger: typeof DialogTrigger;
 } = Object.assign(DialogRoot, {
   Close: DialogClose,
   Content: DialogContent,
@@ -168,4 +170,4 @@ export const Dialog: React.FC<React.ComponentProps<typeof DialogPrimitive.Root>>
   Portal: DialogPortal,
   Title: DialogTitle,
   Trigger: DialogTrigger,
-})
+});

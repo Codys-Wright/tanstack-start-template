@@ -1,9 +1,9 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import * as TooltipPrimitive from "@radix-ui/react-tooltip"
+import * as React from "react";
+import * as TooltipPrimitive from "@radix-ui/react-tooltip";
 
-import { cn } from "@/features/ui/shadcn/lib/utils"
+import { cn } from "@/features/ui/shadcn/lib/utils";
 
 function TooltipProvider({
   delayDuration = 0,
@@ -15,7 +15,7 @@ function TooltipProvider({
       delayDuration={delayDuration}
       {...props}
     />
-  )
+  );
 }
 
 function TooltipRoot({
@@ -25,13 +25,13 @@ function TooltipRoot({
     <TooltipProvider>
       <TooltipPrimitive.Root data-slot="tooltip" {...props} />
     </TooltipProvider>
-  )
+  );
 }
 
 function TooltipTrigger({
   ...props
 }: React.ComponentProps<typeof TooltipPrimitive.Trigger>) {
-  return <TooltipPrimitive.Trigger data-slot="tooltip-trigger" {...props} />
+  return <TooltipPrimitive.Trigger data-slot="tooltip-trigger" {...props} />;
 }
 
 function TooltipContent({
@@ -55,15 +55,17 @@ function TooltipContent({
         <TooltipPrimitive.Arrow className="bg-foreground fill-foreground z-50 size-2.5 translate-y-[calc(-50%_-_2px)] rotate-45 rounded-[2px]" />
       </TooltipPrimitive.Content>
     </TooltipPrimitive.Portal>
-  )
+  );
 }
 
-export const Tooltip: React.FC<React.ComponentProps<typeof TooltipPrimitive.Root>> & {
-  Trigger: typeof TooltipTrigger
-  Content: typeof TooltipContent
-  Provider: typeof TooltipProvider
+export const Tooltip: React.FC<
+  React.ComponentProps<typeof TooltipPrimitive.Root>
+> & {
+  Trigger: typeof TooltipTrigger;
+  Content: typeof TooltipContent;
+  Provider: typeof TooltipProvider;
 } = Object.assign(TooltipRoot, {
   Trigger: TooltipTrigger,
   Content: TooltipContent,
   Provider: TooltipProvider,
-})
+});

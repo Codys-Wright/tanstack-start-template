@@ -33,9 +33,7 @@ export function TodoList() {
             <Alert variant="destructive">
               <Alert.Title>Something went wrong loading todos.</Alert.Title>
               <Alert.Description>
-                <div className="mb-2 text-sm">
-                  Error: {String(error)}
-                </div>
+                <div className="mb-2 text-sm">Error: {String(error)}</div>
                 <Button
                   onClick={refreshTodos}
                   variant="outline"
@@ -52,4 +50,3 @@ export function TodoList() {
     </div>
   );
 }
-

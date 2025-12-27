@@ -10,13 +10,12 @@ export class EnvVars extends Effect.Service<EnvVars>()("EnvVars", {
     return {
       API_URL: yield* Config.url("API_URL").pipe(
         Config.map(normalizeUrl),
-        Config.withDefault("http://localhost:3000"),
+        Config.withDefault("http://localhost:3000")
       ),
       DATABASE_URL: yield* Config.redacted("DATABASE_URL"),
       UPLOADTHING_SECRET: yield* Config.redacted("UPLOADTHING_SECRET").pipe(
-        Config.withDefault(Redacted.make("")),
+        Config.withDefault(Redacted.make(""))
       ),
     } as const;
   }),
 }) {}
-

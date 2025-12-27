@@ -28,7 +28,9 @@ const prettyLoggerWithPrefix: Layer.Layer<never> = Logger.replace(
         const prefix = String(prefixAnnotation.value);
         const newAnnotations = HashMap.remove(options.annotations, "__prefix");
 
-        const messageArray = Array.isArray(options.message) ? options.message : [options.message];
+        const messageArray = Array.isArray(options.message)
+          ? options.message
+          : [options.message];
         const prefixedMessages =
           messageArray.length > 0
             ? [`[${prefix}] ${messageArray[0]}`, ...messageArray.slice(1)]
@@ -41,8 +43,8 @@ const prettyLoggerWithPrefix: Layer.Layer<never> = Logger.replace(
         };
       }
       return options;
-    }),
-  ),
+    })
+  )
 );
 
 export const makeAtomRuntime = Atom.context({ memoMap: Atom.defaultMemoMap });
@@ -50,8 +52,8 @@ makeAtomRuntime.addGlobalLayer(
   Layer.mergeAll(
     prettyLoggerWithPrefix,
     FetchHttpClient.layer,
-    Logger.minimumLogLevel(LogLevel.Debug),
-  ),
+    Logger.minimumLogLevel(LogLevel.Debug)
+  )
 );
 
 export const useAtomRegistry = (): Registry.Registry => {
@@ -89,4 +91,3 @@ export const useAtomInterrupt = (atom: Atom.Writable<unknown, unknown>) => {
     set(Atom.Interrupt);
   }, [set]);
 };
-

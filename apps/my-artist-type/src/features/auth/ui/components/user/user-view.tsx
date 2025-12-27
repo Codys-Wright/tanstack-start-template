@@ -1,23 +1,22 @@
-import { cn, Skeleton } 
-from "@shadcn"
-import { UserAvatar, type UserAvatarClassNames } from "./user-avatar.js"
-import type { User } from "../../../domain/index.js"
+import { cn, Skeleton } from "@shadcn";
+import { UserAvatar, type UserAvatarClassNames } from "./user-avatar.js";
+import type { User } from "../../../domain/index.js";
 
 export interface UserViewClassNames {
-	base?: string
-	avatar?: UserAvatarClassNames
-	content?: string
-	title?: string
-	subtitle?: string
-	skeleton?: string
+  base?: string;
+  avatar?: UserAvatarClassNames;
+  content?: string;
+  title?: string;
+  subtitle?: string;
+  skeleton?: string;
 }
 
 export interface UserViewProps {
-	className?: string
-	classNames?: UserViewClassNames
-	isPending?: boolean
-	size?: "sm" | "default" | "lg" | null
-	user?: User | null
+  className?: string;
+  classNames?: UserViewClassNames;
+  isPending?: boolean;
+  size?: "sm" | "default" | "lg" | null;
+  user?: User | null;
 }
 
 /**
@@ -30,77 +29,75 @@ export interface UserViewProps {
  * - Supports customization through classNames prop
  */
 export function UserView({
-	className,
-	classNames,
-	isPending,
-	size,
-	user,
+  className,
+  classNames,
+  isPending,
+  size,
+  user,
 }: UserViewProps) {
-	return (
-		<div
-			className={cn("flex items-center gap-2", className, classNames?.base)}
-		>
-			<UserAvatar
-				className={cn(size !== "sm" && "my-0.5")}
-				classNames={classNames?.avatar}
-				isPending={isPending}
-				size={size}
-				user={user}
-			/>
+  return (
+    <div className={cn("flex items-center gap-2", className, classNames?.base)}>
+      <UserAvatar
+        className={cn(size !== "sm" && "my-0.5")}
+        classNames={classNames?.avatar}
+        isPending={isPending}
+        size={size}
+        user={user}
+      />
 
-			<div
-				className={cn(
-					"grid flex-1 text-start leading-tight",
-					classNames?.content,
-				)}
-			>
-				{isPending ? (
-					<>
-						<Skeleton
-							className={cn(
-								"max-w-full",
-								size === "lg" ? "h-4.5 w-32" : "h-3.5 w-24",
-								classNames?.title,
-								classNames?.skeleton,
-							)}
-						/>
-						{size !== "sm" && (
-							<Skeleton
-								className={cn(
-									"mt-1.5 max-w-full",
-									size === "lg" ? "h-3.5 w-40" : "h-3 w-32",
-									classNames?.subtitle,
-									classNames?.skeleton,
-								)}
-							/>
-						)}
-					</>
-				) : (
-					<>
-						<span
-							className={cn(
-								"truncate font-semibold",
-								size === "lg" ? "text-base" : "text-sm",
-								classNames?.title,
-							)}
-						>
-							{user?.name || user?.email || "User"}
-						</span>
+      <div
+        className={cn(
+          "grid flex-1 text-start leading-tight",
+          classNames?.content
+        )}
+      >
+        {isPending ? (
+          <>
+            <Skeleton
+              className={cn(
+                "max-w-full",
+                size === "lg" ? "h-4.5 w-32" : "h-3.5 w-24",
+                classNames?.title,
+                classNames?.skeleton
+              )}
+            />
+            {size !== "sm" && (
+              <Skeleton
+                className={cn(
+                  "mt-1.5 max-w-full",
+                  size === "lg" ? "h-3.5 w-40" : "h-3 w-32",
+                  classNames?.subtitle,
+                  classNames?.skeleton
+                )}
+              />
+            )}
+          </>
+        ) : (
+          <>
+            <span
+              className={cn(
+                "truncate font-semibold",
+                size === "lg" ? "text-base" : "text-sm",
+                classNames?.title
+              )}
+            >
+              {user?.name || user?.email || "User"}
+            </span>
 
-						{size !== "sm" && user?.name && (
-							<span
-								className={cn(
-									"truncate opacity-70",
-									size === "lg" ? "text-sm" : "text-xs",
-									classNames?.subtitle,
-								)}
-							>
-								{user?.email}
-							</span>
-						)}
-					</>
-				)}
-			</div>
-		</div>
-	)
+            {size !== "sm" && user?.name && (
+              <span
+                className={cn(
+                  "truncate opacity-70",
+                  size === "lg" ? "text-sm" : "text-xs",
+                  classNames?.subtitle
+                )}
+              >
+                {user?.email}
+              </span>
+            )}
+          </>
+        )}
+      </div>
+    </div>
+  );
 }

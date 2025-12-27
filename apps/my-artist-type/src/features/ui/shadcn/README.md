@@ -21,11 +21,11 @@ shadcn/
 
 ```typescript
 // Import from main index
-import { Button, ModeToggle, ThemeProvider, cn } from "@shadcn"
+import { Button, ModeToggle, ThemeProvider, cn } from "@shadcn";
 
 // Or import specific components
-import { Button } from "@shadcn/components/ui/button"
-import { ThemeProvider, useTheme } from "@shadcn/components/theme-provider"
+import { Button } from "@shadcn/components/ui/button";
+import { ThemeProvider, useTheme } from "@shadcn/components/theme-provider";
 ```
 
 ### Theme Provider Setup
@@ -33,28 +33,28 @@ import { ThemeProvider, useTheme } from "@shadcn/components/theme-provider"
 Wrap your app root with `ThemeProvider`:
 
 ```tsx
-import { ThemeProvider } from "@shadcn"
+import { ThemeProvider } from "@shadcn";
 
 function App() {
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
       {children}
     </ThemeProvider>
-  )
+  );
 }
 ```
 
 ### Using Mode Toggle
 
 ```tsx
-import { ModeToggle } from "@shadcn"
+import { ModeToggle } from "@shadcn";
 
 function Header() {
   return (
     <header>
       <ModeToggle />
     </header>
-  )
+  );
 }
 ```
 
@@ -67,22 +67,22 @@ This feature requires specific Vite configuration to work properly. If you need 
 The following configuration in `vite.config.ts` is required for this feature:
 
 ```typescript
-import { defineConfig } from 'vite'
-import { tanstackStart } from '@tanstack/react-start/plugin/vite'
-import viteReact from '@vitejs/plugin-react'
-import viteTsConfigPaths from 'vite-tsconfig-paths'
-import tailwindcss from '@tailwindcss/vite'
+import { defineConfig } from "vite";
+import { tanstackStart } from "@tanstack/react-start/plugin/vite";
+import viteReact from "@vitejs/plugin-react";
+import viteTsConfigPaths from "vite-tsconfig-paths";
+import tailwindcss from "@tailwindcss/vite";
 
 const config = defineConfig({
   plugins: [
     // ... other plugins
     viteTsConfigPaths({
-      projects: ['./tsconfig.json'],
+      projects: ["./tsconfig.json"],
     }),
     tailwindcss(),
     // ... rest of plugins
   ],
-})
+});
 ```
 
 ### Key Requirements
@@ -121,7 +121,7 @@ The feature uses Tailwind CSS with CSS variables for theming. Ensure your `src/s
   :root {
     /* Light mode variables */
   }
-  
+
   .dark {
     /* Dark mode variables */
   }
@@ -141,6 +141,7 @@ Components will be automatically installed to `components/ui/` based on the `com
 ## Dependencies
 
 This feature depends on:
+
 - `@radix-ui/*` - UI primitives
 - `class-variance-authority` - Variant management
 - `clsx` & `tailwind-merge` - Class name utilities
@@ -153,4 +154,3 @@ This feature depends on:
 - Theme state is persisted in localStorage (default key: `vite-ui-theme`)
 - Theme provider supports "light", "dark", and "system" modes
 - System mode automatically detects user's OS preference
-

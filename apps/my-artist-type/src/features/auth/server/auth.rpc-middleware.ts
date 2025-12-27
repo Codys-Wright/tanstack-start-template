@@ -8,7 +8,7 @@ import { BetterAuthService } from "./better-auth.service.js";
 /**
  * Live implementation of RpcAuthenticationMiddleware.
  * For RPC calls, we attempt to get the session from Better Auth.
- * 
+ *
  * Note: RPC authentication in SSR context may require different handling
  * depending on whether RPC calls are server-side only or from the browser.
  * Currently this implementation attempts to validate with Better Auth.
@@ -32,7 +32,7 @@ export const RpcAuthenticationMiddlewareLive = Layer.effect(
 
         // Return AuthContext
         return { userId: session.user.id as UserId };
-      }),
+      })
     );
-  }),
+  })
 );

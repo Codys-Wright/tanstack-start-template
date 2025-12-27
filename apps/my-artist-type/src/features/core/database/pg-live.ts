@@ -37,7 +37,7 @@ export const PgLive = Layer.unwrapEffect(
       connectTimeout: "10 seconds",
       ...pgConfig,
     });
-  }),
+  })
 ).pipe(Layer.orDie);
 
 // ===============================
@@ -47,7 +47,7 @@ export const PgLive = Layer.unwrapEffect(
 class PgContainer extends Effect.Service<PgContainer>()("PgContainer", {
   scoped: Effect.acquireRelease(
     Effect.promise(() => new PostgreSqlContainer("postgres:alpine").start()),
-    (container) => Effect.promise(() => container.stop()),
+    (container) => Effect.promise(() => container.stop())
   ),
 }) {}
 
@@ -59,7 +59,7 @@ const ApplySchemaDump = Layer.effectDiscard(
     const schemaPath = path.resolve(currentDir, "migrations/sql/_schema.sql");
     const schema = yield* fs.readFileString(schemaPath);
     yield* sql.unsafe(schema);
-  }),
+  })
 ).pipe(Layer.provide(NodeFileSystem.layer), Layer.orDie);
 
 const PgClientTest = Layer.unwrapEffect(
@@ -69,7 +69,7 @@ const PgClientTest = Layer.unwrapEffect(
       url: Redacted.make(container.getConnectionUri()),
       ...pgConfig,
     });
-  }),
+  })
 ).pipe(Layer.provide(PgContainer.Default), Layer.orDie);
 
 export const PgTest = ApplySchemaDump.pipe(Layer.provideMerge(PgClientTest));
@@ -79,13 +79,13 @@ export const PgTest = ApplySchemaDump.pipe(Layer.provideMerge(PgClientTest));
 // ===============================
 
 class TransactionRollback extends Schema.TaggedError<TransactionRollback>(
-  "TestRollback",
+  "TestRollback"
 )("TestRollback", {
   value: Schema.Any,
 }) {}
 
 export const withTransactionRollback = <A, E, R>(
-  self: Effect.Effect<A, E, R>,
+  self: Effect.Effect<A, E, R>
 ) =>
   Effect.gen(function* () {
     const sql = yield* SqlClient.SqlClient;
@@ -94,11 +94,11 @@ export const withTransactionRollback = <A, E, R>(
         Effect.gen(function* () {
           const value = yield* self;
           return yield* new TransactionRollback({ value });
-        }),
+        })
       )
       .pipe(
         Effect.catchIf(Schema.is(TransactionRollback), (error) =>
-          Effect.succeed(error.value as A),
-        ),
+          Effect.succeed(error.value as A)
+        )
       );
   });

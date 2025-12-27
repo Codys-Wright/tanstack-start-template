@@ -1,15 +1,15 @@
-import * as React from "react"
-import { OTPInput, OTPInputContext } from "input-otp"
-import { MinusIcon } from "lucide-react"
+import * as React from "react";
+import { OTPInput, OTPInputContext } from "input-otp";
+import { MinusIcon } from "lucide-react";
 
-import { cn } from "@/features/ui/shadcn/lib/utils"
+import { cn } from "@/features/ui/shadcn/lib/utils";
 
 function InputOTPRoot({
   className,
   containerClassName,
   ...props
 }: React.ComponentProps<typeof OTPInput> & {
-  containerClassName?: string
+  containerClassName?: string;
 }) {
   return (
     <OTPInput
@@ -21,7 +21,7 @@ function InputOTPRoot({
       className={cn("disabled:cursor-not-allowed", className)}
       {...props}
     />
-  )
+  );
 }
 
 function InputOTPGroup({ className, ...props }: React.ComponentProps<"div">) {
@@ -31,7 +31,7 @@ function InputOTPGroup({ className, ...props }: React.ComponentProps<"div">) {
       className={cn("flex items-center", className)}
       {...props}
     />
-  )
+  );
 }
 
 function InputOTPSlot({
@@ -39,10 +39,10 @@ function InputOTPSlot({
   className,
   ...props
 }: React.ComponentProps<"div"> & {
-  index: number
+  index: number;
 }) {
-  const inputOTPContext = React.useContext(OTPInputContext)
-  const { char, hasFakeCaret, isActive } = inputOTPContext?.slots[index] ?? {}
+  const inputOTPContext = React.useContext(OTPInputContext);
+  const { char, hasFakeCaret, isActive } = inputOTPContext?.slots[index] ?? {};
 
   return (
     <div
@@ -61,7 +61,7 @@ function InputOTPSlot({
         </div>
       )}
     </div>
-  )
+  );
 }
 
 function InputOTPSeparator({ ...props }: React.ComponentProps<"div">) {
@@ -69,15 +69,17 @@ function InputOTPSeparator({ ...props }: React.ComponentProps<"div">) {
     <div data-slot="input-otp-separator" role="separator" {...props}>
       <MinusIcon />
     </div>
-  )
+  );
 }
 
-export const InputOTP: React.FC<React.ComponentProps<typeof OTPInput> & { containerClassName?: string }> & {
-  Group: typeof InputOTPGroup
-  Slot: typeof InputOTPSlot
-  Separator: typeof InputOTPSeparator
+export const InputOTP: React.FC<
+  React.ComponentProps<typeof OTPInput> & { containerClassName?: string }
+> & {
+  Group: typeof InputOTPGroup;
+  Slot: typeof InputOTPSlot;
+  Separator: typeof InputOTPSeparator;
 } = Object.assign(InputOTPRoot, {
   Group: InputOTPGroup,
   Slot: InputOTPSlot,
   Separator: InputOTPSeparator,
-})
+});

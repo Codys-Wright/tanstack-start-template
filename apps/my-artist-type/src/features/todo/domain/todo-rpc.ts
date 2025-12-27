@@ -36,7 +36,7 @@ export class TodosRpc extends RpcGroup.make(
     success: Schema.Void,
     error: TodoNotFound,
     payload: { id: TodoId },
-  }),
+  })
 )
   .prefix("todos_")
   .middleware(RpcAuthenticationMiddleware) {}

@@ -7,12 +7,12 @@ import { fromFeatures } from "./feature-migration-loader.js";
 
 /**
  * Migration runner that discovers and runs migrations from all features.
- * 
+ *
  * Migrations are discovered from:
  * - src/features/auth/database/migrations/
  * - src/features/todo/database/migrations/
  * - ... any other feature with a database/migrations folder
- * 
+ *
  * Migrations run in order:
  * 1. Auth migrations (always first)
  * 2. Other features (alphabetically)

@@ -10,20 +10,20 @@ import { Organization } from "../domain/organization.schema.js";
  * Provides type-safe SQL operations with automatic validation.
  */
 export class OrganizationRepository extends Effect.Service<OrganizationRepository>()(
-	"OrganizationRepository",
-	{
-		dependencies: [PgLive],
-		effect: Effect.gen(function* () {
-			const sql = yield* SqlClient.SqlClient;
+  "OrganizationRepository",
+  {
+    dependencies: [PgLive],
+    effect: Effect.gen(function* () {
+      const sql = yield* SqlClient.SqlClient;
 
-			// Find all organizations
-			const findAll = SqlSchema.findAll({
-				Request: Schema.Struct({
-					limit: Schema.optional(Schema.Number),
-					offset: Schema.optional(Schema.Number),
-				}),
-				Result: Organization,
-				execute: (req) => sql`
+      // Find all organizations
+      const findAll = SqlSchema.findAll({
+        Request: Schema.Struct({
+          limit: Schema.optional(Schema.Number),
+          offset: Schema.optional(Schema.Number),
+        }),
+        Result: Organization,
+        execute: (req) => sql`
 					SELECT 
 						id,
 						name,
@@ -36,13 +36,13 @@ export class OrganizationRepository extends Effect.Service<OrganizationRepositor
 					LIMIT ${req.limit ?? 1000}
 					OFFSET ${req.offset ?? 0}
 				`,
-			});
+      });
 
-			// Find a single organization by ID
-			const findById = SqlSchema.single({
-				Request: Schema.Struct({ id: Schema.String }),
-				Result: Organization,
-				execute: (req) => sql`
+      // Find a single organization by ID
+      const findById = SqlSchema.single({
+        Request: Schema.Struct({ id: Schema.String }),
+        Result: Organization,
+        execute: (req) => sql`
 					SELECT 
 						id,
 						name,
@@ -53,13 +53,13 @@ export class OrganizationRepository extends Effect.Service<OrganizationRepositor
 					FROM organization
 					WHERE id = ${req.id}
 				`,
-			});
+      });
 
-			// Find organization by slug
-			const findBySlug = SqlSchema.single({
-				Request: Schema.Struct({ slug: Schema.String }),
-				Result: Organization,
-				execute: (req) => sql`
+      // Find organization by slug
+      const findBySlug = SqlSchema.single({
+        Request: Schema.Struct({ slug: Schema.String }),
+        Result: Organization,
+        execute: (req) => sql`
 					SELECT 
 						id,
 						name,
@@ -70,33 +70,33 @@ export class OrganizationRepository extends Effect.Service<OrganizationRepositor
 					FROM organization
 					WHERE slug = ${req.slug}
 				`,
-			});
+      });
 
-			// Count total organizations
-			const count = SqlSchema.single({
-				Request: Schema.Struct({}),
-				Result: Schema.Struct({ count: Schema.Number }),
-				execute: () => sql`
+      // Count total organizations
+      const count = SqlSchema.single({
+        Request: Schema.Struct({}),
+        Result: Schema.Struct({ count: Schema.Number }),
+        execute: () => sql`
 					SELECT COUNT(*)::int as count FROM organization
 				`,
-			});
+      });
 
-			// Get organizations with member count
-			const findAllWithMemberCount = SqlSchema.findAll({
-				Request: Schema.Struct({
-					limit: Schema.optional(Schema.Number),
-					offset: Schema.optional(Schema.Number),
-				}),
-				Result: Schema.Struct({
-					id: Schema.String,
-					name: Schema.String,
-					slug: Schema.String,
-					logo: Schema.NullOr(Schema.String),
-					metadata: Schema.optional(Schema.Unknown),
-					createdAt: Schema.DateTimeUtc,
-					memberCount: Schema.Number,
-				}),
-				execute: (req) => sql`
+      // Get organizations with member count
+      const findAllWithMemberCount = SqlSchema.findAll({
+        Request: Schema.Struct({
+          limit: Schema.optional(Schema.Number),
+          offset: Schema.optional(Schema.Number),
+        }),
+        Result: Schema.Struct({
+          id: Schema.String,
+          name: Schema.String,
+          slug: Schema.String,
+          logo: Schema.NullOr(Schema.String),
+          metadata: Schema.optional(Schema.Unknown),
+          createdAt: Schema.DateTimeUtc,
+          memberCount: Schema.Number,
+        }),
+        execute: (req) => sql`
 					SELECT 
 						o.id,
 						o.name,
@@ -112,15 +112,15 @@ export class OrganizationRepository extends Effect.Service<OrganizationRepositor
 					LIMIT ${req.limit ?? 1000}
 					OFFSET ${req.offset ?? 0}
 				`,
-			});
+      });
 
-			return {
-				findAll,
-				findById,
-				findBySlug,
-				count,
-				findAllWithMemberCount,
-			} as const;
-		}),
-	},
+      return {
+        findAll,
+        findById,
+        findBySlug,
+        count,
+        findAllWithMemberCount,
+      } as const;
+    }),
+  }
 ) {}

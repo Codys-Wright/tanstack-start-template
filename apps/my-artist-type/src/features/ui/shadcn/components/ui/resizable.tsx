@@ -1,8 +1,8 @@
-import * as React from "react"
-import { GripVerticalIcon } from "lucide-react"
-import * as ResizablePrimitive from "react-resizable-panels"
+import * as React from "react";
+import { GripVerticalIcon } from "lucide-react";
+import * as ResizablePrimitive from "react-resizable-panels";
 
-import { cn } from "@/features/ui/shadcn/lib/utils"
+import { cn } from "@/features/ui/shadcn/lib/utils";
 
 function ResizablePanelGroupRoot({
   className,
@@ -17,13 +17,13 @@ function ResizablePanelGroupRoot({
       )}
       {...props}
     />
-  )
+  );
 }
 
 function ResizablePanel({
   ...props
 }: React.ComponentProps<typeof ResizablePrimitive.Panel>) {
-  return <ResizablePrimitive.Panel data-slot="resizable-panel" {...props} />
+  return <ResizablePrimitive.Panel data-slot="resizable-panel" {...props} />;
 }
 
 function ResizableHandle({
@@ -31,7 +31,7 @@ function ResizableHandle({
   className,
   ...props
 }: React.ComponentProps<typeof ResizablePrimitive.PanelResizeHandle> & {
-  withHandle?: boolean
+  withHandle?: boolean;
 }) {
   return (
     <ResizablePrimitive.PanelResizeHandle
@@ -48,13 +48,15 @@ function ResizableHandle({
         </div>
       )}
     </ResizablePrimitive.PanelResizeHandle>
-  )
+  );
 }
 
-export const ResizablePanelGroup: React.FC<React.ComponentProps<typeof ResizablePrimitive.PanelGroup>> & {
-  Panel: typeof ResizablePanel
-  Handle: typeof ResizableHandle
+export const ResizablePanelGroup: React.FC<
+  React.ComponentProps<typeof ResizablePrimitive.PanelGroup>
+> & {
+  Panel: typeof ResizablePanel;
+  Handle: typeof ResizableHandle;
 } = Object.assign(ResizablePanelGroupRoot, {
   Panel: ResizablePanel,
   Handle: ResizableHandle,
-})
+});

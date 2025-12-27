@@ -11,9 +11,9 @@ export type TeamId = typeof TeamId.Type;
  * Team entity - represents a team within an organization
  */
 export class Team extends Schema.Class<Team>("Team")({
-	id: TeamId,
-	name: Schema.String,
-	organizationId: OrganizationId,
-	createdAt: Schema.DateTimeUtc,
-	updatedAt: Schema.optional(Schema.DateTimeUtc),
+  id: TeamId,
+  name: Schema.String,
+  organizationId: OrganizationId,
+  createdAt: Schema.DateTimeUtc,
+  updatedAt: Schema.optional(Schema.DateTimeUtc),
 }) {}

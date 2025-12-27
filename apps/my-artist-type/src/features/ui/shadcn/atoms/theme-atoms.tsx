@@ -23,7 +23,15 @@ const writeToLocalStorage = (key: string, value: string): void => {
 
 // Helper to validate theme name
 const validateThemeName = (value: string): string => {
-  const valid = ["neutral", "blue", "green", "rose", "purple", "orange", "cyan"];
+  const valid = [
+    "neutral",
+    "blue",
+    "green",
+    "rose",
+    "purple",
+    "orange",
+    "cyan",
+  ];
   return valid.includes(value) ? value : "neutral";
 };
 
@@ -40,13 +48,17 @@ const validateColorMode = (value: string): string => {
 };
 
 // Create a writable atom that syncs with localStorage
-const createSyncedAtom = (key: string, defaultValue: string, validate: (v: string) => string) => {
+const createSyncedAtom = (
+  key: string,
+  defaultValue: string,
+  validate: (v: string) => string
+) => {
   // Read synchronously from localStorage for initial value
   const initialValue = validate(readFromLocalStorage(key, defaultValue));
-  
+
   // Create atom with initial value
   const baseAtom = Atom.make(initialValue).pipe(Atom.keepAlive);
-  
+
   // Wrap in writable atom that syncs to localStorage
   return Atom.writable(
     (get) => get(baseAtom),

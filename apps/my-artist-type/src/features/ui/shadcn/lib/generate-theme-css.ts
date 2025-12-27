@@ -6,7 +6,7 @@ import { getTheme } from "./themes.js";
 export function generateThemeCSS(
   themeName: string,
   colorMode: "light" | "dark",
-  radius: string,
+  radius: string
 ): string {
   const theme = getTheme(themeName);
 

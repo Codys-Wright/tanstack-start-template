@@ -7,7 +7,10 @@ import { BetterAuthService } from "@/features/auth/server/better-auth.service.js
 const memoMap = Effect.runSync(Layer.makeMemoMap);
 
 // Merge BetterAuthService and TodosService layers
-const serverLayer = Layer.merge(BetterAuthService.Default, TodosService.Default);
+const serverLayer = Layer.merge(
+  BetterAuthService.Default,
+  TodosService.Default
+);
 
 // ManagedRuntime for use in loaders/server functions
 export const serverRuntime = ManagedRuntime.make(serverLayer, memoMap);

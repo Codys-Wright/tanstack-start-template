@@ -1,12 +1,15 @@
-import * as React from "react"
+import * as React from "react";
 import {
   ChevronLeftIcon,
   ChevronRightIcon,
   MoreHorizontalIcon,
-} from "lucide-react"
+} from "lucide-react";
 
-import { cn } from "@/features/ui/shadcn/lib/utils"
-import { buttonVariants, type Button } from "@/features/ui/shadcn/components/ui/button"
+import { cn } from "@/features/ui/shadcn/lib/utils";
+import {
+  buttonVariants,
+  type Button,
+} from "@/features/ui/shadcn/components/ui/button";
 
 function PaginationRoot({ className, ...props }: React.ComponentProps<"nav">) {
   return (
@@ -17,7 +20,7 @@ function PaginationRoot({ className, ...props }: React.ComponentProps<"nav">) {
       className={cn("mx-auto flex w-full justify-center", className)}
       {...props}
     />
-  )
+  );
 }
 
 function PaginationContent({
@@ -30,17 +33,17 @@ function PaginationContent({
       className={cn("flex flex-row items-center gap-1", className)}
       {...props}
     />
-  )
+  );
 }
 
 function PaginationItem({ ...props }: React.ComponentProps<"li">) {
-  return <li data-slot="pagination-item" {...props} />
+  return <li data-slot="pagination-item" {...props} />;
 }
 
 type PaginationLinkProps = {
-  isActive?: boolean
+  isActive?: boolean;
 } & Pick<React.ComponentProps<typeof Button>, "size"> &
-  React.ComponentProps<"a">
+  React.ComponentProps<"a">;
 
 function PaginationLink({
   className,
@@ -62,7 +65,7 @@ function PaginationLink({
       )}
       {...props}
     />
-  )
+  );
 }
 
 function PaginationPrevious({
@@ -79,7 +82,7 @@ function PaginationPrevious({
       <ChevronLeftIcon />
       <span className="hidden sm:block">Previous</span>
     </PaginationLink>
-  )
+  );
 }
 
 function PaginationNext({
@@ -96,7 +99,7 @@ function PaginationNext({
       <span className="hidden sm:block">Next</span>
       <ChevronRightIcon />
     </PaginationLink>
-  )
+  );
 }
 
 function PaginationEllipsis({
@@ -113,16 +116,16 @@ function PaginationEllipsis({
       <MoreHorizontalIcon className="size-4" />
       <span className="sr-only">More pages</span>
     </span>
-  )
+  );
 }
 
 export const Pagination: React.FC<React.ComponentProps<"nav">> & {
-  Content: typeof PaginationContent
-  Link: typeof PaginationLink
-  Item: typeof PaginationItem
-  Previous: typeof PaginationPrevious
-  Next: typeof PaginationNext
-  Ellipsis: typeof PaginationEllipsis
+  Content: typeof PaginationContent;
+  Link: typeof PaginationLink;
+  Item: typeof PaginationItem;
+  Previous: typeof PaginationPrevious;
+  Next: typeof PaginationNext;
+  Ellipsis: typeof PaginationEllipsis;
 } = Object.assign(PaginationRoot, {
   Content: PaginationContent,
   Link: PaginationLink,
@@ -130,4 +133,4 @@ export const Pagination: React.FC<React.ComponentProps<"nav">> & {
   Previous: PaginationPrevious,
   Next: PaginationNext,
   Ellipsis: PaginationEllipsis,
-})
+});

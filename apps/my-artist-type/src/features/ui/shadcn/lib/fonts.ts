@@ -1,17 +1,17 @@
 // Font definitions for dynamic font switching
 // These fonts are loaded via Google Fonts API
 
-export type FontType = "sans" | "mono"
+export type FontType = "sans" | "mono";
 
 export type Font = {
-  name: string
-  value: string
-  type: FontType
+  name: string;
+  value: string;
+  type: FontType;
   // Google Fonts family name
-  family: string
+  family: string;
   // CSS variable name (for preloading if needed)
-  variable?: string
-}
+  variable?: string;
+};
 
 export const FONTS: readonly Font[] = [
   {
@@ -84,13 +84,12 @@ export const FONTS: readonly Font[] = [
     family: "'JetBrains Mono Variable', 'JetBrains Mono', monospace",
     variable: "--font-jetbrains-mono",
   },
-] as const
+] as const;
 
 export function getFont(value: string): Font | undefined {
-  return FONTS.find((f) => f.value === value)
+  return FONTS.find((f) => f.value === value);
 }
 
 export function getDefaultFont(): Font {
-  return FONTS[0] // Inter
+  return FONTS[0]; // Inter
 }
-

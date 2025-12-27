@@ -11,14 +11,14 @@ import type { UserId } from "./auth.user-id.js";
  *   const userId = currentUser.userId;
  */
 export class AuthContext extends Context.Tag("AuthContext")<
-	AuthContext,
-	{ readonly userId: UserId }
+  AuthContext,
+  { readonly userId: UserId }
 >() {
-	/**
-	 * Mock implementation for testing - always returns a static user ID.
-	 * No database or Better Auth required.
-	 */
-	static Mock = Layer.succeed(this, {
-		userId: "00000000-0000-0000-0000-000000000001" as UserId,
-	});
+  /**
+   * Mock implementation for testing - always returns a static user ID.
+   * No database or Better Auth required.
+   */
+  static Mock = Layer.succeed(this, {
+    userId: "00000000-0000-0000-0000-000000000001" as UserId,
+  });
 }

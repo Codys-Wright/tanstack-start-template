@@ -1,10 +1,10 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import * as RadioGroupPrimitive from "@radix-ui/react-radio-group"
-import { CircleIcon } from "lucide-react"
+import * as React from "react";
+import * as RadioGroupPrimitive from "@radix-ui/react-radio-group";
+import { CircleIcon } from "lucide-react";
 
-import { cn } from "@/features/ui/shadcn/lib/utils"
+import { cn } from "@/features/ui/shadcn/lib/utils";
 
 function RadioGroupRoot({
   className,
@@ -16,7 +16,7 @@ function RadioGroupRoot({
       className={cn("grid gap-3", className)}
       {...props}
     />
-  )
+  );
 }
 
 function RadioGroupItem({
@@ -39,11 +39,13 @@ function RadioGroupItem({
         <CircleIcon className="fill-primary absolute top-1/2 left-1/2 size-2 -translate-x-1/2 -translate-y-1/2" />
       </RadioGroupPrimitive.Indicator>
     </RadioGroupPrimitive.Item>
-  )
+  );
 }
 
-export const RadioGroup: React.FC<React.ComponentProps<typeof RadioGroupPrimitive.Root>> & {
-  Item: typeof RadioGroupItem
+export const RadioGroup: React.FC<
+  React.ComponentProps<typeof RadioGroupPrimitive.Root>
+> & {
+  Item: typeof RadioGroupItem;
 } = Object.assign(RadioGroupRoot, {
   Item: RadioGroupItem,
-})
+});

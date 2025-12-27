@@ -1,9 +1,9 @@
 import { Atom, Result } from "@effect-atom/atom-react";
 import * as Effect from "effect/Effect";
 import {
-	type SessionData,
-	type SignInInput,
-	type SignUpInput,
+  type SessionData,
+  type SignInInput,
+  type SignUpInput,
 } from "../domain/index.js";
 import { authClient } from "./auth.client.js";
 
@@ -21,62 +21,66 @@ import { authClient } from "./auth.client.js";
  * - Cookie chunking for large sessions
  */
 class AuthApi extends Effect.Service<AuthApi>()("@features/auth/AuthApi", {
-	effect: Effect.sync(() => ({
-		getSession: () =>
-			Effect.tryPromise({
-				try: async () => {
-					const result = await authClient.getSession();
-					return result.data as SessionData;
-				},
-				catch: (error) => new Error(`Failed to get session: ${error}`),
-			}),
+  effect: Effect.sync(() => ({
+    getSession: () =>
+      Effect.tryPromise({
+        try: async () => {
+          const result = await authClient.getSession();
+          return result.data as SessionData;
+        },
+        catch: (error) => new Error(`Failed to get session: ${error}`),
+      }),
 
-		signIn: (input: SignInInput) =>
-			Effect.tryPromise({
-				try: async () => {
-					const result = await authClient.signIn.email({
-						email: input.email,
-						password: input.password,
-						callbackURL: input.callbackURL,
-						rememberMe: input.rememberMe,
-					});
-					if (result.error) {
-						throw new Error(result.error.message || "Sign in failed");
-					}
-					return result.data;
-				},
-				catch: (error) =>
-					new Error(`Sign in failed: ${error instanceof Error ? error.message : error}`),
-			}),
+    signIn: (input: SignInInput) =>
+      Effect.tryPromise({
+        try: async () => {
+          const result = await authClient.signIn.email({
+            email: input.email,
+            password: input.password,
+            callbackURL: input.callbackURL,
+            rememberMe: input.rememberMe,
+          });
+          if (result.error) {
+            throw new Error(result.error.message || "Sign in failed");
+          }
+          return result.data;
+        },
+        catch: (error) =>
+          new Error(
+            `Sign in failed: ${error instanceof Error ? error.message : error}`
+          ),
+      }),
 
-		signOut: () =>
-			Effect.tryPromise({
-				try: async () => {
-					const result = await authClient.signOut();
-					return result.data;
-				},
-				catch: (error) => new Error(`Sign out failed: ${error}`),
-			}),
+    signOut: () =>
+      Effect.tryPromise({
+        try: async () => {
+          const result = await authClient.signOut();
+          return result.data;
+        },
+        catch: (error) => new Error(`Sign out failed: ${error}`),
+      }),
 
-		signUp: (input: SignUpInput) =>
-			Effect.tryPromise({
-				try: async () => {
-					const result = await authClient.signUp.email({
-						name: input.name,
-						email: input.email,
-						password: input.password,
-						image: input.image,
-						callbackURL: input.callbackURL,
-					});
-					if (result.error) {
-						throw new Error(result.error.message || "Sign up failed");
-					}
-					return result.data;
-				},
-				catch: (error) =>
-					new Error(`Sign up failed: ${error instanceof Error ? error.message : error}`),
-			}),
-	})),
+    signUp: (input: SignUpInput) =>
+      Effect.tryPromise({
+        try: async () => {
+          const result = await authClient.signUp.email({
+            name: input.name,
+            email: input.email,
+            password: input.password,
+            image: input.image,
+            callbackURL: input.callbackURL,
+          });
+          if (result.error) {
+            throw new Error(result.error.message || "Sign up failed");
+          }
+          return result.data;
+        },
+        catch: (error) =>
+          new Error(
+            `Sign up failed: ${error instanceof Error ? error.message : error}`
+          ),
+      }),
+  })),
 }) {}
 
 /**
@@ -93,27 +97,27 @@ export const authRuntime = Atom.runtime(AuthApi.Default);
  * - Syncs across browser tabs
  */
 export const sessionAtom = (() => {
-	const remoteAtom = authRuntime.atom(
-		Effect.gen(function* () {
-			const api = yield* AuthApi;
-			return yield* api.getSession();
-		}),
-	);
+  const remoteAtom = authRuntime.atom(
+    Effect.gen(function* () {
+      const api = yield* AuthApi;
+      return yield* api.getSession();
+    })
+  );
 
-	return Object.assign(
-		Atom.writable(
-			(get) => get(remoteAtom),
-			// Allow manually updating session (for optimistic updates after signIn)
-			(ctx, session: SessionData) => {
-				ctx.setSelf(Result.success(session));
-			},
-			// Refresh function
-			(refresh) => {
-				refresh(remoteAtom);
-			},
-		),
-		{ remote: remoteAtom },
-	);
+  return Object.assign(
+    Atom.writable(
+      (get) => get(remoteAtom),
+      // Allow manually updating session (for optimistic updates after signIn)
+      (ctx, session: SessionData) => {
+        ctx.setSelf(Result.success(session));
+      },
+      // Refresh function
+      (refresh) => {
+        refresh(remoteAtom);
+      }
+    ),
+    { remote: remoteAtom }
+  );
 })();
 
 /**
@@ -124,16 +128,16 @@ export const sessionAtom = (() => {
  * 2. Optimistically updates sessionAtom with fresh session data
  */
 export const signInAtom = authRuntime.fn<SignInInput>()(
-	Effect.fnUntraced(function* (input, get) {
-		const api = yield* AuthApi;
-		const signInResponse = yield* api.signIn(input);
+  Effect.fnUntraced(function* (input, get) {
+    const api = yield* AuthApi;
+    const signInResponse = yield* api.signIn(input);
 
-		// After successful sign-in, fetch fresh session to update sessionAtom
-		const freshSession = yield* api.getSession();
-		get.set(sessionAtom, freshSession);
+    // After successful sign-in, fetch fresh session to update sessionAtom
+    const freshSession = yield* api.getSession();
+    get.set(sessionAtom, freshSession);
 
-		return signInResponse;
-	}),
+    return signInResponse;
+  })
 );
 
 /**
@@ -144,15 +148,15 @@ export const signInAtom = authRuntime.fn<SignInInput>()(
  * 2. Clears sessionAtom (sets to null)
  */
 export const signOutAtom = authRuntime.fn<void>()(
-	Effect.fnUntraced(function* (_, get) {
-		const api = yield* AuthApi;
-		const result = yield* api.signOut();
+  Effect.fnUntraced(function* (_, get) {
+    const api = yield* AuthApi;
+    const result = yield* api.signOut();
 
-		// Clear session after sign-out
-		get.set(sessionAtom, null);
+    // Clear session after sign-out
+    get.set(sessionAtom, null);
 
-		return result;
-	}),
+    return result;
+  })
 );
 
 /**
@@ -163,14 +167,14 @@ export const signOutAtom = authRuntime.fn<void>()(
  * 2. Optimistically updates sessionAtom with fresh session data
  */
 export const signUpAtom = authRuntime.fn<SignUpInput>()(
-	Effect.fnUntraced(function* (input, get) {
-		const api = yield* AuthApi;
-		const signUpResponse = yield* api.signUp(input);
+  Effect.fnUntraced(function* (input, get) {
+    const api = yield* AuthApi;
+    const signUpResponse = yield* api.signUp(input);
 
-		// After successful sign-up, fetch fresh session to update sessionAtom
-		const freshSession = yield* api.getSession();
-		get.set(sessionAtom, freshSession);
+    // After successful sign-up, fetch fresh session to update sessionAtom
+    const freshSession = yield* api.getSession();
+    get.set(sessionAtom, freshSession);
 
-		return signUpResponse;
-	}),
+    return signUpResponse;
+  })
 );

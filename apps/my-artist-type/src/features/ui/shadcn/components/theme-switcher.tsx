@@ -1,13 +1,13 @@
-"use client"
+"use client";
 
-import { Palette } from "lucide-react"
-import { Button } from "./ui/button"
-import { DropdownMenu } from "./ui/dropdown-menu"
-import { useThemeSystem } from "./theme-system-provider"
-import { themes } from "../lib/themes"
+import { Palette } from "lucide-react";
+import { Button } from "./ui/button";
+import { DropdownMenu } from "./ui/dropdown-menu";
+import { useThemeSystem } from "./theme-system-provider";
+import { themes } from "../lib/themes";
 
 export function ThemeSwitcher() {
-  const { themeName, setThemeName } = useThemeSystem()
+  const { themeName, setThemeName } = useThemeSystem();
 
   return (
     <DropdownMenu>
@@ -30,6 +30,5 @@ export function ThemeSwitcher() {
         ))}
       </DropdownMenu.Content>
     </DropdownMenu>
-  )
+  );
 }
-

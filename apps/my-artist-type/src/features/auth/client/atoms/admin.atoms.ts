@@ -25,24 +25,30 @@ class AdminApi extends Effect.Service<AdminApi>()("@features/auth/AdminApi", {
         },
         catch: (error) =>
           new Error(
-            `Failed to create user: ${error instanceof Error ? error.message : String(error)}`,
+            `Failed to create user: ${
+              error instanceof Error ? error.message : String(error)
+            }`
           ),
       }),
 
-		listUsers: (input?: any) =>
-			Effect.tryPromise({
-				try: async () => {
-					const result = await authClient.admin.listUsers({ query: input || {} } as any);
-					if (result.error) {
-						throw new Error(result.error.message || "Failed to list users");
-					}
-					return result.data;
-				},
-				catch: (error) =>
-					new Error(
-						`Failed to list users: ${error instanceof Error ? error.message : String(error)}`,
-					),
-			}),
+    listUsers: (input?: any) =>
+      Effect.tryPromise({
+        try: async () => {
+          const result = await authClient.admin.listUsers({
+            query: input || {},
+          } as any);
+          if (result.error) {
+            throw new Error(result.error.message || "Failed to list users");
+          }
+          return result.data;
+        },
+        catch: (error) =>
+          new Error(
+            `Failed to list users: ${
+              error instanceof Error ? error.message : String(error)
+            }`
+          ),
+      }),
 
     updateUser: (input: any) =>
       Effect.tryPromise({
@@ -55,7 +61,9 @@ class AdminApi extends Effect.Service<AdminApi>()("@features/auth/AdminApi", {
         },
         catch: (error) =>
           new Error(
-            `Failed to update user: ${error instanceof Error ? error.message : String(error)}`,
+            `Failed to update user: ${
+              error instanceof Error ? error.message : String(error)
+            }`
           ),
       }),
 
@@ -70,7 +78,9 @@ class AdminApi extends Effect.Service<AdminApi>()("@features/auth/AdminApi", {
         },
         catch: (error) =>
           new Error(
-            `Failed to remove user: ${error instanceof Error ? error.message : String(error)}`,
+            `Failed to remove user: ${
+              error instanceof Error ? error.message : String(error)
+            }`
           ),
       }),
 
@@ -87,7 +97,9 @@ class AdminApi extends Effect.Service<AdminApi>()("@features/auth/AdminApi", {
         },
         catch: (error) =>
           new Error(
-            `Failed to set role: ${error instanceof Error ? error.message : String(error)}`,
+            `Failed to set role: ${
+              error instanceof Error ? error.message : String(error)
+            }`
           ),
       }),
 
@@ -108,7 +120,9 @@ class AdminApi extends Effect.Service<AdminApi>()("@features/auth/AdminApi", {
         },
         catch: (error) =>
           new Error(
-            `Failed to ban user: ${error instanceof Error ? error.message : String(error)}`,
+            `Failed to ban user: ${
+              error instanceof Error ? error.message : String(error)
+            }`
           ),
       }),
 
@@ -123,7 +137,9 @@ class AdminApi extends Effect.Service<AdminApi>()("@features/auth/AdminApi", {
         },
         catch: (error) =>
           new Error(
-            `Failed to unban user: ${error instanceof Error ? error.message : String(error)}`,
+            `Failed to unban user: ${
+              error instanceof Error ? error.message : String(error)
+            }`
           ),
       }),
 
@@ -135,14 +151,16 @@ class AdminApi extends Effect.Service<AdminApi>()("@features/auth/AdminApi", {
           const result = await authClient.admin.listUserSessions({ userId });
           if (result.error) {
             throw new Error(
-              result.error.message || "Failed to list user sessions",
+              result.error.message || "Failed to list user sessions"
             );
           }
           return result.data;
         },
         catch: (error) =>
           new Error(
-            `Failed to list user sessions: ${error instanceof Error ? error.message : String(error)}`,
+            `Failed to list user sessions: ${
+              error instanceof Error ? error.message : String(error)
+            }`
           ),
       }),
 
@@ -159,7 +177,9 @@ class AdminApi extends Effect.Service<AdminApi>()("@features/auth/AdminApi", {
         },
         catch: (error) =>
           new Error(
-            `Failed to revoke session: ${error instanceof Error ? error.message : String(error)}`,
+            `Failed to revoke session: ${
+              error instanceof Error ? error.message : String(error)
+            }`
           ),
       }),
 
@@ -169,14 +189,16 @@ class AdminApi extends Effect.Service<AdminApi>()("@features/auth/AdminApi", {
           const result = await authClient.admin.revokeUserSessions({ userId });
           if (result.error) {
             throw new Error(
-              result.error.message || "Failed to revoke user sessions",
+              result.error.message || "Failed to revoke user sessions"
             );
           }
           return result.data;
         },
         catch: (error) =>
           new Error(
-            `Failed to revoke user sessions: ${error instanceof Error ? error.message : String(error)}`,
+            `Failed to revoke user sessions: ${
+              error instanceof Error ? error.message : String(error)
+            }`
           ),
       }),
 
@@ -191,7 +213,9 @@ class AdminApi extends Effect.Service<AdminApi>()("@features/auth/AdminApi", {
         },
         catch: (error) =>
           new Error(
-            `Failed to set password: ${error instanceof Error ? error.message : String(error)}`,
+            `Failed to set password: ${
+              error instanceof Error ? error.message : String(error)
+            }`
           ),
       }),
 
@@ -203,14 +227,16 @@ class AdminApi extends Effect.Service<AdminApi>()("@features/auth/AdminApi", {
           const result = await authClient.admin.impersonateUser({ userId });
           if (result.error) {
             throw new Error(
-              result.error.message || "Failed to impersonate user",
+              result.error.message || "Failed to impersonate user"
             );
           }
           return result.data;
         },
         catch: (error) =>
           new Error(
-            `Failed to impersonate user: ${error instanceof Error ? error.message : String(error)}`,
+            `Failed to impersonate user: ${
+              error instanceof Error ? error.message : String(error)
+            }`
           ),
       }),
 
@@ -220,14 +246,16 @@ class AdminApi extends Effect.Service<AdminApi>()("@features/auth/AdminApi", {
           const result = await authClient.admin.stopImpersonating();
           if (result.error) {
             throw new Error(
-              result.error.message || "Failed to stop impersonating",
+              result.error.message || "Failed to stop impersonating"
             );
           }
           return result.data;
         },
         catch: (error) =>
           new Error(
-            `Failed to stop impersonating: ${error instanceof Error ? error.message : String(error)}`,
+            `Failed to stop impersonating: ${
+              error instanceof Error ? error.message : String(error)
+            }`
           ),
       }),
 
@@ -239,14 +267,16 @@ class AdminApi extends Effect.Service<AdminApi>()("@features/auth/AdminApi", {
           const result = await authClient.admin.hasPermission(input as any);
           if (result.error) {
             throw new Error(
-              result.error.message || "Failed to check permission",
+              result.error.message || "Failed to check permission"
             );
           }
           return result.data;
         },
         catch: (error) =>
           new Error(
-            `Failed to check permission: ${error instanceof Error ? error.message : String(error)}`,
+            `Failed to check permission: ${
+              error instanceof Error ? error.message : String(error)
+            }`
           ),
       }),
 
@@ -262,7 +292,9 @@ class AdminApi extends Effect.Service<AdminApi>()("@features/auth/AdminApi", {
         },
         catch: (error) =>
           new Error(
-            `Failed to list organizations: ${error instanceof Error ? error.message : String(error)}`,
+            `Failed to list organizations: ${
+              error instanceof Error ? error.message : String(error)
+            }`
           ),
       }),
 
@@ -276,7 +308,9 @@ class AdminApi extends Effect.Service<AdminApi>()("@features/auth/AdminApi", {
         },
         catch: (error) =>
           new Error(
-            `Failed to list sessions: ${error instanceof Error ? error.message : String(error)}`,
+            `Failed to list sessions: ${
+              error instanceof Error ? error.message : String(error)
+            }`
           ),
       }),
 
@@ -290,7 +324,9 @@ class AdminApi extends Effect.Service<AdminApi>()("@features/auth/AdminApi", {
         },
         catch: (error) =>
           new Error(
-            `Failed to list invitations: ${error instanceof Error ? error.message : String(error)}`,
+            `Failed to list invitations: ${
+              error instanceof Error ? error.message : String(error)
+            }`
           ),
       }),
 
@@ -304,7 +340,9 @@ class AdminApi extends Effect.Service<AdminApi>()("@features/auth/AdminApi", {
         },
         catch: (error) =>
           new Error(
-            `Failed to list members: ${error instanceof Error ? error.message : String(error)}`,
+            `Failed to list members: ${
+              error instanceof Error ? error.message : String(error)
+            }`
           ),
       }),
   })),
@@ -330,7 +368,7 @@ export const createUserAtom = adminRuntime.fn<{
   Effect.fnUntraced(function* (input) {
     const api = yield* AdminApi;
     return yield* api.createUser(input);
-  }),
+  })
 );
 
 /**
@@ -340,7 +378,7 @@ export const listUsersAtom = adminRuntime.atom(
   Effect.gen(function* () {
     const api = yield* AdminApi;
     return yield* api.listUsers();
-  }),
+  })
 );
 
 /**
@@ -353,7 +391,7 @@ export const updateUserAtom = adminRuntime.fn<{
   Effect.fnUntraced(function* (input) {
     const api = yield* AdminApi;
     return yield* api.updateUser(input);
-  }),
+  })
 );
 
 /**
@@ -363,7 +401,7 @@ export const removeUserAtom = adminRuntime.fn<{ userId: string }>()(
   Effect.fnUntraced(function* (input) {
     const api = yield* AdminApi;
     return yield* api.removeUser(input.userId);
-  }),
+  })
 );
 
 // ===== ROLE MANAGEMENT ATOMS =====
@@ -378,7 +416,7 @@ export const setRoleAtom = adminRuntime.fn<{
   Effect.fnUntraced(function* (input) {
     const api = yield* AdminApi;
     return yield* api.setRole(input);
-  }),
+  })
 );
 
 // ===== BAN MANAGEMENT ATOMS =====
@@ -394,7 +432,7 @@ export const banUserAtom = adminRuntime.fn<{
   Effect.fnUntraced(function* (input) {
     const api = yield* AdminApi;
     return yield* api.banUser(input);
-  }),
+  })
 );
 
 /**
@@ -404,7 +442,7 @@ export const unbanUserAtom = adminRuntime.fn<{ userId: string }>()(
   Effect.fnUntraced(function* (input) {
     const api = yield* AdminApi;
     return yield* api.unbanUser(input.userId);
-  }),
+  })
 );
 
 // ===== SESSION MANAGEMENT ATOMS =====
@@ -416,7 +454,7 @@ export const listUserSessionsAtom = adminRuntime.fn<{ userId: string }>()(
   Effect.fnUntraced(function* (input) {
     const api = yield* AdminApi;
     return yield* api.listUserSessions(input.userId);
-  }),
+  })
 );
 
 /**
@@ -428,7 +466,7 @@ export const revokeUserSessionAtom = adminRuntime.fn<{
   Effect.fnUntraced(function* (input) {
     const api = yield* AdminApi;
     return yield* api.revokeUserSession(input.sessionToken);
-  }),
+  })
 );
 
 /**
@@ -438,7 +476,7 @@ export const revokeUserSessionsAtom = adminRuntime.fn<{ userId: string }>()(
   Effect.fnUntraced(function* (input) {
     const api = yield* AdminApi;
     return yield* api.revokeUserSessions(input.userId);
-  }),
+  })
 );
 
 /**
@@ -451,7 +489,7 @@ export const setUserPasswordAtom = adminRuntime.fn<{
   Effect.fnUntraced(function* (input) {
     const api = yield* AdminApi;
     return yield* api.setUserPassword(input);
-  }),
+  })
 );
 
 // ===== IMPERSONATION ATOMS =====
@@ -463,7 +501,7 @@ export const impersonateUserAtom = adminRuntime.fn<{ userId: string }>()(
   Effect.fnUntraced(function* (input) {
     const api = yield* AdminApi;
     return yield* api.impersonateUser(input.userId);
-  }),
+  })
 );
 
 /**
@@ -473,7 +511,7 @@ export const stopImpersonatingAtom = adminRuntime.fn<void>()(
   Effect.fnUntraced(function* () {
     const api = yield* AdminApi;
     return yield* api.stopImpersonating();
-  }),
+  })
 );
 
 // ===== PERMISSION ATOMS =====
@@ -489,5 +527,5 @@ export const hasPermissionAtom = adminRuntime.fn<{
   Effect.fnUntraced(function* (input) {
     const api = yield* AdminApi;
     return yield* api.hasPermission(input);
-  }),
+  })
 );

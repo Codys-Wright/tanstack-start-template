@@ -2,7 +2,7 @@
  * ThemeScript - Inline script that runs synchronously before React hydration
  * to inject CSS variables from localStorage, preventing FOUC (Flash of Unstyled Content)
  */
-import { themes } from "../lib/themes.js"
+import { themes } from "../lib/themes.js";
 
 export function getThemeScriptContent({
   defaultThemeName = "neutral",
@@ -11,11 +11,11 @@ export function getThemeScriptContent({
   radiusStorageKey = "vite-ui-radius",
   themeStorageKey = "vite-ui-theme",
 }: {
-  defaultThemeName?: string
-  defaultRadius?: string
-  storageKey?: string
-  radiusStorageKey?: string
-  themeStorageKey?: string
+  defaultThemeName?: string;
+  defaultRadius?: string;
+  storageKey?: string;
+  radiusStorageKey?: string;
+  themeStorageKey?: string;
 }): string {
   // Serialize all theme data for the inline script
   const themesData = JSON.stringify(
@@ -28,7 +28,7 @@ export function getThemeScriptContent({
         },
       ])
     )
-  )
+  );
 
   return `
 (function() {
@@ -100,7 +100,7 @@ export function getThemeScriptContent({
     document.documentElement.classList.add('light');
   }
 })();
-`.trim()
+`.trim();
 }
 
 export function ThemeScript({
@@ -110,11 +110,11 @@ export function ThemeScript({
   radiusStorageKey = "vite-ui-radius",
   themeStorageKey = "vite-ui-theme",
 }: {
-  defaultThemeName?: string
-  defaultRadius?: string
-  storageKey?: string
-  radiusStorageKey?: string
-  themeStorageKey?: string
+  defaultThemeName?: string;
+  defaultRadius?: string;
+  storageKey?: string;
+  radiusStorageKey?: string;
+  themeStorageKey?: string;
 }) {
   const scriptContent = getThemeScriptContent({
     defaultThemeName,
@@ -122,12 +122,12 @@ export function ThemeScript({
     storageKey,
     radiusStorageKey,
     themeStorageKey,
-  })
+  });
 
   return (
     <script
       dangerouslySetInnerHTML={{ __html: scriptContent }}
       suppressHydrationWarning
     />
-  )
+  );
 }

@@ -11,11 +11,11 @@ export type RandomizeContext = {
 export type RandomizeBiases = {
   fonts?: (
     fonts: readonly Font[],
-    context: RandomizeContext,
+    context: RandomizeContext
   ) => readonly Font[];
   radius?: (
     radii: readonly { name: string; value: string }[],
-    context: RandomizeContext,
+    context: RandomizeContext
   ) => readonly { name: string; value: string }[];
 };
 
@@ -42,7 +42,7 @@ export const RANDOMIZE_BIASES: RandomizeBiases = {
 export function applyBias<T>(
   items: readonly T[],
   context: RandomizeContext,
-  biasFilter?: (items: readonly T[], context: RandomizeContext) => readonly T[],
+  biasFilter?: (items: readonly T[], context: RandomizeContext) => readonly T[]
 ): readonly T[] {
   if (!biasFilter) {
     return items;
@@ -75,7 +75,7 @@ export const RADII = [
  * Randomizes all theme parameters
  */
 export function randomizeThemeParams(
-  lockedParams: Partial<RandomizeContext> = {},
+  lockedParams: Partial<RandomizeContext> = {}
 ): RandomizeContext {
   const context: RandomizeContext = {};
 

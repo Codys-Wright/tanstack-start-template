@@ -45,7 +45,7 @@ export const todosAtom = (() => {
       Effect.gen(function* () {
         const api = yield* Api;
         return yield* api.list();
-      }),
+      })
     )
     .pipe(
       serializable({
@@ -54,10 +54,10 @@ export const todosAtom = (() => {
           success: TodosSchema,
           error: Schema.Union(
             HttpApiError.Unauthorized,
-            RpcClientError.RpcClientError,
+            RpcClientError.RpcClientError
           ),
         }),
-      }),
+      })
     );
 
   return Object.assign(
@@ -72,7 +72,7 @@ export const todosAtom = (() => {
             case "Upsert": {
               const existingIndex = Arr.findFirstIndex(
                 current.value,
-                (t) => t.id === update.todo.id,
+                (t) => t.id === update.todo.id
               );
               return Option.match(existingIndex, {
                 onNone: () => Arr.prepend(current.value, update.todo),
@@ -90,9 +90,9 @@ export const todosAtom = (() => {
       },
       (refresh) => {
         refresh(remoteAtom);
-      },
+      }
     ),
-    { remote: remoteAtom },
+    { remote: remoteAtom }
   );
 })();
 
@@ -102,7 +102,7 @@ export const createTodoAtom = runtime.fn<CreateTodoInput>()(
     const result = yield* api.create(input);
     get.set(todosAtom, { _tag: "Upsert", todo: result });
     return result;
-  }),
+  })
 );
 
 export const updateTodoAtom = runtime.fn<{
@@ -114,7 +114,7 @@ export const updateTodoAtom = runtime.fn<{
     const result = yield* api.update(id, input);
     get.set(todosAtom, { _tag: "Upsert", todo: result });
     return result;
-  }),
+  })
 );
 
 export const deleteTodoAtom = runtime.fn<TodoId>()(
@@ -122,5 +122,5 @@ export const deleteTodoAtom = runtime.fn<TodoId>()(
     const api = yield* Api;
     yield* api.remove(id);
     get.set(todosAtom, { _tag: "Delete", id });
-  }),
+  })
 );

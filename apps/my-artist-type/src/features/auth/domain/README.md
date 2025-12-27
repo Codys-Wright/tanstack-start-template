@@ -45,6 +45,7 @@ export class User extends Schema.Class<User>("User")({
 ```
 
 **When to use:**
+
 - Database entities (User, Organization, Team, etc.)
 - Entities with a unique identifier
 - Objects that need instanceof checks
@@ -59,6 +60,7 @@ export type UserId = typeof UserId.Type;
 ```
 
 **When to use:**
+
 - All ID fields to prevent mixing different entity IDs
 - Type-level guarantees (can't pass OrganizationId where UserId is expected)
 
@@ -67,25 +69,24 @@ export type UserId = typeof UserId.Type;
 Used for request payloads with faker annotations:
 
 ```typescript
-export class CreateUserPayload extends Schema.Class<CreateUserPayload>("CreateUserPayload")({
-  name: Schema.String.pipe(
-    Schema.nonEmptyString()
-  ).annotations({
-    arbitrary: () => (fc: any) => fc.constant(null).map(() => 
-      faker.person.fullName()
-    ),
+export class CreateUserPayload extends Schema.Class<CreateUserPayload>(
+  "CreateUserPayload"
+)({
+  name: Schema.String.pipe(Schema.nonEmptyString()).annotations({
+    arbitrary: () => (fc: any) =>
+      fc.constant(null).map(() => faker.person.fullName()),
   }),
   email: Schema.String.pipe(
     Schema.pattern(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)
   ).annotations({
-    arbitrary: () => (fc: any) => fc.constant(null).map(() => 
-      faker.internet.email()
-    ),
+    arbitrary: () => (fc: any) =>
+      fc.constant(null).map(() => faker.internet.email()),
   }),
 }) {}
 ```
 
 **When to use:**
+
 - API request payloads
 - Forms and user input
 - Anywhere you need test data generation
@@ -95,15 +96,12 @@ export class CreateUserPayload extends Schema.Class<CreateUserPayload>("CreateUs
 Used for fixed sets of values:
 
 ```typescript
-export const OrganizationRole = Schema.Literal(
-  "owner",
-  "admin",
-  "member"
-);
+export const OrganizationRole = Schema.Literal("owner", "admin", "member");
 export type OrganizationRole = typeof OrganizationRole.Type;
 ```
 
 **When to use:**
+
 - Status fields (pending, accepted, rejected)
 - Role types
 - Any field with a fixed set of valid values
@@ -113,26 +111,31 @@ export type OrganizationRole = typeof OrganizationRole.Type;
 Our schemas include fields from Better Auth plugins:
 
 ### Admin Plugin
+
 - `User.role`: User's global role
 - `User.banned`: Ban status
 - `User.banReason`, `User.banExpires`: Ban details
 - `Session.impersonatedBy`: Admin impersonation tracking
 
 ### Organization Plugin
+
 - `Organization`, `Member`, `Invitation` entities
 - `Session.activeOrganizationId`: Current org context
 - Organization roles and permissions
 
 ### Team Plugin (within Organizations)
+
 - `Team`, `TeamMember` entities
 - `Session.activeTeamId`: Current team context
 - Team-based access control
 
 ### Passkey Plugin
+
 - `Passkey` entity for WebAuthn credentials
 - Passkey management schemas
 
 ### Two-Factor Plugin
+
 - `TwoFactorStatus` for 2FA state
 - TOTP and backup code schemas
 
@@ -205,14 +208,17 @@ await seedDatabase({
 ## Schema Organization
 
 ### Core Auth Flows
+
 - `auth.schema.ts`: Sign in/up/out, password reset, email change
 - `session.schema.ts`: Session entity with org/team context
 - `user.schema.ts`: User entity with admin plugin fields
 
 ### Social Login & Verification
+
 - `account.schema.ts`: Linked accounts (Google, GitHub, etc.) and email verification
 
 ### Organizations & Teams
+
 - `organization.schema.ts`: Organization CRUD operations
 - `organization-role.schema.ts`: Dynamic role-based access control
 - `team.schema.ts`: Team CRUD operations
@@ -221,6 +227,7 @@ await seedDatabase({
 - `invitation.schema.ts`: Organization invitations
 
 ### Security Features
+
 - `security.schema.ts`: Passkeys, 2FA, active sessions
 
 ## Faker.js Integration
@@ -229,25 +236,26 @@ All payload schemas include `arbitrary` annotations for generating realistic tes
 
 ```typescript
 name: Schema.String.annotations({
-  arbitrary: () => (fc: any) => fc.constant(null).map(() => 
+  arbitrary: () => (fc: any) => fc.constant(null).map(() =>
     faker.person.fullName()
   ),
 }),
 
 email: Schema.String.annotations({
-  arbitrary: () => (fc: any) => fc.constant(null).map(() => 
+  arbitrary: () => (fc: any) => fc.constant(null).map(() =>
     faker.internet.email()
   ),
 }),
 
 logo: Schema.NullOr(Schema.String).annotations({
-  arbitrary: () => (fc: any) => fc.constant(null).map(() => 
+  arbitrary: () => (fc: any) => fc.constant(null).map(() =>
     faker.image.url()
   ),
 }),
 ```
 
 **Available Faker Modules:**
+
 - `faker.person.*`: Names, titles, bios
 - `faker.internet.*`: Emails, URLs, usernames
 - `faker.company.*`: Company names, descriptions
@@ -260,18 +268,22 @@ See [@faker-js/faker docs](https://fakerjs.dev/) for full API.
 ## Effect Schema Benefits
 
 1. **Compile-time Type Safety**
+
    - TypeScript types derived from schemas
    - No type/runtime mismatch
 
 2. **Runtime Validation**
+
    - Parse untrusted input (API responses, user forms)
    - Fail fast with detailed error messages
 
 3. **Transformations**
+
    - Convert between domain types and API types
    - Handle legacy formats
 
 4. **Test Data Generation**
+
    - Generate realistic test data with Faker
    - Property-based testing with fast-check
 
@@ -289,6 +301,7 @@ The old auth schemas used plain `Schema.Struct` without `Schema.Class`. The new 
 4. Support all Better Auth plugins out of the box
 
 **Before:**
+
 ```typescript
 export const User = Schema.Struct({
   id: Schema.String,
@@ -298,6 +311,7 @@ export const User = Schema.Struct({
 ```
 
 **After:**
+
 ```typescript
 export class User extends Schema.Class<User>("User")({
   id: UserId,

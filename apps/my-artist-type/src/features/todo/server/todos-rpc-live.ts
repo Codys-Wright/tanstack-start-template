@@ -13,7 +13,7 @@ export const TodosRpcLive = TodosRpc.toLayer(
         Effect.gen(function* () {
           const currentUser = yield* AuthContext;
           yield* Effect.log(
-            `[RPC] Listing todos for user: ${currentUser.userId}`,
+            `[RPC] Listing todos for user: ${currentUser.userId}`
           );
           return yield* todos.list(currentUser.userId);
         }),
@@ -22,7 +22,7 @@ export const TodosRpcLive = TodosRpc.toLayer(
         Effect.gen(function* () {
           const currentUser = yield* AuthContext;
           yield* Effect.log(
-            `[RPC] Getting todo ${id} for user: ${currentUser.userId}`,
+            `[RPC] Getting todo ${id} for user: ${currentUser.userId}`
           );
           return yield* todos.getById(id, currentUser.userId);
         }),
@@ -31,7 +31,7 @@ export const TodosRpcLive = TodosRpc.toLayer(
         Effect.gen(function* () {
           const currentUser = yield* AuthContext;
           yield* Effect.log(
-            `[RPC] Creating todo for user: ${currentUser.userId}`,
+            `[RPC] Creating todo for user: ${currentUser.userId}`
           );
           return yield* todos.create(input, currentUser.userId);
         }),
@@ -40,7 +40,7 @@ export const TodosRpcLive = TodosRpc.toLayer(
         Effect.gen(function* () {
           const currentUser = yield* AuthContext;
           yield* Effect.log(
-            `[RPC] Updating todo ${id} for user: ${currentUser.userId}`,
+            `[RPC] Updating todo ${id} for user: ${currentUser.userId}`
           );
           return yield* todos.update(id, input, currentUser.userId);
         }),
@@ -49,10 +49,10 @@ export const TodosRpcLive = TodosRpc.toLayer(
         Effect.gen(function* () {
           const currentUser = yield* AuthContext;
           yield* Effect.log(
-            `[RPC] Removing todo ${id} for user: ${currentUser.userId}`,
+            `[RPC] Removing todo ${id} for user: ${currentUser.userId}`
           );
           return yield* todos.remove(id, currentUser.userId);
         }),
     });
-  }),
+  })
 ).pipe(Layer.provide(TodosService.Default));

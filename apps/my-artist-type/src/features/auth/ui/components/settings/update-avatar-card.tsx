@@ -16,14 +16,17 @@ export interface UpdateAvatarCardProps {
 const UpdateAvatarSchema = Schema.Struct({
   image: Schema.String.pipe(
     Schema.minLength(1),
-    Schema.filter((s) => {
-      try {
-        new URL(s);
-        return true;
-      } catch {
-        return false;
-      }
-    }, { message: () => "Invalid URL" }),
+    Schema.filter(
+      (s) => {
+        try {
+          new URL(s);
+          return true;
+        } catch {
+          return false;
+        }
+      },
+      { message: () => "Invalid URL" }
+    )
   ),
 });
 

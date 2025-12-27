@@ -18,7 +18,8 @@ function TestPage() {
           <div className="p-6 bg-card rounded-lg border">
             <h2 className="text-xl font-semibold mb-4">Component Showcase</h2>
             <p className="text-muted-foreground mb-4">
-              This page showcases various UI components to test theme persistence.
+              This page showcases various UI components to test theme
+              persistence.
             </p>
             <div className="flex flex-wrap gap-4">
               <Button>Primary Button</Button>
@@ -51,7 +52,8 @@ function TestPage() {
           <div className="p-6 bg-muted rounded-lg">
             <h3 className="font-semibold mb-2">Muted Background</h3>
             <p className="text-sm text-muted-foreground">
-              This section uses the muted background color to test theme variations.
+              This section uses the muted background color to test theme
+              variations.
             </p>
           </div>
         </div>

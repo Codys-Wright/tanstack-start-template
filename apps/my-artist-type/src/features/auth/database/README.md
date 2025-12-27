@@ -30,6 +30,7 @@ This outputs the schema to `./migrations/better-auth-schema.sql`.
 **Schema file location:** `migrations/better-auth-schema.sql`
 
 **Why generate?**
+
 - Review Better Auth's table structure
 - Manual migration control if needed
 - Documentation of auth schema
@@ -40,10 +41,8 @@ This outputs the schema to `./migrations/better-auth-schema.sql`.
 By default, Better Auth auto-migrates on app startup via `better-auth.service.ts`:
 
 ```typescript
-const { runMigrations } = yield* Effect.promise(() =>
-  getMigrations(options),
-);
-yield* Effect.promise(runMigrations);
+const { runMigrations } = yield * Effect.promise(() => getMigrations(options));
+yield * Effect.promise(runMigrations);
 ```
 
 This ensures the schema is always up-to-date when the app starts.
@@ -52,15 +51,15 @@ This ensures the schema is always up-to-date when the app starts.
 
 The Better Auth configuration is shared between runtime and CLI:
 
-- **Service**: `server/better-auth.service.ts` 
+- **Service**: `server/better-auth.service.ts`
   - Exports `makeBetterAuthOptions()` function
   - Effect-integrated for runtime
-  
 - **CLI**: `../auth.ts`
   - Imports `makeBetterAuthOptions()`
   - Same config ensures consistency
 
 Both use identical settings for:
+
 - Email/password authentication
 - OpenAPI plugin
 - PostgreSQL with Kysely
@@ -79,6 +78,7 @@ File: `0001_users_table.ts`
 File: `0002_static_user.ts`
 
 Inserts a static user for development/testing:
+
 - ID: `00000000-0000-0000-0000-000000000001`
 - Email: `static@example.com`
 

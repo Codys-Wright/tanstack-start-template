@@ -1,7 +1,11 @@
 import { Atom, Result } from "@effect-atom/atom-react";
 import * as Effect from "effect/Effect";
 import { authClient } from "../auth.client.js";
-import type { SessionData, SignInInput, SignUpInput } from "../../domain/index.js";
+import type {
+  SessionData,
+  SignInInput,
+  SignUpInput,
+} from "../../domain/index.js";
 
 /**
  * AuthApi - Effect Service wrapper around Better Auth client
@@ -17,217 +21,233 @@ import type { SessionData, SignInInput, SignUpInput } from "../../domain/index.j
  * - Cookie chunking for large sessions
  */
 class AuthApi extends Effect.Service<AuthApi>()("@features/auth/AuthApi", {
-	effect: Effect.sync(() => ({
-		getSession: () =>
-			Effect.tryPromise({
-				try: async () => {
-					const result = await authClient.getSession();
-					return result.data as SessionData;
-				},
-				catch: (error) => new Error(`Failed to get session: ${error}`),
-			}),
+  effect: Effect.sync(() => ({
+    getSession: () =>
+      Effect.tryPromise({
+        try: async () => {
+          const result = await authClient.getSession();
+          return result.data as SessionData;
+        },
+        catch: (error) => new Error(`Failed to get session: ${error}`),
+      }),
 
-		signIn: (input: SignInInput) =>
-			Effect.tryPromise({
-				try: async () => {
-					const result = await authClient.signIn.email({
-						email: input.email,
-						password: input.password,
-						callbackURL: input.callbackURL,
-						rememberMe: input.rememberMe,
-					});
-					if (result.error) {
-						throw new Error(result.error.message || "Sign in failed");
-					}
-					return result.data;
-				},
-				catch: (error) =>
-					new Error(
-						`Sign in failed: ${error instanceof Error ? error.message : error}`,
-					),
-			}),
+    signIn: (input: SignInInput) =>
+      Effect.tryPromise({
+        try: async () => {
+          const result = await authClient.signIn.email({
+            email: input.email,
+            password: input.password,
+            callbackURL: input.callbackURL,
+            rememberMe: input.rememberMe,
+          });
+          if (result.error) {
+            throw new Error(result.error.message || "Sign in failed");
+          }
+          return result.data;
+        },
+        catch: (error) =>
+          new Error(
+            `Sign in failed: ${error instanceof Error ? error.message : error}`
+          ),
+      }),
 
-		signInWithGoogle: () =>
-			Effect.tryPromise({
-				try: async () => {
-					const result = await authClient.signIn.social({
-						provider: "google",
-						callbackURL: `${window.location.origin}/auth/callback`,
-					});
-					if (result.error) {
-						throw new Error(result.error.message || "Google sign in failed");
-					}
-					// OAuth redirect happens automatically, this won't return
-					return result.data;
-				},
-				catch: (error) => new Error(`Google sign in failed: ${error}`),
-			}),
+    signInWithGoogle: () =>
+      Effect.tryPromise({
+        try: async () => {
+          const result = await authClient.signIn.social({
+            provider: "google",
+            callbackURL: `${window.location.origin}/auth/callback`,
+          });
+          if (result.error) {
+            throw new Error(result.error.message || "Google sign in failed");
+          }
+          // OAuth redirect happens automatically, this won't return
+          return result.data;
+        },
+        catch: (error) => new Error(`Google sign in failed: ${error}`),
+      }),
 
-		signInWithPasskey: () =>
-			Effect.tryPromise({
-				try: async () => {
-					const result = await authClient.signIn.passkey();
-					if (result.error) {
-						throw new Error(result.error.message || "Passkey sign in failed");
-					}
-					return result.data;
-				},
-				catch: (error) => new Error(`Passkey sign in failed: ${error}`),
-			}),
+    signInWithPasskey: () =>
+      Effect.tryPromise({
+        try: async () => {
+          const result = await authClient.signIn.passkey();
+          if (result.error) {
+            throw new Error(result.error.message || "Passkey sign in failed");
+          }
+          return result.data;
+        },
+        catch: (error) => new Error(`Passkey sign in failed: ${error}`),
+      }),
 
-		signOut: () =>
-			Effect.tryPromise({
-				try: async () => {
-					const result = await authClient.signOut();
-					return result.data;
-				},
-				catch: (error) => new Error(`Sign out failed: ${error}`),
-			}),
+    signOut: () =>
+      Effect.tryPromise({
+        try: async () => {
+          const result = await authClient.signOut();
+          return result.data;
+        },
+        catch: (error) => new Error(`Sign out failed: ${error}`),
+      }),
 
-		signUp: (input: SignUpInput) =>
-			Effect.tryPromise({
-				try: async () => {
-					const result = await authClient.signUp.email({
-						name: input.name,
-						email: input.email,
-						password: input.password,
-						image: input.image,
-						callbackURL: input.callbackURL,
-					});
-					if (result.error) {
-						throw new Error(result.error.message || "Sign up failed");
-					}
-					return result.data;
-				},
-				catch: (error) =>
-					new Error(
-						`Sign up failed: ${error instanceof Error ? error.message : error}`,
-					),
-			}),
+    signUp: (input: SignUpInput) =>
+      Effect.tryPromise({
+        try: async () => {
+          const result = await authClient.signUp.email({
+            name: input.name,
+            email: input.email,
+            password: input.password,
+            image: input.image,
+            callbackURL: input.callbackURL,
+          });
+          if (result.error) {
+            throw new Error(result.error.message || "Sign up failed");
+          }
+          return result.data;
+        },
+        catch: (error) =>
+          new Error(
+            `Sign up failed: ${error instanceof Error ? error.message : error}`
+          ),
+      }),
 
-	forgotPassword: (email: string) =>
-		Effect.tryPromise({
-			try: async () => {
-				const result = await authClient.requestPasswordReset({
-					email,
-					redirectTo: `${window.location.origin}/auth/reset-password`,
-				});
-				if (result.error) {
-					throw new Error(result.error.message || "Password reset request failed");
-				}
-				return result.data;
-			},
-			catch: (error) =>
-				new Error(
-					`Password reset request failed: ${error instanceof Error ? error.message : String(error)}`,
-				),
-		}),
+    forgotPassword: (email: string) =>
+      Effect.tryPromise({
+        try: async () => {
+          const result = await authClient.requestPasswordReset({
+            email,
+            redirectTo: `${window.location.origin}/auth/reset-password`,
+          });
+          if (result.error) {
+            throw new Error(
+              result.error.message || "Password reset request failed"
+            );
+          }
+          return result.data;
+        },
+        catch: (error) =>
+          new Error(
+            `Password reset request failed: ${
+              error instanceof Error ? error.message : String(error)
+            }`
+          ),
+      }),
 
-	resetPassword: (newPassword: string, token: string) =>
-		Effect.tryPromise({
-			try: async () => {
-				const result = await authClient.resetPassword({
-					newPassword,
-					token,
-				});
-				if (result.error) {
-					throw new Error(result.error.message || "Password reset failed");
-				}
-				return result.data;
-			},
-			catch: (error) =>
-				new Error(
-					`Password reset failed: ${error instanceof Error ? error.message : String(error)}`,
-				),
-		}),
+    resetPassword: (newPassword: string, token: string) =>
+      Effect.tryPromise({
+        try: async () => {
+          const result = await authClient.resetPassword({
+            newPassword,
+            token,
+          });
+          if (result.error) {
+            throw new Error(result.error.message || "Password reset failed");
+          }
+          return result.data;
+        },
+        catch: (error) =>
+          new Error(
+            `Password reset failed: ${
+              error instanceof Error ? error.message : String(error)
+            }`
+          ),
+      }),
 
-	verifyTwoFactor: (code: string, trustDevice?: boolean) =>
-		Effect.tryPromise({
-			try: async () => {
-				const result = await authClient.twoFactor.verifyOtp({
-					code,
-					trustDevice: trustDevice ?? false,
-				});
-				if (result.error) {
-					throw new Error(result.error.message || "2FA verification failed");
-				}
-				return result.data;
-			},
-			catch: (error) =>
-				new Error(
-					`2FA verification failed: ${error instanceof Error ? error.message : String(error)}`,
-				),
-		}),
+    verifyTwoFactor: (code: string, trustDevice?: boolean) =>
+      Effect.tryPromise({
+        try: async () => {
+          const result = await authClient.twoFactor.verifyOtp({
+            code,
+            trustDevice: trustDevice ?? false,
+          });
+          if (result.error) {
+            throw new Error(result.error.message || "2FA verification failed");
+          }
+          return result.data;
+        },
+        catch: (error) =>
+          new Error(
+            `2FA verification failed: ${
+              error instanceof Error ? error.message : String(error)
+            }`
+          ),
+      }),
 
-		recoverAccount: (code: string) =>
-		Effect.tryPromise({
-			try: async () => {
-				const result = await authClient.twoFactor.verifyBackupCode({
-					code,
-				});
-				if (result.error) {
-					throw new Error(result.error.message || "Account recovery failed");
-				}
-				return result.data;
-			},
-			catch: (error) =>
-				new Error(
-					`Account recovery failed: ${error instanceof Error ? error.message : String(error)}`,
-				),
-		}),
+    recoverAccount: (code: string) =>
+      Effect.tryPromise({
+        try: async () => {
+          const result = await authClient.twoFactor.verifyBackupCode({
+            code,
+          });
+          if (result.error) {
+            throw new Error(result.error.message || "Account recovery failed");
+          }
+          return result.data;
+        },
+        catch: (error) =>
+          new Error(
+            `Account recovery failed: ${
+              error instanceof Error ? error.message : String(error)
+            }`
+          ),
+      }),
 
-	updateName: (name: string) =>
-		Effect.tryPromise({
-			try: async () => {
-				const result = await authClient.updateUser({
-					name,
-				});
-				if (result.error) {
-					throw new Error(result.error.message || "Failed to update name");
-				}
-				return result.data;
-			},
-			catch: (error) =>
-				new Error(
-					`Failed to update name: ${error instanceof Error ? error.message : String(error)}`,
-				),
-		}),
+    updateName: (name: string) =>
+      Effect.tryPromise({
+        try: async () => {
+          const result = await authClient.updateUser({
+            name,
+          });
+          if (result.error) {
+            throw new Error(result.error.message || "Failed to update name");
+          }
+          return result.data;
+        },
+        catch: (error) =>
+          new Error(
+            `Failed to update name: ${
+              error instanceof Error ? error.message : String(error)
+            }`
+          ),
+      }),
 
-	updateImage: (image: string) =>
-		Effect.tryPromise({
-			try: async () => {
-				const result = await authClient.updateUser({
-					image,
-				});
-				if (result.error) {
-					throw new Error(result.error.message || "Failed to update avatar");
-				}
-				return result.data;
-			},
-			catch: (error) =>
-				new Error(
-					`Failed to update avatar: ${error instanceof Error ? error.message : String(error)}`,
-				),
-		}),
+    updateImage: (image: string) =>
+      Effect.tryPromise({
+        try: async () => {
+          const result = await authClient.updateUser({
+            image,
+          });
+          if (result.error) {
+            throw new Error(result.error.message || "Failed to update avatar");
+          }
+          return result.data;
+        },
+        catch: (error) =>
+          new Error(
+            `Failed to update avatar: ${
+              error instanceof Error ? error.message : String(error)
+            }`
+          ),
+      }),
 
-	changeEmail: (newEmail: string) =>
-		Effect.tryPromise({
-			try: async () => {
-				const result = await authClient.changeEmail({
-					newEmail,
-					callbackURL: `${window.location.origin}/account/settings`,
-				});
-				if (result.error) {
-					throw new Error(result.error.message || "Failed to change email");
-				}
-				return result.data;
-			},
-			catch: (error) =>
-				new Error(
-					`Failed to change email: ${error instanceof Error ? error.message : String(error)}`,
-				),
-		}),
-	})),
+    changeEmail: (newEmail: string) =>
+      Effect.tryPromise({
+        try: async () => {
+          const result = await authClient.changeEmail({
+            newEmail,
+            callbackURL: `${window.location.origin}/account/settings`,
+          });
+          if (result.error) {
+            throw new Error(result.error.message || "Failed to change email");
+          }
+          return result.data;
+        },
+        catch: (error) =>
+          new Error(
+            `Failed to change email: ${
+              error instanceof Error ? error.message : String(error)
+            }`
+          ),
+      }),
+  })),
 }) {}
 
 /**
@@ -244,27 +264,27 @@ export const authRuntime = Atom.runtime(AuthApi.Default);
  * - Syncs across browser tabs
  */
 export const sessionAtom = (() => {
-	const remoteAtom = authRuntime.atom(
-		Effect.gen(function* () {
-			const api = yield* AuthApi;
-			return yield* api.getSession();
-		}),
-	);
+  const remoteAtom = authRuntime.atom(
+    Effect.gen(function* () {
+      const api = yield* AuthApi;
+      return yield* api.getSession();
+    })
+  );
 
-	return Object.assign(
-		Atom.writable(
-			(get) => get(remoteAtom),
-			// Allow manually updating session (for optimistic updates after signIn)
-			(ctx, session: SessionData) => {
-				ctx.setSelf(Result.success(session));
-			},
-			// Refresh function
-			(refresh) => {
-				refresh(remoteAtom);
-			},
-		),
-		{ remote: remoteAtom },
-	);
+  return Object.assign(
+    Atom.writable(
+      (get) => get(remoteAtom),
+      // Allow manually updating session (for optimistic updates after signIn)
+      (ctx, session: SessionData) => {
+        ctx.setSelf(Result.success(session));
+      },
+      // Refresh function
+      (refresh) => {
+        refresh(remoteAtom);
+      }
+    ),
+    { remote: remoteAtom }
+  );
 })();
 
 /**
@@ -275,16 +295,16 @@ export const sessionAtom = (() => {
  * 2. Optimistically updates sessionAtom with fresh session data
  */
 export const signInAtom = authRuntime.fn<SignInInput>()(
-	Effect.fnUntraced(function* (input, get) {
-		const api = yield* AuthApi;
-		const signInResponse = yield* api.signIn(input);
+  Effect.fnUntraced(function* (input, get) {
+    const api = yield* AuthApi;
+    const signInResponse = yield* api.signIn(input);
 
-		// After successful sign-in, fetch fresh session to update sessionAtom
-		const freshSession = yield* api.getSession();
-		get.set(sessionAtom, freshSession);
+    // After successful sign-in, fetch fresh session to update sessionAtom
+    const freshSession = yield* api.getSession();
+    get.set(sessionAtom, freshSession);
 
-		return signInResponse;
-	}),
+    return signInResponse;
+  })
 );
 
 /**
@@ -294,10 +314,10 @@ export const signInAtom = authRuntime.fn<SignInInput>()(
  * Session will be established after callback redirect.
  */
 export const signInWithGoogleAtom = authRuntime.fn<void>()(
-	Effect.fnUntraced(function* (_input, _get) {
-		const api = yield* AuthApi;
-		return yield* api.signInWithGoogle();
-	}),
+  Effect.fnUntraced(function* (_input, _get) {
+    const api = yield* AuthApi;
+    return yield* api.signInWithGoogle();
+  })
 );
 
 /**
@@ -308,14 +328,14 @@ export const signInWithGoogleAtom = authRuntime.fn<void>()(
  * 2. Updates sessionAtom with fresh session data
  */
 export const signInWithPasskeyAtom = authRuntime.fn<void>()(
-	Effect.fnUntraced(function* (_input, get) {
-		const api = yield* AuthApi;
-		yield* api.signInWithPasskey();
+  Effect.fnUntraced(function* (_input, get) {
+    const api = yield* AuthApi;
+    yield* api.signInWithPasskey();
 
-		// After successful passkey sign-in, fetch fresh session
-		const freshSession = yield* api.getSession();
-		get.set(sessionAtom, freshSession);
-	}),
+    // After successful passkey sign-in, fetch fresh session
+    const freshSession = yield* api.getSession();
+    get.set(sessionAtom, freshSession);
+  })
 );
 
 /**
@@ -326,15 +346,15 @@ export const signInWithPasskeyAtom = authRuntime.fn<void>()(
  * 2. Clears sessionAtom (sets to null)
  */
 export const signOutAtom = authRuntime.fn<void>()(
-	Effect.fnUntraced(function* (_input, get) {
-		const api = yield* AuthApi;
-		const result = yield* api.signOut();
+  Effect.fnUntraced(function* (_input, get) {
+    const api = yield* AuthApi;
+    const result = yield* api.signOut();
 
-		// Clear session after sign-out
-		get.set(sessionAtom, null);
+    // Clear session after sign-out
+    get.set(sessionAtom, null);
 
-		return result;
-	}),
+    return result;
+  })
 );
 
 /**
@@ -345,16 +365,16 @@ export const signOutAtom = authRuntime.fn<void>()(
  * 2. Optimistically updates sessionAtom with fresh session data
  */
 export const signUpAtom = authRuntime.fn<SignUpInput>()(
-	Effect.fnUntraced(function* (input, get) {
-		const api = yield* AuthApi;
-		const signUpResponse = yield* api.signUp(input);
+  Effect.fnUntraced(function* (input, get) {
+    const api = yield* AuthApi;
+    const signUpResponse = yield* api.signUp(input);
 
-		// After successful sign-up, fetch fresh session to update sessionAtom
-		const freshSession = yield* api.getSession();
-		get.set(sessionAtom, freshSession);
+    // After successful sign-up, fetch fresh session to update sessionAtom
+    const freshSession = yield* api.getSession();
+    get.set(sessionAtom, freshSession);
 
-		return signUpResponse;
-	}),
+    return signUpResponse;
+  })
 );
 
 /**
@@ -365,10 +385,10 @@ export const signUpAtom = authRuntime.fn<SignUpInput>()(
  * 2. User can then use the link in email to reset their password
  */
 export const forgotPasswordAtom = authRuntime.fn<{ email: string }>()(
-	Effect.fnUntraced(function* (input) {
-		const api = yield* AuthApi;
-		return yield* api.forgotPassword(input.email);
-	}),
+  Effect.fnUntraced(function* (input) {
+    const api = yield* AuthApi;
+    return yield* api.forgotPassword(input.email);
+  })
 );
 
 /**
@@ -378,11 +398,14 @@ export const forgotPasswordAtom = authRuntime.fn<{ email: string }>()(
  * 1. Updates user's password
  * 2. User can then sign in with new password
  */
-export const resetPasswordAtom = authRuntime.fn<{ newPassword: string; token: string }>()(
-	Effect.fnUntraced(function* (input) {
-		const api = yield* AuthApi;
-		return yield* api.resetPassword(input.newPassword, input.token);
-	}),
+export const resetPasswordAtom = authRuntime.fn<{
+  newPassword: string;
+  token: string;
+}>()(
+  Effect.fnUntraced(function* (input) {
+    const api = yield* AuthApi;
+    return yield* api.resetPassword(input.newPassword, input.token);
+  })
 );
 
 /**
@@ -393,17 +416,20 @@ export const resetPasswordAtom = authRuntime.fn<{ newPassword: string; token: st
  * 2. Updates sessionAtom with fresh session data
  * 3. Optionally trusts the device for future logins
  */
-export const verifyTwoFactorAtom = authRuntime.fn<{ code: string; trustDevice?: boolean }>()(
-	Effect.fnUntraced(function* (input, get) {
-		const api = yield* AuthApi;
-		const result = yield* api.verifyTwoFactor(input.code, input.trustDevice);
+export const verifyTwoFactorAtom = authRuntime.fn<{
+  code: string;
+  trustDevice?: boolean;
+}>()(
+  Effect.fnUntraced(function* (input, get) {
+    const api = yield* AuthApi;
+    const result = yield* api.verifyTwoFactor(input.code, input.trustDevice);
 
-		// After successful 2FA verification, fetch fresh session
-		const freshSession = yield* api.getSession();
-		get.set(sessionAtom, freshSession);
+    // After successful 2FA verification, fetch fresh session
+    const freshSession = yield* api.getSession();
+    get.set(sessionAtom, freshSession);
 
-		return result;
-	}),
+    return result;
+  })
 );
 
 /**
@@ -414,16 +440,16 @@ export const verifyTwoFactorAtom = authRuntime.fn<{ code: string; trustDevice?: 
  * 2. Updates sessionAtom with fresh session data
  */
 export const recoverAccountAtom = authRuntime.fn<{ code: string }>()(
-	Effect.fnUntraced(function* (input, get) {
-		const api = yield* AuthApi;
-		const result = yield* api.recoverAccount(input.code);
+  Effect.fnUntraced(function* (input, get) {
+    const api = yield* AuthApi;
+    const result = yield* api.recoverAccount(input.code);
 
-		// After successful recovery, fetch fresh session
-		const freshSession = yield* api.getSession();
-		get.set(sessionAtom, freshSession);
+    // After successful recovery, fetch fresh session
+    const freshSession = yield* api.getSession();
+    get.set(sessionAtom, freshSession);
 
-		return result;
-	}),
+    return result;
+  })
 );
 
 /**
@@ -434,16 +460,16 @@ export const recoverAccountAtom = authRuntime.fn<{ code: string }>()(
  * 2. Updates sessionAtom with fresh session data
  */
 export const updateNameAtom = authRuntime.fn<{ name: string }>()(
-	Effect.fnUntraced(function* (input, get) {
-		const api = yield* AuthApi;
-		const result = yield* api.updateName(input.name);
+  Effect.fnUntraced(function* (input, get) {
+    const api = yield* AuthApi;
+    const result = yield* api.updateName(input.name);
 
-		// After successful update, fetch fresh session
-		const freshSession = yield* api.getSession();
-		get.set(sessionAtom, freshSession);
+    // After successful update, fetch fresh session
+    const freshSession = yield* api.getSession();
+    get.set(sessionAtom, freshSession);
 
-		return result;
-	}),
+    return result;
+  })
 );
 
 /**
@@ -454,16 +480,16 @@ export const updateNameAtom = authRuntime.fn<{ name: string }>()(
  * 2. Updates sessionAtom with fresh session data
  */
 export const updateImageAtom = authRuntime.fn<{ image: string }>()(
-	Effect.fnUntraced(function* (input, get) {
-		const api = yield* AuthApi;
-		const result = yield* api.updateImage(input.image);
+  Effect.fnUntraced(function* (input, get) {
+    const api = yield* AuthApi;
+    const result = yield* api.updateImage(input.image);
 
-		// After successful update, fetch fresh session
-		const freshSession = yield* api.getSession();
-		get.set(sessionAtom, freshSession);
+    // After successful update, fetch fresh session
+    const freshSession = yield* api.getSession();
+    get.set(sessionAtom, freshSession);
 
-		return result;
-	}),
+    return result;
+  })
 );
 
 /**
@@ -474,8 +500,8 @@ export const updateImageAtom = authRuntime.fn<{ image: string }>()(
  * 2. User must verify new email via link
  */
 export const changeEmailAtom = authRuntime.fn<{ newEmail: string }>()(
-	Effect.fnUntraced(function* (input) {
-		const api = yield* AuthApi;
-		return yield* api.changeEmail(input.newEmail);
-	}),
+  Effect.fnUntraced(function* (input) {
+    const api = yield* AuthApi;
+    return yield* api.changeEmail(input.newEmail);
+  })
 );

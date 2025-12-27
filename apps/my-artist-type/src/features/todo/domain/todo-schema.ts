@@ -33,6 +33,5 @@ export class TodoNotFound extends Schema.TaggedError<TodoNotFound>()(
   {
     id: TodoId,
   },
-  HttpApiSchema.annotations({ status: 404 }),
+  HttpApiSchema.annotations({ status: 404 })
 ) {}
-

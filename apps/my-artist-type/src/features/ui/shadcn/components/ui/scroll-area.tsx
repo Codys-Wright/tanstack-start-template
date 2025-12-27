@@ -1,9 +1,9 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import * as ScrollAreaPrimitive from "@radix-ui/react-scroll-area"
+import * as React from "react";
+import * as ScrollAreaPrimitive from "@radix-ui/react-scroll-area";
 
-import { cn } from "@/features/ui/shadcn/lib/utils"
+import { cn } from "@/features/ui/shadcn/lib/utils";
 
 function ScrollAreaRoot({
   className,
@@ -25,7 +25,7 @@ function ScrollAreaRoot({
       <ScrollBar />
       <ScrollAreaPrimitive.Corner />
     </ScrollAreaPrimitive.Root>
-  )
+  );
 }
 
 function ScrollBar({
@@ -52,11 +52,13 @@ function ScrollBar({
         className="bg-border relative flex-1 rounded-full"
       />
     </ScrollAreaPrimitive.ScrollAreaScrollbar>
-  )
+  );
 }
 
-export const ScrollArea: React.FC<React.ComponentProps<typeof ScrollAreaPrimitive.Root>> & {
-  Bar: typeof ScrollBar
+export const ScrollArea: React.FC<
+  React.ComponentProps<typeof ScrollAreaPrimitive.Root>
+> & {
+  Bar: typeof ScrollBar;
 } = Object.assign(ScrollAreaRoot, {
   Bar: ScrollBar,
-})
+});

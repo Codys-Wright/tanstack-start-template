@@ -1,9 +1,9 @@
-import * as React from "react"
-import { Command as CommandPrimitive } from "cmdk"
-import { SearchIcon } from "lucide-react"
+import * as React from "react";
+import { Command as CommandPrimitive } from "cmdk";
+import { SearchIcon } from "lucide-react";
 
-import { cn } from "@/features/ui/shadcn/lib/utils"
-import { Dialog } from "@/features/ui/shadcn/components/ui/dialog"
+import { cn } from "@/features/ui/shadcn/lib/utils";
+import { Dialog } from "@/features/ui/shadcn/components/ui/dialog";
 
 function CommandRoot({
   className,
@@ -18,7 +18,7 @@ function CommandRoot({
       )}
       {...props}
     />
-  )
+  );
 }
 
 function CommandDialog({
@@ -29,10 +29,10 @@ function CommandDialog({
   showCloseButton = true,
   ...props
 }: React.ComponentProps<typeof Dialog> & {
-  title?: string
-  description?: string
-  className?: string
-  showCloseButton?: boolean
+  title?: string;
+  description?: string;
+  className?: string;
+  showCloseButton?: boolean;
 }) {
   return (
     <Dialog {...props}>
@@ -49,7 +49,7 @@ function CommandDialog({
         </Command>
       </Dialog.Content>
     </Dialog>
-  )
+  );
 }
 
 function CommandInput({
@@ -71,7 +71,7 @@ function CommandInput({
         {...props}
       />
     </div>
-  )
+  );
 }
 
 function CommandList({
@@ -87,7 +87,7 @@ function CommandList({
       )}
       {...props}
     />
-  )
+  );
 }
 
 function CommandEmpty({
@@ -99,7 +99,7 @@ function CommandEmpty({
       className="py-6 text-center text-sm"
       {...props}
     />
-  )
+  );
 }
 
 function CommandGroup({
@@ -115,7 +115,7 @@ function CommandGroup({
       )}
       {...props}
     />
-  )
+  );
 }
 
 function CommandSeparator({
@@ -128,7 +128,7 @@ function CommandSeparator({
       className={cn("bg-border -mx-1 h-px", className)}
       {...props}
     />
-  )
+  );
 }
 
 function CommandItem({
@@ -144,7 +144,7 @@ function CommandItem({
       )}
       {...props}
     />
-  )
+  );
 }
 
 function CommandShortcut({
@@ -160,18 +160,20 @@ function CommandShortcut({
       )}
       {...props}
     />
-  )
+  );
 }
 
-export const Command: React.FC<React.ComponentProps<typeof CommandPrimitive>> & {
-  Dialog: typeof CommandDialog
-  Input: typeof CommandInput
-  List: typeof CommandList
-  Empty: typeof CommandEmpty
-  Group: typeof CommandGroup
-  Item: typeof CommandItem
-  Shortcut: typeof CommandShortcut
-  Separator: typeof CommandSeparator
+export const Command: React.FC<
+  React.ComponentProps<typeof CommandPrimitive>
+> & {
+  Dialog: typeof CommandDialog;
+  Input: typeof CommandInput;
+  List: typeof CommandList;
+  Empty: typeof CommandEmpty;
+  Group: typeof CommandGroup;
+  Item: typeof CommandItem;
+  Shortcut: typeof CommandShortcut;
+  Separator: typeof CommandSeparator;
 } = Object.assign(CommandRoot, {
   Dialog: CommandDialog,
   Input: CommandInput,
@@ -181,4 +183,4 @@ export const Command: React.FC<React.ComponentProps<typeof CommandPrimitive>> & 
   Item: CommandItem,
   Shortcut: CommandShortcut,
   Separator: CommandSeparator,
-})
+});

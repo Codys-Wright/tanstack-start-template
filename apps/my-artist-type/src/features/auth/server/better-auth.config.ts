@@ -20,7 +20,7 @@ const betterAuthConfig: Config.Config<BetterAuthConfigValues> = Config.all({
   BETTER_AUTH_SECRET: Config.redacted("BETTER_AUTH_SECRET"),
   DATABASE_URL: Config.redacted("DATABASE_URL"),
   CLIENT_ORIGIN: Config.option(Config.string("CLIENT_ORIGIN")).pipe(
-    Config.map(Option.getOrElse(() => "http://localhost:5173")),
+    Config.map(Option.getOrElse(() => "http://localhost:5173"))
   ),
   GOOGLE_CLIENT_ID: Config.option(Config.redacted("GOOGLE_CLIENT_ID")),
   GOOGLE_CLIENT_SECRET: Config.option(Config.redacted("GOOGLE_CLIENT_SECRET")),
@@ -32,7 +32,7 @@ export class BetterAuthConfig extends Effect.Service<BetterAuthConfig>()(
   {
     effect: betterAuthConfig,
     dependencies: [Layer.setConfigProvider(ConfigProvider.fromEnv())],
-  },
+  }
 ) {}
 
 export const getDatabaseUrl = (env: BetterAuthConfigValues) =>
