@@ -16,15 +16,5 @@
     "**/*.test.js"
   ],
   "include": ["src/**/*.ts", "src/**/*.js"],
-  "references": [
-    {
-      "path": "../../core/database/tsconfig.lib.json"
-    },
-    {
-      "path": "../domain/tsconfig.lib.json"
-    },
-    {
-      "path": "../database/tsconfig.lib.json"
-    }
-  ]
+  "references": []
 }

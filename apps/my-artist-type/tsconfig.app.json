@@ -29,10 +29,19 @@
   "include": ["src/**/*.js", "src/**/*.jsx", "src/**/*.ts", "src/**/*.tsx"],
   "references": [
     {
-      "path": "../../packages/auth/tsconfig.lib.json"
+      "path": "../../packages/core/database"
     },
     {
-      "path": "../../packages/core/tsconfig.lib.json"
+      "path": "../../packages/auth/database"
+    },
+    {
+      "path": "../../packages/auth/server"
+    },
+    {
+      "path": "../../packages/auth/domain"
+    },
+    {
+      "path": "../../packages/auth/client"
     },
     {
       "path": "../../packages/ui/theme/tsconfig.lib.json"

@@ -27,12 +27,5 @@
     "**/*.test.jsx"
   ],
   "include": ["src/**/*.js", "src/**/*.jsx", "src/**/*.ts", "src/**/*.tsx"],
-  "references": [
-    {
-      "path": "../../core/database/tsconfig.lib.json"
-    },
-    {
-      "path": "../domain/tsconfig.lib.json"
-    }
-  ]
+  "references": []
 }

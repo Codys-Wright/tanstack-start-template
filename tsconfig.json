@@ -11,36 +11,6 @@
     },
     {
       "path": "./packages/ui/theme"
-    },
-    {
-      "path": "./packages/auth"
-    },
-    {
-      "path": "./packages/core"
-    },
-    {
-      "path": "./packages/core/domain"
-    },
-    {
-      "path": "./packages/core/server"
-    },
-    {
-      "path": "./packages/core/client"
-    },
-    {
-      "path": "./packages/core/database"
-    },
-    {
-      "path": "./packages/auth/domain"
-    },
-    {
-      "path": "./packages/auth/client"
-    },
-    {
-      "path": "./packages/auth/server"
-    },
-    {
-      "path": "./packages/auth/database"
     }
   ]
 }
