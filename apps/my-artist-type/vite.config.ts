@@ -10,7 +10,7 @@ const config = defineConfig({
   root: import.meta.dirname,
   plugins: [
     devtools(),
-    nitro(),
+    nitro({}),
     // this is the plugin that enables path aliases
     viteTsConfigPaths({
       projects: ["./tsconfig.app.json"],
@@ -20,10 +20,10 @@ const config = defineConfig({
     viteReact(),
   ],
   optimizeDeps: {
-    exclude: ["cpu-features", "pg"],
+    exclude: ["cpu-features", "pg", "@testcontainers/postgresql"],
   },
   ssr: {
-    external: ["cpu-features", "pg"],
+    external: ["cpu-features", "pg", "@testcontainers/postgresql"],
     noExternal: [],
   },
   build: {
