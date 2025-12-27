@@ -38,7 +38,19 @@ export default defineConfig(() => ({
     },
     rollupOptions: {
       // External packages that should not be bundled into your library.
-      external: ['react', 'react-dom', 'react/jsx-runtime'],
+      external: [
+        'react',
+        'react-dom',
+        'react/jsx-runtime',
+        '@shadcn',
+        /^@radix-ui\/.*/,
+        '@effect-atom/atom',
+        '@effect-atom/atom-react',
+        'class-variance-authority',
+        'clsx',
+        'tailwind-merge',
+        'lucide-react',
+      ],
     },
   },
 }));

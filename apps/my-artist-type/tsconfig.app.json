@@ -14,11 +14,7 @@
     "module": "esnext",
     "moduleResolution": "bundler",
     "paths": {
-      "@/*": ["./src/*"],
-      "@shadcn": ["./src/features/ui/shadcn"],
-      "@shadcn/*": ["./src/features/ui/shadcn/*"],
-      "@/components/ui": ["./src/features/ui/shadcn/components/ui"],
-      "@/components/ui/*": ["./src/features/ui/shadcn/components/ui/*"]
+      "@/*": ["./src/*"]
     }
   },
   "exclude": [

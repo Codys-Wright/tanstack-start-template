@@ -2,9 +2,8 @@ import { HeadContent, Scripts, createRootRoute } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 import { TanStackDevtools } from "@tanstack/react-devtools";
 import { RegistryProvider } from "@effect-atom/atom-react";
-import { ThemeProvider, ThemeSystemProviderWithContext } from "@theme";
+import { ThemeProvider, ThemeSystemProviderWithContext, getThemeScriptContent } from "@theme";
 import { Navigation } from "@/components/navigation";
-import { getThemeScriptContent } from "@/features/ui/shadcn/components/theme-script";
 import appCss from "../styles.css?url";
 
 export const Route = createRootRoute({
