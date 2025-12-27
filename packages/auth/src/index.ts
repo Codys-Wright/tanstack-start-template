@@ -1,43 +1,38 @@
 /**
- * @auth - Authentication & Authorization Package
- * 
- * Complete authentication system with:
- * - User management
- * - Session handling
- * - Account self-service
- * - Multi-tenancy (Organizations & Teams)
- * - Security features (2FA, Passkeys)
- * - Admin operations
- * 
+ * @auth - Authentication & Authorization Package (Client)
+ *
+ * Client-side authentication components and state management.
+ * Server-side code (repositories, services, middleware) is not exported.
+ *
+ * Features:
+ * - Client-side auth client (Better Auth)
+ * - Reactive state management (Effect-Atom)
+ * - UI components for authentication
+ * - Type-safe schemas and types
+ *
  * @example
- * ```ts
- * // Import core auth
- * import { authClient, SignInInput } from "@auth";
- * 
- * // Import specific features
- * import { UserAvatar } from "@auth/user";
- * import { SignInForm } from "@auth/session";
- * import { OrganizationsCard } from "@auth/organization";
+ * ```tsx
+ * // Import client components
+ * import { UserButton, SignInForm } from "@auth";
+ *
+ * // Import state management
+ * import { sessionAtom, signInAtom } from "@auth";
+ *
+ * // Import types
+ * import type { User, Session } from "@auth";
  * ```
  */
 
 // ============================================================================
-// Core - Authentication infrastructure
+// Core - Client-side authentication
 // ============================================================================
 
-// Export everything from core except potential conflicts
+// Export client-safe core items
 export {
-  // Better Auth
+  // Better Auth client (browser-compatible)
   authClient,
-  
-  // Services
-  BetterAuthConfig,
-  BetterAuthDatabase,
-  BetterAuthRouter,
-  BetterAuthService,
-  EmailService,
-  
-  // Auth schemas
+
+  // Auth schemas (types only)
   SignInInput,
   SignInResponse,
   SignUpInput,
@@ -45,64 +40,21 @@ export {
   SignOutResponse,
   ForgotPasswordInput,
   ResetPasswordInput,
-  
-  // Context & Middleware
-  AuthContext,
-  RpcAuthenticationMiddleware,
-  HttpAuthenticationMiddleware,
-  HttpAuthenticationMiddlewareLive,
-  RpcAuthenticationMiddlewareLive,
 } from "./_core/index.js";
 
-// Re-export the auth CLI entry for better-auth commands
-export { auth } from "./_core/auth.js";
+// ============================================================================
+// Session - Client-side session management
+// ============================================================================
+
+// Only export client-safe items (schemas, atoms, and UI)
+export * from "./session/session.schema.js";
+export * from "./session/session.atoms.js";
+export * from "./session/ui/index.js";
 
 // ============================================================================
-// User - User management
+// User - Client-side user components
 // ============================================================================
-export * from "./user/index.js";
 
-// ============================================================================
-// Session - Session & authentication
-// ============================================================================
-export * from "./session/index.js";
-
-// ============================================================================
-// Account - Profile & account management
-// ============================================================================
-export * from "./account/index.js";
-
-// ============================================================================
-// Security - 2FA & Passkeys
-// ============================================================================
-export * from "./security/index.js";
-
-// ============================================================================
-// Organization - Multi-tenancy
-// ============================================================================
-export * from "./organization/index.js";
-
-// ============================================================================
-// Team - Team management
-// ============================================================================
-export * from "./team/index.js";
-
-// ============================================================================
-// Member - Organization membership
-// ============================================================================
-export * from "./member/index.js";
-
-// ============================================================================
-// Invitation - Org invitations
-// ============================================================================
-export * from "./invitation/index.js";
-
-// ============================================================================
-// Admin - Admin operations
-// ============================================================================
-export * from "./admin/index.js";
-
-// ============================================================================
-// Database - Migrations
-// ============================================================================
-export { authMigrations } from "./database/migrations.js";
+// Only export client-safe items (schemas and UI)
+export * from "./user/user.schema.js";
+export * from "./user/ui/index.js";
