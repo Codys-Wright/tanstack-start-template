@@ -6,7 +6,7 @@ import { useEffect } from "react";
 import * as Schema from "effect/Schema";
 
 import { changeEmailAtom } from "../../session/session.atoms.js";
-import { SettingsCard } from "./settings-card.tsx";
+import { SettingsCard } from "./settings-card.js";
 
 export interface ChangeEmailCardProps {
   className?: string;

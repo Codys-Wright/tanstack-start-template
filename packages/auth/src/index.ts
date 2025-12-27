@@ -52,9 +52,6 @@ export {
   HttpAuthenticationMiddleware,
   HttpAuthenticationMiddlewareLive,
   RpcAuthenticationMiddlewareLive,
-  
-  // Shared types
-  UserId,
 } from "./_core/index.js";
 
 // Re-export the auth CLI entry for better-auth commands

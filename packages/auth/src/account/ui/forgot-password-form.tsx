@@ -6,7 +6,7 @@ import { Loader2Icon } from "lucide-react";
 import { useEffect } from "react";
 import * as Schema from "effect/Schema";
 
-import { forgotPasswordAtom } from "./atoms/session.atoms.js";
+import { forgotPasswordAtom } from "../../session/session.atoms.js";
 
 // Define the form schema using Effect Schema
 const ForgotPasswordSchema = Schema.Struct({

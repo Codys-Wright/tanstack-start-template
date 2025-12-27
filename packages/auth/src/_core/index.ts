@@ -6,7 +6,7 @@
 
 // Better Auth integration
 export * from "./auth.client.js";
-export * from "./auth.ts";
+export * from "./auth.js";
 export * from "./better-auth.config.js";
 export * from "./better-auth.database.js";
 export * from "./better-auth.router.js";
@@ -23,6 +23,3 @@ export * from "./auth.context.js";
 export * from "./auth.policy.js";
 export * from "./auth.http-middleware.js";
 export * from "./auth.rpc-middleware.js";
-
-// Shared types
-export * from "./auth.user-id.js";

@@ -9,12 +9,12 @@ import {
   BuildingIcon,
 } from "lucide-react";
 import { AccountSettingsCards } from "./account-settings-cards.js";
-import { SecuritySettingsCards } from "./settings/security-settings-cards.js";
-import { UserTeamsCard } from "./settings/teams/user-teams-card.js";
-import { ApiKeysCard } from "./settings/api-key/api-keys-card.js";
-import { OrganizationsCard } from "./organization/organizations-card.js";
-import { UserInvitationsCard } from "./organization/user-invitations-card.js";
-import { TeamsCard } from "./organization/teams-card.js";
+import { SecuritySettingsCards } from "./security-settings-cards.js";
+import { UserTeamsCard } from "../../team/ui/user-teams-card.js";
+import { ApiKeysCard } from "./api-keys-card.js";
+import { OrganizationsCard } from "../../organization/ui/organizations-card.js";
+import { UserInvitationsCard } from "../../invitation/ui/user-invitations-card.js";
+import { TeamsCard } from "../../team/ui/teams-card.js";
 
 export interface AccountViewProps {
   className?: string;
