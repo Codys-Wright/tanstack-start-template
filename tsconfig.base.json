@@ -14,7 +14,7 @@
     "noImplicitReturns": true,
     "noUnusedLocals": true,
     "skipLibCheck": true,
-     "baseUrl": ".",
+    "baseUrl": ".",
     "strict": true,
     "target": "es2022",
     "customConditions": ["@org/source"],
