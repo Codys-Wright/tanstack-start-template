@@ -7,70 +7,35 @@ import { getRequestHeaders } from "@tanstack/react-start/server";
 import * as Effect from "effect/Effect";
 import { serverRuntime } from "../features/core/server";
 import { TodosService } from "../features/todo/server/todos-service";
-import { BetterAuthService } from "@auth";
+// import { BetterAuthService } from "@auth";
 import { App } from "./-index/app";
 import { todosAtom } from "../features/todo/client/";
-import type { UserId } from "@auth";
+// import type { UserId } from "@auth";
 
 const getTodos = createServerFn().handler(async () => {
   const todos = await serverRuntime.runPromiseExit(
     Effect.gen(function* () {
       yield* Effect.log("[getTodos] Starting todos fetch");
 
-      // Get Better Auth service
-      const auth = yield* BetterAuthService;
-      yield* Effect.log("[getTodos] Got BetterAuthService");
-
-      // Get request headers for session validation
-      const requestHeaders = getRequestHeaders();
-      const cookieHeader = requestHeaders.get("cookie") || "";
-      yield* Effect.log(
-        `[getTodos] Got request headers, cookie present: ${Boolean(cookieHeader)}`,
-      );
-
-      // Try to get session with proper headers
-      const session = yield* Effect.tryPromise({
-        try: () =>
-          auth.api.getSession({
-            headers: new Headers({
-              cookie: cookieHeader,
-            }),
-          }),
-        catch: (error) => error,
-      }).pipe(
-        Effect.tap(() => Effect.log("[getTodos] Session fetch completed")),
-        Effect.tapError((error) =>
-          Effect.logError(`[getTodos] Failed to get session: ${String(error)}`),
-        ),
-      );
-
-      yield* Effect.log(
-        `[getTodos] Session result: ${
-          session ? "authenticated" : "not authenticated"
-        }`,
-      );
-
-      if (!session?.user?.id) {
-        yield* Effect.log(
-          "[getTodos] No authenticated user, returning empty array",
-        );
-        return [];
-      }
-
-      const userId = session.user.id as UserId;
-      yield* Effect.log(`[getTodos] Fetching todos for user: ${userId}`);
+      // Auth disabled - return todos for all users
+      yield* Effect.log("[getTodos] Auth disabled - returning todos for demo user");
 
       // Get todos service
       const service = yield* TodosService;
       yield* Effect.log("[getTodos] Got TodosService");
 
-      // Fetch todos for this user
-      const userTodos = yield* service.list(userId);
-      yield* Effect.log(
-        `[getTodos] Successfully fetched ${userTodos.length} todos`,
-      );
+      // For demo purposes, use a fixed user ID or return empty array
+      // const userId = "demo-user";
+      // const userTodos = yield* service.list(userId);
+      // yield* Effect.log(
+      //   `[getTodos] Successfully fetched ${userTodos.length} todos`,
+      // );
 
-      return userTodos;
+      // return userTodos;
+
+      // Return empty array for now
+      yield* Effect.log("[getTodos] Returning empty array (auth disabled)");
+      return [];
     }).pipe(
       Effect.tapError((error) =>
         Effect.logError(`[getTodos] Effect error: ${String(error)}`),
