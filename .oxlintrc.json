@@ -118,5 +118,13 @@
     "**/*.md",
     "**/vitest.config.ts",
     "**/vitest.workspace.ts"
+  ],
+  "overrides": [
+    {
+      "files": ["**/database/scripts/**"],
+      "rules": {
+        "eslint/no-console": "off"
+      }
+    }
   ]
 }
