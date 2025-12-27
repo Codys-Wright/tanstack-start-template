@@ -38,7 +38,24 @@ export default defineConfig(() => ({
     },
     rollupOptions: {
       // External packages that should not be bundled into your library.
-      external: ["react", "react-dom", "react/jsx-runtime"],
+      external: [
+        "react",
+        "react-dom",
+        "react/jsx-runtime",
+        // Externalize Node.js built-ins (prevents polyfill issues with Bun)
+        /^node:/,
+        // Externalize PostgreSQL and database dependencies
+        "pg",
+        "pg-cursor",
+        "pg-pool",
+        "pg-connection-string",
+        "pg-types",
+        // Externalize all @effect packages (should not be bundled)
+        /^@effect\//,
+        /^effect\//,
+        // Externalize testcontainers
+        /^@testcontainers\//,
+      ],
     },
   },
 }));
