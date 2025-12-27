@@ -13,15 +13,17 @@
     "typecheck": "tsc --noEmit",
     "db:migrate": "dotenv -- tsx ./src/features/core/database/scripts/migrator.ts",
     "db:reset": "dotenv -- tsx ./src/features/core/database/scripts/reset-database.ts",
-    "db:add-fake-column": "dotenv -- bun run ./src/features/auth/database/scripts/add-fake-column.ts",
-    "db:seed": "dotenv -- bun run ./src/features/auth/database/scripts/seed-users.ts",
-    "db:clean": "dotenv -- bun run ./src/features/auth/database/scripts/cleanup-fake-users.ts",
-    "admin:set": "dotenv -- bun run ./src/features/auth/database/scripts/make-admin.ts",
-    "auth:migrate": "dotenv -- pnpx @better-auth/cli migrate --config ./src/features/auth/auth.ts",
-    "auth:generate": "dotenv -- pnpx @better-auth/cli generate --config ./src/features/auth/auth.ts --output ./src/features/auth/database/migrations/better-auth-schema.sql -y"
+    "db:add-fake-column": "dotenv -- bun run ../../packages/auth/src/database/scripts/add-fake-column.ts",
+    "db:seed": "dotenv -- bun run ../../packages/auth/src/database/scripts/seed-users.ts",
+    "db:clean": "dotenv -- bun run ../../packages/auth/src/database/scripts/cleanup-fake-users.ts",
+    "admin:set": "dotenv -- bun run ../../packages/auth/src/database/scripts/make-admin.ts",
+    "auth:migrate": "dotenv -- pnpx @better-auth/cli migrate --config ../../packages/auth/src/_core/auth.ts",
+    "auth:generate": "dotenv -- pnpx @better-auth/cli generate --config ../../packages/auth/src/_core/auth.ts --output ../../packages/auth/src/database/migrations/better-auth-schema.sql -y"
   },
   "dependencies": {
+    "@auth": "*",
     "@better-auth/passkey": "*",
+    "@core": "*",
     "@effect-atom/atom": "*",
     "@effect-atom/atom-react": "*",
     "@effect/language-service": "*",
