@@ -11,6 +11,12 @@
     },
     {
       "path": "./packages/ui/theme"
+    },
+    {
+      "path": "./packages/auth"
+    },
+    {
+      "path": "./packages/core"
     }
   ]
 }
