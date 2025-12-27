@@ -1,8 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { getTheme, type ThemeDefinition } from '../lib/themes.js';
-import { useTheme } from './theme-provider.js';
+import { getTheme } from '../lib/themes.js';
 import { useAtomValue, useAtomSet } from '@effect-atom/atom-react';
 import { themeNameAtom, radiusAtom } from '../atoms/theme-atoms.js';
 
@@ -22,8 +21,7 @@ export function ThemeSystemProvider({
   themeName = 'neutral',
   radius,
 }: ThemeSystemProviderProps) {
-  const { theme: colorMode } = useTheme();
-  const theme = React.useMemo(() => getTheme(themeName), [themeName]);
+  const themeDefinition = React.useMemo(() => getTheme(themeName), [themeName]);
 
   // Track if this is the first render to avoid overwriting script-injected theme
   const isFirstRender = React.useRef(true);
@@ -40,7 +38,7 @@ export function ThemeSystemProvider({
     }
 
     // Update theme CSS variables
-    if (theme && theme.cssVars) {
+    if (themeDefinition && themeDefinition.cssVars) {
       const styleId = 'theme-system-vars';
       let styleElement = document.getElementById(styleId) as HTMLStyleElement | null;
 
@@ -51,7 +49,7 @@ export function ThemeSystemProvider({
         document.head.insertBefore(styleElement, document.head.firstChild);
       }
 
-      const { light: lightVars, dark: darkVars } = theme.cssVars;
+      const { light: lightVars, dark: darkVars } = themeDefinition.cssVars;
 
       // Get radius value
       const radiusMap: Record<string, string> = {
@@ -122,7 +120,7 @@ export function ThemeSystemProvider({
       const radiusValue = radiusMap[radius] || radiusMap.default;
       document.documentElement.style.setProperty('--radius', radiusValue);
     }
-  }, [theme, colorMode, radius]);
+  }, [themeDefinition, themeName, radius]);
 
   return <>{children}</>;
 }
@@ -146,8 +144,6 @@ const ThemeSystemContext = React.createContext<ThemeSystemContextType>({
 
 export function ThemeSystemProviderWithContext({
   children,
-  defaultThemeName = 'neutral',
-  defaultRadius = 'default',
 }: {
   children: React.ReactNode;
   defaultThemeName?: string;

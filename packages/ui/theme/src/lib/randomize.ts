@@ -21,12 +21,12 @@ export type RandomizeBiases = {
  * Add biases here to influence random selection based on context.
  */
 export const RANDOMIZE_BIASES: RandomizeBiases = {
-  fonts: (fonts, context) => {
+  fonts: (fonts, _context) => {
     // Example: If theme is "dark", prefer certain fonts
     // For now, return all fonts
     return fonts;
   },
-  radius: (radii, context) => {
+  radius: (radii, _context) => {
     // Example: If theme is "minimal", prefer smaller radius
     // For now, return all radii
     return radii;

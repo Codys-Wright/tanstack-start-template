@@ -21,7 +21,7 @@ const initialState: ThemeProviderState = {
 
 const ThemeProviderContext = createContext<ThemeProviderState>(initialState);
 
-export function ThemeProvider({ children, defaultTheme = 'system', ...props }: ThemeProviderProps) {
+export function ThemeProvider({ children, ...props }: ThemeProviderProps) {
   // Use Effect Atom for color mode with localStorage persistence
   const theme = useAtomValue(colorModeAtom);
   const setThemeAtom = useAtomSet(colorModeAtom);
