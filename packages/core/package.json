@@ -14,9 +14,11 @@
     }
   },
   "devDependencies": {
-    "@core/database": "workspace:*"
-  },
-  "devDependencies": {
+    "@core/database": "workspace:*",
+    "@auth/client": "workspace:*",
+    "@auth/server": "workspace:*",
+    "@auth/domain": "workspace:*",
+    "@auth/database": "workspace:*",
     "@effect/vitest": "*",
     "@testcontainers/postgresql": "*",
     "@types/pg": "*",

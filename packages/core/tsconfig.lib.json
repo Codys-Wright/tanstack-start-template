@@ -26,5 +26,22 @@
     "**/*.spec.jsx",
     "**/*.test.jsx"
   ],
-  "include": ["src/**/*.js", "src/**/*.jsx", "src/**/*.ts", "src/**/*.tsx"]
+  "include": ["src/**/*.js", "src/**/*.jsx", "src/**/*.ts", "src/**/*.tsx"],
+  "references": [
+    {
+      "path": "../auth/database/tsconfig.lib.json"
+    },
+    {
+      "path": "../auth/domain/tsconfig.lib.json"
+    },
+    {
+      "path": "../auth/server/tsconfig.lib.json"
+    },
+    {
+      "path": "../auth/client/tsconfig.lib.json"
+    },
+    {
+      "path": "database/tsconfig.lib.json"
+    }
+  ]
 }

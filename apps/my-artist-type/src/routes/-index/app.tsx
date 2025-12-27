@@ -1,5 +1,6 @@
 import { CreateTodoForm, TodoList } from "../../features/todo/client";
 import { ThemeDropdown } from "@theme";
+import { AuthTestComponent } from "@auth";
 
 export function App() {
   return (
@@ -13,6 +14,7 @@ export function App() {
           Use the navigation above to test theme persistence across different
           pages.
         </p>
+        <AuthTestComponent />
         <CreateTodoForm />
         <TodoList />
       </div>

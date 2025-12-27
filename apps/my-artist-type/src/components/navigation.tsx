@@ -53,7 +53,7 @@ export function Navigation() {
                     "text-sm font-medium transition-colors hover:text-primary",
                     isActive
                       ? "text-foreground border-b-2 border-primary pb-1"
-                      : "text-muted-foreground"
+                      : "text-muted-foreground",
                   )}
                 >
                   {item.label}

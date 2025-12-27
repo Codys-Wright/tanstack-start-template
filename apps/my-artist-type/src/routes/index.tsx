@@ -80,7 +80,9 @@ const getTodos = createServerFn().handler(async () => {
   );
 
   Effect.runSync(Effect.log(`[getTodos] Final exit state: ${todos._tag}`));
-  return dehydrate(todosAtom.remote, Result.fromExit(todos));
+  // return dehydrate(todosAtom.remote, Result.fromExit(todos));
+  // Todo functionality disabled - return empty dehydrated state
+  return {};
 });
 
 export const Route = createFileRoute("/")({
