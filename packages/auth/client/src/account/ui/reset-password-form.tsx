@@ -22,7 +22,7 @@ export function ResetPasswordForm({ className }: ResetPasswordFormProps) {
   const search = useSearch({ from: "/auth/$authView" }) as
     | Record<string, string>
     | undefined;
-  const token = search?.token || "";
+  const token = search?.["token"] || "";
 
   const [resetPasswordResult, resetPassword] = useAtom(resetPasswordAtom);
 

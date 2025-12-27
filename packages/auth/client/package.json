@@ -32,7 +32,7 @@
     "@radix-ui/react-switch": "*",
     "@radix-ui/react-tabs": "*",
     "@radix-ui/react-tooltip": "*",
-    "@shadcn": "*",
+    "@shadcn": "workspace:*",
     "@tanstack/react-form": "*",
     "@tanstack/react-router": "*",
     "better-auth": "*",

@@ -104,7 +104,7 @@
     "@auth/domain": "workspace:*",
     "@auth/server": "workspace:*",
     "@auth/database": "workspace:*",
-    "@core": "workspace*",
+    "@core/database": "workspace*",
     "@effect/vitest": "*",
     "@tanstack/devtools-vite": "*",
     "@testcontainers/postgresql": "*",

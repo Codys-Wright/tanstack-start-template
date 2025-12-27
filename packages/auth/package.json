@@ -14,14 +14,12 @@
     }
   },
   "devDependencies": {
+    "@effect/vitest": "*",
     "@auth/client": "workspace:*",
     "@auth/database": "workspace:*",
     "@auth/domain": "workspace:*",
-    "@auth/server": "workspace:*"
-  },
-  "devDependencies": {
-    "@effect/vitest": "*",
-    "@shadcn": "*",
+    "@auth/server": "workspace:*",
+    "@shadcn": "workspace:*",
     "@tanstack/devtools-vite": "*",
     "@testcontainers/postgresql": "*",
     "@testing-library/dom": "*",

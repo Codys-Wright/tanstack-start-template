@@ -42,7 +42,7 @@ class OrganizationApi extends Effect.Service<OrganizationApi>()(
             const result = await authClient.organization.create(createInput);
             if (result.error) {
               throw new Error(
-                result.error.message || "Failed to create organization"
+                result.error.message || "Failed to create organization",
               );
             }
             return result.data;
@@ -51,7 +51,7 @@ class OrganizationApi extends Effect.Service<OrganizationApi>()(
             new Error(
               `Failed to create organization: ${
                 error instanceof Error ? error.message : String(error)
-              }`
+              }`,
             ),
         }),
 
@@ -67,7 +67,7 @@ class OrganizationApi extends Effect.Service<OrganizationApi>()(
             });
             if (result.error) {
               throw new Error(
-                result.error.message || "Failed to update organization"
+                result.error.message || "Failed to update organization",
               );
             }
             return result.data;
@@ -76,7 +76,7 @@ class OrganizationApi extends Effect.Service<OrganizationApi>()(
             new Error(
               `Failed to update organization: ${
                 error instanceof Error ? error.message : String(error)
-              }`
+              }`,
             ),
         }),
 
@@ -88,7 +88,7 @@ class OrganizationApi extends Effect.Service<OrganizationApi>()(
             });
             if (result.error) {
               throw new Error(
-                result.error.message || "Failed to delete organization"
+                result.error.message || "Failed to delete organization",
               );
             }
             return result.data;
@@ -97,7 +97,7 @@ class OrganizationApi extends Effect.Service<OrganizationApi>()(
             new Error(
               `Failed to delete organization: ${
                 error instanceof Error ? error.message : String(error)
-              }`
+              }`,
             ),
         }),
 
@@ -109,7 +109,7 @@ class OrganizationApi extends Effect.Service<OrganizationApi>()(
             });
             if (result.error) {
               throw new Error(
-                result.error.message || "Failed to switch organization"
+                result.error.message || "Failed to switch organization",
               );
             }
             return result.data;
@@ -118,7 +118,7 @@ class OrganizationApi extends Effect.Service<OrganizationApi>()(
             new Error(
               `Failed to switch organization: ${
                 error instanceof Error ? error.message : String(error)
-              }`
+              }`,
             ),
         }),
 
@@ -130,7 +130,7 @@ class OrganizationApi extends Effect.Service<OrganizationApi>()(
             });
             if (result.error) {
               throw new Error(
-                result.error.message || "Failed to leave organization"
+                result.error.message || "Failed to leave organization",
               );
             }
             return result.data;
@@ -139,7 +139,7 @@ class OrganizationApi extends Effect.Service<OrganizationApi>()(
             new Error(
               `Failed to leave organization: ${
                 error instanceof Error ? error.message : String(error)
-              }`
+              }`,
             ),
         }),
 
@@ -151,7 +151,7 @@ class OrganizationApi extends Effect.Service<OrganizationApi>()(
             const result = await authClient.organization.inviteMember(input);
             if (result.error) {
               throw new Error(
-                result.error.message || "Failed to invite member"
+                result.error.message || "Failed to invite member",
               );
             }
             return result.data;
@@ -160,19 +160,18 @@ class OrganizationApi extends Effect.Service<OrganizationApi>()(
             new Error(
               `Failed to invite member: ${
                 error instanceof Error ? error.message : String(error)
-              }`
+              }`,
             ),
         }),
 
       updateMemberRole: (input: any) =>
         Effect.tryPromise({
           try: async () => {
-            const result = await authClient.organization.updateMemberRole(
-              input
-            );
+            const result =
+              await authClient.organization.updateMemberRole(input);
             if (result.error) {
               throw new Error(
-                result.error.message || "Failed to update member role"
+                result.error.message || "Failed to update member role",
               );
             }
             return result.data;
@@ -181,7 +180,7 @@ class OrganizationApi extends Effect.Service<OrganizationApi>()(
             new Error(
               `Failed to update member role: ${
                 error instanceof Error ? error.message : String(error)
-              }`
+              }`,
             ),
         }),
 
@@ -194,7 +193,7 @@ class OrganizationApi extends Effect.Service<OrganizationApi>()(
             });
             if (result.error) {
               throw new Error(
-                result.error.message || "Failed to remove member"
+                result.error.message || "Failed to remove member",
               );
             }
             return result.data;
@@ -203,7 +202,7 @@ class OrganizationApi extends Effect.Service<OrganizationApi>()(
             new Error(
               `Failed to remove member: ${
                 error instanceof Error ? error.message : String(error)
-              }`
+              }`,
             ),
         }),
 
@@ -226,7 +225,7 @@ class OrganizationApi extends Effect.Service<OrganizationApi>()(
             });
             if (result.error) {
               throw new Error(
-                result.error.message || "Failed to accept invitation"
+                result.error.message || "Failed to accept invitation",
               );
             }
             return result.data;
@@ -235,7 +234,7 @@ class OrganizationApi extends Effect.Service<OrganizationApi>()(
             new Error(
               `Failed to accept invitation: ${
                 error instanceof Error ? error.message : String(error)
-              }`
+              }`,
             ),
         }),
 
@@ -247,7 +246,7 @@ class OrganizationApi extends Effect.Service<OrganizationApi>()(
             });
             if (result.error) {
               throw new Error(
-                result.error.message || "Failed to cancel invitation"
+                result.error.message || "Failed to cancel invitation",
               );
             }
             return result.data;
@@ -256,7 +255,7 @@ class OrganizationApi extends Effect.Service<OrganizationApi>()(
             new Error(
               `Failed to cancel invitation: ${
                 error instanceof Error ? error.message : String(error)
-              }`
+              }`,
             ),
         }),
 
@@ -295,7 +294,7 @@ class OrganizationApi extends Effect.Service<OrganizationApi>()(
             new Error(
               `Failed to create team: ${
                 error instanceof Error ? error.message : String(error)
-              }`
+              }`,
             ),
         }),
 
@@ -315,7 +314,7 @@ class OrganizationApi extends Effect.Service<OrganizationApi>()(
             new Error(
               `Failed to update team: ${
                 error instanceof Error ? error.message : String(error)
-              }`
+              }`,
             ),
         }),
 
@@ -335,7 +334,7 @@ class OrganizationApi extends Effect.Service<OrganizationApi>()(
             new Error(
               `Failed to remove team: ${
                 error instanceof Error ? error.message : String(error)
-              }`
+              }`,
             ),
         }),
 
@@ -358,7 +357,7 @@ class OrganizationApi extends Effect.Service<OrganizationApi>()(
             const result = await authClient.organization.addTeamMember(input);
             if (result.error) {
               throw new Error(
-                result.error.message || "Failed to add team member"
+                result.error.message || "Failed to add team member",
               );
             }
             return result.data;
@@ -367,7 +366,7 @@ class OrganizationApi extends Effect.Service<OrganizationApi>()(
             new Error(
               `Failed to add team member: ${
                 error instanceof Error ? error.message : String(error)
-              }`
+              }`,
             ),
         }),
 
@@ -380,7 +379,7 @@ class OrganizationApi extends Effect.Service<OrganizationApi>()(
             });
             if (result.error) {
               throw new Error(
-                result.error.message || "Failed to remove team member"
+                result.error.message || "Failed to remove team member",
               );
             }
             return result.data;
@@ -389,7 +388,7 @@ class OrganizationApi extends Effect.Service<OrganizationApi>()(
             new Error(
               `Failed to remove team member: ${
                 error instanceof Error ? error.message : String(error)
-              }`
+              }`,
             ),
         }),
 
@@ -403,7 +402,7 @@ class OrganizationApi extends Effect.Service<OrganizationApi>()(
             });
             if (result.error) {
               throw new Error(
-                result.error.message || "Failed to set active team"
+                result.error.message || "Failed to set active team",
               );
             }
             return result.data;
@@ -412,7 +411,7 @@ class OrganizationApi extends Effect.Service<OrganizationApi>()(
             new Error(
               `Failed to set active team: ${
                 error instanceof Error ? error.message : String(error)
-              }`
+              }`,
             ),
         }),
 
@@ -428,11 +427,11 @@ class OrganizationApi extends Effect.Service<OrganizationApi>()(
             new Error(
               `Failed to list organization members: ${
                 error instanceof Error ? error.message : String(error)
-              }`
+              }`,
             ),
         }),
     })),
-  }
+  },
 ) {}
 
 /**
@@ -450,7 +449,7 @@ export const organizationsAtom = (() => {
     Effect.gen(function* () {
       const api = yield* OrganizationApi;
       return yield* api.listOrganizations();
-    })
+    }),
   );
 
   type Action = Data.TaggedEnum<{
@@ -471,16 +470,16 @@ export const organizationsAtom = (() => {
           Add: ({ organization }) => [organization, ...result.value],
           Update: ({ organizationId, data }) =>
             result.value.map((org: any) =>
-              org.id === organizationId ? { ...org, ...data } : org
+              org.id === organizationId ? { ...org, ...data } : org,
             ),
           Remove: ({ organizationId }) =>
             result.value.filter((org: any) => org.id !== organizationId),
         });
 
         ctx.setSelf(Result.success(updated));
-      }
+      },
     ),
-    { remote: remoteAtom, Action }
+    { remote: remoteAtom, Action },
   );
 })();
 
@@ -496,7 +495,7 @@ export const createOrganizationAtom = orgRuntime.fn<any>()(
     get.set(organizationsAtom, organizationsAtom.Action.Add({ organization }));
 
     return organization;
-  })
+  }),
 );
 
 /**
@@ -510,7 +509,7 @@ export const updateOrganizationAtom = orgRuntime.fn<{
     const api = yield* OrganizationApi;
     const organization = yield* api.updateOrganization(
       input.organizationId,
-      input.data
+      input.data,
     );
 
     // Optimistically update in organizations list
@@ -519,11 +518,11 @@ export const updateOrganizationAtom = orgRuntime.fn<{
       organizationsAtom.Action.Update({
         organizationId: input.organizationId,
         data: input.data,
-      })
+      }),
     );
 
     return organization;
-  })
+  }),
 );
 
 /**
@@ -539,11 +538,11 @@ export const deleteOrganizationAtom = orgRuntime.fn<{
     // Optimistically remove from organizations list
     get.set(
       organizationsAtom,
-      organizationsAtom.Action.Remove({ organizationId: input.organizationId })
+      organizationsAtom.Action.Remove({ organizationId: input.organizationId }),
     );
 
     return result;
-  })
+  }),
 );
 
 /**
@@ -555,7 +554,7 @@ export const setActiveOrganizationAtom = orgRuntime.fn<{
   Effect.fnUntraced(function* (input) {
     const api = yield* OrganizationApi;
     return yield* api.setActiveOrganization(input.organizationId);
-  })
+  }),
 );
 
 /**
@@ -571,11 +570,11 @@ export const leaveOrganizationAtom = orgRuntime.fn<{
     // Optimistically remove from organizations list
     get.set(
       organizationsAtom,
-      organizationsAtom.Action.Remove({ organizationId: input.organizationId })
+      organizationsAtom.Action.Remove({ organizationId: input.organizationId }),
     );
 
     return result;
-  })
+  }),
 );
 
 // ===== MEMBER ATOMS =====
@@ -587,7 +586,7 @@ export const inviteMemberAtom = orgRuntime.fn<any>()(
   Effect.fnUntraced(function* (input) {
     const api = yield* OrganizationApi;
     return yield* api.inviteMember(input);
-  })
+  }),
 );
 
 /**
@@ -597,7 +596,7 @@ export const updateMemberRoleAtom = orgRuntime.fn<any>()(
   Effect.fnUntraced(function* (input) {
     const api = yield* OrganizationApi;
     return yield* api.updateMemberRole(input);
-  })
+  }),
 );
 
 /**
@@ -610,7 +609,7 @@ export const removeMemberAtom = orgRuntime.fn<{
   Effect.fnUntraced(function* (input) {
     const api = yield* OrganizationApi;
     return yield* api.removeMember(input.memberIdOrEmail, input.organizationId);
-  })
+  }),
 );
 
 // ===== INVITATION ATOMS =====
@@ -622,7 +621,7 @@ export const invitationsAtom = orgRuntime.atom(
   Effect.gen(function* () {
     const api = yield* OrganizationApi;
     return yield* api.listUserInvitations();
-  })
+  }),
 );
 
 /**
@@ -632,7 +631,7 @@ export const acceptInvitationAtom = orgRuntime.fn<{ invitationId: string }>()(
   Effect.fnUntraced(function* (input) {
     const api = yield* OrganizationApi;
     return yield* api.acceptInvitation(input.invitationId);
-  })
+  }),
 );
 
 /**
@@ -642,7 +641,7 @@ export const cancelInvitationAtom = orgRuntime.fn<{ invitationId: string }>()(
   Effect.fnUntraced(function* (input) {
     const api = yield* OrganizationApi;
     return yield* api.cancelInvitation(input.invitationId);
-  })
+  }),
 );
 
 // ===== TEAM ATOMS =====
@@ -655,7 +654,7 @@ export const teamsAtom = (organizationId?: string) =>
     Effect.gen(function* () {
       const api = yield* OrganizationApi;
       return yield* api.listTeams(organizationId);
-    })
+    }),
   );
 
 /**
@@ -665,7 +664,7 @@ export const userTeamsAtom = orgRuntime.atom(
   Effect.gen(function* () {
     const api = yield* OrganizationApi;
     return yield* api.listUserTeams();
-  })
+  }),
 );
 
 /**
@@ -675,7 +674,7 @@ export const createTeamAtom = orgRuntime.fn<any>()(
   Effect.fnUntraced(function* (input) {
     const api = yield* OrganizationApi;
     return yield* api.createTeam(input);
-  })
+  }),
 );
 
 /**
@@ -685,7 +684,7 @@ export const updateTeamAtom = orgRuntime.fn<{ teamId: string; data: any }>()(
   Effect.fnUntraced(function* (input) {
     const api = yield* OrganizationApi;
     return yield* api.updateTeam(input.teamId, input.data);
-  })
+  }),
 );
 
 /**
@@ -698,7 +697,7 @@ export const removeTeamAtom = orgRuntime.fn<{
   Effect.fnUntraced(function* (input) {
     const api = yield* OrganizationApi;
     return yield* api.removeTeam(input.teamId, input.organizationId);
-  })
+  }),
 );
 
 // ===== TEAM MEMBER ATOMS =====
@@ -711,7 +710,7 @@ export const teamMembersAtom = (teamId: string) =>
     Effect.gen(function* () {
       const api = yield* OrganizationApi;
       return yield* api.listTeamMembers(teamId);
-    })
+    }),
   );
 
 /**
@@ -721,7 +720,7 @@ export const addTeamMemberAtom = orgRuntime.fn<any>()(
   Effect.fnUntraced(function* (input) {
     const api = yield* OrganizationApi;
     return yield* api.addTeamMember(input);
-  })
+  }),
 );
 
 /**
@@ -734,7 +733,7 @@ export const removeTeamMemberAtom = orgRuntime.fn<{
   Effect.fnUntraced(function* (input) {
     const api = yield* OrganizationApi;
     return yield* api.removeTeamMember(input.teamId, input.userId);
-  })
+  }),
 );
 
 // ===== ADDITIONAL ATOMS =====
@@ -746,7 +745,7 @@ export const setActiveTeamAtom = orgRuntime.fn<{ teamId: string | null }>()(
   Effect.fnUntraced(function* (input) {
     const api = yield* OrganizationApi;
     return yield* api.setActiveTeam(input.teamId);
-  })
+  }),
 );
 
 /**
@@ -758,5 +757,5 @@ export const organizationMembersAtom = (organizationId?: string) =>
     Effect.gen(function* () {
       const api = yield* OrganizationApi;
       return yield* api.listOrganizationMembers(organizationId);
-    })
+    }),
   );

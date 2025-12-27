@@ -1,24 +1,24 @@
-import { Button, Card } from '@shadcn';
-import { Result, useAtom, useAtomValue } from '@effect-atom/atom-react';
-import { BuildingIcon, PlusIcon, CheckIcon } from 'lucide-react';
-import { sessionAtom } from '../../session/session.atoms.js';
+import { Button, Card } from "@shadcn";
+import { Result, useAtom, useAtomValue } from "@effect-atom/atom-react";
+import { BuildingIcon, PlusIcon, CheckIcon } from "lucide-react";
+import { sessionAtom } from "../../session/session.atoms.js";
 import {
   organizationsAtom,
   setActiveOrganizationAtom,
   createOrganizationAtom,
-} from '../organization.atoms.js';
-import { useForm } from '@tanstack/react-form';
-import * as Schema from 'effect/Schema';
-import { toast } from 'sonner';
+} from "../organization.atoms.js";
+import { useForm } from "@tanstack/react-form";
+import * as Schema from "effect/Schema";
+import { toast } from "sonner";
 
 // Schema for creating organization
 const CreateOrganizationSchema = Schema.Struct({
   name: Schema.Trim.pipe(
     Schema.nonEmptyString({
-      message: () => 'Organization name is required',
+      message: () => "Organization name is required",
     }),
     Schema.maxLength(100, {
-      message: () => 'Organization name must be less than 100 characters',
+      message: () => "Organization name must be less than 100 characters",
     }),
   ),
 });
@@ -45,7 +45,7 @@ export function OrganizationsCard({ className }: OrganizationsCardProps) {
   if (!user) return null;
 
   return (
-    <div className={`flex w-full flex-col gap-4 md:gap-6 ${className || ''}`}>
+    <div className={`flex w-full flex-col gap-4 md:gap-6 ${className || ""}`}>
       {/* Organization Switcher */}
       <OrganizationSwitcherCard
         organizations={organizations}
@@ -74,7 +74,7 @@ function OrganizationSwitcherCard({
 
   const handleSwitch = (orgId: string | null) => {
     switchOrg({ organizationId: orgId });
-    toast.success('Switched organization');
+    toast.success("Switched organization");
   };
 
   const isSwitching = switchResult.waiting;
@@ -86,7 +86,9 @@ function OrganizationSwitcherCard({
           <BuildingIcon className="size-5" />
           Your Organizations
         </Card.Title>
-        <Card.Description>Switch between organizations you belong to.</Card.Description>
+        <Card.Description>
+          Switch between organizations you belong to.
+        </Card.Description>
       </Card.Header>
       <Card.Content>
         {loading ? (
@@ -97,7 +99,9 @@ function OrganizationSwitcherCard({
           <div className="text-center py-8 text-muted-foreground">
             <BuildingIcon className="mx-auto size-8 mb-2" />
             <p>No organizations found.</p>
-            <p className="text-sm mt-1">Create your first organization below.</p>
+            <p className="text-sm mt-1">
+              Create your first organization below.
+            </p>
           </div>
         ) : (
           <div className="space-y-3">
@@ -106,13 +110,17 @@ function OrganizationSwitcherCard({
                 key={org.id}
                 className={`flex items-center justify-between p-3 rounded-lg border ${
                   activeOrganizationId === org.id
-                    ? 'border-primary bg-primary/5'
-                    : 'border-border hover:bg-muted/50'
+                    ? "border-primary bg-primary/5"
+                    : "border-border hover:bg-muted/50"
                 }`}
               >
                 <div className="flex items-center gap-3">
                   {org.logo ? (
-                    <img src={org.logo} alt={org.name} className="size-8 rounded" />
+                    <img
+                      src={org.logo}
+                      alt={org.name}
+                      className="size-8 rounded"
+                    />
                   ) : (
                     <div className="size-8 rounded bg-primary/10 flex items-center justify-center">
                       <BuildingIcon className="size-4" />
@@ -132,7 +140,7 @@ function OrganizationSwitcherCard({
                     onClick={() => handleSwitch(org.id)}
                     disabled={isSwitching}
                   >
-                    {isSwitching ? 'Switching...' : 'Switch'}
+                    {isSwitching ? "Switching..." : "Switch"}
                   </Button>
                 )}
               </div>
@@ -149,14 +157,14 @@ function CreateOrganizationCard() {
 
   const form = useForm({
     defaultValues: {
-      name: '',
+      name: "",
     },
     onSubmit: async ({ value }) => {
       try {
         const decoded = Schema.decodeSync(CreateOrganizationSchema)(value);
         await createOrg(decoded);
         form.reset();
-        toast.success('Organization created successfully');
+        toast.success("Organization created successfully");
       } catch (error) {
         if (error instanceof Error) {
           toast.error(error.message);
@@ -177,7 +185,9 @@ function CreateOrganizationCard() {
           <PlusIcon className="size-5" />
           Create Organization
         </Card.Title>
-        <Card.Description>Start a new organization and invite team members.</Card.Description>
+        <Card.Description>
+          Start a new organization and invite team members.
+        </Card.Description>
       </Card.Header>
       <Card.Content>
         <form
@@ -214,7 +224,7 @@ function CreateOrganizationCard() {
           <form.Subscribe selector={(state) => state.isSubmitting}>
             {(isSubmitting) => (
               <Button type="submit" disabled={isSubmitting} className="w-full">
-                {isSubmitting ? 'Creating...' : 'Create Organization'}
+                {isSubmitting ? "Creating..." : "Create Organization"}
               </Button>
             )}
           </form.Subscribe>
