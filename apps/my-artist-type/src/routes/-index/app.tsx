@@ -1,4 +1,4 @@
-import { CreateTodoForm, TodoList } from "../../features/todo/client";
+// import { CreateTodoForm, TodoList } from "../../features/todo/client";
 import { ThemeDropdown } from "@theme";
 
 export function App() {
@@ -13,8 +13,11 @@ export function App() {
           Use the navigation above to test theme persistence across different
           pages.
         </p>
-        <CreateTodoForm />
-        <TodoList />
+        {/* <CreateTodoForm />
+        <TodoList /> */}
+        <div className="text-center py-8">
+          <p className="text-muted-foreground">Todo components are commented out to avoid auth dependencies.</p>
+        </div>
       </div>
     </div>
   );
