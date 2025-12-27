@@ -14,7 +14,6 @@
     }
   },
   "dependencies": {
-    "@auth/domain": "*",
     "@better-auth/passkey": "*",
     "@effect-atom/atom": "*",
     "@effect-atom/atom-react": "*",
@@ -52,6 +51,7 @@
     "zod": "*"
   },
   "devDependencies": {
+    "@auth/domain": "workspace:*",
     "@effect/vitest": "*",
     "@testing-library/dom": "*",
     "@testing-library/react": "*",

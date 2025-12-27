@@ -13,8 +13,8 @@
       "default": "./src/index.ts"
     }
   },
-  "dependencies": {
-    "@core/database": "*"
+  "devDependencies": {
+    "@core/database": "workspace:*"
   },
   "devDependencies": {
     "@effect/vitest": "*",

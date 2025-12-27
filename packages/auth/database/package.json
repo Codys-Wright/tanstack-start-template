@@ -14,14 +14,14 @@
     }
   },
   "dependencies": {
-    "@auth/domain": "*",
-    "@core/database": "*",
     "@effect/sql": "*",
     "@effect/sql-pg": "*",
     "effect": "*",
     "kysely": "*"
   },
   "devDependencies": {
+    "@auth/domain": "workspace:*",
+    "@core/database": "workspace:*",
     "@effect/vitest": "*",
     "@testcontainers/postgresql": "*",
     "@types/pg": "*",

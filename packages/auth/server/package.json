@@ -15,7 +15,6 @@
   },
   "dependencies": {
     "@better-auth/passkey": "*",
-    "@core/database": "*",
     "@effect/platform": "*",
     "@effect/platform-bun": "*",
     "@effect/rpc": "*",
@@ -28,6 +27,7 @@
   "devDependencies": {
     "@auth/database": "workspace:*",
     "@auth/domain": "workspace:*",
+    "@core/database": "workspace:*",
     "@effect/vitest": "*",
     "@types/bcryptjs": "*",
     "typescript": "*",

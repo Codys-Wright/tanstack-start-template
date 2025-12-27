@@ -13,11 +13,11 @@
       "default": "./src/index.ts"
     }
   },
-  "dependencies": {
-    "@auth/client": "*",
-    "@auth/database": "*",
-    "@auth/domain": "*",
-    "@auth/server": "*"
+  "devDependencies": {
+    "@auth/client": "workspace:*",
+    "@auth/database": "workspace:*",
+    "@auth/domain": "workspace:*",
+    "@auth/server": "workspace:*"
   },
   "devDependencies": {
     "@effect/vitest": "*",
