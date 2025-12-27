@@ -32,6 +32,7 @@
     "@radix-ui/react-switch": "*",
     "@radix-ui/react-tabs": "*",
     "@radix-ui/react-tooltip": "*",
+    "@shadcn": "workspace:*",
     "@tanstack/react-form": "*",
     "@tanstack/react-router": "*",
     "better-auth": "*",
@@ -51,7 +52,6 @@
   },
   "devDependencies": {
     "@auth/domain": "workspace:*",
-    "@shadcn": "workspace:*",
     "@effect/vitest": "*",
     "@testing-library/dom": "*",
     "@testing-library/react": "*",
