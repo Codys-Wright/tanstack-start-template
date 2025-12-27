@@ -22,8 +22,8 @@ import {
 import { serverRuntime } from "./server-runtime.js";
 import * as NodeContext from "@effect/platform-node/NodeContext";
 import * as PgMigrator from "@effect/sql-pg/PgMigrator";
-import { PgLive } from "@/features/core/database/pg-live.js";
-import { fromFeatures } from "@/features/core/database/scripts/feature-migration-loader.js";
+import { PgLive, createMigrationLoader } from "@core";
+import { authMigrations } from "@auth";
 
 class RpcLogger extends RpcMiddleware.Tag<RpcLogger>()("RpcLogger", {
   wrap: true,
@@ -120,7 +120,9 @@ await Effect.runPromise(
     yield* Effect.log("[AutoMigration] Starting database migration check...");
 
     const migrations = yield* PgMigrator.run({
-      loader: fromFeatures(),
+      loader: createMigrationLoader({
+        features: [authMigrations],
+      }),
     });
 
     if (migrations.length === 0) {
