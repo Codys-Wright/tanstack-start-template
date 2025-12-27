@@ -21,9 +21,7 @@
     "auth:generate": "dotenv -- pnpx @better-auth/cli generate --config ../../packages/auth/src/_core/auth.ts --output ../../packages/auth/src/database/migrations/better-auth-schema.sql -y"
   },
   "dependencies": {
-    "@auth": "*",
     "@better-auth/passkey": "*",
-    "@core": "*",
     "@effect-atom/atom": "*",
     "@effect-atom/atom-react": "*",
     "@effect/language-service": "*",
@@ -100,6 +98,7 @@
     "zod": "*"
   },
   "devDependencies": {
+    "@core": "*",
     "@shadcn": "*",
     "@theme": "*",
     "@effect/vitest": "*",

@@ -1,0 +1,9 @@
+{
+  "name": "@ethoscreative/explore",
+  "version": "0.0.1",
+  "private": true,
+  "devDependencies": {
+    "@playground": "*",
+    "@shadcn": "*"
+  }
+}

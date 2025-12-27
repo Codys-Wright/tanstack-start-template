@@ -1,7 +1,8 @@
 import { Button, cn, DropdownMenu } from "@shadcn";
 import { Link, useRouterState } from "@tanstack/react-router";
 import { ChevronDownIcon } from "lucide-react";
-import { UserButton } from "@auth";
+
+// import { playground } from "@playground";
 
 const navItems = [
   { path: "/", label: "Home" },
@@ -53,7 +54,7 @@ export function Navigation() {
                     "text-sm font-medium transition-colors hover:text-primary",
                     isActive
                       ? "text-foreground border-b-2 border-primary pb-1"
-                      : "text-muted-foreground"
+                      : "text-muted-foreground",
                   )}
                 >
                   {item.label}
@@ -102,10 +103,6 @@ export function Navigation() {
                 ))}
               </DropdownMenu.Content>
             </DropdownMenu>
-          </div>
-
-          <div className="flex items-center gap-3">
-            <UserButton size="default" />
           </div>
         </div>
       </div>

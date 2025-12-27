@@ -121,5 +121,5 @@ export class TodoRepository extends Effect.Service<TodoRepository>()(
         delete: deleteTodo,
       } as const;
     }),
-  }
+  },
 ) {}

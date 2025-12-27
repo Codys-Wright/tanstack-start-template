@@ -1,6 +1,5 @@
 import * as Effect from "effect/Effect";
 import * as Option from "effect/Option";
-import type { UserId } from "@auth";
 import {
   CreateTodoInput,
   TodoId,
@@ -20,7 +19,7 @@ export class TodosService extends Effect.Service<TodosService>()(
     effect: Effect.gen(function* () {
       const repo = yield* TodoRepository;
 
-      const list = (userId: UserId) =>
+      const list = (userId: string) =>
         Effect.gen(function* () {
           yield* Effect.log(
             `[TodosService.list] Fetching todos for user: ${userId}`,
@@ -30,7 +29,7 @@ export class TodosService extends Effect.Service<TodosService>()(
           return todos;
         });
 
-      const getById = (id: TodoId, userId: UserId) =>
+      const getById = (id: TodoId, userId: string) =>
         repo.findById({ id, userId }).pipe(
           Effect.tap(() =>
             Effect.log(`[TodosService.getById] Found todo: ${id}`),
@@ -41,7 +40,7 @@ export class TodosService extends Effect.Service<TodosService>()(
           ),
         );
 
-      const create = (input: CreateTodoInput, userId: UserId) =>
+      const create = (input: CreateTodoInput, userId: string) =>
         Effect.gen(function* () {
           yield* Effect.log(
             `[TodosService.create] Creating todo "${input.title}" for user: ${userId}`,
@@ -57,7 +56,7 @@ export class TodosService extends Effect.Service<TodosService>()(
           return todo;
         });
 
-      const update = (id: TodoId, input: UpdateTodoInput, userId: UserId) =>
+      const update = (id: TodoId, input: UpdateTodoInput, userId: string) =>
         Effect.gen(function* () {
           yield* Effect.log(`[TodosService.update] Updating todo: ${id}`);
           const updated = yield* repo.update({
@@ -75,7 +74,7 @@ export class TodosService extends Effect.Service<TodosService>()(
           ),
         );
 
-      const remove = (id: TodoId, userId: UserId) =>
+      const remove = (id: TodoId, userId: string) =>
         Effect.gen(function* () {
           yield* Effect.log(`[TodosService.remove] Deleting todo: ${id}`);
           yield* repo.delete({ id, userId });
