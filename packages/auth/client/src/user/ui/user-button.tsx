@@ -1,24 +1,22 @@
-import { Button, cn, DropdownMenu, Skeleton } from "@shadcn";
-import { Result, useAtom, useAtomValue } from "@effect-atom/atom-react";
-import { Link } from "@tanstack/react-router";
-import { ChevronsUpDown, LogOutIcon, SettingsIcon } from "lucide-react";
-import { sessionAtom, signOutAtom } from "../session.atoms.js";
-import { UserAvatar } from "./user-avatar.js";
-import { UserView } from "./user-view.js";
+import { Button, cn, DropdownMenu, Skeleton } from '@shadcn';
+import { Result, useAtom, useAtomValue } from '@effect-atom/atom-react';
+import { Link } from '@tanstack/react-router';
+import { ChevronsUpDown, LogOutIcon, SettingsIcon } from 'lucide-react';
+import { sessionAtom, signOutAtom } from '../../session/session.atoms.js';
+import { UserAvatar } from './user-avatar.js';
+import { UserView } from './user-view.js';
 
 export interface UserButtonProps {
-  size?: "icon" | "default";
+  size?: 'icon' | 'default';
   className?: string;
 }
 
-export function UserButton({ size = "icon", className }: UserButtonProps) {
+export function UserButton({ size = 'icon', className }: UserButtonProps) {
   const sessionResult = useAtomValue(sessionAtom);
   const [signOutResult, signOut] = useAtom(signOutAtom);
 
   const isPending = Result.isInitial(sessionResult) && sessionResult.waiting;
-  const user = Result.isSuccess(sessionResult)
-    ? sessionResult.value?.user
-    : null;
+  const user = Result.isSuccess(sessionResult) ? sessionResult.value?.user : null;
   const isSignedIn = Boolean(user);
 
   const handleSignOut = () => {
@@ -26,20 +24,13 @@ export function UserButton({ size = "icon", className }: UserButtonProps) {
   };
 
   if (isPending) {
-    return (
-      <Skeleton
-        className={cn(
-          "rounded-full",
-          size === "icon" ? "size-10" : "h-10 w-40",
-        )}
-      />
-    );
+    return <Skeleton className={cn('rounded-full', size === 'icon' ? 'size-10' : 'h-10 w-40')} />;
   }
 
   if (!isSignedIn) {
     return (
       <Button asChild variant="outline" className={className}>
-        <Link to="/auth/$authView" params={{ authView: "sign-in" }}>
+        <Link to="/auth/$authView" params={{ authView: 'sign-in' }}>
           Sign In
         </Link>
       </Button>
@@ -49,16 +40,12 @@ export function UserButton({ size = "icon", className }: UserButtonProps) {
   return (
     <DropdownMenu>
       <DropdownMenu.Trigger asChild>
-        {size === "icon" ? (
-          <Button
-            variant="ghost"
-            size="icon"
-            className={cn("rounded-full", className)}
-          >
+        {size === 'icon' ? (
+          <Button variant="ghost" size="icon" className={cn('rounded-full', className)}>
             <UserAvatar user={user} />
           </Button>
         ) : (
-          <Button variant="ghost" className={cn("h-auto py-2 px-3", className)}>
+          <Button variant="ghost" className={cn('h-auto py-2 px-3', className)}>
             <UserView user={user} size="sm" />
             <ChevronsUpDown className="ml-2 size-4" />
           </Button>
@@ -75,7 +62,7 @@ export function UserButton({ size = "icon", className }: UserButtonProps) {
         <DropdownMenu.Item asChild>
           <Link
             to="/account/$accountView"
-            params={{ accountView: "settings" }}
+            params={{ accountView: 'settings' }}
             className="flex items-center gap-2"
           >
             <SettingsIcon className="size-4" />
@@ -91,7 +78,7 @@ export function UserButton({ size = "icon", className }: UserButtonProps) {
           className="text-destructive focus:text-destructive"
         >
           <LogOutIcon className="size-4 mr-2" />
-          {signOutResult.waiting ? "Signing out..." : "Sign Out"}
+          {signOutResult.waiting ? 'Signing out...' : 'Sign Out'}
         </DropdownMenu.Item>
       </DropdownMenu.Content>
     </DropdownMenu>

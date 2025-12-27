@@ -7,12 +7,12 @@ import {
   BuildingIcon,
   ClockIcon,
 } from "lucide-react";
-import { sessionAtom } from "../session.atoms.js";
+import { sessionAtom } from "../../session/session.atoms.js";
 import {
   invitationsAtom,
   acceptInvitationAtom,
   cancelInvitationAtom,
-} from "../organization.atoms.js";
+} from "../../organization/organization.atoms.js";
 import { toast } from "sonner";
 
 export interface UserInvitationsCardProps {
@@ -78,12 +78,12 @@ function InvitationCard({ invitation }: InvitationCardProps) {
   const [cancelResult, cancel] = useAtom(cancelInvitationAtom);
 
   const handleAccept = async () => {
-    await accept({ invitationId: invitation.id });
+    accept({ invitationId: invitation.id });
     toast.success("Invitation accepted");
   };
 
   const handleDecline = async () => {
-    await cancel({ invitationId: invitation.id });
+    cancel({ invitationId: invitation.id });
     toast.success("Invitation declined");
   };
 

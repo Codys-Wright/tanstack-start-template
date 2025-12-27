@@ -6,7 +6,7 @@ import { Loader2Icon } from "lucide-react";
 import { useEffect } from "react";
 import * as Schema from "effect/Schema";
 
-import { resetPasswordAtom } from "../session.atoms.js";
+import { resetPasswordAtom } from "../../session/session.atoms.js";
 
 // Define the form schema using Effect Schema
 const ResetPasswordSchema = Schema.Struct({
@@ -118,7 +118,7 @@ export function ResetPasswordForm({ className }: ResetPasswordFormProps) {
                   autoComplete="new-password"
                   required
                   className={cn(
-                    field.state.meta.errors.length > 0 && "border-destructive"
+                    field.state.meta.errors.length > 0 && "border-destructive",
                   )}
                 />
                 {field.state.meta.errors.length > 0 && (
@@ -161,7 +161,7 @@ export function ResetPasswordForm({ className }: ResetPasswordFormProps) {
                   autoComplete="new-password"
                   required
                   className={cn(
-                    field.state.meta.errors.length > 0 && "border-destructive"
+                    field.state.meta.errors.length > 0 && "border-destructive",
                   )}
                 />
                 {field.state.meta.errors.length > 0 && (

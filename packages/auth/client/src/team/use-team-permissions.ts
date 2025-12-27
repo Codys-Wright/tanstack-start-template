@@ -1,7 +1,7 @@
-import { useMemo, useState, useEffect } from "react";
-import { Result, useAtomValue } from "@effect-atom/atom-react";
-import { sessionAtom } from "../session.atoms.js";
-import { authClient } from "../auth.client.js";
+import { useMemo, useState, useEffect } from 'react';
+import { Result, useAtomValue } from '@effect-atom/atom-react';
+import { sessionAtom } from '../session/session.atoms.js';
+import { authClient } from '../auth.client.js';
 
 export interface TeamPermissions {
   canCreate: boolean;
@@ -37,9 +37,7 @@ export function useTeamPermissions(): TeamPermissions {
           query: { organizationId: activeOrgId },
         });
         const members = membersResult.data?.members || [];
-        const userMember = members.find(
-          (member: any) => member.userId === userId
-        );
+        const userMember = members.find((member: any) => member.userId === userId);
 
         setUserRole(userMember?.role || null);
       } catch {
@@ -65,8 +63,8 @@ export function useTeamPermissions(): TeamPermissions {
 
     // Grant permissions based on organization role
     // Owner and admin can do everything, members have limited permissions
-    const isOwner = userRole === "owner";
-    const isAdmin = userRole === "admin";
+    const isOwner = userRole === 'owner';
+    const isAdmin = userRole === 'admin';
 
     return {
       canCreate: isOwner || isAdmin,

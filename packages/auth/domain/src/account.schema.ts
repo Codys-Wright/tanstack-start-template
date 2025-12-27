@@ -1,12 +1,12 @@
-import { faker } from "@faker-js/faker";
-import * as Schema from "effect/Schema";
-import { UserId } from "./../user";
+import { faker } from '@faker-js/faker';
+import * as Schema from 'effect/Schema';
+import { UserId } from './user.schema.js';
 
 /**
  * Account entity matching Better Auth OpenAPI spec
  * Represents a linked authentication provider (social login, passkey, etc.)
  */
-export class Account extends Schema.Class<Account>("Account")({
+export class Account extends Schema.Class<Account>('Account')({
   id: Schema.String,
   accountId: Schema.String,
   providerId: Schema.String,
@@ -26,7 +26,7 @@ export class Account extends Schema.Class<Account>("Account")({
  * Verification entity matching Better Auth OpenAPI spec
  * Used for email verification, password reset, etc.
  */
-export class Verification extends Schema.Class<Verification>("Verification")({
+export class Verification extends Schema.Class<Verification>('Verification')({
   id: Schema.String,
   identifier: Schema.String,
   value: Schema.String,
@@ -39,9 +39,7 @@ export class Verification extends Schema.Class<Verification>("Verification")({
  * Update user profile input
  */
 export const UpdateUserInput = Schema.Struct({
-  name: Schema.optional(
-    Schema.String.pipe(Schema.minLength(1), Schema.maxLength(100)),
-  ),
+  name: Schema.optional(Schema.String.pipe(Schema.minLength(1), Schema.maxLength(100))),
   image: Schema.optional(Schema.NullOr(Schema.String)),
 });
 export type UpdateUserInput = typeof UpdateUserInput.Type;
@@ -52,7 +50,7 @@ export type UpdateUserInput = typeof UpdateUserInput.Type;
 export const DeleteAccountInput = Schema.Struct({
   password: Schema.String.pipe(
     Schema.minLength(1, {
-      message: () => "Password is required",
+      message: () => 'Password is required',
     }),
   ),
 });
@@ -62,14 +60,9 @@ export type DeleteAccountInput = typeof DeleteAccountInput.Type;
  * Input for POST /api/auth/change-email
  * Change user's email address (requires verification)
  */
-export class ChangeEmailInput extends Schema.Class<ChangeEmailInput>(
-  "ChangeEmailInput",
-)({
-  newEmail: Schema.String.pipe(
-    Schema.pattern(/^[^\s@]+@[^\s@]+\.[^\s@]+$/),
-  ).annotations({
-    arbitrary: () => (fc: any) =>
-      fc.constant(null).map(() => faker.internet.email()),
+export class ChangeEmailInput extends Schema.Class<ChangeEmailInput>('ChangeEmailInput')({
+  newEmail: Schema.String.pipe(Schema.pattern(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)).annotations({
+    arbitrary: () => (fc: any) => fc.constant(null).map(() => faker.internet.email()),
   }),
   callbackURL: Schema.optional(Schema.String),
 }) {}
@@ -78,9 +71,7 @@ export class ChangeEmailInput extends Schema.Class<ChangeEmailInput>(
  * Input for POST /api/auth/change-password
  * Change user's password (requires current password)
  */
-export class ChangePasswordInput extends Schema.Class<ChangePasswordInput>(
-  "ChangePasswordInput",
-)({
+export class ChangePasswordInput extends Schema.Class<ChangePasswordInput>('ChangePasswordInput')({
   currentPassword: Schema.String,
   newPassword: Schema.String.pipe(Schema.minLength(8)).annotations({
     arbitrary: () => (fc: any) =>

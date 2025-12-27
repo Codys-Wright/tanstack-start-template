@@ -1,12 +1,12 @@
-import { Button, Card } from "@shadcn";
-import { Result, useAtom } from "@effect-atom/atom-react";
-import { useForm } from "@tanstack/react-form";
-import { ImageIcon, Loader2Icon, UploadIcon } from "lucide-react";
-import { useEffect } from "react";
-import * as Schema from "effect/Schema";
+import { Button, Card } from '@shadcn';
+import { Result, useAtom } from '@effect-atom/atom-react';
+import { useForm } from '@tanstack/react-form';
+import { ImageIcon, Loader2Icon, UploadIcon } from 'lucide-react';
+import { useEffect } from 'react';
+import * as Schema from 'effect/Schema';
 
-import { updateImageAtom } from "../session.atoms.js";
-import { SettingsCard } from "./settings-card.js";
+import { updateImageAtom } from '../../session/session.atoms.js';
+import { SettingsCard } from './settings-card.js';
 
 export interface UpdateAvatarCardProps {
   className?: string;
@@ -25,8 +25,8 @@ const UpdateAvatarSchema = Schema.Struct({
           return false;
         }
       },
-      { message: () => "Invalid URL" }
-    )
+      { message: () => 'Invalid URL' },
+    ),
   ),
 });
 
@@ -35,7 +35,7 @@ export function UpdateAvatarCard({ className }: UpdateAvatarCardProps) {
 
   const form = useForm({
     defaultValues: {
-      image: "",
+      image: '',
     },
     onSubmit: async ({ value }) => {
       try {
@@ -86,11 +86,11 @@ export function UpdateAvatarCard({ className }: UpdateAvatarCardProps) {
             name="image"
             validators={{
               onChange: ({ value }) => {
-                if (!value) return "Image URL is required";
+                if (!value) return 'Image URL is required';
                 try {
                   new URL(value);
                 } catch {
-                  return "Invalid URL format";
+                  return 'Invalid URL format';
                 }
                 return undefined;
               },
@@ -119,16 +119,14 @@ export function UpdateAvatarCard({ className }: UpdateAvatarCardProps) {
                     size="icon"
                     disabled={isLoading || !field.state.value}
                     onClick={() => {
-                      window.open(field.state.value, "_blank");
+                      window.open(field.state.value, '_blank');
                     }}
                   >
                     <UploadIcon className="size-4" />
                   </Button>
                 </div>
                 {field.state.meta.errors.length > 0 && (
-                  <p className="text-xs text-destructive">
-                    {field.state.meta.errors.join(", ")}
-                  </p>
+                  <p className="text-xs text-destructive">{field.state.meta.errors.join(', ')}</p>
                 )}
               </div>
             )}
@@ -139,7 +137,7 @@ export function UpdateAvatarCard({ className }: UpdateAvatarCardProps) {
             <div className="bg-destructive/10 border border-destructive/30 rounded p-3 text-sm text-destructive">
               {error instanceof Error
                 ? error.message
-                : "Failed to update avatar. Please try again."}
+                : 'Failed to update avatar. Please try again.'}
             </div>
           )}
 
@@ -157,7 +155,7 @@ export function UpdateAvatarCard({ className }: UpdateAvatarCardProps) {
                     Updating...
                   </>
                 ) : (
-                  "Update Avatar"
+                  'Update Avatar'
                 )}
               </Button>
             )}

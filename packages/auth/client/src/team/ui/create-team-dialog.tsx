@@ -3,8 +3,8 @@ import { Dialog, Button, Input } from "@shadcn";
 import { useForm } from "@tanstack/react-form";
 import { useAtom, useAtomValue, Result } from "@effect-atom/atom-react";
 import { toast } from "sonner";
-import { createTeamAtom } from "../organization.atoms.js";
-import { sessionAtom } from "../session.atoms.js";
+import { createTeamAtom } from "../../organization/organization.atoms.js";
+import { sessionAtom } from "../../session/session.atoms.js";
 
 export interface CreateTeamDialogProps {
   children: React.ReactNode;

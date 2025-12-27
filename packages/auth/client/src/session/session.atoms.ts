@@ -1,7 +1,7 @@
 import { Atom, Result } from "@effect-atom/atom-react";
 import * as Effect from "effect/Effect";
 import { authClient } from "../auth.client.js";
-import type { SessionData } from "./session.schema.js";
+import type { SessionData } from "@auth/domain";
 import type { SignInInput, SignUpInput } from "@auth/domain";
 
 /**
@@ -44,7 +44,7 @@ class AuthApi extends Effect.Service<AuthApi>()("@features/auth/AuthApi", {
         },
         catch: (error) =>
           new Error(
-            `Sign in failed: ${error instanceof Error ? error.message : error}`
+            `Sign in failed: ${error instanceof Error ? error.message : error}`,
           ),
       }),
 
@@ -102,7 +102,7 @@ class AuthApi extends Effect.Service<AuthApi>()("@features/auth/AuthApi", {
         },
         catch: (error) =>
           new Error(
-            `Sign up failed: ${error instanceof Error ? error.message : error}`
+            `Sign up failed: ${error instanceof Error ? error.message : error}`,
           ),
       }),
 
@@ -115,7 +115,7 @@ class AuthApi extends Effect.Service<AuthApi>()("@features/auth/AuthApi", {
           });
           if (result.error) {
             throw new Error(
-              result.error.message || "Password reset request failed"
+              result.error.message || "Password reset request failed",
             );
           }
           return result.data;
@@ -124,7 +124,7 @@ class AuthApi extends Effect.Service<AuthApi>()("@features/auth/AuthApi", {
           new Error(
             `Password reset request failed: ${
               error instanceof Error ? error.message : String(error)
-            }`
+            }`,
           ),
       }),
 
@@ -144,7 +144,7 @@ class AuthApi extends Effect.Service<AuthApi>()("@features/auth/AuthApi", {
           new Error(
             `Password reset failed: ${
               error instanceof Error ? error.message : String(error)
-            }`
+            }`,
           ),
       }),
 
@@ -164,7 +164,7 @@ class AuthApi extends Effect.Service<AuthApi>()("@features/auth/AuthApi", {
           new Error(
             `2FA verification failed: ${
               error instanceof Error ? error.message : String(error)
-            }`
+            }`,
           ),
       }),
 
@@ -183,7 +183,7 @@ class AuthApi extends Effect.Service<AuthApi>()("@features/auth/AuthApi", {
           new Error(
             `Account recovery failed: ${
               error instanceof Error ? error.message : String(error)
-            }`
+            }`,
           ),
       }),
 
@@ -202,7 +202,7 @@ class AuthApi extends Effect.Service<AuthApi>()("@features/auth/AuthApi", {
           new Error(
             `Failed to update name: ${
               error instanceof Error ? error.message : String(error)
-            }`
+            }`,
           ),
       }),
 
@@ -221,7 +221,7 @@ class AuthApi extends Effect.Service<AuthApi>()("@features/auth/AuthApi", {
           new Error(
             `Failed to update avatar: ${
               error instanceof Error ? error.message : String(error)
-            }`
+            }`,
           ),
       }),
 
@@ -241,7 +241,7 @@ class AuthApi extends Effect.Service<AuthApi>()("@features/auth/AuthApi", {
           new Error(
             `Failed to change email: ${
               error instanceof Error ? error.message : String(error)
-            }`
+            }`,
           ),
       }),
   })),
@@ -265,7 +265,7 @@ export const sessionAtom = (() => {
     Effect.gen(function* () {
       const api = yield* AuthApi;
       return yield* api.getSession();
-    })
+    }),
   );
 
   return Object.assign(
@@ -278,9 +278,9 @@ export const sessionAtom = (() => {
       // Refresh function
       (refresh) => {
         refresh(remoteAtom);
-      }
+      },
     ),
-    { remote: remoteAtom }
+    { remote: remoteAtom },
   );
 })();
 
@@ -301,7 +301,7 @@ export const signInAtom = authRuntime.fn<SignInInput>()(
     get.set(sessionAtom, freshSession);
 
     return signInResponse;
-  })
+  }),
 );
 
 /**
@@ -314,7 +314,7 @@ export const signInWithGoogleAtom = authRuntime.fn<void>()(
   Effect.fnUntraced(function* (_input, _get) {
     const api = yield* AuthApi;
     return yield* api.signInWithGoogle();
-  })
+  }),
 );
 
 /**
@@ -332,7 +332,7 @@ export const signInWithPasskeyAtom = authRuntime.fn<void>()(
     // After successful passkey sign-in, fetch fresh session
     const freshSession = yield* api.getSession();
     get.set(sessionAtom, freshSession);
-  })
+  }),
 );
 
 /**
@@ -351,7 +351,7 @@ export const signOutAtom = authRuntime.fn<void>()(
     get.set(sessionAtom, null);
 
     return result;
-  })
+  }),
 );
 
 /**
@@ -371,7 +371,7 @@ export const signUpAtom = authRuntime.fn<SignUpInput>()(
     get.set(sessionAtom, freshSession);
 
     return signUpResponse;
-  })
+  }),
 );
 
 /**
@@ -385,7 +385,7 @@ export const forgotPasswordAtom = authRuntime.fn<{ email: string }>()(
   Effect.fnUntraced(function* (input) {
     const api = yield* AuthApi;
     return yield* api.forgotPassword(input.email);
-  })
+  }),
 );
 
 /**
@@ -402,7 +402,7 @@ export const resetPasswordAtom = authRuntime.fn<{
   Effect.fnUntraced(function* (input) {
     const api = yield* AuthApi;
     return yield* api.resetPassword(input.newPassword, input.token);
-  })
+  }),
 );
 
 /**
@@ -426,7 +426,7 @@ export const verifyTwoFactorAtom = authRuntime.fn<{
     get.set(sessionAtom, freshSession);
 
     return result;
-  })
+  }),
 );
 
 /**
@@ -446,7 +446,7 @@ export const recoverAccountAtom = authRuntime.fn<{ code: string }>()(
     get.set(sessionAtom, freshSession);
 
     return result;
-  })
+  }),
 );
 
 /**
@@ -466,7 +466,7 @@ export const updateNameAtom = authRuntime.fn<{ name: string }>()(
     get.set(sessionAtom, freshSession);
 
     return result;
-  })
+  }),
 );
 
 /**
@@ -486,7 +486,7 @@ export const updateImageAtom = authRuntime.fn<{ image: string }>()(
     get.set(sessionAtom, freshSession);
 
     return result;
-  })
+  }),
 );
 
 /**
@@ -500,5 +500,5 @@ export const changeEmailAtom = authRuntime.fn<{ newEmail: string }>()(
   Effect.fnUntraced(function* (input) {
     const api = yield* AuthApi;
     return yield* api.changeEmail(input.newEmail);
-  })
+  }),
 );

@@ -2,11 +2,8 @@ import { Card, Button } from "@shadcn";
 import { UsersIcon } from "lucide-react";
 import { Result, useAtomValue, useAtom } from "@effect-atom/atom-react";
 import { toast } from "sonner";
-import {
-  userTeamsAtom,
-  setActiveTeamAtom,
-} from "../organization.atoms.js";
-import { sessionAtom } from "../session.atoms.js";
+import { userTeamsAtom, setActiveTeamAtom } from "../../organization";
+import { sessionAtom } from "../../session/session.atoms.js";
 
 export interface UserTeamsCardProps {
   className?: string;

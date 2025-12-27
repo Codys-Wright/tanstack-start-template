@@ -1,14 +1,14 @@
-import { useState, useMemo } from "react";
-import { Dialog, Button } from "@shadcn";
-import { UsersIcon, PlusIcon, Loader2 } from "lucide-react";
-import { useAtomValue, useAtom, Result } from "@effect-atom/atom-react";
-import { toast } from "sonner";
+import { useState, useMemo } from 'react';
+import { Dialog, Button } from '@shadcn';
+import { UsersIcon, PlusIcon, Loader2 } from 'lucide-react';
+import { useAtomValue, useAtom, Result } from '@effect-atom/atom-react';
+import { toast } from 'sonner';
 import {
   addTeamMemberAtom,
   teamMembersAtom,
   organizationMembersAtom,
-} from "../organization.atoms.js";
-import type { Team } from "../team.schema.js";
+} from '../../organization/organization.atoms.js';
+import type { Team } from '@auth/domain';
 
 export interface AddTeamMemberDialogProps {
   team: Team;
@@ -16,23 +16,16 @@ export interface AddTeamMemberDialogProps {
   onSuccess?: () => void;
 }
 
-export function AddTeamMemberDialog({
-  team,
-  children,
-  onSuccess,
-}: AddTeamMemberDialogProps) {
+export function AddTeamMemberDialog({ team, children, onSuccess }: AddTeamMemberDialogProps) {
   const [open, setOpen] = useState(false);
   const [addResult, addMember] = useAtom(addTeamMemberAtom);
 
   // Create atoms for current team data (memoized to prevent recreation)
   const currentOrgMembersAtom = useMemo(
     () => organizationMembersAtom(team.organizationId),
-    [team.organizationId]
+    [team.organizationId],
   );
-  const currentTeamMembersAtom = useMemo(
-    () => teamMembersAtom(team.id),
-    [team.id]
-  );
+  const currentTeamMembersAtom = useMemo(() => teamMembersAtom(team.id), [team.id]);
 
   const orgMembersResult = useAtomValue(currentOrgMembersAtom);
   const teamMembersResult = useAtomValue(currentTeamMembersAtom);
@@ -54,15 +47,15 @@ export function AddTeamMemberDialog({
       await addMember({
         teamId: team.id,
         userId: member.userId,
-        role: "member",
+        role: 'member',
       });
-      toast.success("Member added to team");
+      toast.success('Member added to team');
       onSuccess?.();
     } catch (error) {
       if (error instanceof Error) {
         toast.error(error.message);
       } else {
-        toast.error("Failed to add member");
+        toast.error('Failed to add member');
       }
     }
   };
@@ -70,9 +63,7 @@ export function AddTeamMemberDialog({
   // Filter out members who are already in the team
   const availableMembers = organizationMembers.filter(
     (orgMember: any) =>
-      !teamMembers.some(
-        (teamMember: any) => teamMember.userId === orgMember.userId
-      )
+      !teamMembers.some((teamMember: any) => teamMember.userId === orgMember.userId),
   );
 
   return (
@@ -95,9 +86,7 @@ export function AddTeamMemberDialog({
             <div className="text-center py-8 text-muted-foreground">
               <UsersIcon className="mx-auto size-8 mb-2" />
               <p>No available members</p>
-              <p className="text-sm mt-1">
-                All organization members are already in this team.
-              </p>
+              <p className="text-sm mt-1">All organization members are already in this team.</p>
             </div>
           ) : (
             <div className="space-y-2 max-h-64 overflow-y-auto">
@@ -111,14 +100,12 @@ export function AddTeamMemberDialog({
                       <span className="text-sm font-medium">
                         {member.user?.name?.charAt(0)?.toUpperCase() ||
                           member.userId?.charAt(0)?.toUpperCase() ||
-                          "?"}
+                          '?'}
                       </span>
                     </div>
                     <div>
                       <p className="font-medium">
-                        {member.user?.name ||
-                          `User ${member.userId?.slice(-4)}` ||
-                          "Unknown"}
+                        {member.user?.name || `User ${member.userId?.slice(-4)}` || 'Unknown'}
                       </p>
                       <p className="text-sm text-muted-foreground">
                         {member.user?.email || member.userId}

@@ -1,10 +1,10 @@
-import { useState, useEffect } from "react";
-import { Dialog, Button, Input } from "@shadcn";
-import { useForm } from "@tanstack/react-form";
-import { useAtom } from "@effect-atom/atom-react";
-import { toast } from "sonner";
-import { updateTeamAtom } from "../organization.atoms.js";
-import type { Team } from "../team.schema.js";
+import { useState, useEffect } from 'react';
+import { Dialog, Button, Input } from '@shadcn';
+import { useForm } from '@tanstack/react-form';
+import { useAtom } from '@effect-atom/atom-react';
+import { toast } from 'sonner';
+import { updateTeamAtom } from '../../organization/organization.atoms.js';
+import type { Team } from '@auth/domain';
 
 export interface UpdateTeamDialogProps {
   team: Team;
@@ -12,11 +12,7 @@ export interface UpdateTeamDialogProps {
   onSuccess?: () => void;
 }
 
-export function UpdateTeamDialog({
-  team,
-  children,
-  onSuccess,
-}: UpdateTeamDialogProps) {
+export function UpdateTeamDialog({ team, children, onSuccess }: UpdateTeamDialogProps) {
   const [open, setOpen] = useState(false);
   const [_updateResult, updateTeam] = useAtom(updateTeamAtom);
 
@@ -31,13 +27,13 @@ export function UpdateTeamDialog({
           data: { name: value.name },
         });
         setOpen(false);
-        toast.success("Team updated successfully");
+        toast.success('Team updated successfully');
         onSuccess?.();
       } catch (error) {
         if (error instanceof Error) {
           toast.error(error.message);
         } else {
-          toast.error("Failed to update team");
+          toast.error('Failed to update team');
         }
       }
     },
@@ -46,7 +42,7 @@ export function UpdateTeamDialog({
   // Update form when team changes
   useEffect(() => {
     form.reset();
-    form.setFieldValue("name", team.name);
+    form.setFieldValue('name', team.name);
   }, [team, form]);
 
   return (
@@ -74,29 +70,21 @@ export function UpdateTeamDialog({
                   id={field.name}
                   value={field.state.value}
                   onBlur={field.handleBlur}
-                  onChange={(e) =>
-                    field.handleChange((e.target as HTMLInputElement).value)
-                  }
+                  onChange={(e) => field.handleChange((e.target as HTMLInputElement).value)}
                   placeholder="Enter team name"
                 />
                 {field.state.meta.errors.length > 0 && (
-                  <p className="text-sm text-destructive">
-                    {field.state.meta.errors[0]}
-                  </p>
+                  <p className="text-sm text-destructive">{field.state.meta.errors[0]}</p>
                 )}
               </div>
             )}
           </form.Field>
           <div className="flex justify-end gap-2">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => setOpen(false)}
-            >
+            <Button type="button" variant="outline" onClick={() => setOpen(false)}>
               Cancel
             </Button>
             <Button type="submit" disabled={form.state.isSubmitting}>
-              {form.state.isSubmitting ? "Updating..." : "Update Team"}
+              {form.state.isSubmitting ? 'Updating...' : 'Update Team'}
             </Button>
           </div>
         </form>

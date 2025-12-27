@@ -5,8 +5,8 @@ import { useMemo } from "react";
 import { Result, useAtomValue } from "@effect-atom/atom-react";
 import { CreateTeamDialog } from "./create-team-dialog.js";
 import { TeamCell } from "./team-cell.js";
-import { teamsAtom } from "../organization.atoms.js";
-import { sessionAtom } from "../session.atoms.js";
+import { teamsAtom } from "../../organization";
+import { sessionAtom } from "../../session/session.atoms.js";
 import { useTeamPermissions } from "../use-team-permissions.js";
 
 export interface TeamsCardProps {
@@ -24,7 +24,7 @@ export function TeamsCard({ className }: TeamsCardProps) {
   // Create teams atom for current org (memoized to prevent recreating)
   const currentTeamsAtom = useMemo(
     () => (activeOrgId ? teamsAtom(activeOrgId) : teamsAtom(undefined)),
-    [activeOrgId]
+    [activeOrgId],
   );
 
   const teamsResult = useAtomValue(currentTeamsAtom);

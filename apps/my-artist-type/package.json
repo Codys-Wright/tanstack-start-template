@@ -100,7 +100,10 @@
   "devDependencies": {
     "@shadcn": "workspace:*",
     "@theme": "workspace:*",
-    "@auth": "workspace:*",
+    "@auth/client": "workspace:*",
+    "@auth/domain": "workspace:*",
+    "@auth/server": "workspace:*",
+    "@auth/database": "workspace:*",
     "@core": "workspace*",
     "@effect/vitest": "*",
     "@tanstack/devtools-vite": "*",

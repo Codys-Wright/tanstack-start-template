@@ -1,7 +1,7 @@
 import { Card } from "@shadcn";
 import { Result, useAtomValue } from "@effect-atom/atom-react";
 import { ShieldIcon, KeyIcon, ClockIcon, SmartphoneIcon } from "lucide-react";
-import { sessionAtom } from "../session.atoms.js";
+import { sessionAtom } from "../../session/session.atoms.js";
 import { SettingsCard } from "./settings-card.js";
 
 export interface SecuritySettingsCardsProps {

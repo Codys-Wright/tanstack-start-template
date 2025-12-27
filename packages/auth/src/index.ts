@@ -1,60 +1,27 @@
 /**
- * @auth - Authentication & Authorization Package (Client)
+ * @auth - Authentication & Authorization Package
  *
- * Client-side authentication components and state management.
- * Server-side code (repositories, services, middleware) is not exported.
+ * Facade package that re-exports domain types and client components.
  *
- * Features:
- * - Client-side auth client (Better Auth)
- * - Reactive state management (Effect-Atom)
- * - UI components for authentication
- * - Type-safe schemas and types
+ * Sub-packages (import directly for better tree-shaking):
+ * - @auth/domain - Pure domain schemas and types
+ * - @auth/client - React components, hooks, and atoms
+ * - @auth/server - Server-side services and middleware (server-only)
+ * - @auth/database - Repositories and migrations (server-only)
  *
  * @example
  * ```tsx
- * // Import client components
- * import { UserButton, SignInForm } from "@auth";
+ * // Import from facade (convenience)
+ * import { User, Session } from "@auth";
+ * import { UserButton, SignInForm } from "@auth/client";
  *
- * // Import state management
- * import { sessionAtom, signInAtom } from "@auth";
- *
- * // Import types
- * import type { User, Session } from "@auth";
+ * // Or import from specific packages (recommended)
+ * import type { User, Session } from "@auth/domain";
+ * import { UserButton, SignInForm } from "@auth/client";
  * ```
  */
 
 // ============================================================================
-// Core - Client-side authentication
+// Domain - Pure schemas and types
 // ============================================================================
-
-// Export client-safe core items
-export {
-  // Better Auth client (browser-compatible)
-  authClient,
-
-  // Auth schemas (types only)
-  SignInInput,
-  SignInResponse,
-  SignUpInput,
-  SignUpResponse,
-  SignOutResponse,
-  ForgotPasswordInput,
-  ResetPasswordInput,
-} from "./_core/index.js";
-
-// ============================================================================
-// Session - Client-side session management
-// ============================================================================
-
-// Only export client-safe items (schemas, atoms, and UI)
-export * from "./session/session.schema.js";
-export * from "./session/session.atoms.js";
-export * from "./session/ui/index.js";
-
-// ============================================================================
-// User - Client-side user components
-// ============================================================================
-
-// Only export client-safe items (schemas and UI)
-export * from "./user/user.schema.js";
-export * from "./user/ui/index.js";
+export * from '@auth/domain';

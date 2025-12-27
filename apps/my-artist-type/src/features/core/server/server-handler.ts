@@ -1,31 +1,31 @@
-import * as HttpServerResponse from "@effect/platform/HttpServerResponse";
-import * as HttpServer from "@effect/platform/HttpServer";
-import * as HttpLayerRouter from "@effect/platform/HttpLayerRouter";
-import * as HttpApiSwagger from "@effect/platform/HttpApiSwagger";
-import * as HttpApiScalar from "@effect/platform/HttpApiScalar";
-import * as RpcSerialization from "@effect/rpc/RpcSerialization";
-import * as RpcServer from "@effect/rpc/RpcServer";
-import * as Layer from "effect/Layer";
-import * as RpcMiddleware from "@effect/rpc/RpcMiddleware";
-import * as Effect from "effect/Effect";
-import * as Exit from "effect/Exit";
-import * as Logger from "effect/Logger";
-import * as Context from "effect/Context";
-import { DomainRpc, DomainApi } from "../domain";
-import { TodosRpcLive, TodosApiLive } from "../../todo/server";
+import * as HttpServerResponse from '@effect/platform/HttpServerResponse';
+import * as HttpServer from '@effect/platform/HttpServer';
+import * as HttpLayerRouter from '@effect/platform/HttpLayerRouter';
+import * as HttpApiSwagger from '@effect/platform/HttpApiSwagger';
+import * as HttpApiScalar from '@effect/platform/HttpApiScalar';
+import * as RpcSerialization from '@effect/rpc/RpcSerialization';
+import * as RpcServer from '@effect/rpc/RpcServer';
+import * as Layer from 'effect/Layer';
+import * as RpcMiddleware from '@effect/rpc/RpcMiddleware';
+import * as Effect from 'effect/Effect';
+import * as Exit from 'effect/Exit';
+import * as Logger from 'effect/Logger';
+import * as Context from 'effect/Context';
+import { DomainRpc, DomainApi } from '../domain';
+import { TodosRpcLive, TodosApiLive } from '../../todo/server';
 import {
   HttpAuthenticationMiddlewareLive,
   RpcAuthenticationMiddlewareLive,
   BetterAuthService,
   BetterAuthRouter,
-} from "@auth";
-import { serverRuntime } from "./server-runtime.js";
-import * as BunContext from "@effect/platform-bun/BunContext";
-import * as PgMigrator from "@effect/sql-pg/PgMigrator";
-import { PgLive, createMigrationLoader } from "@core";
-import { authMigrations } from "@auth";
+} from '@auth/server';
+import { serverRuntime } from './server-runtime.js';
+import * as BunContext from '@effect/platform-bun/BunContext';
+import * as PgMigrator from '@effect/sql-pg/PgMigrator';
+import { PgLive, createMigrationLoader } from '@core';
+import { authMigrations } from '@auth/database';
 
-class RpcLogger extends RpcMiddleware.Tag<RpcLogger>()("RpcLogger", {
+class RpcLogger extends RpcMiddleware.Tag<RpcLogger>()('RpcLogger', {
   wrap: true,
   optional: true,
 }) {}
@@ -38,13 +38,10 @@ const RpcLoggerLive = Layer.succeed(
         onSuccess: () => exit,
         onFailure: (cause) =>
           Effect.zipRight(
-            Effect.annotateLogs(
-              Effect.logError(`RPC request failed: ${opts.rpc._tag}`, cause),
-              {
-                "rpc.method": opts.rpc._tag,
-                "rpc.clientId": opts.clientId,
-              },
-            ),
+            Effect.annotateLogs(Effect.logError(`RPC request failed: ${opts.rpc._tag}`, cause), {
+              'rpc.method': opts.rpc._tag,
+              'rpc.clientId': opts.clientId,
+            }),
             exit,
           ),
       }),
@@ -54,9 +51,9 @@ const RpcLoggerLive = Layer.succeed(
 
 const RpcRouter = RpcServer.layerHttpRouter({
   group: DomainRpc.middleware(RpcLogger),
-  path: "/api/rpc",
-  protocol: "http",
-  spanPrefix: "rpc",
+  path: '/api/rpc',
+  protocol: 'http',
+  spanPrefix: 'rpc',
   disableFatalDefects: true,
 }).pipe(
   Layer.provide(TodosRpcLive),
@@ -67,7 +64,7 @@ const RpcRouter = RpcServer.layerHttpRouter({
 
 // HttpApi router - FIXED
 const HttpApiRouter = HttpLayerRouter.addHttpApi(DomainApi, {
-  openapiPath: "/api/openapi.json", // Built-in OpenAPI endpoint
+  openapiPath: '/api/openapi.json', // Built-in OpenAPI endpoint
 }).pipe(
   Layer.provide(TodosApiLive),
   Layer.provide(HttpAuthenticationMiddlewareLive), // Provide real auth middleware
@@ -77,10 +74,10 @@ const HttpApiRouter = HttpLayerRouter.addHttpApi(DomainApi, {
 // Scalar UI (modern OpenAPI docs) at /api/docs
 const ScalarDocs = HttpApiScalar.layerHttpLayerRouter({
   api: DomainApi,
-  path: "/api/docs",
+  path: '/api/docs',
   scalar: {
-    theme: "moon",
-    layout: "modern",
+    theme: 'moon',
+    layout: 'modern',
     darkMode: true,
     defaultOpenAllTags: true,
   },
@@ -89,11 +86,11 @@ const ScalarDocs = HttpApiScalar.layerHttpLayerRouter({
 // Swagger UI (classic OpenAPI docs) at /api/swagger
 const SwaggerDocs = HttpApiSwagger.layerHttpLayerRouter({
   api: DomainApi,
-  path: "/api/swagger",
+  path: '/api/swagger',
 });
 
 const HealthRoute = HttpLayerRouter.use((router) =>
-  router.add("GET", "/api/health", HttpServerResponse.text("OK")),
+  router.add('GET', '/api/health', HttpServerResponse.text('OK')),
 );
 
 // Merge all routes - includes both Scalar and Swagger UIs
@@ -117,7 +114,7 @@ const AllRoutes = Layer.mergeAll(
 // Run auto-migration on startup
 await Effect.runPromise(
   Effect.gen(function* () {
-    yield* Effect.log("[AutoMigration] Starting database migration check...");
+    yield* Effect.log('[AutoMigration] Starting database migration check...');
 
     const migrations = yield* PgMigrator.run({
       loader: createMigrationLoader({
@@ -126,22 +123,18 @@ await Effect.runPromise(
     });
 
     if (migrations.length === 0) {
-      yield* Effect.log("[AutoMigration] No new migrations to apply.");
+      yield* Effect.log('[AutoMigration] No new migrations to apply.');
     } else {
-      yield* Effect.log(
-        `[AutoMigration] Applied ${migrations.length} migration(s):`,
-      );
+      yield* Effect.log(`[AutoMigration] Applied ${migrations.length} migration(s):`);
       for (const [id, name] of migrations) {
-        yield* Effect.log(`  - ${id.toString().padStart(4, "0")}_${name}`);
+        yield* Effect.log(`  - ${id.toString().padStart(4, '0')}_${name}`);
       }
     }
 
-    yield* Effect.log("[AutoMigration] Database schema is up-to-date.");
+    yield* Effect.log('[AutoMigration] Database schema is up-to-date.');
   }).pipe(
     Effect.provide(Layer.merge(PgLive, BunContext.layer)),
-    Effect.tapError((error) =>
-      Effect.logError(`[AutoMigration] Migration failed: ${error}`),
-    ),
+    Effect.tapError((error) => Effect.logError(`[AutoMigration] Migration failed: ${error}`)),
     Effect.orDie,
   ),
 );

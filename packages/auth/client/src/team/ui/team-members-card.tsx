@@ -3,14 +3,11 @@ import { UsersIcon, PlusIcon, UserMinusIcon } from "lucide-react";
 import { useMemo } from "react";
 import { Result, useAtomValue, useAtom } from "@effect-atom/atom-react";
 import { toast } from "sonner";
-import {
-  teamMembersAtom,
-  removeTeamMemberAtom,
-} from "../organization.atoms.js";
-import { sessionAtom } from "../session.atoms.js";
+import { teamMembersAtom, removeTeamMemberAtom } from "../../organization";
+import { sessionAtom } from "../../session/session.atoms.js";
 import { AddTeamMemberDialog } from "./add-team-member-dialog.js";
 import { useTeamPermissions } from "../use-team-permissions.js";
-import type { Team } from "../team.schema.js";
+import type { Team } from "@auth/domain";
 
 export interface TeamMembersCardProps {
   team: Team;
@@ -29,7 +26,7 @@ export function TeamMembersCard({ team, className }: TeamMembersCardProps) {
   // Create atom for current team members (memoized to prevent recreation)
   const currentTeamMembersAtom = useMemo(
     () => teamMembersAtom(team.id),
-    [team.id]
+    [team.id],
   );
   const membersResult = useAtomValue(currentTeamMembersAtom);
 
