@@ -1,9 +1,9 @@
 import * as HttpApiError from "@effect/platform/HttpApiError";
 import * as Effect from "effect/Effect";
 import * as Layer from "effect/Layer";
-import type { UserId } from "./../user";
-import { RpcAuthenticationMiddleware } from "./auth.policy.js";
-import { BetterAuthService } from "./better-auth.service.js";
+import type { UserId } from "./../user/user.schema";
+import { RpcAuthenticationMiddleware } from "./auth.policy";
+import { BetterAuthService } from "./better-auth.service";
 
 /**
  * Live implementation of RpcAuthenticationMiddleware.

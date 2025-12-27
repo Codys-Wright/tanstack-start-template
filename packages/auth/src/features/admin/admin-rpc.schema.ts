@@ -1,9 +1,9 @@
 import * as Rpc from "@effect/rpc/Rpc";
 import * as RpcGroup from "@effect/rpc/RpcGroup";
 import * as Schema from "effect/Schema";
-import { User } from "../user/user.schema.js";
-import { InvitationStatus } from "../invitation/invitation.schema.js";
-import { OrganizationRole } from "../member/member.schema.js";
+import { User } from "../user/user.schema";
+import { InvitationStatus } from "../invitation/invitation.schema";
+import { OrganizationRole } from "../member/member.schema";
 
 /**
  * Admin RPC Schema - Defines admin data fetching operations

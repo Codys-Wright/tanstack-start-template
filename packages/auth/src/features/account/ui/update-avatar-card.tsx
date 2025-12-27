@@ -5,8 +5,8 @@ import { ImageIcon, Loader2Icon, UploadIcon } from "lucide-react";
 import { useEffect } from "react";
 import * as Schema from "effect/Schema";
 
-import { updateImageAtom } from "../../session/session.atoms.js";
-import { SettingsCard } from "./settings-card.js";
+import { updateImageAtom } from "../../session/session.atoms";
+import { SettingsCard } from "./settings-card";
 
 export interface UpdateAvatarCardProps {
   className?: string;

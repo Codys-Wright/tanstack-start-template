@@ -1,6 +1,6 @@
 import { faker } from "@faker-js/faker";
 import * as Schema from "effect/Schema";
-import { User } from "../user/user.schema.js";
+import { User } from "../user/user.schema";
 
 /**
  * Core Authentication Schemas

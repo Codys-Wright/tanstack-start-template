@@ -1,4 +1,13 @@
+import {
+  BetterAuthRouter,
+  BetterAuthService,
+  HttpAuthenticationMiddlewareLive,
+  RpcAuthenticationMiddlewareLive,
+} from "@auth/server";
+import { authMigrations } from "@auth/database";
+import { PgLive, createMigrationLoader } from "@core/database";
 import { makeTodosApiLive, TodosRpcLive } from "@todo/server";
+import * as BunContext from "@effect/platform-bun/BunContext";
 import * as HttpApiScalar from "@effect/platform/HttpApiScalar";
 import * as HttpApiSwagger from "@effect/platform/HttpApiSwagger";
 import * as HttpLayerRouter from "@effect/platform/HttpLayerRouter";
@@ -7,26 +16,17 @@ import * as HttpServerResponse from "@effect/platform/HttpServerResponse";
 import * as RpcMiddleware from "@effect/rpc/RpcMiddleware";
 import * as RpcSerialization from "@effect/rpc/RpcSerialization";
 import * as RpcServer from "@effect/rpc/RpcServer";
+import * as PgMigrator from "@effect/sql-pg/PgMigrator";
 import * as Context from "effect/Context";
 import * as Effect from "effect/Effect";
 import * as Exit from "effect/Exit";
 import * as Layer from "effect/Layer";
 import * as Logger from "effect/Logger";
 import { DomainApi, DomainRpc } from "../domain/index.js";
+import { serverRuntime } from "./server-runtime.js";
 
 // HttpApi handlers for todos - uses makeTodosApiLive from @todo
 const TodosApiLive = makeTodosApiLive(DomainApi);
-// import {
-//   HttpAuthenticationMiddlewareLive,
-//   RpcAuthenticationMiddlewareLive,
-//   BetterAuthService,
-//   BetterAuthRouter,
-// } from "@auth";
-import { serverRuntime } from "./server-runtime.js";
-// import * as BunContext from "@effect/platform-bun/BunContext";
-// import * as PgMigrator from "@effect/sql-pg/PgMigrator";
-// import { PgLive, createMigrationLoader } from "@core";
-// import { authMigrations } from "@auth";
 
 class RpcLogger extends RpcMiddleware.Tag<RpcLogger>()("RpcLogger", {
   wrap: true,
@@ -64,16 +64,16 @@ const RpcRouter = RpcServer.layerHttpRouter({
 }).pipe(
   Layer.provide(TodosRpcLive),
   Layer.provide(RpcLoggerLive),
-  // Layer.provide(RpcAuthenticationMiddlewareLive),
+  Layer.provide(RpcAuthenticationMiddlewareLive),
   Layer.provide(RpcSerialization.layerNdjson),
 );
 
-// HttpApi router - FIXED
+// HttpApi router
 const HttpApiRouter = HttpLayerRouter.addHttpApi(DomainApi, {
-  openapiPath: "/api/openapi.json", // Built-in OpenAPI endpoint
+  openapiPath: "/api/openapi.json",
 }).pipe(
   Layer.provide(TodosApiLive),
-  // Layer.provide(HttpAuthenticationMiddlewareLive), // Provide real auth middleware
+  Layer.provide(HttpAuthenticationMiddlewareLive),
   Layer.provide(HttpServer.layerContext),
 );
 
@@ -103,51 +103,46 @@ const HealthRoute = HttpLayerRouter.use((router) =>
 const AllRoutes = Layer.mergeAll(
   RpcRouter,
   HttpApiRouter,
-  ScalarDocs, // Modern Scalar UI at /api/docs
-  SwaggerDocs, // Classic Swagger UI at /api/swagger
+  ScalarDocs,
+  SwaggerDocs,
   HealthRoute,
-  // BetterAuthRouter,
+  BetterAuthRouter,
 ).pipe(
-  // Layer.provideMerge(BetterAuthService.Default),
+  Layer.provideMerge(BetterAuthService.Default),
   Layer.provide(Logger.pretty),
-  // Apply CORS globally if needed
-  // Layer.provide(HttpLayerRouter.cors({
-  //   allowedOrigins: ["http://localhost:3000"],
-  //   credentials: true
-  // }))
 );
 
-// // Run auto-migration on startup
-// await Effect.runPromise(
-//   Effect.gen(function* () {
-//     yield* Effect.log("[AutoMigration] Starting database migration check...");
-//
-//     const migrations = yield* PgMigrator.run({
-//       loader: createMigrationLoader({
-//         features: [authMigrations],
-//       }),
-//     });
-//
-//     if (migrations.length === 0) {
-//       yield* Effect.log("[AutoMigration] No new migrations to apply.");
-//     } else {
-//       yield* Effect.log(
-//         `[AutoMigration] Applied ${migrations.length} migration(s):`,
-//       );
-//       for (const [id, name] of migrations) {
-//         yield* Effect.log(`  - ${id.toString().padStart(4, "0")}_${name}`);
-//       }
-//     }
-//
-//     yield* Effect.log("[AutoMigration] Database schema is up-to-date.");
-//   }).pipe(
-//     Effect.provide(Layer.merge(PgLive, BunContext.layer)),
-//     Effect.tapError((error) =>
-//       Effect.logError(`[AutoMigration] Migration failed: ${error}`),
-//     ),
-//     Effect.orDie,
-//   ),
-// );
+// Run auto-migration on startup
+await Effect.runPromise(
+  Effect.gen(function* () {
+    yield* Effect.log("[AutoMigration] Starting database migration check...");
+
+    const migrations = yield* PgMigrator.run({
+      loader: createMigrationLoader({
+        features: [authMigrations],
+      }),
+    });
+
+    if (migrations.length === 0) {
+      yield* Effect.log("[AutoMigration] No new migrations to apply.");
+    } else {
+      yield* Effect.log(
+        `[AutoMigration] Applied ${migrations.length} migration(s):`,
+      );
+      for (const [id, name] of migrations) {
+        yield* Effect.log(`  - ${id.toString().padStart(4, "0")}_${name}`);
+      }
+    }
+
+    yield* Effect.log("[AutoMigration] Database schema is up-to-date.");
+  }).pipe(
+    Effect.provide(Layer.merge(PgLive, BunContext.layer)),
+    Effect.tapError((error) =>
+      Effect.logError(`[AutoMigration] Migration failed: ${error}`),
+    ),
+    Effect.orDie,
+  ),
+);
 
 const memoMap = Effect.runSync(Layer.makeMemoMap);
 

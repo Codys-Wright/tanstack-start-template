@@ -6,11 +6,11 @@ import { toast } from "sonner";
 import {
   teamMembersAtom,
   removeTeamMemberAtom,
-} from "../../organization/organization.atoms.js";
-import { sessionAtom } from "../../session/session.atoms.js";
-import { AddTeamMemberDialog } from "./add-team-member-dialog.js";
-import { useTeamPermissions } from "../use-team-permissions.js";
-import type { Team } from "../team.schema.js";
+} from "../../organization/organization.atoms";
+import { sessionAtom } from "../../session/session.atoms";
+import { AddTeamMemberDialog } from "./add-team-member-dialog";
+import { useTeamPermissions } from "../use-team-permissions";
+import type { Team } from "../team.schema";
 
 export interface TeamMembersCardProps {
   team: Team;

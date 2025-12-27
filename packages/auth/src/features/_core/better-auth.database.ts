@@ -1,7 +1,7 @@
 import * as Effect from "effect/Effect";
 import { Kysely, PostgresDialect } from "kysely";
 import pg from "pg";
-import { BetterAuthConfig, getDatabaseUrl } from "./better-auth.config.js";
+import { BetterAuthConfig, getDatabaseUrl } from "./better-auth.config";
 
 const { Pool } = pg;
 

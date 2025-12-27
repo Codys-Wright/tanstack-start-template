@@ -3,11 +3,11 @@ import { UsersIcon, PlusIcon } from "lucide-react";
 import { Button } from "@shadcn";
 import { useMemo } from "react";
 import { Result, useAtomValue } from "@effect-atom/atom-react";
-import { CreateTeamDialog } from "./create-team-dialog.js";
-import { TeamCell } from "./team-cell.js";
-import { teamsAtom } from "../../organization/organization.atoms.js";
-import { sessionAtom } from "../../session/session.atoms.js";
-import { useTeamPermissions } from "../use-team-permissions.js";
+import { CreateTeamDialog } from "./create-team-dialog";
+import { TeamCell } from "./team-cell";
+import { teamsAtom } from "../../organization/organization.atoms";
+import { sessionAtom } from "../../session/session.atoms";
+import { useTeamPermissions } from "../use-team-permissions";
 
 export interface TeamsCardProps {
   className?: string;

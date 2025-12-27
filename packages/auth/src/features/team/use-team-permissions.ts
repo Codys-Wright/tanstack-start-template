@@ -1,7 +1,7 @@
 import { useMemo, useState, useEffect } from "react";
 import { Result, useAtomValue } from "@effect-atom/atom-react";
-import { sessionAtom } from "../session/session.atoms.js";
-import { authClient } from "../_core/auth.client.js";
+import { sessionAtom } from "../session/session.atoms";
+import { authClient } from "../_core/auth.client";
 
 export interface TeamPermissions {
   canCreate: boolean;

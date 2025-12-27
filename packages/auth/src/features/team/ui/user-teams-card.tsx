@@ -5,8 +5,8 @@ import { toast } from "sonner";
 import {
   userTeamsAtom,
   setActiveTeamAtom,
-} from "../../organization/organization.atoms.js";
-import { sessionAtom } from "../../session/session.atoms.js";
+} from "../../organization/organization.atoms";
+import { sessionAtom } from "../../session/session.atoms";
 
 export interface UserTeamsCardProps {
   className?: string;

@@ -2,8 +2,8 @@ import * as SqlClient from "@effect/sql/SqlClient";
 import * as SqlSchema from "@effect/sql/SqlSchema";
 import * as Effect from "effect/Effect";
 import * as Schema from "effect/Schema";
-import { PgLive } from "@core";
-import { OrganizationRole } from "./member.schema.js";
+import { PgLive } from "@core/database";
+import { OrganizationRole } from "./member.schema";
 
 /**
  * MemberRepository - Database access layer for organization members using Effect SQL.

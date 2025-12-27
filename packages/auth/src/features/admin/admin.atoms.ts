@@ -1,6 +1,6 @@
 import { Atom } from "@effect-atom/atom-react";
 import * as Effect from "effect/Effect";
-import { authClient } from "../_core/auth.client.js";
+import { authClient } from "../_core/auth.client";
 
 /**
  * AdminApi - Effect Service wrapper around Better Auth admin client

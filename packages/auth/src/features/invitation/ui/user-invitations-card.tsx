@@ -7,12 +7,12 @@ import {
   BuildingIcon,
   ClockIcon,
 } from "lucide-react";
-import { sessionAtom } from "../../session/session.atoms.js";
+import { sessionAtom } from "../../session/session.atoms";
 import {
   invitationsAtom,
   acceptInvitationAtom,
   cancelInvitationAtom,
-} from "../../organization/organization.atoms.js";
+} from "../../organization/organization.atoms";
 import { toast } from "sonner";
 
 export interface UserInvitationsCardProps {

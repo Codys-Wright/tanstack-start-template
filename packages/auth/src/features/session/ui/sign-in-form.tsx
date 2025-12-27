@@ -6,8 +6,8 @@ import { Loader2Icon } from "lucide-react";
 import { useEffect } from "react";
 import * as Schema from "effect/Schema";
 
-import { signInAtom } from "../session.atoms.js";
-import type { SignInInput } from "../../_core/auth.schema.js";
+import { signInAtom } from "../session.atoms";
+import type { SignInInput } from "../../_core/auth.schema";
 
 // Define the form schema using Effect Schema
 const SignInSchema = Schema.Struct({

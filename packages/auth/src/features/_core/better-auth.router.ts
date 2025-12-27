@@ -4,7 +4,7 @@ import * as HttpServerResponse from "@effect/platform/HttpServerResponse";
 import * as Effect from "effect/Effect";
 import { Readable } from "node:stream";
 import type { ReadableStream as WebReadableStream } from "stream/web";
-import { BetterAuthService } from "./better-auth.service.js";
+import { BetterAuthService } from "./better-auth.service";
 
 export const betterAuthHandler = (req: HttpServerRequest.HttpServerRequest) =>
   Effect.gen(function* () {

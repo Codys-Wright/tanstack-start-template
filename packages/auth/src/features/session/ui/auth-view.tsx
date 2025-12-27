@@ -1,10 +1,10 @@
 import { Card } from "@shadcn";
-import { SignInForm } from "./sign-in-form.js";
-import { SignUpForm } from "./sign-up-form.js";
-import { ForgotPasswordForm } from "../../account/ui/forgot-password-form.js";
-import { ResetPasswordForm } from "../../account/ui/reset-password-form.js";
-import { TwoFactorForm } from "./two-factor-form.js";
-import { RecoverAccountForm } from "../../account/ui/recover-account-form.js";
+import { SignInForm } from "./sign-in-form";
+import { SignUpForm } from "./sign-up-form";
+import { ForgotPasswordForm } from "../../account/ui/forgot-password-form";
+import { ResetPasswordForm } from "../../account/ui/reset-password-form";
+import { TwoFactorForm } from "./two-factor-form";
+import { RecoverAccountForm } from "../../account/ui/recover-account-form";
 
 export interface AuthViewProps {
   pathname: string;

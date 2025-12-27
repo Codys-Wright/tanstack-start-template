@@ -2,8 +2,8 @@ import * as SqlClient from "@effect/sql/SqlClient";
 import * as SqlSchema from "@effect/sql/SqlSchema";
 import * as Effect from "effect/Effect";
 import * as Schema from "effect/Schema";
-import { PgLive } from "@core";
-import { User } from "./user.schema.js";
+import { PgLive } from "@core/database";
+import { User } from "./user.schema";
 
 /**
  * UserRepository - Database access layer for users using Effect SQL.

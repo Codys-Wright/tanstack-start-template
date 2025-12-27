@@ -2,9 +2,9 @@ import { Button, cn, DropdownMenu, Skeleton } from "@shadcn";
 import { Result, useAtom, useAtomValue } from "@effect-atom/atom-react";
 import { Link } from "@tanstack/react-router";
 import { ChevronsUpDown, LogOutIcon, SettingsIcon } from "lucide-react";
-import { sessionAtom, signOutAtom } from "../../session/session.atoms.js";
-import { UserAvatar } from "./user-avatar.js";
-import { UserView } from "./user-view.js";
+import { sessionAtom, signOutAtom } from "../../session/session.atoms";
+import { UserAvatar } from "./user-avatar";
+import { UserView } from "./user-view";
 
 export interface UserButtonProps {
   size?: "icon" | "default";

@@ -1,8 +1,8 @@
-import { defineFeatureMigrations } from "@core";
+import { defineFeatureMigrations } from "@core/database";
 
 // Import migration effects
-import migration0001 from "./migrations/0001_users_table.js";
-import migration0002 from "./migrations/0002_static_user.js";
+import migration0001 from "./migrations/0001_users_table";
+import migration0002 from "./migrations/0002_static_user";
 
 /**
  * Auth package migrations

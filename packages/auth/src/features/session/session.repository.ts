@@ -2,7 +2,7 @@ import * as SqlClient from "@effect/sql/SqlClient";
 import * as SqlSchema from "@effect/sql/SqlSchema";
 import * as Effect from "effect/Effect";
 import * as Schema from "effect/Schema";
-import { PgLive } from "@core";
+import { PgLive } from "@core/database";
 
 /**
  * SessionRepository - Database access layer for sessions using Effect SQL.

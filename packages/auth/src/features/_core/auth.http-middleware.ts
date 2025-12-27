@@ -5,9 +5,9 @@ import * as HttpServerRequest from "@effect/platform/HttpServerRequest";
 import * as Effect from "effect/Effect";
 import * as Layer from "effect/Layer";
 import * as Schema from "effect/Schema";
-import { AuthContext } from "./auth.context.js";
-import type { UserId } from "./../user";
-import { BetterAuthService } from "./better-auth.service.js";
+import { AuthContext } from "./auth.context";
+import type { UserId } from "./../user/user.schema";
+import { BetterAuthService } from "./better-auth.service";
 
 /**
  * HTTP API middleware that validates Better Auth session and provides AuthContext.

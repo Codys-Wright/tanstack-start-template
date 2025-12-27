@@ -1,8 +1,7 @@
+import { UserButton } from "@auth";
 import { Button, cn, DropdownMenu } from "@shadcn";
 import { Link, useRouterState } from "@tanstack/react-router";
 import { ChevronDownIcon } from "lucide-react";
-
-// import { playground } from "@playground";
 
 const navItems = [
   { path: "/", label: "Home" },
@@ -104,6 +103,9 @@ export function Navigation() {
               </DropdownMenu.Content>
             </DropdownMenu>
           </div>
+
+          {/* User Button */}
+          <UserButton />
         </div>
       </div>
     </nav>

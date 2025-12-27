@@ -1,9 +1,9 @@
 import { Card, Button, DropdownMenu } from "@shadcn";
 import { UsersIcon, MoreVerticalIcon, UserPlusIcon } from "lucide-react";
-import { UpdateTeamDialog } from "./update-team-dialog.js";
-import { DeleteTeamDialog } from "./delete-team-dialog.js";
-import { TeamMembersDialog } from "./team-members-dialog.js";
-import type { Team } from "../team.schema.js";
+import { UpdateTeamDialog } from "./update-team-dialog";
+import { DeleteTeamDialog } from "./delete-team-dialog";
+import { TeamMembersDialog } from "./team-members-dialog";
+import type { Team } from "../team.schema";
 
 export interface TeamCellProps {
   team: Team;

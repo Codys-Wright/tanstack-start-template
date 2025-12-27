@@ -1,7 +1,7 @@
 import { betterAuth } from "better-auth";
 import { Kysely, PostgresDialect } from "kysely";
 import pg from "pg";
-import { makeBetterAuthOptions } from "./better-auth.service.js";
+import { makeBetterAuthOptions } from "./better-auth.service";
 
 const { Pool } = pg;
 

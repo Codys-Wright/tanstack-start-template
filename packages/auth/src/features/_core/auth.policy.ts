@@ -1,6 +1,6 @@
 import * as HttpApiError from "@effect/platform/HttpApiError";
 import * as RpcMiddleware from "@effect/rpc/RpcMiddleware";
-import { AuthContext } from "./auth.context.js";
+import { AuthContext } from "./auth.context";
 
 /**
  * RPC middleware that validates authentication and provides AuthContext.

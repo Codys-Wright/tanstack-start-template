@@ -1,5 +1,5 @@
 import * as Schema from "effect/Schema";
-import { OrganizationId } from "./../organization/";
+import { OrganizationId } from "../organization/organization.schema";
 
 /**
  * Branded Team ID type for type safety

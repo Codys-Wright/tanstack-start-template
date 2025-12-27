@@ -7,8 +7,8 @@ import {
   addTeamMemberAtom,
   teamMembersAtom,
   organizationMembersAtom,
-} from "../../organization/organization.atoms.js";
-import type { Team } from "../team.schema.js";
+} from "../../organization/organization.atoms";
+import type { Team } from "../team.schema";
 
 export interface AddTeamMemberDialogProps {
   team: Team;
@@ -27,11 +27,11 @@ export function AddTeamMemberDialog({
   // Create atoms for current team data (memoized to prevent recreation)
   const currentOrgMembersAtom = useMemo(
     () => organizationMembersAtom(team.organizationId),
-    [team.organizationId]
+    [team.organizationId],
   );
   const currentTeamMembersAtom = useMemo(
     () => teamMembersAtom(team.id),
-    [team.id]
+    [team.id],
   );
 
   const orgMembersResult = useAtomValue(currentOrgMembersAtom);
@@ -51,7 +51,7 @@ export function AddTeamMemberDialog({
 
   const handleAddMember = async (member: any) => {
     try {
-      await addMember({
+      addMember({
         teamId: team.id,
         userId: member.userId,
         role: "member",
@@ -71,8 +71,8 @@ export function AddTeamMemberDialog({
   const availableMembers = organizationMembers.filter(
     (orgMember: any) =>
       !teamMembers.some(
-        (teamMember: any) => teamMember.userId === orgMember.userId
-      )
+        (teamMember: any) => teamMember.userId === orgMember.userId,
+      ),
   );
 
   return (

@@ -1,6 +1,6 @@
 import * as Schema from "effect/Schema";
-import { UserId } from "../user/user.schema.js";
-import { TeamId } from "./team.schema.js";
+import { UserId } from "../user/user.schema";
+import { TeamId } from "./team.schema";
 
 /**
  * TeamMember entity - represents a user's membership in a team

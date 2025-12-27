@@ -1,5 +1,5 @@
 import * as Schema from "effect/Schema";
-import { OrganizationId } from "./organization.schema.js";
+import { OrganizationId } from "./organization.schema";
 
 /**
  * OrganizationRole entity - for dynamic access control

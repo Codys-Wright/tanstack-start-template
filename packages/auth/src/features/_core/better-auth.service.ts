@@ -6,11 +6,12 @@ import { organization } from "better-auth/plugins/organization";
 import { passkey } from "@better-auth/passkey";
 import { twoFactor } from "better-auth/plugins/two-factor";
 import * as Effect from "effect/Effect";
+import * as Layer from "effect/Layer";
 import * as Option from "effect/Option";
 import * as Redacted from "effect/Redacted";
-import { BetterAuthConfig, getAuthSecret } from "./better-auth.config.js";
-import { BetterAuthDatabase } from "./better-auth.database.js";
-import { EmailService } from "./email.service.js";
+import { BetterAuthConfig, getAuthSecret } from "./better-auth.config";
+import { BetterAuthDatabase } from "./better-auth.database";
+import { EmailService } from "./email.service";
 
 export type BetterAuthInstance = ReturnType<typeof betterAuth>;
 
@@ -149,10 +150,12 @@ export class BetterAuthService extends Effect.Service<BetterAuthService>()(
   "BetterAuthService",
   {
     effect: makeBetterAuth,
+    // Use Layer.orDie to convert ConfigError into defects
+    // This prevents ConfigError from propagating up to consumers
     dependencies: [
-      BetterAuthDatabase.Default,
-      BetterAuthConfig.Default,
-      EmailService.Default,
+      BetterAuthDatabase.Default.pipe(Layer.orDie),
+      BetterAuthConfig.Default.pipe(Layer.orDie),
+      EmailService.Default.pipe(Layer.orDie),
     ],
   }
 ) {}

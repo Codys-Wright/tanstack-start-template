@@ -7,18 +7,18 @@
 // ============================================================================
 // Core - Database
 // ============================================================================
-export * from "./features/_core/better-auth.database.js";
+export * from "./features/_core/better-auth.database";
 
 // ============================================================================
 // Migrations
 // ============================================================================
-export { authMigrations } from "./database/migrations.js";
+export { authMigrations } from "./database/migrations";
 
 // ============================================================================
 // Repositories
 // ============================================================================
-export * from "./features/user/user.repository.js";
-export * from "./features/session/session.repository.js";
-export * from "./features/organization/organization.repository.js";
-export * from "./features/member/member.repository.js";
-export * from "./features/invitation/invitation.repository.js";
+export * from "./features/user/user.repository";
+export * from "./features/session/session.repository";
+export * from "./features/organization/organization.repository";
+export * from "./features/member/member.repository";
+export * from "./features/invitation/invitation.repository";

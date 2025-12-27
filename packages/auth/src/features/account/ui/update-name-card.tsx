@@ -5,8 +5,8 @@ import { Loader2Icon, UserIcon } from "lucide-react";
 import { useEffect } from "react";
 import * as Schema from "effect/Schema";
 
-import { updateNameAtom } from "../../session/session.atoms.js";
-import { SettingsCard } from "./settings-card.js";
+import { updateNameAtom } from "../../session/session.atoms";
+import { SettingsCard } from "./settings-card";
 
 export interface UpdateNameCardProps {
   className?: string;

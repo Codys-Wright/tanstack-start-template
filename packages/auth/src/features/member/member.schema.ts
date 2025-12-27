@@ -1,6 +1,6 @@
 import * as Schema from "effect/Schema";
-import { UserId } from "../user/user.schema.js";
-import { OrganizationId } from "../organization/organization.schema.js";
+import { UserId } from "../user/user.schema";
+import { OrganizationId } from "../organization/organization.schema";
 
 /**
  * Organization role type

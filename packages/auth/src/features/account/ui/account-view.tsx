@@ -8,13 +8,13 @@ import {
   KeyIcon,
   BuildingIcon,
 } from "lucide-react";
-import { AccountSettingsCards } from "./account-settings-cards.js";
-import { SecuritySettingsCards } from "./security-settings-cards.js";
-import { UserTeamsCard } from "../../team/ui/user-teams-card.js";
-import { ApiKeysCard } from "./api-keys-card.js";
-import { OrganizationsCard } from "../../organization/ui/organizations-card.js";
-import { UserInvitationsCard } from "../../invitation/ui/user-invitations-card.js";
-import { TeamsCard } from "../../team/ui/teams-card.js";
+import { AccountSettingsCards } from "./account-settings-cards";
+import { SecuritySettingsCards } from "./security-settings-cards";
+import { UserTeamsCard } from "../../team/ui/user-teams-card";
+import { ApiKeysCard } from "./api-keys-card";
+import { OrganizationsCard } from "../../organization/ui/organizations-card";
+import { UserInvitationsCard } from "../../invitation/ui/user-invitations-card";
+import { TeamsCard } from "../../team/ui/teams-card";
 
 export interface AccountViewProps {
   className?: string;

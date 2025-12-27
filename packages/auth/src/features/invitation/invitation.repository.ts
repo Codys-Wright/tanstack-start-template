@@ -2,8 +2,8 @@ import * as SqlClient from "@effect/sql/SqlClient";
 import * as SqlSchema from "@effect/sql/SqlSchema";
 import * as Effect from "effect/Effect";
 import * as Schema from "effect/Schema";
-import { PgLive } from "@core";
-import { InvitationStatus } from "./invitation.schema.js";
+import { PgLive } from "@core/database";
+import { InvitationStatus } from "./invitation.schema";
 
 /**
  * InvitationRepository - Database access layer for invitations using Effect SQL.

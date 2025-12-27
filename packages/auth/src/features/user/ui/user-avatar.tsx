@@ -1,7 +1,7 @@
 import { Avatar, cn, Skeleton } from "@shadcn";
 import { UserRoundIcon } from "lucide-react";
 import type { ComponentProps } from "react";
-import type { User } from "../user.schema.js";
+import type { User } from "../user.schema";
 
 export interface UserAvatarClassNames {
   base?: string;

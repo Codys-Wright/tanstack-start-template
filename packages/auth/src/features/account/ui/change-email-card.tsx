@@ -5,8 +5,8 @@ import { Loader2Icon, MailIcon } from "lucide-react";
 import { useEffect } from "react";
 import * as Schema from "effect/Schema";
 
-import { changeEmailAtom } from "../../session/session.atoms.js";
-import { SettingsCard } from "./settings-card.js";
+import { changeEmailAtom } from "../../session/session.atoms";
+import { SettingsCard } from "./settings-card";
 
 export interface ChangeEmailCardProps {
   className?: string;

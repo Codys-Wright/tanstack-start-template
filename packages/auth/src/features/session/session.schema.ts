@@ -1,5 +1,5 @@
 import * as Schema from "effect/Schema";
-import { UserId } from "../user/user.schema.js";
+import { UserId } from "../user/user.schema";
 
 /**
  * Session entity matching Better Auth OpenAPI spec

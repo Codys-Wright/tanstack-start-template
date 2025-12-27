@@ -1,12 +1,9 @@
 /**
  * @core - Core utilities and infrastructure
  *
- * Shared utilities and infrastructure for all packages:
- * - Database connection and migrations
- * - Client utilities (atom-utils, rpc-config)
- * - Testing utilities
- * - Common configurations
+ * Client-safe exports only.
+ * For database code, import from "@core/database"
+ * For server code, import from "@core/server"
  */
 
 export * from "./client/index.js";
-export * from "./database/index.js";

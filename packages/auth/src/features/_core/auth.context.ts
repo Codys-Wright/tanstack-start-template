@@ -1,6 +1,6 @@
 import * as Context from "effect/Context";
 import * as Layer from "effect/Layer";
-import type { UserId } from "./../user";
+import type { UserId } from "./../user/user.schema";
 
 /**
  * Auth context tag - represents the currently authenticated user.

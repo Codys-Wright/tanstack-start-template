@@ -1,5 +1,5 @@
 import * as Schema from "effect/Schema";
-import { UserId } from "../user/user.schema.js";
+import { UserId } from "../user/user.schema";
 
 export const Passkey = Schema.Struct({
   id: Schema.String,

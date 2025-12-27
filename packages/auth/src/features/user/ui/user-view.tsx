@@ -1,6 +1,6 @@
 import { cn, Skeleton } from "@shadcn";
-import { UserAvatar, type UserAvatarClassNames } from "./user-avatar.js";
-import type { User } from "../user.schema.js";
+import { UserAvatar, type UserAvatarClassNames } from "./user-avatar";
+import type { User } from "../user.schema";
 
 export interface UserViewClassNames {
   base?: string;

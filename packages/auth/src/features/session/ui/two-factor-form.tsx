@@ -6,7 +6,7 @@ import { Loader2Icon } from "lucide-react";
 import { useEffect } from "react";
 import * as Schema from "effect/Schema";
 
-import { verifyTwoFactorAtom } from "../session.atoms.js";
+import { verifyTwoFactorAtom } from "../session.atoms";
 
 // Define the form schema using Effect Schema
 const TwoFactorSchema = Schema.Struct({
