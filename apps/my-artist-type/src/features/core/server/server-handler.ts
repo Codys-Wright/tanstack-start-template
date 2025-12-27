@@ -11,8 +11,8 @@ import * as Effect from "effect/Effect";
 import * as Exit from "effect/Exit";
 import * as Logger from "effect/Logger";
 import * as Context from "effect/Context";
-import { DomainRpc, DomainApi } from "@/features/core/domain";
-import { TodosRpcLive, TodosApiLive } from "@/features/todo/server";
+import { DomainRpc, DomainApi } from "../domain";
+import { TodosRpcLive, TodosApiLive } from "../../todo/server";
 import {
   HttpAuthenticationMiddlewareLive,
   RpcAuthenticationMiddlewareLive,

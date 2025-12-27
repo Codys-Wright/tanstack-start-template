@@ -1,6 +1,6 @@
 import * as HttpApi from "@effect/platform/HttpApi";
 import * as OpenApi from "@effect/platform/OpenApi";
-import { TodosApiGroup } from "@/features/todo/domain";
+import { TodosApiGroup } from "../../todo/domain";
 
 export class DomainApi extends HttpApi.make("api")
   .add(TodosApiGroup)

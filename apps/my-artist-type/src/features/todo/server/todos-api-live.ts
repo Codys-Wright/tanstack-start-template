@@ -1,5 +1,5 @@
-import { DomainApi } from "@/features/core/domain";
-import { AuthContext } from "@auth";
+import { DomainApi } from "../../core/domain";
+import { AuthContext } from "../../../packages/auth/src";
 import * as HttpApiBuilder from "@effect/platform/HttpApiBuilder";
 import * as HttpApiError from "@effect/platform/HttpApiError";
 import * as Layer from "effect/Layer";

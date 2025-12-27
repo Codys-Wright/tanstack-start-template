@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { effectHandler } from "@/features/core/server";
+import { effectHandler } from "../../features/core/server";
 
 export const Route = createFileRoute("/api/$")({
   server: {

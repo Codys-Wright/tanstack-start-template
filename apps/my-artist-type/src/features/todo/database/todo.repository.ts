@@ -2,8 +2,8 @@ import * as SqlClient from "@effect/sql/SqlClient";
 import * as SqlSchema from "@effect/sql/SqlSchema";
 import * as Effect from "effect/Effect";
 import * as Schema from "effect/Schema";
-import { PgLive } from "@/features/core/database";
-import type { UserId } from "@auth";
+import { PgLive } from "../../core/database";
+import type { UserId } from "../../../packages/auth/src";
 import {
   CreateTodoInput,
   Todo,

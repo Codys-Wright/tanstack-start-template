@@ -1,6 +1,6 @@
-import { PgTest } from "@/features/core/database";
+import { PgTest } from "../../core/database";
 import { describe, expect, it } from "@effect/vitest";
-import type { UserId } from "@auth";
+import type { UserId } from "../../../packages/auth/src";
 import * as Effect from "effect/Effect";
 import * as Layer from "effect/Layer";
 import { randomUUID } from "node:crypto";

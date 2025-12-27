@@ -3,7 +3,7 @@ import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 import { TanStackDevtools } from "@tanstack/react-devtools";
 import { RegistryProvider } from "@effect-atom/atom-react";
 import { ThemeProvider, ThemeSystemProviderWithContext, getThemeScriptContent } from "@theme";
-import { Navigation } from "@/components/navigation";
+import { Navigation } from "../../components/navigation";
 import appCss from "../styles.css?url";
 
 export const Route = createRootRoute({

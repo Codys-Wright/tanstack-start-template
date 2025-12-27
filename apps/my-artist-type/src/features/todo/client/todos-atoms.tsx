@@ -1,11 +1,11 @@
-import { ApiClient } from "@/features/core/client";
+import { ApiClient } from "../../core/client";
 import {
   CreateTodoInput,
   Todo,
   TodoId,
   UpdateTodoInput,
 } from "../domain/todo-schema.js";
-import { serializable } from "@/features/core/client";
+import { serializable } from "../../core/client";
 import { Atom, Result } from "@effect-atom/atom-react";
 import * as HttpApiError from "@effect/platform/HttpApiError";
 import * as RpcClientError from "@effect/rpc/RpcClientError";

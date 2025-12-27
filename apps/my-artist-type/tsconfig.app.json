@@ -12,10 +12,7 @@
       "vite/client"
     ],
     "module": "esnext",
-    "moduleResolution": "bundler",
-    "paths": {
-      "@/*": ["./src/*"]
-    }
+    "moduleResolution": "bundler"
   },
   "exclude": [
     "out-tsc",

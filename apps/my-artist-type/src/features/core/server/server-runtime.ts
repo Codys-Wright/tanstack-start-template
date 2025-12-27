@@ -1,8 +1,8 @@
 import * as ManagedRuntime from "effect/ManagedRuntime";
 import * as Effect from "effect/Effect";
 import * as Layer from "effect/Layer";
-import { TodosService } from "@/features/todo/server/todos-service";
-import { BetterAuthService } from "@auth";
+import { TodosService } from "../../todo/server/todos-service";
+import { BetterAuthService } from "../../../packages/auth/src";
 
 const memoMap = Effect.runSync(Layer.makeMemoMap);
 
