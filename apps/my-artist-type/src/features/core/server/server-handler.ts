@@ -43,13 +43,13 @@ const RpcLoggerLive = Layer.succeed(
               {
                 "rpc.method": opts.rpc._tag,
                 "rpc.clientId": opts.clientId,
-              }
+              },
             ),
-            exit
+            exit,
           ),
-      })
-    )
-  )
+      }),
+    ),
+  ),
 );
 
 const RpcRouter = RpcServer.layerHttpRouter({
@@ -62,7 +62,7 @@ const RpcRouter = RpcServer.layerHttpRouter({
   Layer.provide(TodosRpcLive),
   Layer.provide(RpcLoggerLive),
   Layer.provide(RpcAuthenticationMiddlewareLive),
-  Layer.provide(RpcSerialization.layerNdjson)
+  Layer.provide(RpcSerialization.layerNdjson),
 );
 
 // HttpApi router - FIXED
@@ -71,7 +71,7 @@ const HttpApiRouter = HttpLayerRouter.addHttpApi(DomainApi, {
 }).pipe(
   Layer.provide(TodosApiLive),
   Layer.provide(HttpAuthenticationMiddlewareLive), // Provide real auth middleware
-  Layer.provide(HttpServer.layerContext)
+  Layer.provide(HttpServer.layerContext),
 );
 
 // Scalar UI (modern OpenAPI docs) at /api/docs
@@ -93,7 +93,7 @@ const SwaggerDocs = HttpApiSwagger.layerHttpLayerRouter({
 });
 
 const HealthRoute = HttpLayerRouter.use((router) =>
-  router.add("GET", "/api/health", HttpServerResponse.text("OK"))
+  router.add("GET", "/api/health", HttpServerResponse.text("OK")),
 );
 
 // Merge all routes - includes both Scalar and Swagger UIs
@@ -103,10 +103,10 @@ const AllRoutes = Layer.mergeAll(
   ScalarDocs, // Modern Scalar UI at /api/docs
   SwaggerDocs, // Classic Swagger UI at /api/swagger
   HealthRoute,
-  BetterAuthRouter
+  BetterAuthRouter,
 ).pipe(
   Layer.provideMerge(BetterAuthService.Default),
-  Layer.provide(Logger.pretty)
+  Layer.provide(Logger.pretty),
   // Apply CORS globally if needed
   // Layer.provide(HttpLayerRouter.cors({
   //   allowedOrigins: ["http://localhost:3000"],
@@ -129,7 +129,7 @@ await Effect.runPromise(
       yield* Effect.log("[AutoMigration] No new migrations to apply.");
     } else {
       yield* Effect.log(
-        `[AutoMigration] Applied ${migrations.length} migration(s):`
+        `[AutoMigration] Applied ${migrations.length} migration(s):`,
       );
       for (const [id, name] of migrations) {
         yield* Effect.log(`  - ${id.toString().padStart(4, "0")}_${name}`);
@@ -140,10 +140,10 @@ await Effect.runPromise(
   }).pipe(
     Effect.provide(Layer.merge(PgLive, NodeContext.layer)),
     Effect.tapError((error) =>
-      Effect.logError(`[AutoMigration] Migration failed: ${error}`)
+      Effect.logError(`[AutoMigration] Migration failed: ${error}`),
     ),
-    Effect.orDie
-  )
+    Effect.orDie,
+  ),
 );
 
 const memoMap = Effect.runSync(Layer.makeMemoMap);

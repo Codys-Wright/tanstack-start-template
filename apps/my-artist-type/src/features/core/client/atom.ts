@@ -34,15 +34,16 @@ const prettyLoggerWithPrefix: Layer.Layer<never> = Logger.replace(
         const prefixedMessages =
           messageArray.length > 0
             ? [`[${prefix}] ${messageArray[0]}`, ...messageArray.slice(1)]
-            : [`[${prefix}]`];
+            : [`[${prefix}] `];
 
         return {
           ...options,
           message: prefixedMessages,
           annotations: newAnnotations,
         };
+      } else {
+        return options;
       }
-      return options;
     })
   )
 );
