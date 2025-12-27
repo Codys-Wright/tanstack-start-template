@@ -78,7 +78,7 @@
     "kysely": "*",
     "lucide-react": "*",
     "next-themes": "*",
-    "nitro": "*",
+    "nitro": "3.0.1-alpha.1",
     "react": "*",
     "react-day-picker": "*",
     "react-dom": "*",
@@ -115,5 +115,10 @@
     "vite": "*",
     "vitest": "*",
     "web-vitals": "*"
+  },
+  "patchedDependencies": {
+    "srvx@0.9.7@0.9.7": "patches/srvx@0.9.7.patch",
+    "nitro@3.0.1-alpha.1@3.0.1-alpha.1": "patches/nitro@3.0.1-alpha.1.patch"
   }
+
 }
