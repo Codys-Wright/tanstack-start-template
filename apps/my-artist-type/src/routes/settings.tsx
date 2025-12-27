@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { ThemeDropdown } from "@shadcn";
-import { useThemeSystem } from "@shadcn";
+import { ThemeDropdown } from "@theme";
+import { useThemeSystem } from "@theme";
 
 export const Route = createFileRoute("/settings")({
   component: SettingsPage,
@@ -21,18 +21,18 @@ function SettingsPage() {
             <h2 className="text-xl font-semibold mb-4">Theme Settings</h2>
             <div className="space-y-4">
               <div>
-                <label className="text-sm font-medium text-muted-foreground">
-                  Current Theme
-                </label>
-                <p className="text-lg font-semibold mt-1 capitalize">
+                <p className="text-lg font-semibold">
+                  <span className="text-sm font-medium text-muted-foreground mr-2">
+                    Current Theme
+                  </span>
                   {themeName}
                 </p>
               </div>
               <div>
-                <label className="text-sm font-medium text-muted-foreground">
-                  Current Radius
-                </label>
-                <p className="text-lg font-semibold mt-1 capitalize">
+                <p className="text-lg font-semibold">
+                  <span className="text-sm font-medium text-muted-foreground mr-2">
+                    Current Radius
+                  </span>
                   {radius}
                 </p>
               </div>

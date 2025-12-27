@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { AccountView } from "./../../features/auth/ui/components/account-view.js";
+import { AccountView } from "@auth";
 
 export const Route = createFileRoute("/account/$accountView")({
   component: RouteComponent,

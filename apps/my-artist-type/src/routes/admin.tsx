@@ -11,8 +11,8 @@ import {
   MailCheckIcon,
   UsersIcon,
 } from "lucide-react";
-import { listUsersAtom } from "../features/auth/client/atoms/admin.atoms.js";
-import { sessionAtom } from "../features/auth/client/atoms/session.atoms.js";
+import { listUsersAtom } from "@auth";
+import { sessionAtom } from "@auth";
 
 export const Route = createFileRoute("/admin")({
   component: AdminPage,
@@ -109,7 +109,7 @@ function AdminPage() {
                             <div className="h-3 bg-muted rounded animate-pulse w-1/2" />
                           </div>
                         </div>
-                      )
+                      ),
                     )}
                   </div>
                 ) : users.length === 0 ? (
@@ -137,8 +137,8 @@ function AdminPage() {
                         const roles = Array.isArray(user.role)
                           ? user.role
                           : user.role
-                          ? [user.role]
-                          : [];
+                            ? [user.role]
+                            : [];
                         const isAdmin = roles.includes("admin");
                         const isBanned = user.banned;
 

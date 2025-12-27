@@ -1,5 +1,5 @@
 import { CreateTodoForm, TodoList } from "../../features/todo/client";
-import { ThemeDropdown } from "@shadcn";
+import { ThemeDropdown } from "@theme";
 
 export function App() {
   return (

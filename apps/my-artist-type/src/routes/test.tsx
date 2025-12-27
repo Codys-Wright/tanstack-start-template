@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { ThemeDropdown } from "@shadcn";
+import { ThemeDropdown } from "@theme";
 import { Button } from "@shadcn";
 
 export const Route = createFileRoute("/test")({
