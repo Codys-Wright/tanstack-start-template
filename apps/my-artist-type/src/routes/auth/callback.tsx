@@ -2,7 +2,7 @@ import { Card, Skeleton } from "@shadcn";
 import { Result, useAtomValue } from "@effect-atom/atom-react";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect } from "react";
-import { sessionAtom } from "@/features/auth";
+import { sessionAtom } from "@auth";
 
 export const Route = createFileRoute("/auth/callback")({
   component: OAuthCallback,

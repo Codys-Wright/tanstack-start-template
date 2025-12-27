@@ -1,7 +1,7 @@
 import { Button, cn, DropdownMenu } from "@shadcn";
 import { Link, useRouterState } from "@tanstack/react-router";
 import { ChevronDownIcon } from "lucide-react";
-import { UserButton } from "@/features/auth";
+import { UserButton } from "@auth";
 
 const navItems = [
   { path: "/", label: "Home" },

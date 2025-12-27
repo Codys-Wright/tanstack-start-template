@@ -18,7 +18,7 @@ import {
   RpcAuthenticationMiddlewareLive,
   BetterAuthService,
   BetterAuthRouter,
-} from "@/features/auth/server";
+} from "@auth";
 import { serverRuntime } from "./server-runtime.js";
 import * as NodeContext from "@effect/platform-node/NodeContext";
 import * as PgMigrator from "@effect/sql-pg/PgMigrator";

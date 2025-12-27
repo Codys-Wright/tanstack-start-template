@@ -1,6 +1,6 @@
 import * as Effect from "effect/Effect";
 import * as Option from "effect/Option";
-import type { UserId } from "@/features/auth/domain/auth.user-id";
+import type { UserId } from "@auth";
 import {
   CreateTodoInput,
   TodoId,

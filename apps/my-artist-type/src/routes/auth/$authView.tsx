@@ -1,6 +1,6 @@
 import { cn } from "@shadcn";
 import { createFileRoute } from "@tanstack/react-router";
-import { AuthView } from "@/features/auth/ui/auth-view.js";
+import { AuthView } from "@auth";
 
 export const Route = createFileRoute("/auth/$authView")({
   component: RouteComponent,

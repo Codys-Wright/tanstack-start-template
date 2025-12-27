@@ -1,6 +1,6 @@
 import * as Layer from "effect/Layer";
 import * as Effect from "effect/Effect";
-import { AuthContext } from "@/features/auth";
+import { AuthContext } from "@auth";
 import { TodosRpc } from "../domain/todo-rpc";
 import { TodosService } from "./todos-service";
 

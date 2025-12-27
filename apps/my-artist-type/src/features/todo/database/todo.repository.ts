@@ -3,7 +3,7 @@ import * as SqlSchema from "@effect/sql/SqlSchema";
 import * as Effect from "effect/Effect";
 import * as Schema from "effect/Schema";
 import { PgLive } from "@/features/core/database";
-import type { UserId } from "@/features/auth/domain/auth.user-id";
+import type { UserId } from "@auth";
 import {
   CreateTodoInput,
   Todo,

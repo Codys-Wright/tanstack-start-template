@@ -7,10 +7,10 @@ import { getRequestHeaders } from "@tanstack/react-start/server";
 import * as Effect from "effect/Effect";
 import { serverRuntime } from "@/features/core/server";
 import { TodosService } from "@/features/todo/server/todos-service";
-import { BetterAuthService } from "@/features/auth/server";
+import { BetterAuthService } from "@auth";
 import { App } from "./-index/app";
 import { todosAtom } from "@/features/todo/client";
-import type { UserId } from "@/features/auth/domain/auth.user-id";
+import type { UserId } from "@auth";
 
 const getTodos = createServerFn().handler(async () => {
   const todos = await serverRuntime.runPromiseExit(
