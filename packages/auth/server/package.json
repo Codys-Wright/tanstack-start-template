@@ -14,8 +14,6 @@
     }
   },
   "dependencies": {
-    "@auth/database": "*",
-    "@auth/domain": "*",
     "@better-auth/passkey": "*",
     "@core/database": "*",
     "@effect/platform": "*",
@@ -28,6 +26,8 @@
     "resend": "*"
   },
   "devDependencies": {
+    "@auth/database": "workspace:*",
+    "@auth/domain": "workspace:*",
     "@effect/vitest": "*",
     "@types/bcryptjs": "*",
     "typescript": "*",
