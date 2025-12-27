@@ -101,6 +101,7 @@
     "@core": "*",
     "@shadcn": "*",
     "@theme": "*",
+    "@todo": "*",
     "@effect/vitest": "*",
     "@tanstack/devtools-vite": "*",
     "@testcontainers/postgresql": "*",

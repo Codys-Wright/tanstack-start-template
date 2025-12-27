@@ -1,9 +1,9 @@
-import type { Todo } from "../domain/todo-schema.js";
+import { Alert, Button, Checkbox, Input } from "@shadcn";
 import { useAtomRefresh, useAtomSet } from "@effect-atom/atom-react";
 import * as Option from "effect/Option";
-import { useState, memo, useCallback } from "react";
-import { todosAtom, updateTodoAtom, deleteTodoAtom } from "./todos-atoms.js";
-import { Checkbox, Input, Button, Alert, Badge } from "@shadcn";
+import { memo, useCallback, useState } from "react";
+import { deleteTodoAtom, todosAtom, updateTodoAtom } from "../index.js";
+import type { Todo } from "../../domain/index.js";
 
 export const TodoItem = memo(
   function TodoItem({ todo }: { readonly todo: Todo }) {
@@ -19,7 +19,7 @@ export const TodoItem = memo(
       setIsLoading(true);
       setError(null);
       try {
-        await update({
+        update({
           id: todo.id,
           input: {
             title: Option.none(),
@@ -37,7 +37,7 @@ export const TodoItem = memo(
       setIsLoading(true);
       setError(null);
       try {
-        await deleteTodo(todo.id);
+        deleteTodo(todo.id);
       } catch (e) {
         setError(e instanceof Error ? e : new Error("Delete failed"));
       } finally {
@@ -50,7 +50,7 @@ export const TodoItem = memo(
       setIsLoading(true);
       setError(null);
       try {
-        await update({
+        update({
           id: todo.id,
           input: {
             title: Option.some(editTitle.trim()),
@@ -86,15 +86,16 @@ export const TodoItem = memo(
               <Input
                 type="text"
                 value={editTitle}
-                onChange={(e) => setEditTitle(e.target.value)}
-                onKeyDown={(e) => {
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setEditTitle(e.target.value)
+                }
+                onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
                   if (e.key === "Enter") handleSaveEdit();
                   if (e.key === "Escape") {
                     setIsEditing(false);
                     setEditTitle(todo.title);
                   }
                 }}
-                
                 className="flex-1"
               />
               <Button onClick={handleSaveEdit} disabled={isLoading} size="sm">
@@ -125,9 +126,6 @@ export const TodoItem = memo(
                 >
                   {todo.title}
                 </button>
-                <Badge variant="outline" className="font-mono text-xs w-fit">
-                  Owner: {todo.userId.substring(0, 8)}...
-                </Badge>
               </div>
               <Button
                 onClick={() => setIsEditing(true)}
@@ -171,8 +169,7 @@ export const TodoItem = memo(
     return (
       prevProps.todo.id === nextProps.todo.id &&
       prevProps.todo.title === nextProps.todo.title &&
-      prevProps.todo.completed === nextProps.todo.completed &&
-      prevProps.todo.userId === nextProps.todo.userId
+      prevProps.todo.completed === nextProps.todo.completed
     );
-  }
+  },
 );

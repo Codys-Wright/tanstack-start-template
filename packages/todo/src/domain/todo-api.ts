@@ -1,5 +1,5 @@
-import * as HttpApiGroup from "@effect/platform/HttpApiGroup";
 import * as HttpApiEndpoint from "@effect/platform/HttpApiEndpoint";
+import * as HttpApiGroup from "@effect/platform/HttpApiGroup";
 import * as Schema from "effect/Schema";
 import {
   CreateTodoInput,
@@ -9,6 +9,10 @@ import {
   UpdateTodoInput,
 } from "./todo-schema.js";
 
+/**
+ * TodosApiGroup - HTTP REST API for todos.
+ * This provides REST endpoints that map to TodosService operations.
+ */
 export class TodosApiGroup extends HttpApiGroup.make("todos")
   .add(HttpApiEndpoint.get("list", "/todos").addSuccess(Schema.Array(Todo)))
   .add(

@@ -14,8 +14,11 @@
     }
   },
   "dependencies": {
+    "@effect-atom/atom": "*",
+    "@effect-atom/atom-react": "*",
     "@effect/platform": "*",
     "@effect/platform-bun": "*",
+    "@effect/rpc": "*",
     "@effect/sql": "*",
     "@effect/sql-pg": "*",
     "effect": "*",

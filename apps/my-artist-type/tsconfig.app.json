@@ -15,7 +15,11 @@
     "module": "esnext",
     "moduleResolution": "bundler",
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@todo": ["../../packages/todo/src/index.ts"],
+      "@todo/*": ["../../packages/todo/src/*"],
+      "@core": ["../../packages/core/src/index.ts"],
+      "@core/*": ["../../packages/core/src/*"]
     }
   },
   "exclude": [
@@ -43,6 +47,9 @@
     },
     {
       "path": "../../packages/ui/shadcn/tsconfig.lib.json"
+    },
+    {
+      "path": "../../packages/todo/tsconfig.lib.json"
     }
   ]
 }

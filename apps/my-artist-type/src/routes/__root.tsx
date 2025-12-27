@@ -1,11 +1,11 @@
-import { HeadContent, Scripts, createRootRoute } from "@tanstack/react-router";
-import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
-import { TanStackDevtools } from "@tanstack/react-devtools";
 import { RegistryProvider } from "@effect-atom/atom-react";
+import { HeadContent, Scripts, createRootRoute } from "@tanstack/react-router";
+import { TanStackDevtools } from "@tanstack/react-devtools";
+import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 import {
+  getThemeScriptContent,
   ThemeProvider,
   ThemeSystemProviderWithContext,
-  getThemeScriptContent,
 } from "@theme";
 import { Navigation } from "../components/navigation";
 import appCss from "../styles.css?url";

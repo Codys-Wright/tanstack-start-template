@@ -221,6 +221,7 @@
         "@testing-library/dom": "*",
         "@testing-library/react": "*",
         "@theme": "*",
+        "@todo": "*",
         "@types/bcryptjs": "*",
         "@types/node": "*",
         "@types/pg": "*",
@@ -348,8 +349,11 @@
       "name": "@core",
       "version": "0.0.1",
       "dependencies": {
+        "@effect-atom/atom": "*",
+        "@effect-atom/atom-react": "*",
         "@effect/platform": "*",
         "@effect/platform-bun": "*",
+        "@effect/rpc": "*",
         "@effect/sql": "*",
         "@effect/sql-pg": "*",
         "effect": "*",
@@ -367,6 +371,20 @@
     "packages/playground": {
       "name": "@playground",
       "version": "0.0.1",
+    },
+    "packages/todo": {
+      "name": "@todo",
+      "version": "0.0.1",
+      "dependencies": {
+        "@core": "*",
+        "@effect-atom/atom": "*",
+        "@effect-atom/atom-react": "*",
+        "@effect/platform": "*",
+        "@effect/rpc": "*",
+        "@shadcn": "*",
+        "effect": "*",
+        "react": "*",
+      },
     },
     "packages/ui/shadcn": {
       "name": "@shadcn",
@@ -1676,6 +1694,8 @@
     "@testing-library/react": ["@testing-library/react@16.3.1", "", { "dependencies": { "@babel/runtime": "^7.12.5" }, "peerDependencies": { "@testing-library/dom": "^10.0.0", "@types/react": "^18.0.0 || ^19.0.0", "@types/react-dom": "^18.0.0 || ^19.0.0", "react": "^18.0.0 || ^19.0.0", "react-dom": "^18.0.0 || ^19.0.0" }, "optionalPeers": ["@types/react", "@types/react-dom"] }, "sha512-gr4KtAWqIOQoucWYD/f6ki+j5chXfcPc74Col/6poTyqTmn7zRmodWahWRCp8tYd+GMqBonw6hstNzqjbs6gjw=="],
 
     "@theme": ["@theme@workspace:packages/ui/theme"],
+
+    "@todo": ["@todo@workspace:packages/todo"],
 
     "@trysound/sax": ["@trysound/sax@0.2.0", "", {}, "sha512-L7z9BgrNEcYyUYtF+HaEfiS5ebkh9jXqbszz7pC0hRBPaatV0XjSD3+eHrpqFemQfgwiFF0QPIarnIihIDn7OA=="],
 

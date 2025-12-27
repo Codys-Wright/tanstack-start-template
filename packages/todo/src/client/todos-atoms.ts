@@ -1,65 +1,56 @@
-import { ApiClient } from "../../core/client";
-import {
-  CreateTodoInput,
-  Todo,
-  TodoId,
-  UpdateTodoInput,
-} from "../domain/todo-schema.js";
-import { serializable } from "../../core/client";
+import { serializable } from "@core/client/atom-utils";
 import { Atom, Result } from "@effect-atom/atom-react";
-import * as HttpApiError from "@effect/platform/HttpApiError";
 import * as RpcClientError from "@effect/rpc/RpcClientError";
 import * as Arr from "effect/Array";
 import * as Data from "effect/Data";
 import * as Effect from "effect/Effect";
 import * as Option from "effect/Option";
 import * as Schema from "effect/Schema";
+import {
+  CreateTodoInput,
+  Todo,
+  TodoId,
+  UpdateTodoInput,
+} from "../domain/index.js";
+import { TodosClient } from "./todos-client.js";
 
 const TodosSchema = Schema.Array(Todo);
 
-class Api extends Effect.Service<Api>()("@features/todo/Api", {
-  dependencies: [ApiClient.Default],
-  effect: Effect.gen(function* () {
-    const { rpc } = yield* ApiClient;
-
-    return {
-      list: () => rpc.todos_list(),
-      create: (input: CreateTodoInput) => rpc.todos_create({ input }),
-      update: (id: TodoId, input: UpdateTodoInput) =>
-        rpc.todos_update({ id, input }),
-      remove: (id: TodoId) => rpc.todos_remove({ id }),
-    } as const;
-  }),
-}) {}
-
-export const runtime = Atom.runtime(Api.Default);
+// ============================================================================
+// Query Atoms
+// ============================================================================
 
 type TodosCacheUpdate = Data.TaggedEnum<{
   Upsert: { readonly todo: Todo };
   Delete: { readonly id: TodoId };
 }>;
 
+/**
+ * Main todos atom with SSR support and optimistic updates.
+ *
+ * Uses runtime.atom() pattern from reference implementation for full control
+ * over the Effect pipeline and proper error type inference.
+ */
 export const todosAtom = (() => {
-  const remoteAtom = runtime
+  // Remote atom that fetches from the RPC
+  const remoteAtom = TodosClient.runtime
     .atom(
       Effect.gen(function* () {
-        const api = yield* Api;
-        return yield* api.list();
+        const client = yield* TodosClient;
+        return yield* client("todos_list", undefined);
       })
     )
     .pipe(
       serializable({
-        key: "@features/todo/todos",
+        key: "@todo/todos",
         schema: Result.Schema({
           success: TodosSchema,
-          error: Schema.Union(
-            HttpApiError.Unauthorized,
-            RpcClientError.RpcClientError
-          ),
+          error: RpcClientError.RpcClientError,
         }),
       })
     );
 
+  // Writable atom with local cache updates
   return Object.assign(
     Atom.writable(
       (get) => get(remoteAtom),
@@ -96,31 +87,44 @@ export const todosAtom = (() => {
   );
 })();
 
-export const createTodoAtom = runtime.fn<CreateTodoInput>()(
+// ============================================================================
+// Mutation Atoms with Optimistic Updates
+// ============================================================================
+
+/**
+ * Create todo with optimistic cache update.
+ */
+export const createTodoAtom = TodosClient.runtime.fn<CreateTodoInput>()(
   Effect.fnUntraced(function* (input, get) {
-    const api = yield* Api;
-    const result = yield* api.create(input);
+    const client = yield* TodosClient;
+    const result = yield* client("todos_create", { input });
     get.set(todosAtom, { _tag: "Upsert", todo: result });
     return result;
   })
 );
 
-export const updateTodoAtom = runtime.fn<{
+/**
+ * Update todo with optimistic cache update.
+ */
+export const updateTodoAtom = TodosClient.runtime.fn<{
   readonly id: TodoId;
   readonly input: UpdateTodoInput;
 }>()(
   Effect.fnUntraced(function* ({ id, input }, get) {
-    const api = yield* Api;
-    const result = yield* api.update(id, input);
+    const client = yield* TodosClient;
+    const result = yield* client("todos_update", { id, input });
     get.set(todosAtom, { _tag: "Upsert", todo: result });
     return result;
   })
 );
 
-export const deleteTodoAtom = runtime.fn<TodoId>()(
+/**
+ * Delete todo with optimistic cache update.
+ */
+export const deleteTodoAtom = TodosClient.runtime.fn<TodoId>()(
   Effect.fnUntraced(function* (id, get) {
-    const api = yield* Api;
-    yield* api.remove(id);
+    const client = yield* TodosClient;
+    yield* client("todos_remove", { id });
     get.set(todosAtom, { _tag: "Delete", id });
   })
 );

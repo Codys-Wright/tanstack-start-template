@@ -1,7 +1,7 @@
+import { Alert, Button, Input } from "@shadcn";
 import { Result, useAtom } from "@effect-atom/atom-react";
 import { useState } from "react";
-import { createTodoAtom } from "./todos-atoms.js";
-import { Input, Button, Alert } from "@shadcn";
+import { createTodoAtom } from "../index.js";
 
 export function CreateTodoForm() {
   const [title, setTitle] = useState("");

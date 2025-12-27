@@ -36,10 +36,11 @@
           "watchDepsName": "watch-deps"
         }
       },
-      "exclude": ["packages/playground/*"]
+      "exclude": ["packages/playground/*", "packages/todo/*"]
     },
     {
       "plugin": "@nx/vite/plugin",
+      "exclude": ["reference/**"],
       "options": {
         "buildTargetName": "build",
         "testTargetName": "test",
@@ -54,7 +55,7 @@
     },
     {
       "plugin": "@nx/js/typescript",
-      "include": ["packages/playground/*"],
+      "include": ["packages/playground/*", "packages/todo/*"],
       "options": {
         "typecheck": {
           "targetName": "typecheck"

@@ -1,4 +1,4 @@
-import { CreateTodoForm, TodoList } from "../../features/todo/client";
+import { CreateTodoForm, TodoList } from "@todo";
 import { ThemeDropdown } from "@theme";
 
 export function App() {

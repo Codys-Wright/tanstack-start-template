@@ -1,6 +1,5 @@
 import * as HttpApiSchema from "@effect/platform/HttpApiSchema";
 import * as Schema from "effect/Schema";
-// import { UserId } from "@auth";
 
 export const TodoId = Schema.String.pipe(Schema.brand("TodoId"));
 export type TodoId = typeof TodoId.Type;
@@ -9,9 +8,7 @@ export const Todo = Schema.Struct({
   id: TodoId,
   title: Schema.String,
   completed: Schema.Boolean,
-  userId: Schema.String, // Changed from ownerId to match DB column (user_id)
   createdAt: Schema.DateTimeUtc,
-  updatedAt: Schema.DateTimeUtc, // Added to match DB
 });
 export type Todo = typeof Todo.Type;
 

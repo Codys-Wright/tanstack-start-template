@@ -1,6 +1,5 @@
-import NxWelcome from "./nx-welcome";
-import { playground } from "@playground";
 import { Card } from "@shadcn";
+import { playground } from "@playground";
 
 export function App() {
   return (

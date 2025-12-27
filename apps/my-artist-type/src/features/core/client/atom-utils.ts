@@ -1,4 +1,5 @@
 import { Atom } from "@effect-atom/atom-react";
+import type * as Hydration from "@effect-atom/atom/Hydration";
 import type * as Schema from "effect/Schema";
 
 export interface TypedSerializable<A, I> {
@@ -23,15 +24,17 @@ export const serializable: {
   ): R & TypedSerializable<Atom.Type<R>, I>;
 } = Atom.serializable as any;
 
+/**
+ * Dehydrates a single atom value for SSR hydration.
+ * Creates a proper DehydratedAtom with the brand property required by HydrationBoundary.
+ */
 export const dehydrate = <A, I>(
   atom: Atom.Atom<A> & TypedSerializable<A, I>,
   value: A
-): {
-  readonly key: string;
-  readonly value: {};
-  readonly dehydratedAt: number;
-} => ({
-  key: atom[Atom.SerializableTypeId].key,
-  value: atom[Atom.SerializableTypeId].encode(value) as {},
-  dehydratedAt: Date.now(),
-});
+): Hydration.DehydratedAtom =>
+  ({
+    "~@effect-atom/atom/DehydratedAtom": true,
+    key: atom[Atom.SerializableTypeId].key,
+    value: atom[Atom.SerializableTypeId].encode(value),
+    dehydratedAt: Date.now(),
+  }) as Hydration.DehydratedAtom;

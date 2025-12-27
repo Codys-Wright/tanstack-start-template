@@ -3,7 +3,7 @@ import * as DialogPrimitive from '@radix-ui/react-dialog';
 import { XIcon } from 'lucide-react';
 import { cva, type VariantProps } from 'class-variance-authority';
 
-import { cn } from '../../lib/utils';
+import { cn } from '../../lib/utils.js';
 
 function DialogRoot({ ...props }: React.ComponentProps<typeof DialogPrimitive.Root>) {
   return <DialogPrimitive.Root data-slot="dialog" {...props} />;

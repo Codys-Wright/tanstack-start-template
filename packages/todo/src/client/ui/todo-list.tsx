@@ -1,7 +1,7 @@
-import { Result, useAtomRefresh, useAtomValue } from "@effect-atom/atom-react";
-import { todosAtom } from "./todos-atoms.js";
-import { TodoItem } from "./todo-item.js";
 import { Alert, Button } from "@shadcn";
+import { Result, useAtomRefresh, useAtomValue } from "@effect-atom/atom-react";
+import { todosAtom } from "../index.js";
+import { TodoItem } from "./todo-item.js";
 
 export function TodoList() {
   const result = useAtomValue(todosAtom);

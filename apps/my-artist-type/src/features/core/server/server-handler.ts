@@ -1,18 +1,21 @@
-import * as HttpServerResponse from "@effect/platform/HttpServerResponse";
-import * as HttpServer from "@effect/platform/HttpServer";
-import * as HttpLayerRouter from "@effect/platform/HttpLayerRouter";
-import * as HttpApiSwagger from "@effect/platform/HttpApiSwagger";
+import { makeTodosApiLive, TodosRpcLive } from "@todo/server";
 import * as HttpApiScalar from "@effect/platform/HttpApiScalar";
+import * as HttpApiSwagger from "@effect/platform/HttpApiSwagger";
+import * as HttpLayerRouter from "@effect/platform/HttpLayerRouter";
+import * as HttpServer from "@effect/platform/HttpServer";
+import * as HttpServerResponse from "@effect/platform/HttpServerResponse";
+import * as RpcMiddleware from "@effect/rpc/RpcMiddleware";
 import * as RpcSerialization from "@effect/rpc/RpcSerialization";
 import * as RpcServer from "@effect/rpc/RpcServer";
-import * as Layer from "effect/Layer";
-import * as RpcMiddleware from "@effect/rpc/RpcMiddleware";
+import * as Context from "effect/Context";
 import * as Effect from "effect/Effect";
 import * as Exit from "effect/Exit";
+import * as Layer from "effect/Layer";
 import * as Logger from "effect/Logger";
-import * as Context from "effect/Context";
-import { DomainRpc, DomainApi } from "../domain";
-import { TodosRpcLive, TodosApiLive } from "../../todo/server";
+import { DomainApi, DomainRpc } from "../domain/index.js";
+
+// HttpApi handlers for todos - uses makeTodosApiLive from @todo
+const TodosApiLive = makeTodosApiLive(DomainApi);
 // import {
 //   HttpAuthenticationMiddlewareLive,
 //   RpcAuthenticationMiddlewareLive,
@@ -108,12 +111,10 @@ const AllRoutes = Layer.mergeAll(
   // Layer.provideMerge(BetterAuthService.Default),
   Layer.provide(Logger.pretty),
   // Apply CORS globally if needed
-  Layer.provide(
-    HttpLayerRouter.cors({
-      allowedOrigins: ["http://localhost:3000"],
-      credentials: true,
-    }),
-  ),
+  // Layer.provide(HttpLayerRouter.cors({
+  //   allowedOrigins: ["http://localhost:3000"],
+  //   credentials: true
+  // }))
 );
 
 // // Run auto-migration on startup
