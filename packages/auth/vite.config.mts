@@ -1,25 +1,38 @@
 /// <reference types='vitest' />
-import { defineConfig } from "vite";
+import { defineConfig, Plugin } from "vite";
 import react from "@vitejs/plugin-react";
 import dts from "vite-plugin-dts";
+import { nodeExternals } from "rollup-plugin-node-externals";
 import * as path from "path";
+
+// Wrapper to make rollup-plugin-node-externals compatible with Vite
+function externals(): Plugin {
+  return {
+    ...nodeExternals({
+      // Automatically externalize Node.js built-ins and dependencies
+      builtins: true,
+      deps: true,
+      devDeps: false,
+      peerDeps: true,
+      optDeps: true,
+    }),
+    name: "node-externals",
+    enforce: "pre", // Run before Vite's default dependency resolution
+    apply: "build",
+  };
+}
 
 export default defineConfig(() => ({
   root: import.meta.dirname,
   cacheDir: "../../node_modules/.vite/packages/auth",
   plugins: [
+    externals(),
     react(),
     dts({
       entryRoot: "src",
       tsconfigPath: path.join(import.meta.dirname, "tsconfig.lib.json"),
     }),
   ],
-  // Uncomment this if you are using workers.
-  // worker: {
-  //  plugins: [],
-  // },
-  // Configuration for building your library.
-  // See: https://vite.dev/guide/build.html#library-mode
   build: {
     outDir: "./dist",
     emptyOutDir: true,
@@ -28,17 +41,27 @@ export default defineConfig(() => ({
       transformMixedEsModules: true,
     },
     lib: {
-      // Could also be a dictionary or array of multiple entry points.
       entry: "src/index.ts",
-      name: "@ethoscreative/auth",
+      name: "@auth",
       fileName: "index",
-      // Change this to the formats you want to support.
-      // Don't forget to update your package.json as well.
       formats: ["es" as const],
     },
     rollupOptions: {
-      // External packages that should not be bundled into your library.
-      external: ["react", "react-dom", "react/jsx-runtime"],
+      // Node externals plugin will handle most of this automatically,
+      // but we explicitly list these for clarity
+      external: [
+        "react",
+        "react-dom",
+        "react/jsx-runtime",
+        "@shadcn",
+        "@theme",
+        "@core",
+      ],
     },
+  },
+  resolve: {
+    // Use Node.js module resolution instead of browser
+    mainFields: ["module", "jsnext:main", "jsnext"],
+    conditions: ["node"],
   },
 }));

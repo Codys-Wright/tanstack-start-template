@@ -13,7 +13,7 @@
       "default": "./dist/index.js"
     }
   },
- "dependencies": {
+  "dependencies": {
     "@better-auth/passkey": "*",
     "@effect-atom/atom": "*",
     "@effect-atom/atom-react": "*",
@@ -92,8 +92,8 @@
     "@core": "*"
   },
   "devDependencies": {
-    "@shadcn": "*",
     "@effect/vitest": "*",
+    "@shadcn": "*",
     "@tanstack/devtools-vite": "*",
     "@testcontainers/postgresql": "*",
     "@testing-library/dom": "*",
@@ -107,6 +107,7 @@
     "dotenv-cli": "*",
     "jsdom": "*",
     "pg": "*",
+    "rollup-plugin-node-externals": "^8.1.2",
     "tsx": "*",
     "tw-animate-css": "*",
     "typescript": "*",
