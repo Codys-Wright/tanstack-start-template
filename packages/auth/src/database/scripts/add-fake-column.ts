@@ -1,6 +1,6 @@
 #!/usr/bin/env bun
 import * as Effect from "effect/Effect";
-import * as NodeRuntime from "@effect/platform-node/NodeRuntime";
+import * as BunRuntime from "@effect/platform-bun/BunRuntime";
 import pg from "pg";
 
 const { Pool } = pg;
@@ -53,4 +53,4 @@ const addFakeColumnProgram = Effect.gen(function* () {
   }
 });
 
-NodeRuntime.runMain(addFakeColumnProgram);
+BunRuntime.runMain(addFakeColumnProgram);

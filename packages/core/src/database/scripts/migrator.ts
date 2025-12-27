@@ -1,5 +1,5 @@
-import * as NodeContext from "@effect/platform-node/NodeContext";
-import * as NodeRuntime from "@effect/platform-node/NodeRuntime";
+import * as BunContext from "@effect/platform-bun/BunContext";
+import * as BunRuntime from "@effect/platform-bun/BunRuntime";
 import * as PgMigrator from "@effect/sql-pg/PgMigrator";
 import * as Effect from "effect/Effect";
 import { PgLive } from "../pg-live.js";
@@ -32,6 +32,6 @@ const program = Effect.gen(function* () {
       yield* Effect.log(`- ${id.toString().padStart(4, "0")}_${name}`);
     }
   }
-}).pipe(Effect.provide([PgLive, NodeContext.layer]));
+}).pipe(Effect.provide([PgLive, BunContext.layer]));
 
-NodeRuntime.runMain(program);
+BunRuntime.runMain(program);

@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@effect/platform": "*",
-    "@effect/platform-node": "*",
+    "@effect/platform-bun": "*",
     "@effect/sql": "*",
     "@effect/sql-pg": "*",
     "effect": "*",

@@ -20,7 +20,7 @@ import {
   BetterAuthRouter,
 } from "@auth";
 import { serverRuntime } from "./server-runtime.js";
-import * as NodeContext from "@effect/platform-node/NodeContext";
+import * as BunContext from "@effect/platform-bun/BunContext";
 import * as PgMigrator from "@effect/sql-pg/PgMigrator";
 import { PgLive, createMigrationLoader } from "@core";
 import { authMigrations } from "@auth";
@@ -138,7 +138,7 @@ await Effect.runPromise(
 
     yield* Effect.log("[AutoMigration] Database schema is up-to-date.");
   }).pipe(
-    Effect.provide(Layer.merge(PgLive, NodeContext.layer)),
+    Effect.provide(Layer.merge(PgLive, BunContext.layer)),
     Effect.tapError((error) =>
       Effect.logError(`[AutoMigration] Migration failed: ${error}`),
     ),

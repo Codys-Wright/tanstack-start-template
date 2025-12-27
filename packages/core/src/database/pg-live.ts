@@ -1,4 +1,4 @@
-import * as NodeFileSystem from "@effect/platform-node/NodeFileSystem";
+import * as BunFileSystem from "@effect/platform-bun/BunFileSystem";
 import * as FileSystem from "@effect/platform/FileSystem";
 import * as PgClient from "@effect/sql-pg/PgClient";
 import * as SqlClient from "@effect/sql/SqlClient";
@@ -35,7 +35,7 @@ export const PgLive = Layer.unwrapEffect(
       connectTimeout: "10 seconds",
       ...pgConfig,
     });
-  })
+  }),
 ).pipe(Layer.orDie);
 
 // ===============================
@@ -45,7 +45,7 @@ export const PgLive = Layer.unwrapEffect(
 class PgContainer extends Effect.Service<PgContainer>()("PgContainer", {
   scoped: Effect.acquireRelease(
     Effect.promise(() => new PostgreSqlContainer("postgres:alpine").start()),
-    (container) => Effect.promise(() => container.stop())
+    (container) => Effect.promise(() => container.stop()),
   ),
 }) {}
 
@@ -60,8 +60,8 @@ export const makeApplySchemaDump = (schemaPath: string) =>
       const fs = yield* FileSystem.FileSystem;
       const schema = yield* fs.readFileString(schemaPath);
       yield* sql.unsafe(schema);
-    })
-  ).pipe(Layer.provide(NodeFileSystem.layer), Layer.orDie);
+    }),
+  ).pipe(Layer.provide(BunFileSystem.layer), Layer.orDie);
 
 const PgClientTest = Layer.unwrapEffect(
   Effect.gen(function* () {
@@ -70,7 +70,7 @@ const PgClientTest = Layer.unwrapEffect(
       url: Redacted.make(container.getConnectionUri()),
       ...pgConfig,
     });
-  })
+  }),
 ).pipe(Layer.provide(PgContainer.Default), Layer.orDie);
 
 /**
@@ -85,13 +85,13 @@ export const makePgTest = (schemaPath: string) =>
 // ===============================
 
 class TransactionRollback extends Schema.TaggedError<TransactionRollback>(
-  "TestRollback"
+  "TestRollback",
 )("TestRollback", {
   value: Schema.Any,
 }) {}
 
 export const withTransactionRollback = <A, E, R>(
-  self: Effect.Effect<A, E, R>
+  self: Effect.Effect<A, E, R>,
 ) =>
   Effect.gen(function* () {
     const sql = yield* SqlClient.SqlClient;
@@ -100,11 +100,11 @@ export const withTransactionRollback = <A, E, R>(
         Effect.gen(function* () {
           const value = yield* self;
           return yield* new TransactionRollback({ value });
-        })
+        }),
       )
       .pipe(
         Effect.catchIf(Schema.is(TransactionRollback), (error) =>
-          Effect.succeed(error.value as A)
-        )
+          Effect.succeed(error.value as A),
+        ),
       );
   });

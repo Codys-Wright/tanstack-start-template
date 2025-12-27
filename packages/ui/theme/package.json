@@ -23,7 +23,7 @@
     "@effect/language-service": "*",
     "@effect/platform": "*",
     "@effect/platform-browser": "*",
-    "@effect/platform-node": "*",
+    "@effect/platform-bun": "*",
     "@effect/rpc": "*",
     "@effect/sql": "*",
     "@effect/sql-pg": "*",
