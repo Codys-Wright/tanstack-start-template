@@ -1,5 +1,5 @@
 {
-  "name": "@core",
+  "name": "@auth/database",
   "version": "0.0.1",
   "type": "module",
   "main": "./src/index.ts",
@@ -14,12 +14,18 @@
     }
   },
   "dependencies": {
-    "@core/database": "*"
+    "@auth/domain": "*",
+    "@core/database": "*",
+    "@effect/sql": "*",
+    "@effect/sql-pg": "*",
+    "effect": "*",
+    "kysely": "*"
   },
   "devDependencies": {
     "@effect/vitest": "*",
     "@testcontainers/postgresql": "*",
     "@types/pg": "*",
+    "pg": "*",
     "typescript": "*",
     "vite": "*",
     "vitest": "*"

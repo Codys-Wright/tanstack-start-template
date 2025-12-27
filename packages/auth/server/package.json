@@ -1,5 +1,5 @@
 {
-  "name": "@core",
+  "name": "@auth/server",
   "version": "0.0.1",
   "type": "module",
   "main": "./src/index.ts",
@@ -14,12 +14,22 @@
     }
   },
   "dependencies": {
-    "@core/database": "*"
+    "@auth/database": "*",
+    "@auth/domain": "*",
+    "@better-auth/passkey": "*",
+    "@core/database": "*",
+    "@effect/platform": "*",
+    "@effect/platform-bun": "*",
+    "@effect/rpc": "*",
+    "bcryptjs": "*",
+    "better-auth": "*",
+    "effect": "*",
+    "kysely": "*",
+    "resend": "*"
   },
   "devDependencies": {
     "@effect/vitest": "*",
-    "@testcontainers/postgresql": "*",
-    "@types/pg": "*",
+    "@types/bcryptjs": "*",
     "typescript": "*",
     "vite": "*",
     "vitest": "*"

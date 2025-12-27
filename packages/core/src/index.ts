@@ -1,10 +1,8 @@
 /**
  * @core - Core utilities and infrastructure
- * 
- * Shared utilities and infrastructure for all packages:
- * - Database connection and migrations
- * - Testing utilities
- * - Common configurations
+ *
+ * Shared utilities and infrastructure for all packages.
+ * Re-exports from specialized sub-packages for convenience.
  */
 
-export * from "./database/index.js";
+export * from '@core/database';
