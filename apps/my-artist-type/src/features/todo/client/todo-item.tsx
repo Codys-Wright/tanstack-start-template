@@ -94,7 +94,7 @@ export const TodoItem = memo(
                     setEditTitle(todo.title);
                   }
                 }}
-                autoFocus
+                
                 className="flex-1"
               />
               <Button onClick={handleSaveEdit} disabled={isLoading} size="sm">

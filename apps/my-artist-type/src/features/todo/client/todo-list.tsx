@@ -14,7 +14,6 @@ export function TodoList() {
           <p className="text-muted-foreground">Loading todos...</p>
         ))
         .onSuccess((todos) => {
-          console.log("[TodoList] Successfully loaded todos:", todos);
           return todos.length === 0 ? (
             <p className="text-muted-foreground">
               No todos yet. Add one above!
@@ -28,7 +27,6 @@ export function TodoList() {
           );
         })
         .onFailure((error) => {
-          console.error("[TodoList] Failed to load todos:", error);
           return (
             <Alert variant="destructive">
               <Alert.Title>Something went wrong loading todos.</Alert.Title>
