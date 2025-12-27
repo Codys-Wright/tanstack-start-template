@@ -1,6 +1,14 @@
 {
   "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc", "unicorn", "react-perf", "jsx-a11y", "vitest"],
+  "plugins": [
+    "react",
+    "typescript",
+    "oxc",
+    "unicorn",
+    "react-perf",
+    "jsx-a11y",
+    "vitest"
+  ],
   "rules": {
     "typescript/await-thenable": "warn",
     "typescript/no-array-delete": "warn",
@@ -103,7 +111,7 @@
     "eslint/no-with": "error",
     "eslint/getter-return": "error"
   },
-  "ignore": [
+  "ignorePatterns": [
     "**/dist",
     "**/build",
     "**/docs",

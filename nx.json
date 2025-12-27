@@ -12,6 +12,18 @@
   },
   "plugins": [
     {
+      "plugin": "nx-oxlint",
+      "options": {
+        "lintTargetName": "lint"
+      }
+    },
+    {
+      "plugin": "@berenddeboer/nx-biome",
+      "options": {
+        "targetName": "format"
+      }
+    },
+    {
       "plugin": "@nx/js/typescript",
       "options": {
         "typecheck": {
