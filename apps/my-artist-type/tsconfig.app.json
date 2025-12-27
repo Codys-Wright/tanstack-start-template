@@ -19,7 +19,9 @@
       "@todo": ["../../packages/todo/src/index.ts"],
       "@todo/*": ["../../packages/todo/src/*"],
       "@core": ["../../packages/core/src/index.ts"],
-      "@core/*": ["../../packages/core/src/*"]
+      "@core/*": ["../../packages/core/src/*"],
+      "@auth": ["../../packages/auth/src/index.ts"],
+      "@auth/*": ["../../packages/auth/src/*"]
     }
   },
   "exclude": [

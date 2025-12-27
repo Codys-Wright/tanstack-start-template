@@ -1,108 +1,74 @@
 /**
  * @auth - Authentication & Authorization Package
- * 
- * Complete authentication system with:
- * - User management
- * - Session handling
- * - Account self-service
- * - Multi-tenancy (Organizations & Teams)
- * - Security features (2FA, Passkeys)
- * - Admin operations
- * 
- * @example
- * ```ts
- * // Import core auth
- * import { authClient, SignInInput } from "@auth";
- * 
- * // Import specific features
- * import { UserAvatar } from "@auth/user";
- * import { SignInForm } from "@auth/session";
- * import { OrganizationsCard } from "@auth/organization";
- * ```
+ *
+ * Client-safe exports: schemas, atoms, UI components, auth client
+ *
+ * For server-side code, import from "@auth/server"
+ * For database code, import from "@auth/database"
  */
 
 // ============================================================================
-// Core - Authentication infrastructure
+// Core - Client & Domain
 // ============================================================================
-
-// Export everything from core except potential conflicts
-export {
-  // Better Auth
-  authClient,
-  
-  // Services
-  BetterAuthConfig,
-  BetterAuthDatabase,
-  BetterAuthRouter,
-  BetterAuthService,
-  EmailService,
-  
-  // Auth schemas
-  SignInInput,
-  SignInResponse,
-  SignUpInput,
-  SignUpResponse,
-  SignOutResponse,
-  ForgotPasswordInput,
-  ResetPasswordInput,
-  
-  // Context & Middleware
-  AuthContext,
-  RpcAuthenticationMiddleware,
-  HttpAuthenticationMiddleware,
-  HttpAuthenticationMiddlewareLive,
-  RpcAuthenticationMiddlewareLive,
-} from "./_core/index.js";
-
-// Re-export the auth CLI entry for better-auth commands
-export { auth } from "./_core/auth.js";
+export { authClient } from "./features/_core/auth.client.js";
+export * from "./features/_core/auth.schema.js";
+export * from "./features/_core/auth.context.js";
+export * from "./features/_core/auth.policy.js";
 
 // ============================================================================
-// User - User management
+// User - Domain & UI
 // ============================================================================
-export * from "./user/index.js";
+export * from "./features/user/user.schema.js";
+export * from "./features/user/ui/index.js";
 
 // ============================================================================
-// Session - Session & authentication
+// Session - Domain, Client & UI
 // ============================================================================
-export * from "./session/index.js";
+export * from "./features/session/session.schema.js";
+export * from "./features/session/session.atoms.js";
+export * from "./features/session/ui/index.js";
 
 // ============================================================================
-// Account - Profile & account management
+// Account - Domain & UI
 // ============================================================================
-export * from "./account/index.js";
+export * from "./features/account/account.schema.js";
+export * from "./features/account/ui/index.js";
 
 // ============================================================================
-// Security - 2FA & Passkeys
+// Security - Domain
 // ============================================================================
-export * from "./security/index.js";
+export * from "./features/security/passkey.schema.js";
+export * from "./features/security/two-factor.schema.js";
 
 // ============================================================================
-// Organization - Multi-tenancy
+// Organization - Domain, Client & UI
 // ============================================================================
-export * from "./organization/index.js";
+export * from "./features/organization/organization.schema.js";
+export * from "./features/organization/organization-role.schema.js";
+export * from "./features/organization/organization.atoms.js";
+export * from "./features/organization/ui/index.js";
 
 // ============================================================================
-// Team - Team management
+// Team - Domain & UI
 // ============================================================================
-export * from "./team/index.js";
+export * from "./features/team/team.schema.js";
+export * from "./features/team/team-member.schema.js";
+export * from "./features/team/use-team-permissions.js";
+export * from "./features/team/ui/index.js";
 
 // ============================================================================
-// Member - Organization membership
+// Member - Domain
 // ============================================================================
-export * from "./member/index.js";
+export * from "./features/member/member.schema.js";
 
 // ============================================================================
-// Invitation - Org invitations
+// Invitation - Domain & UI
 // ============================================================================
-export * from "./invitation/index.js";
+export * from "./features/invitation/invitation.schema.js";
+export * from "./features/invitation/ui/index.js";
 
 // ============================================================================
-// Admin - Admin operations
+// Admin - Domain & Client
 // ============================================================================
-export * from "./admin/index.js";
-
-// ============================================================================
-// Database - Migrations
-// ============================================================================
-export { authMigrations } from "./database/migrations.js";
+export * from "./features/admin/admin-rpc.schema.js";
+export * from "./features/admin/admin.atoms.js";
