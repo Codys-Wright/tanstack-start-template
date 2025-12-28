@@ -1,5 +1,5 @@
-import * as SqlClient from "@effect/sql/SqlClient";
-import * as Effect from "effect/Effect";
+import * as SqlClient from '@effect/sql/SqlClient';
+import * as Effect from 'effect/Effect';
 
 export default Effect.gen(function* () {
   const sql = yield* SqlClient.SqlClient;
@@ -7,7 +7,7 @@ export default Effect.gen(function* () {
   yield* sql`
     CREATE TABLE IF NOT EXISTS public.todos (
       id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-      user_id UUID NOT NULL,
+      user_id TEXT NOT NULL,
       title TEXT NOT NULL,
       completed BOOLEAN NOT NULL DEFAULT false,
       created_at TIMESTAMPTZ NOT NULL DEFAULT now()

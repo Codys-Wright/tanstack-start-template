@@ -6,12 +6,17 @@
   "module": "./src/index.ts",
   "types": "./src/index.ts",
   "exports": {
-    "./package.json": "./package.json",
     ".": {
       "types": "./src/index.ts",
       "import": "./src/index.ts",
       "default": "./src/index.ts"
-    }
+    },
+    "./*": {
+      "types": "./src/*.ts",
+      "import": "./src/*.ts",
+      "default": "./src/*.ts"
+    },
+    "./package.json": "./package.json"
   },
   "dependencies": {
     "@effect-atom/atom": "*",

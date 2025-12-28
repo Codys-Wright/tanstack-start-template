@@ -1,37 +1,130 @@
-import * as BunContext from "@effect/platform-bun/BunContext";
-import * as BunRuntime from "@effect/platform-bun/BunRuntime";
-import * as PgMigrator from "@effect/sql-pg/PgMigrator";
-import * as Effect from "effect/Effect";
-import { PgLive } from "../pg-live.js";
-import { fromFeatures } from "./feature-migration-loader.js";
+import * as BunContext from '@effect/platform-bun/BunContext';
+import * as BunRuntime from '@effect/platform-bun/BunRuntime';
+import * as PgMigrator from '@effect/sql-pg/PgMigrator';
+import { PgLive } from '../pg-live.js';
+import * as Effect from 'effect/Effect';
+import * as Layer from 'effect/Layer';
+import { join } from 'node:path';
+import { readdir } from 'node:fs/promises';
+
+interface MigrationFile {
+  readonly id: number;
+  readonly name: string;
+  readonly path: string;
+}
 
 /**
- * Migration runner that discovers and runs migrations from all features.
+ * Discover migrations from an absolute path.
+ * Use with `import.meta.url` to resolve paths relative to the calling file:
  *
- * Migrations are discovered from:
- * - src/features/auth/database/migrations/
- * - src/features/todo/database/migrations/
- * - ... any other feature with a database/migrations folder
+ * @example
+ * ```ts
+ * import { discoverFromPath } from '@core/database';
+ * import { dirname, join } from 'node:path';
+ * import { fileURLToPath } from 'node:url';
  *
- * Migrations run in order:
- * 1. Auth migrations (always first)
- * 2. Other features (alphabetically)
+ * const __dirname = dirname(fileURLToPath(import.meta.url));
+ *
+ * export const AuthMigrations = discoverFromPath(join(__dirname, 'migrations'));
+ * ```
  */
-const program = Effect.gen(function* () {
-  yield* Effect.log("Discovering feature migrations...");
+export const discoverFromPath = (absolutePath: string): PgMigrator.Loader =>
+  Effect.gen(function* () {
+    const files = yield* Effect.tryPromise({
+      try: () => readdir(absolutePath),
+      catch: (error) => new Error(`Failed to read migrations directory ${absolutePath}: ${error}`),
+    });
 
-  const migrations = yield* PgMigrator.run({
-    loader: fromFeatures(),
+    const migrations: MigrationFile[] = [];
+
+    for (const file of files) {
+      if (!file.endsWith('.ts') || file.endsWith('.test.ts')) continue;
+
+      const match = file.match(/^(\d+)_(.+)\.ts$/);
+      if (!match) continue;
+
+      const [, idStr, name] = match;
+      const id = Number.parseInt(idStr, 10);
+
+      migrations.push({
+        id,
+        name,
+        path: join(absolutePath, file),
+      });
+    }
+
+    migrations.sort((a, b) => a.id - b.id);
+
+    return migrations.map((migration) => {
+      const load = Effect.promise(() => import(/* @vite-ignore */ migration.path)).pipe(
+        Effect.map((module) => module.default),
+      );
+
+      return [migration.id, migration.name, load] as const;
+    });
+  }).pipe(Effect.orDie);
+
+/**
+ * Combine multiple migration loaders and assign globally unique IDs.
+ * Migrations are processed in order: first loader's migrations get IDs 1, 2, 3...
+ * second loader's migrations continue from there, etc.
+ */
+const combineMigrationLoaders = (loaders: ReadonlyArray<PgMigrator.Loader>): PgMigrator.Loader =>
+  Effect.gen(function* () {
+    const allMigrations = yield* Effect.all(loaders);
+    const flattened = allMigrations.flat();
+
+    // Re-assign global IDs to avoid duplicates
+    return flattened.map((migration, index) => {
+      const [_originalId, name, load] = migration;
+      const globalId = index + 1;
+      return [globalId, name, load] as const;
+    });
   });
 
-  if (migrations.length === 0) {
-    yield* Effect.log("No new migrations to run.");
-  } else {
-    yield* Effect.log(`Applied ${migrations.length} migration(s):`);
-    for (const [id, name] of migrations) {
-      yield* Effect.log(`- ${id.toString().padStart(4, "0")}_${name}`);
-    }
-  }
-}).pipe(Effect.provide([PgLive, BunContext.layer]));
+export const runMigrations = (
+  ...loaders: ReadonlyArray<PgMigrator.Loader>
+): Effect.Effect<void, never, never> =>
+  Effect.gen(function* () {
+    yield* Effect.log('[AutoMigration] Starting database migration check...');
 
-BunRuntime.runMain(program);
+    // First, discover all migrations to log them
+    const combinedLoader = combineMigrationLoaders(loaders);
+    const allMigrations = yield* combinedLoader;
+
+    yield* Effect.log(`[AutoMigration] Found ${allMigrations.length} total migration(s):`);
+    for (const [id, name] of allMigrations) {
+      yield* Effect.log(`  - ${id.toString().padStart(4, '0')}_${name}`);
+    }
+
+    // Now run the migrations (re-execute the loader since PgMigrator needs it)
+    const applied = yield* PgMigrator.run({
+      loader: combinedLoader,
+    });
+
+    if (applied.length === 0) {
+      yield* Effect.log('[AutoMigration] No new migrations to apply.');
+    } else {
+      yield* Effect.log(`[AutoMigration] Applied ${applied.length} new migration(s):`);
+      for (const [id, name] of applied) {
+        yield* Effect.log(`  - ${id.toString().padStart(4, '0')}_${name}`);
+      }
+    }
+
+    yield* Effect.log('[AutoMigration] Database schema is up-to-date.');
+  }).pipe(
+    Effect.provide(Layer.merge(PgLive, BunContext.layer)),
+    Effect.tapError((error) => Effect.logError(`[AutoMigration] Migration failed: ${error}`)),
+    Effect.orDie,
+  );
+
+export const main = (): Promise<void> =>
+  Effect.runPromise(
+    Effect.gen(function* () {
+      yield* Effect.log('Running migrations from command line...');
+    }).pipe(Effect.provide(BunContext.layer)),
+  ).then(() => BunRuntime.runMain(Effect.void));
+
+if (import.meta.main) {
+  main();
+}

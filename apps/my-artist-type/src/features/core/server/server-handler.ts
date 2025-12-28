@@ -1,15 +1,14 @@
 import {
   BetterAuthRouter,
-  AuthService,
   HttpAuthenticationMiddlewareLive,
   RpcAuthenticationMiddleware,
   RpcAuthenticationMiddlewareLive,
+  AuthService,
 } from "@auth/server";
-import { authMigrations } from "@auth/database";
-import { todoMigrations } from "@todo/database";
-import { PgLive, createMigrationLoader } from "@core/database";
+import { AuthMigrations, runBetterAuthMigrations } from "@auth/database";
+import { runMigrations } from "@core/database";
 import { makeTodosApiLive, TodosRpcLive } from "@todo/server";
-import * as BunContext from "@effect/platform-bun/BunContext";
+import { TodoMigrations } from "@todo/database";
 import * as HttpApiScalar from "@effect/platform/HttpApiScalar";
 import * as HttpApiSwagger from "@effect/platform/HttpApiSwagger";
 import * as HttpLayerRouter from "@effect/platform/HttpLayerRouter";
@@ -18,7 +17,6 @@ import * as HttpServerResponse from "@effect/platform/HttpServerResponse";
 import * as RpcMiddleware from "@effect/rpc/RpcMiddleware";
 import * as RpcSerialization from "@effect/rpc/RpcSerialization";
 import * as RpcServer from "@effect/rpc/RpcServer";
-import * as PgMigrator from "@effect/sql-pg/PgMigrator";
 import * as Context from "effect/Context";
 import * as Effect from "effect/Effect";
 import * as Exit from "effect/Exit";
@@ -72,6 +70,7 @@ const RpcRouter = RpcServer.layerHttpRouter({
   Layer.provide(TodosRpcLive),
   Layer.provide(RpcLoggerLive),
   Layer.provide(RpcAuthenticationMiddlewareLive),
+  Layer.provide(AuthService.Default),
   Layer.provide(RpcSerialization.layerNdjson),
 );
 
@@ -81,6 +80,7 @@ const HttpApiRouter = HttpLayerRouter.addHttpApi(DomainApi, {
 }).pipe(
   Layer.provide(TodosApiLive),
   Layer.provide(HttpAuthenticationMiddlewareLive),
+  Layer.provide(AuthService.Default),
   Layer.provide(HttpServer.layerContext),
 );
 
@@ -114,41 +114,15 @@ const AllRoutes = Layer.mergeAll(
   SwaggerDocs,
   HealthRoute,
   BetterAuthRouter,
-).pipe(
-  Layer.provideMerge(AuthService.Default),
-  Layer.provide(Logger.pretty),
-);
+).pipe(Layer.provideMerge(AuthService.Default), Layer.provide(Logger.pretty));
 
-// Run auto-migration on startup
-await Effect.runPromise(
+// Run Better Auth migrations first (creates user, session, etc. tables)
+// Then run our Effect SQL migrations (AuthMigrations + TodoMigrations)
+Effect.runPromise(
   Effect.gen(function* () {
-    yield* Effect.log("[AutoMigration] Starting database migration check...");
-
-    const migrations = yield* PgMigrator.run({
-      loader: createMigrationLoader({
-        features: [authMigrations, todoMigrations],
-      }),
-    });
-
-    if (migrations.length === 0) {
-      yield* Effect.log("[AutoMigration] No new migrations to apply.");
-    } else {
-      yield* Effect.log(
-        `[AutoMigration] Applied ${migrations.length} migration(s):`,
-      );
-      for (const [id, name] of migrations) {
-        yield* Effect.log(`  - ${id.toString().padStart(4, "0")}_${name}`);
-      }
-    }
-
-    yield* Effect.log("[AutoMigration] Database schema is up-to-date.");
-  }).pipe(
-    Effect.provide(Layer.merge(PgLive, BunContext.layer)),
-    Effect.tapError((error) =>
-      Effect.logError(`[AutoMigration] Migration failed: ${error}`),
-    ),
-    Effect.orDie,
-  ),
+    yield* runBetterAuthMigrations;
+    yield* runMigrations(AuthMigrations, TodoMigrations);
+  }),
 );
 
 const memoMap = Effect.runSync(Layer.makeMemoMap);

@@ -244,7 +244,6 @@
       "version": "0.0.1",
       "dependencies": {
         "@better-auth/passkey": "*",
-        "@core": "*",
         "@effect-atom/atom": "*",
         "@effect-atom/atom-react": "*",
         "@effect/language-service": "*",
@@ -321,7 +320,9 @@
         "zod": "*",
       },
       "devDependencies": {
+        "@core": "*",
         "@effect/vitest": "*",
+        "@email": "*",
         "@shadcn": "*",
         "@tanstack/devtools-vite": "*",
         "@testcontainers/postgresql": "*",
@@ -369,7 +370,7 @@
       },
     },
     "packages/email": {
-      "name": "@ethoscreative/email",
+      "name": "@email",
       "version": "0.0.1",
     },
     "packages/playground": {
@@ -896,6 +897,8 @@
 
     "@effect/workflow": ["@effect/workflow@0.16.0", "", { "peerDependencies": { "@effect/experimental": "^0.58.0", "@effect/platform": "^0.94.0", "@effect/rpc": "^0.73.0", "effect": "^3.19.13" } }, "sha512-MiAdlxx3TixkgHdbw+Yf1Z3tHAAE0rOQga12kIydJqj05Fnod+W/I+kQGRMY/XWRg+QUsVxhmh1qTr7Ype6lrw=="],
 
+    "@email": ["@email@workspace:packages/email"],
+
     "@emnapi/core": ["@emnapi/core@1.7.1", "", { "dependencies": { "@emnapi/wasi-threads": "1.1.0", "tslib": "^2.4.0" } }, "sha512-o1uhUASyo921r2XtHYOHy7gdkGLge8ghBEQHMWmyJFoXlpU58kIrhhN3w26lpQb6dspetweapMn2CSNwQ8I4wg=="],
 
     "@emnapi/runtime": ["@emnapi/runtime@1.7.1", "", { "dependencies": { "tslib": "^2.4.0" } }, "sha512-PVtJr5CmLwYAU9PZDMITZoR5iAOShYREoR45EyyLrbntV50mdePTgUn4AmOw90Ifcj+x2kRjdzr1HP3RrNiHGA=="],
@@ -971,8 +974,6 @@
     "@eslint/object-schema": ["@eslint/object-schema@2.1.7", "", {}, "sha512-VtAOaymWVfZcmZbp6E2mympDIHvyjXs/12LqWYjVw6qjrfF+VK+fyG33kChz3nnK+SU5/NeHOqrTEHS8sXO3OA=="],
 
     "@eslint/plugin-kit": ["@eslint/plugin-kit@0.4.1", "", { "dependencies": { "@eslint/core": "^0.17.0", "levn": "^0.4.1" } }, "sha512-43/qtrDUokr7LJqoF2c3+RInu/t4zfrpYdoSDfYyhg52rwLV6TnOvdG4fXm7IkSB3wErkcmJS9iEhjVtOSEjjA=="],
-
-    "@ethoscreative/email": ["@ethoscreative/email@workspace:packages/email"],
 
     "@ethoscreative/explore": ["@ethoscreative/explore@workspace:apps/explore"],
 
