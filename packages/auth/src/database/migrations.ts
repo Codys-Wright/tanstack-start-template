@@ -17,7 +17,10 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
  * Custom auth migrations from the migrations/ folder.
  * Use this for any auth-related schema changes beyond what Better Auth provides.
  */
-export const CustomAuthMigrations = discoverFromPath(join(__dirname, 'migrations'));
+export const CustomAuthMigrations = discoverFromPath({
+  path: join(__dirname, 'migrations'),
+  prefix: 'auth',
+});
 
 /**
  * Run Better Auth's built-in migrations.

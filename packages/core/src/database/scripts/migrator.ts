@@ -13,9 +13,16 @@ interface MigrationFile {
   readonly path: string;
 }
 
+interface DiscoverOptions {
+  /** Absolute path to the migrations directory */
+  readonly path: string;
+  /** Prefix to add to migration names (e.g., 'auth', 'todo') */
+  readonly prefix: string;
+}
+
 /**
- * Discover migrations from an absolute path.
- * Use with `import.meta.url` to resolve paths relative to the calling file:
+ * Discover migrations from an absolute path with a prefix.
+ * The prefix ensures migrations from different packages don't conflict.
  *
  * @example
  * ```ts
@@ -25,11 +32,16 @@ interface MigrationFile {
  *
  * const __dirname = dirname(fileURLToPath(import.meta.url));
  *
- * export const AuthMigrations = discoverFromPath(join(__dirname, 'migrations'));
+ * export const TodoMigrations = discoverFromPath({
+ *   path: join(__dirname, 'migrations'),
+ *   prefix: 'todo',
+ * });
  * ```
  */
-export const discoverFromPath = (absolutePath: string): PgMigrator.Loader =>
+export const discoverFromPath = (options: DiscoverOptions): PgMigrator.Loader =>
   Effect.gen(function* () {
+    const { path: absolutePath, prefix } = options;
+
     const files = yield* Effect.tryPromise({
       try: () => readdir(absolutePath),
       catch: (error) => new Error(`Failed to read migrations directory ${absolutePath}: ${error}`),
@@ -60,7 +72,9 @@ export const discoverFromPath = (absolutePath: string): PgMigrator.Loader =>
         Effect.map((module) => module.default),
       );
 
-      return [migration.id, migration.name, load] as const;
+      // Prefix the migration name to avoid conflicts between packages
+      const prefixedName = `${prefix}_${migration.name}`;
+      return [migration.id, prefixedName, load] as const;
     });
   }).pipe(Effect.orDie);
 

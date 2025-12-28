@@ -4,4 +4,7 @@ import { fileURLToPath } from 'node:url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
-export const TodoMigrations = discoverFromPath(join(__dirname, 'migrations'));
+export const TodoMigrations = discoverFromPath({
+  path: join(__dirname, 'migrations'),
+  prefix: 'todo',
+});

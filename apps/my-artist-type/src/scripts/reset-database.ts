@@ -11,7 +11,7 @@ const resetDatabase = Effect.gen(function* () {
 
   // Drop tables in reverse dependency order
   yield* sql`DROP TABLE IF EXISTS public.todos CASCADE`;
-  yield* sql`DROP TABLE IF EXISTS public._sql_migrations CASCADE`;
+  yield* sql`DROP TABLE IF EXISTS public.effect_sql_migrations CASCADE`;
 
   // Drop Better Auth tables
   yield* sql`DROP TABLE IF EXISTS public.passkey CASCADE`;
