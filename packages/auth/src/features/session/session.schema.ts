@@ -1,5 +1,5 @@
-import * as Schema from "effect/Schema";
-import { UserId } from "../user/user.schema";
+import * as Schema from 'effect/Schema';
+import { User, UserId } from '../user/user.schema.js';
 
 /**
  * Session entity matching Better Auth OpenAPI spec
@@ -11,7 +11,7 @@ import { UserId } from "../user/user.schema";
  * Includes admin plugin fields:
  * - impersonatedBy: ID of admin impersonating this session
  */
-export class Session extends Schema.Class<Session>("Session")({
+export class Session extends Schema.Class<Session>('Session')({
   id: Schema.String,
   expiresAt: Schema.DateTimeUtc,
   token: Schema.String,
@@ -51,7 +51,7 @@ export type ActiveSession = typeof ActiveSession.Type;
 export const SessionData = Schema.NullOr(
   Schema.Struct({
     session: Session,
-    user: Schema.Any, // Use Any to avoid circular dependency, will be User at runtime
-  })
+    user: User,
+  }),
 );
 export type SessionData = typeof SessionData.Type;
