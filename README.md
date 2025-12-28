@@ -1,290 +1,279 @@
-Welcome to your new TanStack app! 
+# TanStack Start Template
 
-# Getting Started
+A production-ready monorepo template built with TanStack Start, Nx, Effect, and Better Auth.
 
-To run this application:
+## 🏗️ Project Structure
+
+This is an **Nx monorepo** with the following structure:
+
+```
+.
+├── apps/
+│   ├── my-artist-type/          # Main TanStack Start application
+│   └── explore/                 # Experimental playground app
+├── packages/
+│   ├── auth/                    # Authentication package (@auth)
+│   │   ├── src/features/        # Feature-based organization
+│   │   │   ├── _core/          # Core auth services (AuthService, middleware, etc.)
+│   │   │   ├── account/        # Account management
+│   │   │   ├── admin/          # Admin functionality
+│   │   │   ├── invitation/     # Team invitations
+│   │   │   ├── member/         # Team members
+│   │   │   ├── organization/   # Organizations & teams
+│   │   │   ├── security/       # 2FA, passkeys
+│   │   │   ├── session/        # Session management
+│   │   │   └── user/           # User management
+│   │   └── database/           # Auth database migrations
+│   ├── core/                    # Core utilities (@core)
+│   ├── email/                   # Email service (@email)
+│   ├── todo/                    # Todo feature example (@todo)
+│   └── ui/                      # UI packages
+│       ├── shadcn/             # shadcn/ui components (@shadcn)
+│       └── theme/              # Theme system
+└── scripts/                     # Build and utility scripts
+```
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- [Bun](https://bun.sh/) - Runtime and package manager
+- [Nx](https://nx.dev/) - Monorepo tooling (installed automatically)
+
+### Installation
 
 ```bash
-pnpm install
-pnpm dev
+# Install dependencies
+bun install
+
+# Set up environment variables
+cp apps/my-artist-type/.env.example apps/my-artist-type/.env
+# Edit .env with your configuration
 ```
 
-# Building For Production
-
-To build this application for production:
+### Development
 
 ```bash
-pnpm build
+# Run the main app
+nx dev my-artist-type
+
+# Or using bun directly
+cd apps/my-artist-type
+bun dev
+
+# Run the playground app
+nx dev explore
 ```
 
-## Testing
+### Database Setup
 
-This project uses [Vitest](https://vitest.dev/) for testing. You can run the tests with:
+This project uses PostgreSQL with Better Auth for authentication:
 
 ```bash
-pnpm test
+# Start database (requires Docker)
+cd apps/my-artist-type
+docker-compose up -d
+
+# Run migrations
+nx run my-artist-type:db:migrate
+
+# Seed database (optional)
+nx run my-artist-type:db:seed
 ```
 
-## Styling
+## 📦 Packages
 
-This project uses [Tailwind CSS](https://tailwindcss.com/) for styling.
+### `@auth` - Authentication Package
 
+Full-featured authentication built on [Better Auth](https://better-auth.com/) with Effect integration.
 
+**Features:**
+- Email/password authentication
+- Social login (Google)
+- Organizations & Teams
+- Role-based access control
+- Two-factor authentication
+- Passkey support
+- Session management
 
+**Key Services:**
+- `AuthService` - Main authentication service
+- `AuthConfig` - Configuration management
+- `AuthDatabase` - Database connection
+- `HttpAuthenticationMiddleware` - HTTP middleware
+- `RpcAuthenticationMiddleware` - RPC middleware
 
-## Routing
-This project uses [TanStack Router](https://tanstack.com/router). The initial setup is a file based router. Which means that the routes are managed as files in `src/routes`.
+### `@core` - Core Package
 
-### Adding A Route
+Shared utilities and database infrastructure using Effect.
 
-To add a new route to your application just add another a new file in the `./src/routes` directory.
+### `@email` - Email Service
 
-TanStack will automatically generate the content of the route file for you.
+Mock email service for development (Effect-based).
 
-Now that you have two routes you can use a `Link` component to navigate between them.
+### `@todo` - Todo Package
 
-### Adding Links
+Example feature demonstrating the architecture patterns.
 
-To use SPA (Single Page Application) navigation you will need to import the `Link` component from `@tanstack/react-router`.
+### `@shadcn` - UI Components
 
-```tsx
-import { Link } from "@tanstack/react-router";
-```
+shadcn/ui components configured for the project.
 
-Then anywhere in your JSX you can use it like so:
+## 🛠️ Nx Commands
 
-```tsx
-<Link to="/about">About</Link>
-```
-
-This will create a link that will navigate to the `/about` route.
-
-More information on the `Link` component can be found in the [Link documentation](https://tanstack.com/router/v1/docs/framework/react/api/router/linkComponent).
-
-### Using A Layout
-
-In the File Based Routing setup the layout is located in `src/routes/__root.tsx`. Anything you add to the root route will appear in all the routes. The route content will appear in the JSX where you use the `<Outlet />` component.
-
-Here is an example layout that includes a header:
-
-```tsx
-import { Outlet, createRootRoute } from '@tanstack/react-router'
-import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
-
-import { Link } from "@tanstack/react-router";
-
-export const Route = createRootRoute({
-  component: () => (
-    <>
-      <header>
-        <nav>
-          <Link to="/">Home</Link>
-          <Link to="/about">About</Link>
-        </nav>
-      </header>
-      <Outlet />
-      <TanStackRouterDevtools />
-    </>
-  ),
-})
-```
-
-The `<TanStackRouterDevtools />` component is not required so you can remove it if you don't want it in your layout.
-
-More information on layouts can be found in the [Layouts documentation](https://tanstack.com/router/latest/docs/framework/react/guide/routing-concepts#layouts).
-
-
-## Data Fetching
-
-There are multiple ways to fetch data in your application. You can use TanStack Query to fetch data from a server. But you can also use the `loader` functionality built into TanStack Router to load the data for a route before it's rendered.
-
-For example:
-
-```tsx
-const peopleRoute = createRoute({
-  getParentRoute: () => rootRoute,
-  path: "/people",
-  loader: async () => {
-    const response = await fetch("https://swapi.dev/api/people");
-    return response.json() as Promise<{
-      results: {
-        name: string;
-      }[];
-    }>;
-  },
-  component: () => {
-    const data = peopleRoute.useLoaderData();
-    return (
-      <ul>
-        {data.results.map((person) => (
-          <li key={person.name}>{person.name}</li>
-        ))}
-      </ul>
-    );
-  },
-});
-```
-
-Loaders simplify your data fetching logic dramatically. Check out more information in the [Loader documentation](https://tanstack.com/router/latest/docs/framework/react/guide/data-loading#loader-parameters).
-
-### React-Query
-
-React-Query is an excellent addition or alternative to route loading and integrating it into you application is a breeze.
-
-First add your dependencies:
+### Development
 
 ```bash
-pnpm add @tanstack/react-query @tanstack/react-query-devtools
+# Run any app
+nx dev <app-name>
+
+# Build an app
+nx build <app-name>
+
+# Run tests
+nx test <app-name>
+
+# Type check
+nx check
 ```
 
-Next we'll need to create a query client and provider. We recommend putting those in `main.tsx`.
-
-```tsx
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-
-// ...
-
-const queryClient = new QueryClient();
-
-// ...
-
-if (!rootElement.innerHTML) {
-  const root = ReactDOM.createRoot(rootElement);
-
-  root.render(
-    <QueryClientProvider client={queryClient}>
-      <RouterProvider router={router} />
-    </QueryClientProvider>
-  );
-}
-```
-
-You can also add TanStack Query Devtools to the root route (optional).
-
-```tsx
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-
-const rootRoute = createRootRoute({
-  component: () => (
-    <>
-      <Outlet />
-      <ReactQueryDevtools buttonPosition="top-right" />
-      <TanStackRouterDevtools />
-    </>
-  ),
-});
-```
-
-Now you can use `useQuery` to fetch your data.
-
-```tsx
-import { useQuery } from "@tanstack/react-query";
-
-import "./App.css";
-
-function App() {
-  const { data } = useQuery({
-    queryKey: ["people"],
-    queryFn: () =>
-      fetch("https://swapi.dev/api/people")
-        .then((res) => res.json())
-        .then((data) => data.results as { name: string }[]),
-    initialData: [],
-  });
-
-  return (
-    <div>
-      <ul>
-        {data.map((person) => (
-          <li key={person.name}>{person.name}</li>
-        ))}
-      </ul>
-    </div>
-  );
-}
-
-export default App;
-```
-
-You can find out everything you need to know on how to use React-Query in the [React-Query documentation](https://tanstack.com/query/latest/docs/framework/react/overview).
-
-## State Management
-
-Another common requirement for React applications is state management. There are many options for state management in React. TanStack Store provides a great starting point for your project.
-
-First you need to add TanStack Store as a dependency:
+### Useful Commands
 
 ```bash
-pnpm add @tanstack/store
+# See what's affected by changes
+nx affected:graph
+
+# Run command for all affected projects
+nx affected:test
+nx affected:build
+
+# Clear Nx cache
+nx reset
 ```
 
-Now let's create a simple counter in the `src/App.tsx` file as a demonstration.
+### Project-Specific Tasks
 
-```tsx
-import { useStore } from "@tanstack/react-store";
-import { Store } from "@tanstack/store";
-import "./App.css";
+```bash
+# Database operations
+nx run my-artist-type:db:migrate
+nx run my-artist-type:db:reset
+nx run my-artist-type:db:seed
+nx run my-artist-type:db:clean
 
-const countStore = new Store(0);
-
-function App() {
-  const count = useStore(countStore);
-  return (
-    <div>
-      <button onClick={() => countStore.setState((n) => n + 1)}>
-        Increment - {count}
-      </button>
-    </div>
-  );
-}
-
-export default App;
+# Make user admin
+nx run my-artist-type:admin:set
 ```
 
-One of the many nice features of TanStack Store is the ability to derive state from other state. That derived state will update when the base state updates.
+## 🏛️ Architecture
 
-Let's check this out by doubling the count using derived state.
+### Effect-TS
 
-```tsx
-import { useStore } from "@tanstack/react-store";
-import { Store, Derived } from "@tanstack/store";
-import "./App.css";
+This project uses [Effect](https://effect.website/) for:
+- Type-safe dependency injection
+- Error handling
+- Service composition
+- Runtime management
 
-const countStore = new Store(0);
+### Better Auth
 
-const doubledStore = new Derived({
-  fn: () => countStore.state * 2,
-  deps: [countStore],
-});
-doubledStore.mount();
+Authentication is handled by [Better Auth](https://better-auth.com/) with:
+- Full TypeScript support
+- Database-backed sessions
+- Plugin system (organizations, 2FA, passkeys)
+- React hooks for client-side
 
-function App() {
-  const count = useStore(countStore);
-  const doubledCount = useStore(doubledStore);
+### Feature-Based Organization
 
-  return (
-    <div>
-      <button onClick={() => countStore.setState((n) => n + 1)}>
-        Increment - {count}
-      </button>
-      <div>Doubled - {doubledCount}</div>
-    </div>
-  );
-}
-
-export default App;
+Each feature in `@auth` follows this structure:
+```
+feature/
+├── feature.schema.ts       # Zod/Effect schemas
+├── feature.repository.ts   # Database operations
+├── feature.atoms.ts        # Client state (jotai)
+└── ui/                     # React components
 ```
 
-We use the `Derived` class to create a new store that is derived from another store. The `Derived` class has a `mount` method that will start the derived store updating.
+### Monorepo Benefits
 
-Once we've created the derived store we can use it in the `App` component just like we would any other store using the `useStore` hook.
+- **Shared code** - Common packages used across apps
+- **Type safety** - Full TypeScript across package boundaries
+- **Fast builds** - Nx caching and task orchestration
+- **Isolated testing** - Test packages independently
 
-You can find out everything you need to know on how to use TanStack Store in the [TanStack Store documentation](https://tanstack.com/store/latest).
+## 🧪 Testing
 
-# Demo files
+```bash
+# Run all tests
+bun test
 
-Files prefixed with `demo` can be safely deleted. They are there to provide a starting point for you to play around with the features you've installed.
+# Run tests for specific package
+nx test auth
 
-# Learn More
+# Run tests in watch mode
+nx test auth --watch
+```
 
-You can learn more about all of the offerings from TanStack in the [TanStack documentation](https://tanstack.com).
+## 🏗️ Building for Production
+
+```bash
+# Build the main app
+nx build my-artist-type
+
+# Build all apps
+nx run-many --target=build --all
+
+# Build only affected apps
+nx affected:build
+```
+
+## 📝 Environment Variables
+
+Required environment variables (see `.env.example`):
+
+```bash
+# Database
+DATABASE_URL=postgresql://...
+
+# Better Auth
+BETTER_AUTH_URL=http://localhost:3000
+BETTER_AUTH_SECRET=your-secret-key
+CLIENT_ORIGIN=http://localhost:5173
+
+# OAuth (optional)
+GOOGLE_CLIENT_ID=...
+GOOGLE_CLIENT_SECRET=...
+
+# App
+APP_NAME=My Artist Type
+```
+
+## 🎨 Styling
+
+- **Tailwind CSS** - Utility-first CSS
+- **shadcn/ui** - Beautiful, accessible components
+- **CSS Variables** - Theme system with dark mode
+
+## 📚 Tech Stack
+
+- **Framework:** TanStack Start
+- **Monorepo:** Nx
+- **Runtime:** Bun
+- **Language:** TypeScript
+- **Auth:** Better Auth
+- **Database:** PostgreSQL (Kysely query builder)
+- **Effects:** Effect-TS
+- **State:** Jotai (atoms)
+- **Styling:** Tailwind CSS + shadcn/ui
+- **Testing:** Vitest
+
+## 🔗 Useful Links
+
+- [TanStack Start](https://tanstack.com/start)
+- [Nx Documentation](https://nx.dev/)
+- [Effect Documentation](https://effect.website/)
+- [Better Auth](https://better-auth.com/)
+- [shadcn/ui](https://ui.shadcn.com/)
+
+## 📄 License
+
+MIT
