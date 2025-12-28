@@ -150,6 +150,9 @@ export const makeBetterAuthOptions = (params: {
   trustedOrigins: [params.clientOrigin, params.baseURL],
 });
 
+/**
+ * Creates the auth service with Better Auth instance and helper methods
+ */
 const makeAuthService = Effect.gen(function* () {
   const env = yield* AuthConfig;
   const kysely = yield* AuthDatabase;

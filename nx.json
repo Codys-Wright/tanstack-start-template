@@ -39,7 +39,9 @@
       "exclude": [
         "packages/playground/*",
         "packages/todo/*",
-        "packages/email/*"
+        "packages/email/*",
+        "/packages/quiz/*",
+        "packages/ui/components/*"
       ]
     },
     {
@@ -62,7 +64,9 @@
       "include": [
         "packages/playground/*",
         "packages/todo/*",
-        "packages/email/*"
+        "packages/email/*",
+        "/packages/quiz/*",
+        "packages/ui/components/*"
       ],
       "options": {
         "typecheck": {

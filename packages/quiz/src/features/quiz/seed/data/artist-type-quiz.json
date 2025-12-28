@@ -1,0 +1,8 @@
+{
+  "title": "My Artist Type Quiz",
+  "version": {
+    "semver": "1.0.0",
+    "comment": "Initial Seed Version"
+  },
+  "settings": {}
+}

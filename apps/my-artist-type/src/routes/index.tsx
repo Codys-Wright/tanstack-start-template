@@ -16,9 +16,10 @@ const listTodos = createServerFn({ method: "GET" }).handler(async () => {
       const auth = yield* AuthService;
       const service = yield* TodosService;
 
-      const currentUserId = yield* auth.currentUserId;
-      const todos = yield* service.list(currentUserId);
+      // Require authentication - will fail with Unauthenticated if not logged in
+      const userId = yield* auth.currentUserId();
 
+      const todos = yield* service.list(userId);
       return todos;
     }).pipe(
       // If unauthenticated, return empty array instead of failing

@@ -1,0 +1,404 @@
+{
+  "The Dreamer Artist": [
+    {
+      "question": {
+        "id": 1,
+        "content": "When I get an idea I see it very clearly in my head."
+      },
+      "IdealAnswers": 5,
+      "primary": false
+    },
+    {
+      "question": {
+        "id": 2,
+        "content": "I'm comfortable using the computer programs and apps that are associated with my craft."
+      },
+      "IdealAnswers": 5,
+      "primary": false
+    },
+    {
+      "question": {
+        "id": 3,
+        "content": "It doesn't bother me if people think my ideas are weird."
+      },
+      "IdealAnswers": 5,
+      "primary": false
+    },
+    {
+      "question": {
+        "id": 4,
+        "content": "People turn to me for helpful perspectives on creative ideas."
+      },
+      "IdealAnswers": 5,
+      "primary": false
+    },
+    {
+      "question": {
+        "id": 5,
+        "content": "I lose track of time when creating."
+      },
+      "IdealAnswers": [9, 10],
+      "primary": true
+    },
+    {
+      "question": {
+        "id": 6,
+        "content": "My colleagues consider me an expert in many areas."
+      },
+      "IdealAnswers": 5,
+      "primary": false
+    },
+    {
+      "question": {
+        "id": 7,
+        "content": "I struggle and toil to create my best work."
+      },
+      "IdealAnswers": 5,
+      "primary": false
+    },
+    {
+      "question": {
+        "id": 8,
+        "content": "I feel unhappy or frustrated with my own creative work."
+      },
+      "IdealAnswers": 5,
+      "primary": false
+    },
+    {
+      "question": {
+        "id": 9,
+        "content": "My ideas seem to come fast, as if out of nowhere."
+      },
+      "IdealAnswers": 5,
+      "primary": false
+    },
+    {
+      "question": {
+        "id": 10,
+        "content": "I\u2019m tech savvy in my chosen field."
+      },
+      "IdealAnswers": 5,
+      "primary": false
+    },
+    {
+      "question": {
+        "id": 11,
+        "content": "My goal is to be unique."
+      },
+      "IdealAnswers": 5,
+      "primary": false
+    },
+    {
+      "question": {
+        "id": 12,
+        "content": "I\u2019m not effected much by what others think."
+      },
+      "IdealAnswers": 5,
+      "primary": false
+    },
+    {
+      "question": {
+        "id": 13,
+        "content": "I have a love/hate relationship with my creative work."
+      },
+      "IdealAnswers": 5,
+      "primary": false
+    },
+    {
+      "question": {
+        "id": 14,
+        "content": "My best creative work comes from painful experiences."
+      },
+      "IdealAnswers": 5,
+      "primary": false
+    },
+    {
+      "question": {
+        "id": 15,
+        "content": "I\u2019m highly trained in my art form."
+      },
+      "IdealAnswers": 5,
+      "primary": false
+    },
+    {
+      "question": {
+        "id": 16,
+        "content": "I\u2019m highly imaginative."
+      },
+      "IdealAnswers": [9, 10],
+      "primary": true
+    },
+    {
+      "question": {
+        "id": 17,
+        "content": "When I\u2019m happy, I'm less likely to express myself creatively."
+      },
+      "IdealAnswers": 5,
+      "primary": false
+    },
+    {
+      "question": {
+        "id": 18,
+        "content": "I lose myself in my work and lose track of time."
+      },
+      "IdealAnswers": [9, 10],
+      "primary": true
+    },
+    {
+      "question": {
+        "id": 19,
+        "content": "I know exactly what I\u2019m doing, technically."
+      },
+      "IdealAnswers": 5,
+      "primary": false
+    },
+    {
+      "question": {
+        "id": 20,
+        "content": "People tend to consider me a skilled creative leader."
+      },
+      "IdealAnswers": 5,
+      "primary": false
+    },
+    {
+      "question": {
+        "id": 21,
+        "content": "I could teach others how to do what I do creatively."
+      },
+      "IdealAnswers": 5,
+      "primary": false
+    },
+    {
+      "question": {
+        "id": 22,
+        "content": "I believe the best art comes from pain."
+      },
+      "IdealAnswers": 5,
+      "primary": false
+    },
+    {
+      "question": {
+        "id": 23,
+        "content": "If I'm not feeling inspired, I don't enjoy creating."
+      },
+      "IdealAnswers": 5,
+      "primary": false
+    },
+    {
+      "question": {
+        "id": 24,
+        "content": "I am my own worst critic."
+      },
+      "IdealAnswers": 5,
+      "primary": false
+    },
+    {
+      "question": {
+        "id": 25,
+        "content": "I feel the most in touch with the emotional core of a creative project."
+      },
+      "IdealAnswers": 5,
+      "primary": false
+    },
+    {
+      "question": {
+        "id": 26,
+        "content": "I create a whirlwind of creative energy that inspires others."
+      },
+      "IdealAnswers": 5,
+      "primary": false
+    },
+    {
+      "question": {
+        "id": 27,
+        "content": "I\u2019m confident using the equipment or technology that's often associated with my chosen craft."
+      },
+      "IdealAnswers": 5,
+      "primary": false
+    },
+    {
+      "question": {
+        "id": 28,
+        "content": "I prefer to work alone."
+      },
+      "IdealAnswers": 5,
+      "primary": false
+    },
+    {
+      "question": {
+        "id": 29,
+        "content": "I enjoy leading people in a performance environment."
+      },
+      "IdealAnswers": 5,
+      "primary": false
+    },
+    {
+      "question": {
+        "id": 30,
+        "content": "From the start, I can clearly imagine how a project will turn out when it's finished."
+      },
+      "IdealAnswers": 5,
+      "primary": false
+    },
+    {
+      "question": {
+        "id": 31,
+        "content": "I\u2019m able to imagine how others will perceive a work of art."
+      },
+      "IdealAnswers": 5,
+      "primary": false
+    },
+    {
+      "question": {
+        "id": 32,
+        "content": "My primary creative goal is to entertain people."
+      },
+      "IdealAnswers": 5,
+      "primary": false
+    },
+    {
+      "question": {
+        "id": 33,
+        "content": "I naturally have a bird\u2019s-eye-view of a creative project."
+      },
+      "IdealAnswers": 5,
+      "primary": false
+    },
+    {
+      "question": {
+        "id": 34,
+        "content": "I care deeply what others think of me."
+      },
+      "IdealAnswers": 5,
+      "primary": false
+    },
+    {
+      "question": {
+        "id": 35,
+        "content": "I'm most fulfilled when I create something on my own."
+      },
+      "IdealAnswers": 5,
+      "primary": false
+    },
+    {
+      "question": {
+        "id": 36,
+        "content": "I find it difficult to take criticism well."
+      },
+      "IdealAnswers": 5,
+      "primary": false
+    },
+    {
+      "question": {
+        "id": 37,
+        "content": "I find it easy to get lost in my imagination."
+      },
+      "IdealAnswers": [9, 10],
+      "primary": true
+    },
+    {
+      "question": {
+        "id": 38,
+        "content": "I\u2019m very private about my creative process."
+      },
+      "IdealAnswers": 5,
+      "primary": false
+    },
+    {
+      "question": {
+        "id": 39,
+        "content": "I enjoy being the center of attention."
+      },
+      "IdealAnswers": 5,
+      "primary": false
+    },
+    {
+      "question": {
+        "id": 40,
+        "content": "I prefer situations where I can be in a leadership role."
+      },
+      "IdealAnswers": 5,
+      "primary": false
+    },
+    {
+      "question": {
+        "id": 41,
+        "content": "I feel most alive when I'm performing or presenting my work in front of people."
+      },
+      "IdealAnswers": 5,
+      "primary": false
+    },
+    {
+      "question": {
+        "id": 42,
+        "content": "I feel as if I enter another world when I\u2019m creating."
+      },
+      "IdealAnswers": [9, 10],
+      "primary": true
+    },
+    {
+      "question": {
+        "id": 43,
+        "content": "I prefer that someone else handle the hands-on technical work so I can focus on ideas."
+      },
+      "IdealAnswers": 5,
+      "primary": false
+    },
+    {
+      "question": {
+        "id": 44,
+        "content": "I do my best work when I\u2019m alone."
+      },
+      "IdealAnswers": 5,
+      "primary": false
+    },
+    {
+      "question": {
+        "id": 45,
+        "content": "I feel that my ideas are uniquely special."
+      },
+      "IdealAnswers": 5,
+      "primary": false
+    },
+    {
+      "question": {
+        "id": 46,
+        "content": "I thrive on getting positive reactions from people."
+      },
+      "IdealAnswers": 5,
+      "primary": false
+    },
+    {
+      "question": {
+        "id": 47,
+        "content": "I find collaborations to be distracting."
+      },
+      "IdealAnswers": 5,
+      "primary": false
+    },
+    {
+      "question": {
+        "id": 48,
+        "content": "My creative ideas are expansive and detailed."
+      },
+      "IdealAnswers": 5,
+      "primary": false
+    },
+    {
+      "question": {
+        "id": 49,
+        "content": "My primary creative goal is to express my personal experiences artistically."
+      },
+      "IdealAnswers": 5,
+      "primary": false
+    },
+    {
+      "question": {
+        "id": 50,
+        "content": "I like surprising people with the uniqueness of my ideas."
+      },
+      "IdealAnswers": 5,
+      "primary": false
+    }
+  ]
+}

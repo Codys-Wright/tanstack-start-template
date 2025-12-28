@@ -1,0 +1,554 @@
+{
+  "questions": [
+    {
+      "order": 1,
+      "description": "When I get an idea I see it very clearly in my head.",
+      "data": {
+        "type": "rating",
+        "minLabel": "Hardly Ever",
+        "maxLabel": "Almost Always",
+        "minRating": 0,
+        "maxRating": 10
+      }
+    },
+    {
+      "order": 2,
+      "description": "I'm comfortable using the computer programs and apps that are associated with my craft.",
+      "data": {
+        "type": "rating",
+        "minLabel": "Hardly Ever",
+        "maxLabel": "Almost Always",
+        "minRating": 0,
+        "maxRating": 10
+      }
+    },
+    {
+      "order": 3,
+      "description": "It doesn't bother me if people think my ideas are weird.",
+      "data": {
+        "type": "rating",
+        "minLabel": "Hardly Ever",
+        "maxLabel": "Almost Always",
+        "minRating": 0,
+        "maxRating": 10
+      }
+    },
+    {
+      "order": 4,
+      "description": "People turn to me for helpful perspectives on creative ideas.",
+      "data": {
+        "type": "rating",
+        "minLabel": "Hardly Ever",
+        "maxLabel": "Very Often",
+        "minRating": 0,
+        "maxRating": 10
+      }
+    },
+    {
+      "order": 5,
+      "description": "I lose track of time when creating.",
+      "data": {
+        "type": "rating",
+        "minLabel": "Hardly Ever",
+        "maxLabel": "Very Often",
+        "minRating": 0,
+        "maxRating": 10
+      }
+    },
+    {
+      "order": 6,
+      "description": "My colleagues consider me an expert in many areas.",
+      "data": {
+        "type": "rating",
+        "minLabel": "Hardly Ever",
+        "maxLabel": "Very Often",
+        "minRating": 0,
+        "maxRating": 10
+      }
+    },
+    {
+      "order": 7,
+      "description": "I struggle and toil to create my best work.",
+      "data": {
+        "type": "rating",
+        "minLabel": "Hardly Ever",
+        "maxLabel": "Almost Always",
+        "minRating": 0,
+        "maxRating": 10
+      }
+    },
+    {
+      "order": 8,
+      "description": "I feel unhappy or frustrated with my own creative work.",
+      "data": {
+        "type": "rating",
+        "minLabel": "Hardly Ever",
+        "maxLabel": "Very Often",
+        "minRating": 0,
+        "maxRating": 10
+      }
+    },
+    {
+      "order": 9,
+      "description": "My ideas seem to come fast, as if out of nowhere.",
+      "data": {
+        "type": "rating",
+        "minLabel": "Hardly Ever",
+        "maxLabel": "Almost Always",
+        "minRating": 0,
+        "maxRating": 10
+      }
+    },
+    {
+      "order": 10,
+      "description": "I\u2019m tech savvy in my chosen field.",
+      "data": {
+        "type": "rating",
+        "minLabel": "Hardly Ever",
+        "maxLabel": "Almost Always",
+        "minRating": 0,
+        "maxRating": 10
+      }
+    },
+    {
+      "order": 11,
+      "description": "My goal is to be unique.",
+      "data": {
+        "type": "rating",
+        "minLabel": "Hardly Ever",
+        "maxLabel": "Almost Always",
+        "minRating": 0,
+        "maxRating": 10
+      }
+    },
+    {
+      "order": 12,
+      "description": "I\u2019m not effected much by what others think.",
+      "data": {
+        "type": "rating",
+        "minLabel": "Hardly Ever",
+        "maxLabel": "Almost Always",
+        "minRating": 0,
+        "maxRating": 10
+      }
+    },
+    {
+      "order": 13,
+      "description": "I have a love/hate relationship with my creative work.",
+      "data": {
+        "type": "rating",
+        "minLabel": "Hardly Ever",
+        "maxLabel": "Almost Always",
+        "minRating": 0,
+        "maxRating": 10
+      }
+    },
+    {
+      "order": 14,
+      "description": "My best creative work comes from painful experiences.",
+      "data": {
+        "type": "rating",
+        "minLabel": "Hardly Ever",
+        "maxLabel": "Almost Always",
+        "minRating": 0,
+        "maxRating": 10
+      }
+    },
+    {
+      "order": 15,
+      "description": "I\u2019m highly trained in my art form.",
+      "data": {
+        "type": "rating",
+        "minLabel": "Not at All",
+        "maxLabel": "Very Much So",
+        "minRating": 0,
+        "maxRating": 10
+      }
+    },
+    {
+      "order": 16,
+      "description": "I\u2019m highly imaginative.",
+      "data": {
+        "type": "rating",
+        "minLabel": "Hardly Ever",
+        "maxLabel": "Almost Always",
+        "minRating": 0,
+        "maxRating": 10
+      }
+    },
+    {
+      "order": 17,
+      "description": "When I\u2019m happy, I'm less likely to express myself creatively.",
+      "data": {
+        "type": "rating",
+        "minLabel": "Hardly Ever",
+        "maxLabel": "Almost Always",
+        "minRating": 0,
+        "maxRating": 10
+      }
+    },
+    {
+      "order": 18,
+      "description": "I lose myself in my work and lose track of time.",
+      "data": {
+        "type": "rating",
+        "minLabel": "Hardly Ever",
+        "maxLabel": "Almost Always",
+        "minRating": 0,
+        "maxRating": 10
+      }
+    },
+    {
+      "order": 19,
+      "description": "I know exactly what I\u2019m doing, technically.",
+      "data": {
+        "type": "rating",
+        "minLabel": "Hardly Ever",
+        "maxLabel": "Almost Always",
+        "minRating": 0,
+        "maxRating": 10
+      }
+    },
+    {
+      "order": 20,
+      "description": "People tend to consider me a skilled creative leader.",
+      "data": {
+        "type": "rating",
+        "minLabel": "Hardly Ever",
+        "maxLabel": "Almost Always",
+        "minRating": 0,
+        "maxRating": 10
+      }
+    },
+    {
+      "order": 21,
+      "description": "I could teach others how to do what I do creatively.",
+      "data": {
+        "type": "rating",
+        "minLabel": "No Way",
+        "maxLabel": "I'm Highly confident I could",
+        "minRating": 0,
+        "maxRating": 10
+      }
+    },
+    {
+      "order": 22,
+      "description": "I believe the best art comes from pain.",
+      "data": {
+        "type": "rating",
+        "minLabel": "Strongly Disagree",
+        "maxLabel": "Strongly Agree",
+        "minRating": 0,
+        "maxRating": 10
+      }
+    },
+    {
+      "order": 23,
+      "description": "If I'm not feeling inspired, I don't enjoy creating.",
+      "data": {
+        "type": "rating",
+        "minLabel": "Hardly Ever",
+        "maxLabel": "Almost Always",
+        "minRating": 0,
+        "maxRating": 10
+      }
+    },
+    {
+      "order": 24,
+      "description": "I am my own worst critic.",
+      "data": {
+        "type": "rating",
+        "minLabel": "Hardly Ever",
+        "maxLabel": "Almost Always",
+        "minRating": 0,
+        "maxRating": 10
+      }
+    },
+    {
+      "order": 25,
+      "description": "I feel the most in touch with the emotional core of a creative project.",
+      "data": {
+        "type": "rating",
+        "minLabel": "Hardly Ever",
+        "maxLabel": "Almost Always",
+        "minRating": 0,
+        "maxRating": 10
+      }
+    },
+    {
+      "order": 26,
+      "description": "I create a whirlwind of creative energy that inspires others.",
+      "data": {
+        "type": "rating",
+        "minLabel": "Hardly Ever",
+        "maxLabel": "Almost Always",
+        "minRating": 0,
+        "maxRating": 10
+      }
+    },
+    {
+      "order": 27,
+      "description": "I\u2019m confident using the equipment or technology that's often associated with my chosen craft.",
+      "data": {
+        "type": "rating",
+        "minLabel": "Hardly Ever",
+        "maxLabel": "Almost Always",
+        "minRating": 0,
+        "maxRating": 10
+      }
+    },
+    {
+      "order": 28,
+      "description": "I prefer to work alone.",
+      "data": {
+        "type": "rating",
+        "minLabel": "Hardly Ever",
+        "maxLabel": "Almost Always",
+        "minRating": 0,
+        "maxRating": 10
+      }
+    },
+    {
+      "order": 29,
+      "description": "I enjoy leading people in a performance environment.",
+      "data": {
+        "type": "rating",
+        "minLabel": "Hardly Ever",
+        "maxLabel": "Almost Always",
+        "minRating": 0,
+        "maxRating": 10
+      }
+    },
+    {
+      "order": 30,
+      "description": "From the start, I can clearly imagine how a project will turn out when it's finished.",
+      "data": {
+        "type": "rating",
+        "minLabel": "Hardly Ever",
+        "maxLabel": "Almost Always",
+        "minRating": 0,
+        "maxRating": 10
+      }
+    },
+    {
+      "order": 31,
+      "description": "I\u2019m able to imagine how others will perceive a work of art.",
+      "data": {
+        "type": "rating",
+        "minLabel": "Hardly Ever",
+        "maxLabel": "Almost Always",
+        "minRating": 0,
+        "maxRating": 10
+      }
+    },
+    {
+      "order": 32,
+      "description": "My primary creative goal is to entertain people.",
+      "data": {
+        "type": "rating",
+        "minLabel": "Hardly Ever",
+        "maxLabel": "Almost Always",
+        "minRating": 0,
+        "maxRating": 10
+      }
+    },
+    {
+      "order": 33,
+      "description": "I naturally have a bird\u2019s-eye-view of a creative project.",
+      "data": {
+        "type": "rating",
+        "minLabel": "Hardly Ever",
+        "maxLabel": "Almost Always",
+        "minRating": 0,
+        "maxRating": 10
+      }
+    },
+    {
+      "order": 34,
+      "description": "I care deeply what others think of me.",
+      "data": {
+        "type": "rating",
+        "minLabel": "Hardly Ever",
+        "maxLabel": "Almost Always",
+        "minRating": 0,
+        "maxRating": 10
+      }
+    },
+    {
+      "order": 35,
+      "description": "I'm most fulfilled when I create something on my own.",
+      "data": {
+        "type": "rating",
+        "minLabel": "Hardly Ever",
+        "maxLabel": "Almost Always",
+        "minRating": 0,
+        "maxRating": 10
+      }
+    },
+    {
+      "order": 36,
+      "description": "I find it difficult to take criticism well.",
+      "data": {
+        "type": "rating",
+        "minLabel": "Hardly Ever",
+        "maxLabel": "Almost Always",
+        "minRating": 0,
+        "maxRating": 10
+      }
+    },
+    {
+      "order": 37,
+      "description": "I find it easy to get lost in my imagination.",
+      "data": {
+        "type": "rating",
+        "minLabel": "Hardly Ever",
+        "maxLabel": "Almost Always",
+        "minRating": 0,
+        "maxRating": 10
+      }
+    },
+    {
+      "order": 38,
+      "description": "I\u2019m very private about my creative process.",
+      "data": {
+        "type": "rating",
+        "minLabel": "Hardly Ever",
+        "maxLabel": "Almost Always",
+        "minRating": 0,
+        "maxRating": 10
+      }
+    },
+    {
+      "order": 39,
+      "description": "I enjoy being the center of attention.",
+      "data": {
+        "type": "rating",
+        "minLabel": "Hardly Ever",
+        "maxLabel": "Almost Always",
+        "minRating": 0,
+        "maxRating": 10
+      }
+    },
+    {
+      "order": 40,
+      "description": "I prefer situations where I can be in a leadership role.",
+      "data": {
+        "type": "rating",
+        "minLabel": "Hardly Ever",
+        "maxLabel": "Almost Always",
+        "minRating": 0,
+        "maxRating": 10
+      }
+    },
+    {
+      "order": 41,
+      "description": "I feel most alive when I'm performing or presenting my work in front of people.",
+      "data": {
+        "type": "rating",
+        "minLabel": "Hardly Ever",
+        "maxLabel": "Almost Always",
+        "minRating": 0,
+        "maxRating": 10
+      }
+    },
+    {
+      "order": 42,
+      "description": "I feel as if I enter another world when I\u2019m creating.",
+      "data": {
+        "type": "rating",
+        "minLabel": "Hardly Ever",
+        "maxLabel": "Almost Always",
+        "minRating": 0,
+        "maxRating": 10
+      }
+    },
+    {
+      "order": 43,
+      "description": "I prefer that someone else handle the hands-on technical work so I can focus on ideas.",
+      "data": {
+        "type": "rating",
+        "minLabel": "Hardly Ever",
+        "maxLabel": "Almost Always",
+        "minRating": 0,
+        "maxRating": 10
+      }
+    },
+    {
+      "order": 44,
+      "description": "I do my best work when I\u2019m alone.",
+      "data": {
+        "type": "rating",
+        "minLabel": "Hardly Ever",
+        "maxLabel": "Almost Always",
+        "minRating": 0,
+        "maxRating": 10
+      }
+    },
+    {
+      "order": 45,
+      "description": "I feel that my ideas are uniquely special.",
+      "data": {
+        "type": "rating",
+        "minLabel": "Hardly Ever",
+        "maxLabel": "Almost Always",
+        "minRating": 0,
+        "maxRating": 10
+      }
+    },
+    {
+      "order": 46,
+      "description": "I thrive on getting positive reactions from people.",
+      "data": {
+        "type": "rating",
+        "minLabel": "Hardly Ever",
+        "maxLabel": "Almost Always",
+        "minRating": 0,
+        "maxRating": 10
+      }
+    },
+    {
+      "order": 47,
+      "description": "I find collaborations to be distracting.",
+      "data": {
+        "type": "rating",
+        "minLabel": "Hardly Ever",
+        "maxLabel": "Almost Always",
+        "minRating": 0,
+        "maxRating": 10
+      }
+    },
+    {
+      "order": 48,
+      "description": "My creative ideas are expansive and detailed.",
+      "data": {
+        "type": "rating",
+        "minLabel": "Hardly Ever",
+        "maxLabel": "Almost Always",
+        "minRating": 0,
+        "maxRating": 10
+      }
+    },
+    {
+      "order": 49,
+      "description": "My primary creative goal is to express my personal experiences artistically.",
+      "data": {
+        "type": "rating",
+        "minLabel": "Hardly Ever",
+        "maxLabel": "Almost Always",
+        "minRating": 0,
+        "maxRating": 10
+      }
+    },
+    {
+      "order": 50,
+      "description": "I like surprising people with the uniqueness of my ideas.",
+      "data": {
+        "type": "rating",
+        "minLabel": "Hardly Ever",
+        "maxLabel": "Almost Always",
+        "minRating": 0,
+        "maxRating": 10
+      }
+    }
+  ]
+}

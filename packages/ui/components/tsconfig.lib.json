@@ -1,0 +1,21 @@
+{
+  "extends": "../../../tsconfig.base.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "rootDir": "src",
+    "outDir": "dist",
+    "tsBuildInfoFile": "dist/tsconfig.lib.tsbuildinfo",
+    "emitDeclarationOnly": true,
+    "forceConsistentCasingInFileNames": true,
+    "types": ["node"],
+    "paths": {
+      "@/*": ["./src/*"],
+      "@core": ["../../core/src/index.ts"],
+      "@core/*": ["../../core/src/*"],
+      "@shadcn": ["../shadcn/"],
+      "@shadcn/*": ["../shadcn/src/*"]
+    }
+  },
+  "include": ["src/**/*.ts"],
+  "references": []
+}
