@@ -5,15 +5,27 @@ import { admin, openAPI } from "better-auth/plugins";
 import { organization } from "better-auth/plugins/organization";
 import { passkey } from "@better-auth/passkey";
 import { twoFactor } from "better-auth/plugins/two-factor";
+import * as HttpApiSchema from "@effect/platform/HttpApiSchema";
 import * as Effect from "effect/Effect";
 import * as Layer from "effect/Layer";
 import * as Option from "effect/Option";
 import * as Redacted from "effect/Redacted";
+import * as Schema from "effect/Schema";
 import { BetterAuthConfig, getAuthSecret } from "./better-auth.config";
 import { BetterAuthDatabase } from "./better-auth.database";
 import { EmailService } from "./email.service";
+import type { SessionData } from "../session/session.schema";
 
 export type BetterAuthInstance = ReturnType<typeof betterAuth>;
+
+/**
+ * Error thrown when authentication is required but no valid session exists.
+ */
+export class Unauthenticated extends Schema.TaggedError<Unauthenticated>()(
+  "Unauthenticated",
+  {},
+  HttpApiSchema.annotations({ status: 401 }),
+) {}
 
 /**
  * Creates Better Auth options.
@@ -143,13 +155,40 @@ const makeBetterAuth = Effect.gen(function* () {
   const { runMigrations } = yield* Effect.promise(() => getMigrations(options));
   yield* Effect.promise(runMigrations);
 
-  return betterAuth(options);
+  const auth = betterAuth(options);
+
+  return {
+    ...auth,
+    /**
+     * Gets the current session from cookies.
+     * Returns SessionData (session + user) on success.
+     * Fails with Unauthenticated error if no valid session exists.
+     *
+     * @example
+     * ```ts
+     * const auth = yield* BetterAuthService;
+     * const session = yield* auth.getSession;
+     * const userId = session.user.id;
+     * ```
+     */
+    getSession: Effect.tryPromise({
+      try: () => auth.api.getSession() as Promise<SessionData>,
+      catch: () => new Unauthenticated(),
+    }).pipe(
+      Effect.flatMap((session) =>
+        session
+          ? Effect.succeed(session)
+          : Effect.fail(new Unauthenticated()),
+      ),
+    ),
+  };
 });
 
 export class BetterAuthService extends Effect.Service<BetterAuthService>()(
   "BetterAuthService",
   {
     effect: makeBetterAuth,
+    accessors: true,
     // Use Layer.orDie to convert ConfigError into defects
     // This prevents ConfigError from propagating up to consumers
     dependencies: [

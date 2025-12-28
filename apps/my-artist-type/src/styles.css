@@ -3,6 +3,8 @@
 
 @source "../../../packages/ui/theme/src";
 @source "../../../packages/ui/shadcn/src/";
+@source "../../../packages/auth/src";
+@source "../../../packages/todo/src";
 
 @custom-variant dark (&:is(.dark *));
 

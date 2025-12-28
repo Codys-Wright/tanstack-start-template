@@ -28,6 +28,7 @@ const config = defineConfig({
       "@core/database": path.resolve(import.meta.dirname, "../../packages/core/src/database.ts"),
       "@core/server": path.resolve(import.meta.dirname, "../../packages/core/src/server.ts"),
       "@todo/server": path.resolve(import.meta.dirname, "../../packages/todo/src/server/index.ts"),
+      "@todo/database": path.resolve(import.meta.dirname, "../../packages/todo/src/database/index.ts"),
     },
   },
   optimizeDeps: {

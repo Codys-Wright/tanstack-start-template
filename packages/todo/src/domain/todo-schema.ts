@@ -1,11 +1,16 @@
+import { UserId } from "@auth";
 import * as HttpApiSchema from "@effect/platform/HttpApiSchema";
 import * as Schema from "effect/Schema";
 
 export const TodoId = Schema.String.pipe(Schema.brand("TodoId"));
 export type TodoId = typeof TodoId.Type;
 
+// Re-export UserId from auth package for convenience
+export { UserId };
+
 export const Todo = Schema.Struct({
   id: TodoId,
+  userId: UserId,
   title: Schema.String,
   completed: Schema.Boolean,
   createdAt: Schema.DateTimeUtc,

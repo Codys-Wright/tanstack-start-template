@@ -12,7 +12,7 @@ export * from "./features/_core/auth.context";
 export * from "./features/_core/auth.policy";
 export * from "./features/_core/better-auth.config";
 export * from "./features/_core/better-auth.router";
-export * from "./features/_core/better-auth.service";
+export { BetterAuthService, Unauthenticated } from "./features/_core/better-auth.service";
 export * from "./features/_core/email.service";
 export * from "./features/_core/auth.http-middleware";
 export * from "./features/_core/auth.rpc-middleware";

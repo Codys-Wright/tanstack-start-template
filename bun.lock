@@ -376,6 +376,7 @@
       "name": "@todo",
       "version": "0.0.1",
       "dependencies": {
+        "@auth": "*",
         "@core": "*",
         "@effect-atom/atom": "*",
         "@effect-atom/atom-react": "*",

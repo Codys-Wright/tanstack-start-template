@@ -1,2 +1,3 @@
-// Database exports - currently empty
-// Future: TodosRepository, database migrations, etc.
+// Database exports
+export * from "./todos-repository";
+export * from "./migrations";

@@ -15,13 +15,18 @@
     "paths": {
       "@/*": ["./src/*"],
       "@core": ["../core/src/index.ts"],
-      "@core/*": ["../core/src/*"]
+      "@core/*": ["../core/src/*"],
+      "@auth": ["../auth/src/index.ts"],
+      "@auth/*": ["../auth/src/*"]
     }
   },
   "include": ["src/**/*.ts", "src/**/*.tsx"],
   "references": [
     {
       "path": "../core/tsconfig.lib.json"
+    },
+    {
+      "path": "../auth/tsconfig.lib.json"
     }
   ]
 }

@@ -2,9 +2,11 @@ import {
   BetterAuthRouter,
   BetterAuthService,
   HttpAuthenticationMiddlewareLive,
+  RpcAuthenticationMiddleware,
   RpcAuthenticationMiddlewareLive,
 } from "@auth/server";
 import { authMigrations } from "@auth/database";
+import { todoMigrations } from "@todo/database";
 import { PgLive, createMigrationLoader } from "@core/database";
 import { makeTodosApiLive, TodosRpcLive } from "@todo/server";
 import * as BunContext from "@effect/platform-bun/BunContext";
@@ -55,8 +57,13 @@ const RpcLoggerLive = Layer.succeed(
   ),
 );
 
+// Apply authentication and logging middleware to RPC group
+const DomainRpcWithMiddleware = DomainRpc
+  .middleware(RpcAuthenticationMiddleware)
+  .middleware(RpcLogger);
+
 const RpcRouter = RpcServer.layerHttpRouter({
-  group: DomainRpc.middleware(RpcLogger),
+  group: DomainRpcWithMiddleware,
   path: "/api/rpc",
   protocol: "http",
   spanPrefix: "rpc",
@@ -119,7 +126,7 @@ await Effect.runPromise(
 
     const migrations = yield* PgMigrator.run({
       loader: createMigrationLoader({
-        features: [authMigrations],
+        features: [authMigrations, todoMigrations],
       }),
     });
 
