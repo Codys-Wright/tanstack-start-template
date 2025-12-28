@@ -5,6 +5,7 @@ import {
   RpcAuthenticationMiddleware,
   RpcAuthenticationMiddlewareLive,
   AuthService,
+  makeSessionApiLive,
 } from '@auth/server';
 import { makeTodosApiLive, TodosRpcLive } from '@todo/server';
 import * as HttpApiScalar from '@effect/platform/HttpApiScalar';
@@ -24,6 +25,9 @@ import { DomainApi, DomainRpc } from '../domain/index.js';
 
 // HttpApi handlers for todos - uses makeTodosApiLive from @todo
 const TodosApiLive = makeTodosApiLive(DomainApi);
+
+// HttpApi handlers for session auth - uses makeSessionApiLive from @auth/server
+const SessionApiLive = makeSessionApiLive(DomainApi);
 
 class RpcLogger extends RpcMiddleware.Tag<RpcLogger>()('RpcLogger', {
   wrap: true,
@@ -73,6 +77,7 @@ const HttpApiRouter = HttpLayerRouter.addHttpApi(DomainApi, {
   openapiPath: '/api/openapi.json',
 }).pipe(
   Layer.provide(TodosApiLive),
+  Layer.provide(SessionApiLive),
   Layer.provide(HttpAuthenticationMiddlewareLive),
   Layer.provide(AuthService.Default),
   Layer.provide(HttpServer.layerContext),
