@@ -88,12 +88,13 @@
     "tailwindcss": "*",
     "vaul": "*",
     "vite-tsconfig-paths": "*",
-    "zod": "*",
-    "@core": "*"
+    "zod": "*"
   },
   "devDependencies": {
     "@effect/vitest": "*",
     "@shadcn": "*",
+    "@core": "*",
+    "@email": "*",
     "@tanstack/devtools-vite": "*",
     "@testcontainers/postgresql": "*",
     "@testing-library/dom": "*",

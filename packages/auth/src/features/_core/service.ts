@@ -1,20 +1,25 @@
+import * as HttpApiSchema from "@effect/platform/HttpApiSchema";
+import { passkey } from "@better-auth/passkey";
 import { betterAuth } from "better-auth";
 import type { BetterAuthOptions } from "better-auth";
 import { getMigrations } from "better-auth/db";
 import { admin, openAPI } from "better-auth/plugins";
 import { organization } from "better-auth/plugins/organization";
-import { passkey } from "@better-auth/passkey";
 import { twoFactor } from "better-auth/plugins/two-factor";
-import * as HttpApiSchema from "@effect/platform/HttpApiSchema";
+import { EmailService } from "@email";
 import * as Effect from "effect/Effect";
 import * as Layer from "effect/Layer";
 import * as Option from "effect/Option";
 import * as Redacted from "effect/Redacted";
+import * as Runtime from "effect/Runtime";
 import * as Schema from "effect/Schema";
-import { BetterAuthConfig, getAuthSecret } from "./better-auth.config";
-import { BetterAuthDatabase } from "./better-auth.database";
-import { EmailService } from "./email.service";
 import type { SessionData } from "../session/session.schema";
+import { AuthConfig } from "./config";
+import { AuthDatabase } from "./database";
+
+// ============================================================================
+// Auth Service
+// ============================================================================
 
 export type BetterAuthInstance = ReturnType<typeof betterAuth>;
 
@@ -52,7 +57,7 @@ export const makeBetterAuthOptions = (params: {
       await params.sendEmail(
         user.email,
         "Reset your password",
-        `<p>Click the link below to reset your password:</p><p><a href="${url}">${url}</a></p>`
+        `<p>Click the link below to reset your password:</p><p><a href="${url}">${url}</a></p>`,
       );
     },
   },
@@ -106,7 +111,7 @@ export const makeBetterAuthOptions = (params: {
           data.email,
           `Invitation to join ${data.organization.name}`,
           `<p>You've been invited to join <strong>${data.organization.name}</strong>.</p>
-					<p>Invitation ID: ${data.invitation.id}</p>`
+					<p>Invitation ID: ${data.invitation.id}</p>`,
         );
       },
 
@@ -130,14 +135,15 @@ export const makeBetterAuthOptions = (params: {
   trustedOrigins: [params.clientOrigin, params.baseURL],
 });
 
-const makeBetterAuth = Effect.gen(function* () {
-  const env = yield* BetterAuthConfig;
-  const kysely = yield* BetterAuthDatabase;
+const makeAuthService = Effect.gen(function* () {
+  const env = yield* AuthConfig;
+  const kysely = yield* AuthDatabase;
   const emailService = yield* EmailService;
+  const runtime = yield* Effect.runtime<EmailService>();
 
   const options = makeBetterAuthOptions({
     baseURL: env.BETTER_AUTH_URL,
-    secret: getAuthSecret(env),
+    secret: Redacted.value(env.BETTER_AUTH_SECRET),
     clientOrigin: env.CLIENT_ORIGIN,
     db: kysely,
     googleClientId: Option.isSome(env.GOOGLE_CLIENT_ID)
@@ -148,7 +154,9 @@ const makeBetterAuth = Effect.gen(function* () {
       : undefined,
     appName: env.APP_NAME,
     sendEmail: async (to, subject, html) => {
-      await Effect.runPromise(emailService.send({ to, subject, html }));
+      await Runtime.runPromise(runtime)(
+        emailService.send({ to, subject, html }),
+      );
     },
   });
 
@@ -166,7 +174,7 @@ const makeBetterAuth = Effect.gen(function* () {
      *
      * @example
      * ```ts
-     * const auth = yield* BetterAuthService;
+     * const auth = yield* AuthService;
      * const session = yield* auth.getSession;
      * const userId = session.user.id;
      * ```
@@ -176,25 +184,20 @@ const makeBetterAuth = Effect.gen(function* () {
       catch: () => new Unauthenticated(),
     }).pipe(
       Effect.flatMap((session) =>
-        session
-          ? Effect.succeed(session)
-          : Effect.fail(new Unauthenticated()),
+        session ? Effect.succeed(session) : Effect.fail(new Unauthenticated()),
       ),
     ),
   };
 });
 
-export class BetterAuthService extends Effect.Service<BetterAuthService>()(
-  "BetterAuthService",
-  {
-    effect: makeBetterAuth,
-    accessors: true,
-    // Use Layer.orDie to convert ConfigError into defects
-    // This prevents ConfigError from propagating up to consumers
-    dependencies: [
-      BetterAuthDatabase.Default.pipe(Layer.orDie),
-      BetterAuthConfig.Default.pipe(Layer.orDie),
-      EmailService.Default.pipe(Layer.orDie),
-    ],
-  }
-) {}
+export class AuthService extends Effect.Service<AuthService>()("AuthService", {
+  effect: makeAuthService,
+  accessors: true,
+  // Use Layer.orDie to convert ConfigError into defects
+  // This prevents ConfigError from propagating up to consumers
+  dependencies: [
+    AuthDatabase.Default.pipe(Layer.orDie),
+    AuthConfig.Default.pipe(Layer.orDie),
+    EmailService.Default.pipe(Layer.orDie),
+  ],
+}) {}

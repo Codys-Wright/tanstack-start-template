@@ -16,9 +16,7 @@
     "db:add-fake-column": "dotenv -- bun run ../../packages/auth/src/database/scripts/add-fake-column.ts",
     "db:seed": "dotenv -- bun run ../../packages/auth/src/database/scripts/seed-users.ts",
     "db:clean": "dotenv -- bun run ../../packages/auth/src/database/scripts/cleanup-fake-users.ts",
-    "admin:set": "dotenv -- bun run ../../packages/auth/src/database/scripts/make-admin.ts",
-    "auth:migrate": "dotenv -- pnpx @better-auth/cli migrate --config ../../packages/auth/src/_core/auth.ts",
-    "auth:generate": "dotenv -- pnpx @better-auth/cli generate --config ../../packages/auth/src/_core/auth.ts --output ../../packages/auth/src/database/migrations/better-auth-schema.sql -y"
+    "admin:set": "dotenv -- bun run ../../packages/auth/src/database/scripts/make-admin.ts"
   },
   "dependencies": {
     "@better-auth/passkey": "*",

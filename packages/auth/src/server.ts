@@ -7,12 +7,7 @@
 // ============================================================================
 // Core - Server infrastructure
 // ============================================================================
-export { auth } from "./features/_core/auth";
-export * from "./features/_core/auth.context";
-export * from "./features/_core/auth.policy";
-export * from "./features/_core/better-auth.config";
-export * from "./features/_core/better-auth.router";
-export { BetterAuthService, Unauthenticated } from "./features/_core/better-auth.service";
-export * from "./features/_core/email.service";
-export * from "./features/_core/auth.http-middleware";
-export * from "./features/_core/auth.rpc-middleware";
+export * from "./features/_core/config";
+export * from "./features/_core/middleware";
+export * from "./features/_core/router";
+export { AuthService, Unauthenticated } from "./features/_core/service";

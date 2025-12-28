@@ -7,8 +7,8 @@ import { Result } from "@effect-atom/atom-react";
 import { HydrationBoundary } from "@effect-atom/atom-react/ReactHydration";
 import { createFileRoute } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
+import { getRequestHeaders } from "@tanstack/react-start/server";
 import * as Effect from "effect/Effect";
-import * as Option from "effect/Option";
 import { serverRuntime } from "../features/core/server";
 import { App } from "./-index/app";
 
@@ -18,18 +18,39 @@ const listTodos = createServerFn({ method: "GET" }).handler(async () => {
       const auth = yield* BetterAuthService;
       const service = yield* TodosService;
 
-      // Try to get session, convert error to Option for graceful handling
-      const session = yield* auth.getSession.pipe(Effect.option);
+      // Get request headers (synchronous in TanStack Start)
+      const headers = getRequestHeaders();
+
+      // Try to get session from Better Auth, catch errors and return null
+      const session = yield* Effect.tryPromise({
+        try: () => auth.api.getSession({ headers }),
+        catch: () => new Error("Failed to get session"),
+      }).pipe(
+        Effect.catchAll(() =>
+          Effect.gen(function* () {
+            yield* Effect.logInfo("[listTodos] Session error - returning null");
+            return null;
+          }),
+        ),
+      );
 
       // If not authenticated, return empty array
-      if (Option.isNone(session)) {
+      if (!session) {
+        yield* Effect.logInfo("[listTodos] No session - returning empty todos");
         return [];
       }
 
       // Fetch user's todos
-      const userId = session.value.user.id as UserId;
-      return yield* service.list(userId);
-    }).pipe(Effect.orDie),
+      const userId = session.user.id as UserId;
+      yield* Effect.logInfo(
+        `[listTodos] Authenticated user ${userId} - fetching todos`,
+      );
+
+      const todos = yield* service.list(userId);
+      yield* Effect.logInfo(`[listTodos] Retrieved ${todos.length} todos`);
+
+      return todos;
+    }),
   );
 
   // Convert Exit to Result - handles Success/Failure properly

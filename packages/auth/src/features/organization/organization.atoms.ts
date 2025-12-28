@@ -1,7 +1,7 @@
 import { Atom, Result } from "@effect-atom/atom-react";
 import * as Data from "effect/Data";
 import * as Effect from "effect/Effect";
-import { authClient } from "../_core/auth.client";
+import { authClient } from "../_core/client";
 
 /**
  * OrganizationApi - Effect Service wrapper around Better Auth organization client

@@ -368,6 +368,10 @@
         "vitest": "*",
       },
     },
+    "packages/email": {
+      "name": "@ethoscreative/email",
+      "version": "0.0.1",
+    },
     "packages/playground": {
       "name": "@playground",
       "version": "0.0.1",
@@ -967,6 +971,8 @@
     "@eslint/object-schema": ["@eslint/object-schema@2.1.7", "", {}, "sha512-VtAOaymWVfZcmZbp6E2mympDIHvyjXs/12LqWYjVw6qjrfF+VK+fyG33kChz3nnK+SU5/NeHOqrTEHS8sXO3OA=="],
 
     "@eslint/plugin-kit": ["@eslint/plugin-kit@0.4.1", "", { "dependencies": { "@eslint/core": "^0.17.0", "levn": "^0.4.1" } }, "sha512-43/qtrDUokr7LJqoF2c3+RInu/t4zfrpYdoSDfYyhg52rwLV6TnOvdG4fXm7IkSB3wErkcmJS9iEhjVtOSEjjA=="],
+
+    "@ethoscreative/email": ["@ethoscreative/email@workspace:packages/email"],
 
     "@ethoscreative/explore": ["@ethoscreative/explore@workspace:apps/explore"],
 

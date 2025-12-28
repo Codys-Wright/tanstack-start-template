@@ -10,8 +10,8 @@
 // ============================================================================
 // Core - Client & Domain
 // ============================================================================
-export { authClient } from "./features/_core/auth.client";
-export * from "./features/_core/auth.schema";
+export { authClient } from "./features/_core/client";
+export * from "./features/_core/schema";
 
 // ============================================================================
 // User - Domain & UI

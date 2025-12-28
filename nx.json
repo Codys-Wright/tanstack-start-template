@@ -36,7 +36,11 @@
           "watchDepsName": "watch-deps"
         }
       },
-      "exclude": ["packages/playground/*", "packages/todo/*"]
+      "exclude": [
+        "packages/playground/*",
+        "packages/todo/*",
+        "packages/email/*"
+      ]
     },
     {
       "plugin": "@nx/vite/plugin",
@@ -55,7 +59,11 @@
     },
     {
       "plugin": "@nx/js/typescript",
-      "include": ["packages/playground/*", "packages/todo/*"],
+      "include": [
+        "packages/playground/*",
+        "packages/todo/*",
+        "packages/email/*"
+      ],
       "options": {
         "typecheck": {
           "targetName": "typecheck"

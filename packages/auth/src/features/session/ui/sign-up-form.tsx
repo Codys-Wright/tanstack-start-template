@@ -7,7 +7,7 @@ import { useEffect } from "react";
 import * as Schema from "effect/Schema";
 
 import { signUpAtom } from "../session.atoms";
-import type { SignUpInput } from "../../_core/auth.schema";
+import type { SignUpInput } from "../../_core/schema";
 
 // Define the form schema using Effect Schema
 const SignUpSchema = Schema.Struct({

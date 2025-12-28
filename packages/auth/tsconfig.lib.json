@@ -20,7 +20,9 @@
       "@core": ["../core/src/index.ts"],
       "@core/*": ["../core/src/*"],
       "@shadcn": ["../ui/shadcn/src/index.ts"],
-      "@shadcn/*": ["../ui/shadcn/src/*"]
+      "@shadcn/*": ["../ui/shadcn/src/*"],
+      "@email": ["../email/src/index.ts"],
+      "@email/*": ["../email/src/*"]
     }
   },
   "exclude": [
@@ -42,6 +44,9 @@
     },
     {
       "path": "../ui/shadcn/tsconfig.lib.json"
+    },
+    {
+      "path": "../email/tsconfig.lib.json"
     }
   ]
 }

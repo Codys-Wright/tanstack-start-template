@@ -1,14 +1,15 @@
 import * as Effect from "effect/Effect";
+import * as Redacted from "effect/Redacted";
 import { Kysely, PostgresDialect } from "kysely";
 import pg from "pg";
-import { BetterAuthConfig, getDatabaseUrl } from "./better-auth.config";
+import { AuthConfig } from "./config";
 
 const { Pool } = pg;
 
 const makeKysely = Effect.acquireRelease(
   Effect.gen(function* () {
-    const env = yield* BetterAuthConfig;
-    const connectionString = getDatabaseUrl(env);
+    const env = yield* AuthConfig;
+    const connectionString = Redacted.value(env.DATABASE_URL);
 
     const pool = new Pool({
       connectionString,
@@ -29,10 +30,10 @@ const makeKysely = Effect.acquireRelease(
     })
 ).pipe(Effect.map(({ kysely }) => kysely));
 
-export class BetterAuthDatabase extends Effect.Service<BetterAuthDatabase>()(
-  "BetterAuthDatabase",
+export class AuthDatabase extends Effect.Service<AuthDatabase>()(
+  "AuthDatabase",
   {
     scoped: makeKysely,
-    dependencies: [BetterAuthConfig.Default],
+    dependencies: [AuthConfig.Default],
   }
 ) {}

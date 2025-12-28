@@ -4,11 +4,11 @@ import * as HttpServerResponse from "@effect/platform/HttpServerResponse";
 import * as Effect from "effect/Effect";
 import { Readable } from "node:stream";
 import type { ReadableStream as WebReadableStream } from "stream/web";
-import { BetterAuthService } from "./better-auth.service";
+import { AuthService } from "./service";
 
 export const betterAuthHandler = (req: HttpServerRequest.HttpServerRequest) =>
   Effect.gen(function* () {
-    const auth = yield* BetterAuthService;
+    const auth = yield* AuthService;
 
     const headers = new Headers(req.headers as Record<string, string>);
     const host = headers.get("host") ?? "localhost:3000";

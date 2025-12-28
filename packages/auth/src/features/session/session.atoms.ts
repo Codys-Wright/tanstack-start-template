@@ -1,8 +1,8 @@
 import { Atom, Result } from "@effect-atom/atom-react";
 import * as Effect from "effect/Effect";
-import { authClient } from "../_core/auth.client";
+import { authClient } from "../_core/client";
 import type { SessionData } from "./session.schema";
-import type { SignInInput, SignUpInput } from "../_core/auth.schema";
+import type { SignInInput, SignUpInput } from "../_core/schema";
 
 /**
  * AuthApi - Effect Service wrapper around Better Auth client

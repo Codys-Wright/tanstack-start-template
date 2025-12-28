@@ -1,5 +1,8 @@
 import * as Effect from "effect/Effect";
 
+/**
+ * Email message data
+ */
 export interface EmailMessage {
   readonly to: string;
   readonly subject: string;
@@ -7,13 +10,16 @@ export interface EmailMessage {
   readonly text?: string;
 }
 
+/**
+ * Email send result
+ */
 export interface SendEmailResult {
   readonly success: boolean;
   readonly messageId: string;
 }
 
 /**
- * Email Service - Mocked implementation for development
+ * Email Service - Mock implementation for development
  *
  * This service logs emails to the console instead of actually sending them.
  * In production, replace this with a real email service (Resend, SendGrid, etc.)

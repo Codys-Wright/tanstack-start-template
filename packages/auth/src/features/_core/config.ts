@@ -5,7 +5,7 @@ import * as Layer from "effect/Layer";
 import * as Option from "effect/Option";
 import * as Redacted from "effect/Redacted";
 
-export type BetterAuthConfigValues = {
+export type AuthConfigValues = {
   readonly BETTER_AUTH_URL: string;
   readonly BETTER_AUTH_SECRET: Redacted.Redacted<string>;
   readonly DATABASE_URL: Redacted.Redacted<string>;
@@ -15,7 +15,7 @@ export type BetterAuthConfigValues = {
   readonly APP_NAME: string;
 };
 
-const betterAuthConfig: Config.Config<BetterAuthConfigValues> = Config.all({
+const authConfig: Config.Config<AuthConfigValues> = Config.all({
   BETTER_AUTH_URL: Config.string("BETTER_AUTH_URL"),
   BETTER_AUTH_SECRET: Config.redacted("BETTER_AUTH_SECRET"),
   DATABASE_URL: Config.redacted("DATABASE_URL"),
@@ -27,15 +27,10 @@ const betterAuthConfig: Config.Config<BetterAuthConfigValues> = Config.all({
   APP_NAME: Config.withDefault(Config.string("APP_NAME"), "TanStack App"),
 });
 
-export class BetterAuthConfig extends Effect.Service<BetterAuthConfig>()(
-  "BetterAuthConfig",
+export class AuthConfig extends Effect.Service<AuthConfig>()(
+  "AuthConfig",
   {
-    effect: betterAuthConfig,
+    effect: authConfig,
     dependencies: [Layer.setConfigProvider(ConfigProvider.fromEnv())],
   }
 ) {}
-
-export const getDatabaseUrl = (env: BetterAuthConfigValues) =>
-  Redacted.value(env.DATABASE_URL);
-export const getAuthSecret = (env: BetterAuthConfigValues) =>
-  Redacted.value(env.BETTER_AUTH_SECRET);
