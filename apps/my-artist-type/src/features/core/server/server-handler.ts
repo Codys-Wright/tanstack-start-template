@@ -58,9 +58,9 @@ const RpcLoggerLive = Layer.succeed(
 );
 
 // Apply authentication and logging middleware to RPC group
-const DomainRpcWithMiddleware = DomainRpc
-  .middleware(RpcAuthenticationMiddleware)
-  .middleware(RpcLogger);
+const DomainRpcWithMiddleware = DomainRpc.middleware(
+  RpcAuthenticationMiddleware,
+).middleware(RpcLogger);
 
 const RpcRouter = RpcServer.layerHttpRouter({
   group: DomainRpcWithMiddleware,

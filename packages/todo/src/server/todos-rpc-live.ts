@@ -11,26 +11,31 @@ export const TodosRpcLive = TodosRpc.toLayer(
     return TodosRpc.of({
       todos_list: Effect.fn(function* () {
         const auth = yield* AuthContext;
+        yield* Effect.log(`[RPC] Listing todos for user: ${auth.userId}`);
         return yield* todos.list(auth.userId);
       }),
 
       todos_getById: Effect.fn(function* ({ id }) {
         const auth = yield* AuthContext;
+        yield* Effect.log(`[RPC] Getting todo ${id} for user: ${auth.userId}`);
         return yield* todos.getById(auth.userId, id);
       }),
 
       todos_create: Effect.fn(function* ({ input }) {
         const auth = yield* AuthContext;
+        yield* Effect.log(`[RPC] Creating todo "${input.title}" for user: ${auth.userId}`);
         return yield* todos.create(auth.userId, input);
       }),
 
       todos_update: Effect.fn(function* ({ id, input }) {
         const auth = yield* AuthContext;
+        yield* Effect.log(`[RPC] Updating todo ${id} for user: ${auth.userId}`);
         return yield* todos.update(auth.userId, id, input);
       }),
 
       todos_remove: Effect.fn(function* ({ id }) {
         const auth = yield* AuthContext;
+        yield* Effect.log(`[RPC] Removing todo ${id} for user: ${auth.userId}`);
         return yield* todos.remove(auth.userId, id);
       }),
     });
