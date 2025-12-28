@@ -1,5 +1,5 @@
 import { TodosApiGroup } from '@todo';
-import { SessionApiGroup } from '@auth/server';
+import { SessionApiGroup } from '@auth';
 import * as HttpApi from '@effect/platform/HttpApi';
 import * as OpenApi from '@effect/platform/OpenApi';
 
