@@ -6,6 +6,7 @@ import { getMigrations } from 'better-auth/db';
 import { admin, openAPI } from 'better-auth/plugins';
 import { organization } from 'better-auth/plugins/organization';
 import { twoFactor } from 'better-auth/plugins/two-factor';
+import { getRequestHeaders } from '@tanstack/react-start/server';
 import { EmailService } from '@email';
 import * as Effect from 'effect/Effect';
 import * as Layer from 'effect/Layer';
@@ -14,6 +15,7 @@ import * as Redacted from 'effect/Redacted';
 import * as Runtime from 'effect/Runtime';
 import * as Schema from 'effect/Schema';
 import type { SessionData } from '../session/session.schema';
+import type { UserId } from '../user/user.schema';
 import { AuthConfig } from './config';
 import { AuthDatabase } from './database';
 
@@ -198,6 +200,46 @@ const makeAuthService = Effect.gen(function* () {
         session ? Effect.succeed(session) : Effect.fail(new Unauthenticated()),
       ),
     ),
+
+    /**
+     * Gets the user ID from request headers.
+     * Returns null if no valid session exists instead of failing.
+     * Useful for endpoints that are optionally authenticated.
+     *
+     * @param headers - Optional request headers. If not provided, will get headers from current request.
+     * @returns Effect that resolves to UserId or null
+     *
+     * @example
+     * ```ts
+     * const auth = yield* AuthService;
+     * const userId = yield* auth.getUserIdFromHeaders();
+     * if (userId) {
+     *   // User is authenticated
+     * } else {
+     *   // User is not authenticated
+     * }
+     * ```
+     */
+    getUserIdFromHeaders: (headers?: HeadersInit): Effect.Effect<UserId | null, never, never> =>
+      Effect.sync(() => headers ?? getRequestHeaders()).pipe(
+        Effect.flatMap((requestHeaders) =>
+          Effect.tryPromise({
+            try: () =>
+              auth.api.getSession({
+                headers: requestHeaders,
+              }) as Promise<SessionData | null>,
+            catch: () => new Error('Failed to get session'),
+          }).pipe(
+            Effect.catchAll(() =>
+              Effect.gen(function* () {
+                yield* Effect.logInfo('[getUserIdFromHeaders] Session error - returning null');
+                return null;
+              }),
+            ),
+            Effect.map((session) => (session ? (session.user.id as UserId) : null)),
+          ),
+        ),
+      ),
   };
 });
 

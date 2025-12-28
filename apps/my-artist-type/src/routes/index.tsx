@@ -1,4 +1,3 @@
-import { type UserId } from "@auth";
 import { AuthService } from "@auth/server";
 import { dehydrate } from "../features/core/client";
 import { todosAtom } from "@todo";
@@ -7,7 +6,6 @@ import { Result } from "@effect-atom/atom-react";
 import { HydrationBoundary } from "@effect-atom/atom-react/ReactHydration";
 import { createFileRoute } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
-import { getRequestHeaders } from "@tanstack/react-start/server";
 import * as Effect from "effect/Effect";
 import { serverRuntime } from "../features/core/server";
 import { App } from "./-index/app";
@@ -18,40 +16,16 @@ const listTodos = createServerFn({ method: "GET" }).handler(async () => {
       const auth = yield* AuthService;
       const service = yield* TodosService;
 
-      yield* Effect.log("SERVICE AQUISITION");
-
-      // Get request headers (synchronous in TanStack Start)
-      const headers = getRequestHeaders();
-      yield* Effect.log("HEADERS");
-
-      // Try to get session from Better Auth, catch errors and return null
-      const session = yield* Effect.tryPromise({
-        try: () => auth.api.getSession({ headers }),
-        catch: () => new Error("Failed to get session"),
-      }).pipe(
-        Effect.catchAll(() =>
-          Effect.gen(function* () {
-            yield* Effect.logInfo("[listTodos] Session error - returning null");
-            return null;
-          }),
-        ),
-      );
+      // Get user ID from request headers (automatically retrieved)
+      const userId = yield* auth.getUserIdFromHeaders();
 
       // If not authenticated, return empty array
-      if (!session) {
+      if (!userId) {
         yield* Effect.logInfo("[listTodos] No session - returning empty todos");
         return [];
       }
 
-      // Fetch user's todos
-      const userId = session.user.id as UserId;
-      yield* Effect.logInfo(
-        `[listTodos] Authenticated user ${userId} - fetching todos`,
-      );
-
       const todos = yield* service.list(userId);
-      yield* Effect.logInfo(`[listTodos] Retrieved ${todos.length} todos`);
-
       return todos;
     }),
   );
