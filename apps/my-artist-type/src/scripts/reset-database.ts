@@ -1,5 +1,6 @@
 import * as Effect from 'effect/Effect';
 import * as Layer from 'effect/Layer';
+import * as Logger from 'effect/Logger';
 import * as BunContext from '@effect/platform-bun/BunContext';
 import * as SqlClient from '@effect/sql/SqlClient';
 import { PgLive } from '../../../../packages/core/src/database/pg-live.js';
@@ -31,6 +32,7 @@ const resetDatabase = Effect.gen(function* () {
 await Effect.runPromise(
   resetDatabase.pipe(
     Effect.provide(Layer.merge(PgLive, BunContext.layer)),
+    Effect.provide(Logger.pretty),
     Effect.tapError((error) => Effect.logError(`[ResetDatabase] Failed: ${error}`)),
     Effect.orDie,
   ),

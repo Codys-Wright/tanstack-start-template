@@ -18,8 +18,11 @@ const listTodos = createServerFn({ method: "GET" }).handler(async () => {
       const auth = yield* AuthService;
       const service = yield* TodosService;
 
+      yield* Effect.log("SERVICE AQUISITION");
+
       // Get request headers (synchronous in TanStack Start)
       const headers = getRequestHeaders();
+      yield* Effect.log("HEADERS");
 
       // Try to get session from Better Auth, catch errors and return null
       const session = yield* Effect.tryPromise({

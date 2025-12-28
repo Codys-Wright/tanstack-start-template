@@ -5,10 +5,7 @@ import {
   RpcAuthenticationMiddlewareLive,
   AuthService,
 } from "@auth/server";
-import { AuthMigrations, runBetterAuthMigrations } from "@auth/database";
-import { runMigrations } from "@core/database";
 import { makeTodosApiLive, TodosRpcLive } from "@todo/server";
-import { TodoMigrations } from "@todo/database";
 import * as HttpApiScalar from "@effect/platform/HttpApiScalar";
 import * as HttpApiSwagger from "@effect/platform/HttpApiSwagger";
 import * as HttpLayerRouter from "@effect/platform/HttpLayerRouter";
@@ -23,7 +20,6 @@ import * as Exit from "effect/Exit";
 import * as Layer from "effect/Layer";
 import * as Logger from "effect/Logger";
 import { DomainApi, DomainRpc } from "../domain/index.js";
-import { serverRuntime } from "./server-runtime.js";
 
 // HttpApi handlers for todos - uses makeTodosApiLive from @todo
 const TodosApiLive = makeTodosApiLive(DomainApi);
@@ -116,34 +112,20 @@ const AllRoutes = Layer.mergeAll(
   BetterAuthRouter,
 ).pipe(Layer.provideMerge(AuthService.Default), Layer.provide(Logger.pretty));
 
-// Run Better Auth migrations first (creates user, session, etc. tables)
-// Then run our Effect SQL migrations (AuthMigrations + TodoMigrations)
-Effect.runPromise(
-  Effect.gen(function* () {
-    yield* runBetterAuthMigrations;
-    yield* runMigrations(AuthMigrations, TodoMigrations);
-  }),
-);
+// // Run Better Auth migrations first (creates user, session, etc. tables)
+// // Then run our Effect SQL migrations (AuthMigrations + TodoMigrations)
+// Effect.runPromise(
+//   Effect.gen(function* () {
+//     yield* runBetterAuthMigrations;
+//     yield* runMigrations(AuthMigrations, TodoMigrations);
+//   }),
+// );
 
 const memoMap = Effect.runSync(Layer.makeMemoMap);
-
-const globalHmr = globalThis as unknown as {
-  __EFFECT_DISPOSE__?: () => Promise<void>;
-};
-
-if (globalHmr.__EFFECT_DISPOSE__) {
-  await globalHmr.__EFFECT_DISPOSE__();
-  globalHmr.__EFFECT_DISPOSE__ = undefined;
-}
 
 const { handler, dispose } = HttpLayerRouter.toWebHandler(AllRoutes, {
   memoMap,
 });
-
-globalHmr.__EFFECT_DISPOSE__ = async () => {
-  await dispose();
-  await serverRuntime.dispose();
-};
 
 // Revert to original pattern - the Context.empty() is needed for TanStack Start integration
 export const effectHandler = ({ request }: { request: Request }) =>

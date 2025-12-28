@@ -1,7 +1,7 @@
 /**
  * @auth/database - Database layer exports
  *
- * Repositories, migrations - requires database connection
+ * Repositories, migrations, seeds - requires database connection
  */
 
 // ============================================================================
@@ -16,6 +16,19 @@ export {
   AuthMigrations,
   runBetterAuthMigrations,
 } from './database/migrations.js';
+
+// ============================================================================
+// Seeds
+// ============================================================================
+export {
+  devAdmin,
+  users,
+  organizations,
+  auth,
+  cleanupUsers,
+  cleanupOrganizations,
+  authCleanup,
+} from './database/seeds.js';
 
 // ============================================================================
 // Repositories

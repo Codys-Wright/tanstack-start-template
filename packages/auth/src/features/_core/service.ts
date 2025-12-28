@@ -1,21 +1,21 @@
-import * as HttpApiSchema from "@effect/platform/HttpApiSchema";
-import { passkey } from "@better-auth/passkey";
-import { betterAuth } from "better-auth";
-import type { BetterAuthOptions } from "better-auth";
-import { getMigrations } from "better-auth/db";
-import { admin, openAPI } from "better-auth/plugins";
-import { organization } from "better-auth/plugins/organization";
-import { twoFactor } from "better-auth/plugins/two-factor";
-import { EmailService } from "@email";
-import * as Effect from "effect/Effect";
-import * as Layer from "effect/Layer";
-import * as Option from "effect/Option";
-import * as Redacted from "effect/Redacted";
-import * as Runtime from "effect/Runtime";
-import * as Schema from "effect/Schema";
-import type { SessionData } from "../session/session.schema";
-import { AuthConfig } from "./config";
-import { AuthDatabase } from "./database";
+import * as HttpApiSchema from '@effect/platform/HttpApiSchema';
+import { passkey } from '@better-auth/passkey';
+import { betterAuth } from 'better-auth';
+import type { BetterAuthOptions } from 'better-auth';
+import { getMigrations } from 'better-auth/db';
+import { admin, openAPI } from 'better-auth/plugins';
+import { organization } from 'better-auth/plugins/organization';
+import { twoFactor } from 'better-auth/plugins/two-factor';
+import { EmailService } from '@email';
+import * as Effect from 'effect/Effect';
+import * as Layer from 'effect/Layer';
+import * as Option from 'effect/Option';
+import * as Redacted from 'effect/Redacted';
+import * as Runtime from 'effect/Runtime';
+import * as Schema from 'effect/Schema';
+import type { SessionData } from '../session/session.schema';
+import { AuthConfig } from './config';
+import { AuthDatabase } from './database';
 
 // ============================================================================
 // Auth Service
@@ -27,7 +27,7 @@ export type BetterAuthInstance = ReturnType<typeof betterAuth>;
  * Error thrown when authentication is required but no valid session exists.
  */
 export class Unauthenticated extends Schema.TaggedError<Unauthenticated>()(
-  "Unauthenticated",
+  'Unauthenticated',
   {},
   HttpApiSchema.annotations({ status: 401 }),
 ) {}
@@ -56,7 +56,7 @@ export const makeBetterAuthOptions = (params: {
     sendResetPassword: async ({ user, url }) => {
       await params.sendEmail(
         user.email,
-        "Reset your password",
+        'Reset your password',
         `<p>Click the link below to reset your password:</p><p><a href="${url}">${url}</a></p>`,
       );
     },
@@ -64,18 +64,17 @@ export const makeBetterAuthOptions = (params: {
 
   database: {
     db: params.db,
-    type: "postgres" as const,
-    casing: "camel" as const,
-    schema: {
-      user: {
-        additionalFields: {
-          fake: {
-            type: "boolean",
-            defaultValue: false,
-            required: false,
-            input: false, // Don't allow setting via input, only programmatically
-          },
-        },
+    type: 'postgres' as const,
+    casing: 'camel' as const,
+  },
+
+  user: {
+    additionalFields: {
+      fake: {
+        type: 'boolean',
+        defaultValue: false,
+        required: false,
+        input: false, // Don't allow setting via input, only programmatically
       },
     },
   },
@@ -94,15 +93,15 @@ export const makeBetterAuthOptions = (params: {
     openAPI(),
 
     admin({
-      defaultRole: "user",
-      adminRoles: ["admin"],
+      defaultRole: 'user',
+      adminRoles: ['admin'],
       impersonationSessionDuration: 60 * 60, // 1 hour
       defaultBanExpiresIn: undefined, // Bans never expire by default
     }),
 
     organization({
       allowUserToCreateOrganization: true,
-      creatorRole: "owner",
+      creatorRole: 'owner',
       membershipLimit: 100,
       organizationLimit: 10,
 
@@ -118,6 +117,20 @@ export const makeBetterAuthOptions = (params: {
       teams: {
         enabled: true,
         maximumTeams: 10,
+      },
+
+      schema: {
+        organization: {
+          fields: {},
+          additionalFields: {
+            fake: {
+              type: 'boolean',
+              defaultValue: false,
+              required: false,
+              input: false,
+            },
+          },
+        },
       },
     }),
 
@@ -154,9 +167,7 @@ const makeAuthService = Effect.gen(function* () {
       : undefined,
     appName: env.APP_NAME,
     sendEmail: async (to, subject, html) => {
-      await Runtime.runPromise(runtime)(
-        emailService.send({ to, subject, html }),
-      );
+      await Runtime.runPromise(runtime)(emailService.send({ to, subject, html }));
     },
   });
 
@@ -190,7 +201,7 @@ const makeAuthService = Effect.gen(function* () {
   };
 });
 
-export class AuthService extends Effect.Service<AuthService>()("AuthService", {
+export class AuthService extends Effect.Service<AuthService>()('AuthService', {
   effect: makeAuthService,
   accessors: true,
   // Use Layer.orDie to convert ConfigError into defects
