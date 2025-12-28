@@ -1,6 +1,6 @@
 import {
   BetterAuthRouter,
-  BetterAuthService,
+  AuthService,
   HttpAuthenticationMiddlewareLive,
   RpcAuthenticationMiddleware,
   RpcAuthenticationMiddlewareLive,
@@ -115,7 +115,7 @@ const AllRoutes = Layer.mergeAll(
   HealthRoute,
   BetterAuthRouter,
 ).pipe(
-  Layer.provideMerge(BetterAuthService.Default),
+  Layer.provideMerge(AuthService.Default),
   Layer.provide(Logger.pretty),
 );
 

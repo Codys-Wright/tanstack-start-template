@@ -1,5 +1,5 @@
 import { type UserId } from "@auth";
-import { BetterAuthService } from "@auth/server";
+import { AuthService } from "@auth/server";
 import { dehydrate } from "../features/core/client";
 import { todosAtom } from "@todo";
 import { TodosService } from "@todo/server";
@@ -15,7 +15,7 @@ import { App } from "./-index/app";
 const listTodos = createServerFn({ method: "GET" }).handler(async () => {
   const todos = await serverRuntime.runPromiseExit(
     Effect.gen(function* () {
-      const auth = yield* BetterAuthService;
+      const auth = yield* AuthService;
       const service = yield* TodosService;
 
       // Get request headers (synchronous in TanStack Start)

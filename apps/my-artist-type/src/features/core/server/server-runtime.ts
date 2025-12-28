@@ -1,4 +1,4 @@
-import { BetterAuthService } from "@auth/server";
+import { AuthService } from "@auth/server";
 import { TodosService } from "@todo/server";
 import * as Effect from "effect/Effect";
 import * as Layer from "effect/Layer";
@@ -6,9 +6,9 @@ import * as ManagedRuntime from "effect/ManagedRuntime";
 
 const memoMap = Effect.runSync(Layer.makeMemoMap);
 
-// Merge BetterAuthService and TodosService layers
+// Merge AuthService and TodosService layers
 const serverLayer = Layer.merge(
-  BetterAuthService.Default,
+  AuthService.Default,
   TodosService.Default,
 );
 
