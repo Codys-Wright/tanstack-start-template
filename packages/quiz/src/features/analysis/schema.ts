@@ -1,23 +1,20 @@
 // Analysis Domain Schema
 // This defines the structure for performing analysis and managing analysis results
 
-import { Version } from "@core/domain";
-import { HttpApiEndpoint, HttpApiGroup, HttpApiSchema } from "@effect/platform";
-import { Schema as S } from "effect";
-import { QuizNotFoundError } from "../quiz/quiz-rpc.js";
-import { ResponseId, ResponseNotFoundError } from "../responses/response-rpc.js";
-import {
-  AnalysisEngineId,
-  AnalysisEngineNotFoundError,
-  AnalysisResultId,
-} from "./analysis-engine-rpc.js";
+import { Version } from '@core/domain';
+import { HttpApiEndpoint, HttpApiGroup, HttpApiSchema } from '@effect/platform';
+import { Schema as S } from 'effect';
+import { QuizNotFoundError } from '../quiz/quiz-rpc.js';
+import { ResponseId, ResponseNotFoundError } from '../responses/response-rpc.js';
+import { AnalysisEngineId, AnalysisEngineNotFoundError } from './analysis-engine-rpc.js';
 
 // ============================================================================
 // ANALYSIS RESULT TYPES
+export { AnalysisEngineGroup } from './analysis-engine/schema.js';
 // ============================================================================
 
 // Result for a specific ending from an analysis
-export class EndingResult extends S.Class<EndingResult>("EndingResult")({
+export class EndingResult extends S.Class<EndingResult>('EndingResult')({
   // Ending identifier
   endingId: S.String,
 
@@ -46,7 +43,7 @@ export class EndingResult extends S.Class<EndingResult>("EndingResult")({
 }) {}
 
 // Complete analysis result for a response
-export class AnalysisResult extends S.Class<AnalysisResult>("AnalysisResult")({
+export class AnalysisResult extends S.Class<AnalysisResult>('AnalysisResult')({
   // Unique identifier
   id: AnalysisResultId,
 
@@ -72,13 +69,15 @@ export class AnalysisResult extends S.Class<AnalysisResult>("AnalysisResult")({
   deletedAt: S.NullOr(S.DateTimeUtc),
 }) {}
 
+// ============================================================================/
 // ============================================================================
 // UPSERT SCHEMAS
+// ============================================================================/
 // ============================================================================
 
 // Upsert schema for analysis results (without database-managed fields)
 export class UpsertAnalysisResultPayload extends S.Class<UpsertAnalysisResultPayload>(
-  "UpsertAnalysisResultPayload",
+  'UpsertAnalysisResultPayload',
 )({
   id: S.optional(AnalysisResultId),
   engineId: AnalysisEngineId,
@@ -89,13 +88,15 @@ export class UpsertAnalysisResultPayload extends S.Class<UpsertAnalysisResultPay
   analyzedAt: S.DateTimeUtc,
 }) {}
 
+// ============================================================================/
 // ============================================================================
 // ANALYSIS REQUEST TYPES
+// ============================================================================/
 // ============================================================================
 
 // Request to analyze a response with a specific engine
 export class AnalyzeResponseRequest extends S.Class<AnalyzeResponseRequest>(
-  "AnalyzeResponseRequest",
+  'AnalyzeResponseRequest',
 )({
   responseId: ResponseId,
   engineId: AnalysisEngineId,
@@ -104,25 +105,27 @@ export class AnalyzeResponseRequest extends S.Class<AnalyzeResponseRequest>(
 }) {}
 
 // Request to get analysis results
-export class GetAnalysisRequest extends S.Class<GetAnalysisRequest>("GetAnalysisRequest")({
+export class GetAnalysisRequest extends S.Class<GetAnalysisRequest>('GetAnalysisRequest')({
   responseId: ResponseId,
   engineId: S.optional(AnalysisEngineId), // If not provided, get all analyses for response
 }) {}
 
 // Request to analyze multiple responses in batch
-export class BatchAnalyzeRequest extends S.Class<BatchAnalyzeRequest>("BatchAnalyzeRequest")({
+export class BatchAnalyzeRequest extends S.Class<BatchAnalyzeRequest>('BatchAnalyzeRequest')({
   responseIds: S.Array(ResponseId),
   engineId: AnalysisEngineId,
   // Optional: override scoring config for this batch analysis
   scoringConfigOverride: S.optional(S.Record({ key: S.String, value: S.Unknown })),
 }) {}
 
+// ============================================================================/
 // ============================================================================
 // ANALYSIS SUMMARY TYPES
+// ============================================================================/
 // ============================================================================
 
 // Summary of analysis results across multiple responses
-export class AnalysisSummary extends S.Class<AnalysisSummary>("AnalysisSummary")({
+export class AnalysisSummary extends S.Class<AnalysisSummary>('AnalysisSummary')({
   // Which engine was used
   engineId: AnalysisEngineId,
   engineVersion: S.parseJson(Version),
@@ -145,14 +148,16 @@ export class AnalysisSummary extends S.Class<AnalysisSummary>("AnalysisSummary")
   generatedAt: S.DateTimeUtc,
 }) {}
 
+// ============================================================================/
 // ============================================================================
 // ERROR TYPES
+// ============================================================================/
 // ============================================================================
 
 export class AnalysisResultNotFoundError extends S.TaggedError<AnalysisResultNotFoundError>(
-  "AnalysisResultNotFoundError",
+  'AnalysisResultNotFoundError',
 )(
-  "AnalysisResultNotFoundError",
+  'AnalysisResultNotFoundError',
   { id: AnalysisResultId },
   HttpApiSchema.annotations({
     status: 404,
@@ -163,8 +168,8 @@ export class AnalysisResultNotFoundError extends S.TaggedError<AnalysisResultNot
   }
 }
 
-export class AnalysisFailedError extends S.TaggedError<AnalysisFailedError>("AnalysisFailedError")(
-  "AnalysisFailedError",
+export class AnalysisFailedError extends S.TaggedError<AnalysisFailedError>('AnalysisFailedError')(
+  'AnalysisFailedError',
   { responseId: S.String, engineId: AnalysisEngineId, reason: S.String },
   HttpApiSchema.annotations({
     status: 500,
@@ -176,9 +181,9 @@ export class AnalysisFailedError extends S.TaggedError<AnalysisFailedError>("Ana
 }
 
 export class AnalysisResultNotFoundForResponseError extends S.TaggedError<AnalysisResultNotFoundForResponseError>(
-  "AnalysisResultNotFoundForResponseError",
+  'AnalysisResultNotFoundForResponseError',
 )(
-  "AnalysisResultNotFoundForResponseError",
+  'AnalysisResultNotFoundForResponseError',
   { responseId: ResponseId, engineId: AnalysisEngineId },
   HttpApiSchema.annotations({
     status: 404,
@@ -189,13 +194,14 @@ export class AnalysisResultNotFoundForResponseError extends S.TaggedError<Analys
   }
 }
 
+// ============================================================================/
 // ============================================================================
 // HTTP API DEFINITION
 // ============================================================================
 
-export class AnalysisGroup extends HttpApiGroup.make("Analysis")
+export class AnalysisGroup extends HttpApiGroup.make('Analysis')
   .add(
-    HttpApiEndpoint.post("analyze", "/:engineId/analyze")
+    HttpApiEndpoint.post('analyze', '/:engineId/analyze')
       .addSuccess(AnalysisResult)
       .addError(AnalysisEngineNotFoundError)
       .addError(AnalysisFailedError)
@@ -209,7 +215,7 @@ export class AnalysisGroup extends HttpApiGroup.make("Analysis")
       ),
   )
   .add(
-    HttpApiEndpoint.post("batchAnalyze", "/:engineId/batch-analyze")
+    HttpApiEndpoint.post('batchAnalyze', '/:engineId/batch-analyze')
       .addSuccess(S.Array(AnalysisResult))
       .addError(AnalysisEngineNotFoundError)
       .addError(AnalysisFailedError)
@@ -223,7 +229,7 @@ export class AnalysisGroup extends HttpApiGroup.make("Analysis")
       ),
   )
   .add(
-    HttpApiEndpoint.get("getAnalysis", "/responses/:responseId/analysis")
+    HttpApiEndpoint.get('getAnalysis', '/responses/:responseId/analysis')
       .addSuccess(S.Array(AnalysisResult))
       .addError(AnalysisResultNotFoundError)
       .setPayload(
@@ -232,9 +238,9 @@ export class AnalysisGroup extends HttpApiGroup.make("Analysis")
         }),
       ),
   )
-  .add(HttpApiEndpoint.get("list", "/").addSuccess(S.Array(AnalysisResult)))
+  .add(HttpApiEndpoint.get('list', '/').addSuccess(S.Array(AnalysisResult)))
   .add(
-    HttpApiEndpoint.get("getById", "/:id")
+    HttpApiEndpoint.get('getById', '/:id')
       .addSuccess(AnalysisResult)
       .addError(AnalysisResultNotFoundError)
       .setPayload(
@@ -244,7 +250,7 @@ export class AnalysisGroup extends HttpApiGroup.make("Analysis")
       ),
   )
   .add(
-    HttpApiEndpoint.get("getByEngine", "/engines/:engineId")
+    HttpApiEndpoint.get('getByEngine', '/engines/:engineId')
       .addSuccess(S.Array(AnalysisResult))
       .setPayload(
         S.Struct({
@@ -253,13 +259,13 @@ export class AnalysisGroup extends HttpApiGroup.make("Analysis")
       ),
   )
   .add(
-    HttpApiEndpoint.put("upsert", "/")
+    HttpApiEndpoint.put('upsert', '/')
       .addSuccess(AnalysisResult)
       .addError(AnalysisResultNotFoundError)
       .setPayload(UpsertAnalysisResultPayload),
   )
   .add(
-    HttpApiEndpoint.get("getAnalysisSummary", "/:engineId/summary")
+    HttpApiEndpoint.get('getAnalysisSummary', '/:engineId/summary')
       .addSuccess(AnalysisSummary)
       .addError(AnalysisEngineNotFoundError)
       .setPayload(
@@ -269,7 +275,7 @@ export class AnalysisGroup extends HttpApiGroup.make("Analysis")
       ),
   )
   .add(
-    HttpApiEndpoint.del("deleteAnalysis", "/:id")
+    HttpApiEndpoint.del('deleteAnalysis', '/:id')
       .addSuccess(S.Void)
       .addError(AnalysisResultNotFoundError)
       .setPayload(
@@ -278,4 +284,4 @@ export class AnalysisGroup extends HttpApiGroup.make("Analysis")
         }),
       ),
   )
-  .prefix("/Analysis") {}
+  .prefix('/Analysis') {}
