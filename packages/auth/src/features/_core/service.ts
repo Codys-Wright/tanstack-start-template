@@ -240,6 +240,40 @@ const makeAuthService = Effect.gen(function* () {
           ),
         ),
       ),
+
+    /**
+     * Gets the current authenticated user's ID from request headers.
+     * Fails with Unauthenticated error if no valid session exists.
+     * Useful for endpoints that require authentication.
+     *
+     * @param headers - Optional request headers. If not provided, will get headers from current request.
+     * @returns Effect that resolves to UserId or fails with Unauthenticated
+     *
+     * @example
+     * ```ts
+     * const auth = yield* AuthService;
+     * const currentUserId = yield* auth.currentUserId();
+     * // currentUserId is guaranteed to be valid here
+     * ```
+     */
+    currentUserId: (headers?: HeadersInit): Effect.Effect<UserId, Unauthenticated, never> =>
+      Effect.sync(() => headers ?? getRequestHeaders()).pipe(
+        Effect.flatMap((requestHeaders) =>
+          Effect.tryPromise({
+            try: () =>
+              auth.api.getSession({
+                headers: requestHeaders,
+              }) as Promise<SessionData | null>,
+            catch: () => new Unauthenticated(),
+          }).pipe(
+            Effect.flatMap((session: SessionData | null) =>
+              session
+                ? Effect.succeed(session.user.id as UserId)
+                : Effect.fail(new Unauthenticated()),
+            ),
+          ),
+        ),
+      ),
   };
 });
 

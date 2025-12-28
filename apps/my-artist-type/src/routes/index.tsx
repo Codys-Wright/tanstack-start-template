@@ -16,18 +16,21 @@ const listTodos = createServerFn({ method: "GET" }).handler(async () => {
       const auth = yield* AuthService;
       const service = yield* TodosService;
 
-      // Get user ID from request headers (automatically retrieved)
-      const userId = yield* auth.getUserIdFromHeaders();
+      const currentUserId = yield* auth.currentUserId;
+      const todos = yield* service.list(currentUserId);
 
-      // If not authenticated, return empty array
-      if (!userId) {
-        yield* Effect.logInfo("[listTodos] No session - returning empty todos");
-        return [];
-      }
-
-      const todos = yield* service.list(userId);
       return todos;
-    }),
+    }).pipe(
+      // If unauthenticated, return empty array instead of failing
+      Effect.catchTag("Unauthenticated", () =>
+        Effect.gen(function* () {
+          yield* Effect.logInfo(
+            "[listTodos] No session - returning empty todos",
+          );
+          return [];
+        }),
+      ),
+    ),
   );
 
   // Convert Exit to Result - handles Success/Failure properly
