@@ -1,0 +1,8 @@
+{
+  "name": "playground",
+  "$schema": "../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/playground/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {}
+}

@@ -1,0 +1,8 @@
+{
+  "name": "quiz",
+  "$schema": "../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/quiz/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {}
+}
