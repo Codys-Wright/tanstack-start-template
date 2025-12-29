@@ -3,8 +3,8 @@ import * as HttpServerRequest from '@effect/platform/HttpServerRequest';
 import * as Effect from 'effect/Effect';
 import * as Layer from 'effect/Layer';
 import * as Schema from 'effect/Schema';
-import { AuthApi } from '../_core/auth-api.js';
-import { AuthService } from '../_core/service.js';
+import { AuthApi } from '../core/auth-api.js';
+import { AuthService } from '../core/service.js';
 import { AuthError, toAuthError, Unauthenticated } from '../session/domain/schema.js';
 import { User } from '../user/domain/schema.js';
 import {
