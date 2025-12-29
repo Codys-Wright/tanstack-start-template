@@ -1,5 +1,5 @@
 import * as Effect from 'effect/Effect';
-import { AuthService } from '../../_core/service.js';
+import { AuthService } from '../../core/server/service.js';
 import { OrganizationNotFoundError, OrganizationValidationError } from '../domain/schema.js';
 
 /**

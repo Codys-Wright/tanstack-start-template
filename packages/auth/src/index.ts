@@ -10,11 +10,11 @@
 // ============================================================================
 // Core - Client
 // ============================================================================
-export { authClient } from './features/_core/client.js';
+export { authClient } from './core/client/client.js';
 export {
   AuthApiClient,
   AuthApiClientLive,
-} from './features/_core/auth-api-client.js';
+} from './core/client/auth-api-client.js';
 
 // ============================================================================
 // User - Domain & UI
@@ -30,7 +30,7 @@ export * from './features/user/ui/user-view.js';
 export * from './features/session/domain/schema.js';
 export * from './features/session/client/atoms.js';
 export { SessionApiGroup } from './features/session/domain/api.js';
-export { AuthApi } from './features/_core/auth-api.js';
+export { AuthApi } from './core/auth-api.js';
 export * from './features/session/ui/auth-view.js';
 export * from './features/session/ui/sign-in-form.js';
 export * from './features/session/ui/sign-up-form.js';
