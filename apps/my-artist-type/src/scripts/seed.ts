@@ -9,24 +9,30 @@
  *   bun run db:seed:cleanup   # Remove all fake data
  */
 
-import { runSeed, runCleanup } from '@core/database';
-import { auth, authCleanup } from '@auth/database';
-import { todo, todoCleanup } from '@todo/database';
-import * as Logger from 'effect/Logger';
 import * as Effect from 'effect/Effect';
+import * as Logger from 'effect/Logger';
+
+import { auth, authCleanup } from '@auth/database';
+import { runCleanup, runSeed } from '@core/database';
+import { example, exampleCleanup } from '@example/database';
+import { todo, todoCleanup } from '@todo/database';
 
 const isCleanup = process.argv.includes('--cleanup');
 
 if (isCleanup) {
   // Cleanup mode: remove all fake data
   await Effect.runPromise(
-    runCleanup(...todoCleanup(), ...authCleanup()).pipe(Effect.provide(Logger.pretty)),
+    runCleanup(...exampleCleanup(), ...todoCleanup(), ...authCleanup()).pipe(
+      Effect.provide(Logger.pretty),
+    ),
   );
 } else {
   // Seed mode: create fake data
   await Effect.runPromise(
-    runSeed(...auth({ users: 50, organizations: 10 }), ...todo({ todos: 100 })).pipe(
-      Effect.provide(Logger.pretty),
-    ),
+    runSeed(
+      ...auth({ users: 50, organizations: 10 }),
+      ...todo({ todos: 100 }),
+      ...example({ features: 20 }),
+    ).pipe(Effect.provide(Logger.pretty)),
   );
 }

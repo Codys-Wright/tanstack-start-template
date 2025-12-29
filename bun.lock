@@ -186,6 +186,7 @@
         "@tanstack/react-router-ssr-query": "*",
         "@tanstack/react-start": "*",
         "@tanstack/router-plugin": "*",
+        "@tanstack/virtual-file-routes": "^1.141.0",
         "bcryptjs": "*",
         "better-auth": "*",
         "browser-image-compression": "*",
@@ -383,10 +384,17 @@
       "dependencies": {
         "@auth": "*",
         "@core": "*",
+        "@effect-atom/atom": "*",
+        "@effect-atom/atom-react": "*",
         "@effect/platform": "*",
         "@effect/rpc": "*",
         "@effect/sql": "*",
+        "@shadcn": "*",
         "effect": "*",
+        "react": "*",
+      },
+      "devDependencies": {
+        "@types/react": "*",
       },
     },
     "packages/playground": {
