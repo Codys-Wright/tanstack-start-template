@@ -11,6 +11,16 @@
       "import": "./src/index.ts",
       "default": "./src/index.ts"
     },
+    "./server": {
+      "types": "./src/server.ts",
+      "import": "./src/server.ts",
+      "default": "./src/server.ts"
+    },
+    "./database": {
+      "types": "./src/database.ts",
+      "import": "./src/database.ts",
+      "default": "./src/database.ts"
+    },
     "./*": {
       "types": "./src/*.ts",
       "import": "./src/*.ts",
@@ -25,8 +35,13 @@
     "@effect-atom/atom-react": "*",
     "@effect/platform": "*",
     "@effect/rpc": "*",
+    "@effect/sql": "*",
+    "@faker-js/faker": "*",
     "@shadcn": "*",
     "effect": "*",
     "react": "*"
+  },
+  "devDependencies": {
+    "@types/react": "*"
   }
 }

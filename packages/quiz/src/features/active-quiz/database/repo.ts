@@ -1,7 +1,10 @@
-import { SqlClient, SqlSchema } from '@effect/sql';
+import * as SqlClient from '@effect/sql/SqlClient';
+import * as SqlSchema from '@effect/sql/SqlSchema';
 import { PgLive } from '@core/database';
-import { Effect, flow, Schema } from 'effect';
-import { ActiveQuiz, ActiveQuizNotFoundError } from '../../domain/active-quiz/active-quiz-rpc.js';
+import * as Effect from 'effect/Effect';
+import { flow } from 'effect/Function';
+import * as Schema from 'effect/Schema';
+import { ActiveQuiz, ActiveQuizNotFoundError } from '../domain/schema.js';
 
 //1) Define the Inputs that the repository is expecting
 const CreateActiveQuizInput = ActiveQuiz.pipe(Schema.pick('slug', 'quizId', 'engineId'));

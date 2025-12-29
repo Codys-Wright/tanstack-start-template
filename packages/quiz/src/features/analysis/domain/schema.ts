@@ -2,15 +2,20 @@
 // This defines the structure for performing analysis and managing analysis results
 
 import { Version } from '@core/domain';
-import { HttpApiEndpoint, HttpApiGroup, HttpApiSchema } from '@effect/platform';
-import { Schema as S } from 'effect';
-import { QuizNotFoundError } from '../quiz/quiz-rpc.js';
-import { ResponseId, ResponseNotFoundError } from '../responses/response-rpc.js';
-import { AnalysisEngineId, AnalysisEngineNotFoundError } from './analysis-engine-rpc.js';
+import * as HttpApiEndpoint from '@effect/platform/HttpApiEndpoint';
+import * as HttpApiGroup from '@effect/platform/HttpApiGroup';
+import * as HttpApiSchema from '@effect/platform/HttpApiSchema';
+import * as S from 'effect/Schema';
+import { QuizNotFoundError } from '../../quiz/domain/schema.js';
+import { ResponseId, ResponseNotFoundError } from '../../responses/domain/schema.js';
+import {
+  AnalysisEngineId,
+  AnalysisEngineNotFoundError,
+  AnalysisResultId,
+} from '../../analysis-engine/domain/schema.js';
 
 // ============================================================================
 // ANALYSIS RESULT TYPES
-export { AnalysisEngineGroup } from './analysis-engine/schema.js';
 // ============================================================================
 
 // Result for a specific ending from an analysis
@@ -69,10 +74,8 @@ export class AnalysisResult extends S.Class<AnalysisResult>('AnalysisResult')({
   deletedAt: S.NullOr(S.DateTimeUtc),
 }) {}
 
-// ============================================================================/
 // ============================================================================
 // UPSERT SCHEMAS
-// ============================================================================/
 // ============================================================================
 
 // Upsert schema for analysis results (without database-managed fields)
@@ -88,10 +91,8 @@ export class UpsertAnalysisResultPayload extends S.Class<UpsertAnalysisResultPay
   analyzedAt: S.DateTimeUtc,
 }) {}
 
-// ============================================================================/
 // ============================================================================
 // ANALYSIS REQUEST TYPES
-// ============================================================================/
 // ============================================================================
 
 // Request to analyze a response with a specific engine
@@ -118,10 +119,8 @@ export class BatchAnalyzeRequest extends S.Class<BatchAnalyzeRequest>('BatchAnal
   scoringConfigOverride: S.optional(S.Record({ key: S.String, value: S.Unknown })),
 }) {}
 
-// ============================================================================/
 // ============================================================================
 // ANALYSIS SUMMARY TYPES
-// ============================================================================/
 // ============================================================================
 
 // Summary of analysis results across multiple responses
@@ -148,10 +147,8 @@ export class AnalysisSummary extends S.Class<AnalysisSummary>('AnalysisSummary')
   generatedAt: S.DateTimeUtc,
 }) {}
 
-// ============================================================================/
 // ============================================================================
 // ERROR TYPES
-// ============================================================================/
 // ============================================================================
 
 export class AnalysisResultNotFoundError extends S.TaggedError<AnalysisResultNotFoundError>(
@@ -163,7 +160,7 @@ export class AnalysisResultNotFoundError extends S.TaggedError<AnalysisResultNot
     status: 404,
   }),
 ) {
-  get message() {
+  override get message() {
     return `Analysis result with id ${this.id} not found`;
   }
 }
@@ -175,7 +172,7 @@ export class AnalysisFailedError extends S.TaggedError<AnalysisFailedError>('Ana
     status: 500,
   }),
 ) {
-  get message() {
+  override get message() {
     return `Analysis failed for response ${this.responseId} with engine ${this.engineId}: ${this.reason}`;
   }
 }
@@ -189,12 +186,11 @@ export class AnalysisResultNotFoundForResponseError extends S.TaggedError<Analys
     status: 404,
   }),
 ) {
-  get message() {
+  override get message() {
     return `Analysis result not found for response ${this.responseId} with engine ${this.engineId}`;
   }
 }
 
-// ============================================================================/
 // ============================================================================
 // HTTP API DEFINITION
 // ============================================================================

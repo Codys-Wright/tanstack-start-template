@@ -1,7 +1,8 @@
-import type { Quiz } from '../quiz/schema.js';
-import type { Question } from '../quiz/questions/schema.js';
-import type { InteractionLog, QuizSession } from '../responses/schema.js';
-import { DateTime, Effect } from 'effect';
+import type { Quiz } from '@/features/quiz/domain/schema.js';
+import type { Question } from '@/features/quiz/questions/schema.js';
+import type { InteractionLog, QuizSession } from '@/features/responses/domain/schema.js';
+import * as DateTime from 'effect/DateTime';
+import * as Effect from 'effect/Effect';
 
 // Define the QuizTaker service using Effect.Service
 export class QuizTakerService extends Effect.Service<QuizTakerService>()(

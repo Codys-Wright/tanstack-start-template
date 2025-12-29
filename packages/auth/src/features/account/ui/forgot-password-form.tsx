@@ -1,12 +1,12 @@
-import { Button, Card, Input, cn } from "@shadcn";
-import { Link } from "@tanstack/react-router";
-import { Result, useAtom } from "@effect-atom/atom-react";
-import { useForm } from "@tanstack/react-form";
-import { Loader2Icon } from "lucide-react";
-import { useEffect } from "react";
-import * as Schema from "effect/Schema";
+import { Button, Card, Input, cn } from '@shadcn';
+import { Link } from '@tanstack/react-router';
+import { Result, useAtom } from '@effect-atom/atom-react';
+import { useForm } from '@tanstack/react-form';
+import { Loader2Icon } from 'lucide-react';
+import { useEffect } from 'react';
+import * as Schema from 'effect/Schema';
 
-import { forgotPasswordAtom } from "../../session/session.atoms";
+import { forgotPasswordAtom } from '../../session/client/atoms.js';
 
 // Define the form schema using Effect Schema
 const ForgotPasswordSchema = Schema.Struct({
@@ -22,7 +22,7 @@ export function ForgotPasswordForm({ className }: ForgotPasswordFormProps) {
 
   const form = useForm({
     defaultValues: {
-      email: "",
+      email: '',
     },
     onSubmit: async ({ value }) => {
       try {
@@ -42,23 +42,20 @@ export function ForgotPasswordForm({ className }: ForgotPasswordFormProps) {
   useEffect(() => {
     if (Result.isSuccess(forgotPasswordResult)) {
       // Show success message and redirect
-      window.location.href = "/auth/sign-in";
+      window.location.href = '/auth/sign-in';
     }
   }, [forgotPasswordResult]);
 
-  const isLoading =
-    Result.isInitial(forgotPasswordResult) && forgotPasswordResult.waiting;
+  const isLoading = Result.isInitial(forgotPasswordResult) && forgotPasswordResult.waiting;
   const error = Result.builder(forgotPasswordResult)
     .onFailure((failure) => failure)
     .orNull();
 
   return (
-    <Card className={cn("w-full max-w-sm", className)}>
+    <Card className={cn('w-full max-w-sm', className)}>
       <Card.Header>
         <Card.Title>Reset Password</Card.Title>
-        <Card.Description>
-          Enter your email to receive a password reset link
-        </Card.Description>
+        <Card.Description>Enter your email to receive a password reset link</Card.Description>
       </Card.Header>
 
       <Card.Content>
@@ -74,9 +71,9 @@ export function ForgotPasswordForm({ className }: ForgotPasswordFormProps) {
             name="email"
             validators={{
               onChange: ({ value }) => {
-                if (!value) return "Email is required";
+                if (!value) return 'Email is required';
                 if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
-                  return "Invalid email format";
+                  return 'Invalid email format';
                 }
                 return undefined;
               },
@@ -98,14 +95,10 @@ export function ForgotPasswordForm({ className }: ForgotPasswordFormProps) {
                   disabled={isLoading}
                   autoComplete="email"
                   required
-                  className={cn(
-                    field.state.meta.errors.length > 0 && "border-destructive"
-                  )}
+                  className={cn(field.state.meta.errors.length > 0 && 'border-destructive')}
                 />
                 {field.state.meta.errors.length > 0 && (
-                  <p className="text-xs text-destructive">
-                    {field.state.meta.errors.join(", ")}
-                  </p>
+                  <p className="text-xs text-destructive">{field.state.meta.errors.join(', ')}</p>
                 )}
               </div>
             )}
@@ -116,25 +109,21 @@ export function ForgotPasswordForm({ className }: ForgotPasswordFormProps) {
             <div className="bg-destructive/10 border border-destructive/30 rounded p-3 text-sm text-destructive">
               {error instanceof Error
                 ? error.message
-                : "Failed to request password reset. Please try again."}
+                : 'Failed to request password reset. Please try again.'}
             </div>
           )}
 
           {/* Submit Button */}
           <form.Subscribe selector={(state) => state.isSubmitting}>
             {(isSubmitting) => (
-              <Button
-                type="submit"
-                disabled={isLoading || isSubmitting}
-                className="w-full"
-              >
+              <Button type="submit" disabled={isLoading || isSubmitting} className="w-full">
                 {isLoading || isSubmitting ? (
                   <>
                     <Loader2Icon className="mr-2 size-4 animate-spin" />
                     Sending...
                   </>
                 ) : (
-                  "Send Reset Link"
+                  'Send Reset Link'
                 )}
               </Button>
             )}
@@ -144,10 +133,10 @@ export function ForgotPasswordForm({ className }: ForgotPasswordFormProps) {
         {/* Footer Links */}
         <div className="mt-4 text-center text-sm text-muted-foreground">
           <p>
-            Remember your password?{" "}
+            Remember your password?{' '}
             <Link
               to="/auth/$authView"
-              params={{ authView: "sign-in" }}
+              params={{ authView: 'sign-in' }}
               className="text-primary hover:underline"
             >
               Sign in

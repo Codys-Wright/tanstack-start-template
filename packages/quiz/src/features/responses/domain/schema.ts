@@ -24,9 +24,11 @@
 //     - Any pages related to this feature will go in client/src/features/${featurename}/response.page.tsx, then that component is imported into the main router
 //
 
-import { HttpApiEndpoint, HttpApiGroup, HttpApiSchema } from '@effect/platform';
-import { Schema as S } from 'effect';
-import { QuizId } from '../quiz/quiz-rpc.js';
+import * as HttpApiEndpoint from '@effect/platform/HttpApiEndpoint';
+import * as HttpApiGroup from '@effect/platform/HttpApiGroup';
+import * as HttpApiSchema from '@effect/platform/HttpApiSchema';
+import * as S from 'effect/Schema';
+import { QuizId } from '../../quiz/domain/schema.js';
 
 //1) Create a branded ID type for the entity to avoid confusion in logs and merging other id types
 export const ResponseId = S.UUID.pipe(S.brand('ResponseId'));
@@ -153,7 +155,7 @@ export class ResponseNotFoundError extends S.TaggedError<ResponseNotFoundError>(
     status: 404,
   }),
 ) {
-  get message() {
+  override get message() {
     return `Response with id ${this.id} not found`;
   }
 }
@@ -165,7 +167,7 @@ export class InvalidQuizError extends S.TaggedError<InvalidQuizError>('InvalidQu
     status: 400,
   }),
 ) {
-  get message() {
+  override get message() {
     return `Quiz with id ${this.quizId} not found or invalid`;
   }
 }

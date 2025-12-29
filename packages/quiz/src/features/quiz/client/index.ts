@@ -1,4 +1,3 @@
-// Client: Atoms, RPC client, Presentation
+// Client: Atoms, RPC client
+export * from './client.js';
 export * from './atoms.js';
-// export * from './client.js';
-// export * from './presentation/index.js';

@@ -4,8 +4,15 @@ import * as Effect from 'effect/Effect';
 import * as Layer from 'effect/Layer';
 import * as Schema from 'effect/Schema';
 import { AuthApi } from '../_core/auth-api.js';
-import { AuthError, SessionData, toAuthError, Unauthenticated } from './session.schema.js';
-import { SignInResponse, SignUpResponse, SignOutResponse } from '../_core/schema.js';
+import {
+  AuthError,
+  SessionData,
+  toAuthError,
+  Unauthenticated,
+  SignInResponse,
+  SignUpResponse,
+  SignOutResponse,
+} from './domain/schema.js';
 import { AuthService } from '../_core/service.js';
 
 /**

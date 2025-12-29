@@ -1,58 +1,42 @@
-import { Button, Drawer, Label } from "@shadcn";
-import { Link } from "@tanstack/react-router";
-import {
-  MenuIcon,
-  SettingsIcon,
-  ShieldIcon,
-  UsersIcon,
-  KeyIcon,
-  BuildingIcon,
-} from "lucide-react";
-import { AccountSettingsCards } from "./account-settings-cards";
-import { SecuritySettingsCards } from "./security-settings-cards";
-import { UserTeamsCard } from "../../team/ui/user-teams-card";
-import { ApiKeysCard } from "./api-keys-card";
-import { OrganizationsCard } from "../../organization/ui/organizations-card";
-import { UserInvitationsCard } from "../../invitation/ui/user-invitations-card";
-import { TeamsCard } from "../../team/ui/teams-card";
+import { Button, Drawer, Label } from '@shadcn';
+import { Link } from '@tanstack/react-router';
+import { MenuIcon, SettingsIcon, ShieldIcon, UsersIcon, KeyIcon, BuildingIcon } from 'lucide-react';
+import { AccountSettingsCards } from './account-settings-cards';
+import { SecuritySettingsCards } from './security-settings-cards';
+import { UserTeamsCard } from '../../team/client/presentation/components/user-teams-card';
+import { ApiKeysCard } from './api-keys-card';
+import { OrganizationsCard } from '../../organization/client/presentation/components/organizations-card';
+import { UserInvitationsCard } from '../../invitation/ui/user-invitations-card';
+import { TeamsCard } from '../../team/client/presentation/components/teams-card';
 
 export interface AccountViewProps {
   className?: string;
   view?: AccountViewType;
 }
 
-type AccountViewType =
-  | "settings"
-  | "security"
-  | "teams"
-  | "api-keys"
-  | "organizations";
+type AccountViewType = 'settings' | 'security' | 'teams' | 'api-keys' | 'organizations';
 
 const navItems = [
   {
-    view: "settings" as AccountViewType,
-    label: "Account Settings",
+    view: 'settings' as AccountViewType,
+    label: 'Account Settings',
     icon: SettingsIcon,
   },
-  { view: "security" as AccountViewType, label: "Security", icon: ShieldIcon },
-  { view: "teams" as AccountViewType, label: "Teams", icon: UsersIcon },
-  { view: "api-keys" as AccountViewType, label: "API Keys", icon: KeyIcon },
+  { view: 'security' as AccountViewType, label: 'Security', icon: ShieldIcon },
+  { view: 'teams' as AccountViewType, label: 'Teams', icon: UsersIcon },
+  { view: 'api-keys' as AccountViewType, label: 'API Keys', icon: KeyIcon },
   {
-    view: "organizations" as AccountViewType,
-    label: "Organizations",
+    view: 'organizations' as AccountViewType,
+    label: 'Organizations',
     icon: BuildingIcon,
   },
 ];
 
 export function AccountView({ className, view }: AccountViewProps) {
-  const currentView = view || "settings";
+  const currentView = view || 'settings';
 
   return (
-    <div
-      className={`flex w-full grow flex-col gap-4 md:flex-row md:gap-12 ${
-        className || ""
-      }`}
-    >
+    <div className={`flex w-full grow flex-col gap-4 md:flex-row md:gap-12 ${className || ''}`}>
       {/* Mobile Navigation */}
       <div className="flex justify-between gap-2 md:hidden">
         <Label className="font-semibold text-base">
@@ -81,9 +65,7 @@ export function AccountView({ className, view }: AccountViewProps) {
                     <Button
                       size="lg"
                       className={`w-full justify-start px-4 transition-none ${
-                        currentView === item.view
-                          ? "font-semibold"
-                          : "text-foreground/70"
+                        currentView === item.view ? 'font-semibold' : 'text-foreground/70'
                       }`}
                       variant="ghost"
                     >
@@ -104,17 +86,11 @@ export function AccountView({ className, view }: AccountViewProps) {
           {navItems.map((item) => {
             const Icon = item.icon;
             return (
-              <Link
-                key={item.view}
-                to="/account/$accountView"
-                params={{ accountView: item.view }}
-              >
+              <Link key={item.view} to="/account/$accountView" params={{ accountView: item.view }}>
                 <Button
                   size="lg"
                   className={`w-full justify-start px-4 transition-none ${
-                    currentView === item.view
-                      ? "font-semibold"
-                      : "text-foreground/70"
+                    currentView === item.view ? 'font-semibold' : 'text-foreground/70'
                   }`}
                   variant="ghost"
                 >
@@ -129,11 +105,11 @@ export function AccountView({ className, view }: AccountViewProps) {
 
       {/* Content Area */}
       <div className="flex-1">
-        {currentView === "settings" && <AccountSettingsContent />}
-        {currentView === "security" && <SecuritySettingsContent />}
-        {currentView === "teams" && <TeamsContent />}
-        {currentView === "api-keys" && <ApiKeysContent />}
-        {currentView === "organizations" && <OrganizationsContent />}
+        {currentView === 'settings' && <AccountSettingsContent />}
+        {currentView === 'security' && <SecuritySettingsContent />}
+        {currentView === 'teams' && <TeamsContent />}
+        {currentView === 'api-keys' && <ApiKeysContent />}
+        {currentView === 'organizations' && <OrganizationsContent />}
       </div>
     </div>
   );
@@ -145,9 +121,7 @@ function AccountSettingsContent() {
     <div className="space-y-8">
       <div>
         <h1 className="text-2xl font-bold mb-2">Account Settings</h1>
-        <p className="text-muted-foreground">
-          Manage your account information and preferences.
-        </p>
+        <p className="text-muted-foreground">Manage your account information and preferences.</p>
       </div>
       <AccountSettingsCards />
     </div>
@@ -173,9 +147,7 @@ function TeamsContent() {
     <div className="space-y-8">
       <div>
         <h1 className="text-2xl font-bold mb-2">Teams</h1>
-        <p className="text-muted-foreground">
-          Manage your team memberships and collaborations.
-        </p>
+        <p className="text-muted-foreground">Manage your team memberships and collaborations.</p>
       </div>
       <UserTeamsCard />
     </div>
@@ -187,9 +159,7 @@ function ApiKeysContent() {
     <div className="space-y-8">
       <div>
         <h1 className="text-2xl font-bold mb-2">API Keys</h1>
-        <p className="text-muted-foreground">
-          Manage your API keys and access tokens.
-        </p>
+        <p className="text-muted-foreground">Manage your API keys and access tokens.</p>
       </div>
       <ApiKeysCard />
     </div>
@@ -201,9 +171,7 @@ function OrganizationsContent() {
     <div className="space-y-8">
       <div>
         <h1 className="text-2xl font-bold mb-2">Organizations</h1>
-        <p className="text-muted-foreground">
-          Manage your organization memberships and roles.
-        </p>
+        <p className="text-muted-foreground">Manage your organization memberships and roles.</p>
       </div>
       <div className="grid w-full gap-4 md:gap-6">
         <OrganizationsCard />

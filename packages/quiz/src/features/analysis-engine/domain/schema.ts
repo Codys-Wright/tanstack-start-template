@@ -2,9 +2,11 @@
 // This defines the structure for storing and running different analysis engines
 
 import { Version } from '@core/domain';
-import { HttpApiEndpoint, HttpApiGroup, HttpApiSchema } from '@effect/platform';
-import { Schema as S } from 'effect';
-import { QuizId } from '../quiz/quiz-rpc.js';
+import * as HttpApiEndpoint from '@effect/platform/HttpApiEndpoint';
+import * as HttpApiGroup from '@effect/platform/HttpApiGroup';
+import * as HttpApiSchema from '@effect/platform/HttpApiSchema';
+import * as S from 'effect/Schema';
+import { QuizId } from '../../quiz/domain/schema.js';
 
 // ============================================================================
 // CORE TYPES
@@ -194,7 +196,7 @@ export class AnalysisEngineNotFoundError extends S.TaggedError<AnalysisEngineNot
     status: 404,
   }),
 ) {
-  get message() {
+  override get message() {
     return `Analysis engine with id ${this.id} not found`;
   }
 }

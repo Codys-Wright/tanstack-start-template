@@ -33,8 +33,8 @@ export {
 // ============================================================================
 // Repositories
 // ============================================================================
-export * from './features/user/user.repository';
-export * from './features/session/session.repository';
-export * from './features/organization/organization.repository';
-export * from './features/member/member.repository';
-export * from './features/invitation/invitation.repository';
+export * from './features/user/database/repo.js';
+export * from './features/session/database/repo.js';
+export * from './features/organization/database/repo.js';
+export * from './features/member/database/repo.js';
+export * from './features/invitation/database/repo.js';

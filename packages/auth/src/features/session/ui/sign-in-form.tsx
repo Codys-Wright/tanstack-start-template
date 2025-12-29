@@ -1,13 +1,13 @@
-import { Button, Card, Input, cn } from "@shadcn";
-import { Link } from "@tanstack/react-router";
-import { Result, useAtom } from "@effect-atom/atom-react";
-import { useForm } from "@tanstack/react-form";
-import { Loader2Icon } from "lucide-react";
-import { useEffect } from "react";
-import * as Schema from "effect/Schema";
+import { Button, Card, Input, cn } from '@shadcn';
+import { Link } from '@tanstack/react-router';
+import { Result, useAtom } from '@effect-atom/atom-react';
+import { useForm } from '@tanstack/react-form';
+import { Loader2Icon } from 'lucide-react';
+import { useEffect } from 'react';
+import * as Schema from 'effect/Schema';
 
-import { signInAtom } from "../session.atoms";
-import type { SignInInput } from "../../_core/schema";
+import { signInAtom } from '../client/atoms.js';
+import type { SignInInput } from '../domain/schema.js';
 
 // Define the form schema using Effect Schema
 const SignInSchema = Schema.Struct({
@@ -20,13 +20,13 @@ export interface SignInFormProps {
   redirectTo?: string;
 }
 
-export function SignInForm({ className, redirectTo = "/" }: SignInFormProps) {
+export function SignInForm({ className, redirectTo = '/' }: SignInFormProps) {
   const [signInResult, signIn] = useAtom(signInAtom);
 
   const form = useForm({
     defaultValues: {
-      email: "",
-      password: "",
+      email: '',
+      password: '',
     },
     onSubmit: async ({ value }) => {
       try {
@@ -60,12 +60,10 @@ export function SignInForm({ className, redirectTo = "/" }: SignInFormProps) {
     .orNull();
 
   return (
-    <Card className={cn("w-full max-w-sm", className)}>
+    <Card className={cn('w-full max-w-sm', className)}>
       <Card.Header>
         <Card.Title>Sign In</Card.Title>
-        <Card.Description>
-          Enter your email and password to sign in
-        </Card.Description>
+        <Card.Description>Enter your email and password to sign in</Card.Description>
       </Card.Header>
 
       <Card.Content>
@@ -81,9 +79,9 @@ export function SignInForm({ className, redirectTo = "/" }: SignInFormProps) {
             name="email"
             validators={{
               onChange: ({ value }) => {
-                if (!value) return "Email is required";
+                if (!value) return 'Email is required';
                 if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
-                  return "Invalid email format";
+                  return 'Invalid email format';
                 }
                 return undefined;
               },
@@ -105,14 +103,10 @@ export function SignInForm({ className, redirectTo = "/" }: SignInFormProps) {
                   disabled={isLoading}
                   autoComplete="email"
                   required
-                  className={cn(
-                    field.state.meta.errors.length > 0 && "border-destructive"
-                  )}
+                  className={cn(field.state.meta.errors.length > 0 && 'border-destructive')}
                 />
                 {field.state.meta.errors.length > 0 && (
-                  <p className="text-xs text-destructive">
-                    {field.state.meta.errors.join(", ")}
-                  </p>
+                  <p className="text-xs text-destructive">{field.state.meta.errors.join(', ')}</p>
                 )}
               </div>
             )}
@@ -123,9 +117,9 @@ export function SignInForm({ className, redirectTo = "/" }: SignInFormProps) {
             name="password"
             validators={{
               onChange: ({ value }) => {
-                if (!value) return "Password is required";
+                if (!value) return 'Password is required';
                 if (value.length < 8) {
-                  return "Password must be at least 8 characters";
+                  return 'Password must be at least 8 characters';
                 }
                 return undefined;
               },
@@ -147,14 +141,10 @@ export function SignInForm({ className, redirectTo = "/" }: SignInFormProps) {
                   disabled={isLoading}
                   autoComplete="current-password"
                   required
-                  className={cn(
-                    field.state.meta.errors.length > 0 && "border-destructive"
-                  )}
+                  className={cn(field.state.meta.errors.length > 0 && 'border-destructive')}
                 />
                 {field.state.meta.errors.length > 0 && (
-                  <p className="text-xs text-destructive">
-                    {field.state.meta.errors.join(", ")}
-                  </p>
+                  <p className="text-xs text-destructive">{field.state.meta.errors.join(', ')}</p>
                 )}
               </div>
             )}
@@ -163,27 +153,21 @@ export function SignInForm({ className, redirectTo = "/" }: SignInFormProps) {
           {/* Error Message */}
           {error && (
             <div className="bg-destructive/10 border border-destructive/30 rounded p-3 text-sm text-destructive">
-              {error instanceof Error
-                ? error.message
-                : "Failed to sign in. Please try again."}
+              {error instanceof Error ? error.message : 'Failed to sign in. Please try again.'}
             </div>
           )}
 
           {/* Submit Button */}
           <form.Subscribe selector={(state) => state.isSubmitting}>
             {(isSubmitting) => (
-              <Button
-                type="submit"
-                disabled={isLoading || isSubmitting}
-                className="w-full"
-              >
+              <Button type="submit" disabled={isLoading || isSubmitting} className="w-full">
                 {isLoading || isSubmitting ? (
                   <>
                     <Loader2Icon className="mr-2 size-4 animate-spin" />
                     Signing in...
                   </>
                 ) : (
-                  "Sign In"
+                  'Sign In'
                 )}
               </Button>
             )}
@@ -193,10 +177,10 @@ export function SignInForm({ className, redirectTo = "/" }: SignInFormProps) {
         {/* Footer Links */}
         <div className="mt-4 space-y-2 text-center text-sm text-muted-foreground">
           <p>
-            Don't have an account?{" "}
+            Don't have an account?{' '}
             <Link
               to="/auth/$authView"
-              params={{ authView: "sign-up" }}
+              params={{ authView: 'sign-up' }}
               className="text-primary hover:underline"
             >
               Sign up
@@ -205,7 +189,7 @@ export function SignInForm({ className, redirectTo = "/" }: SignInFormProps) {
           <p>
             <Link
               to="/auth/$authView"
-              params={{ authView: "forgot-password" }}
+              params={{ authView: 'forgot-password' }}
               className="text-primary hover:underline"
             >
               Forgot password?

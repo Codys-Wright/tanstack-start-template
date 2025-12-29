@@ -1,12 +1,12 @@
-import { Button, Card } from "@shadcn";
-import { Result, useAtom } from "@effect-atom/atom-react";
-import { useForm } from "@tanstack/react-form";
-import { Loader2Icon, MailIcon } from "lucide-react";
-import { useEffect } from "react";
-import * as Schema from "effect/Schema";
+import { Button, Card } from '@shadcn';
+import { Result, useAtom } from '@effect-atom/atom-react';
+import { useForm } from '@tanstack/react-form';
+import { Loader2Icon, MailIcon } from 'lucide-react';
+import { useEffect } from 'react';
+import * as Schema from 'effect/Schema';
 
-import { changeEmailAtom } from "../../session/session.atoms";
-import { SettingsCard } from "./settings-card";
+import { changeEmailAtom } from '../../session/client/atoms.js';
+import { SettingsCard } from './settings-card';
 
 export interface ChangeEmailCardProps {
   className?: string;
@@ -22,7 +22,7 @@ export function ChangeEmailCard({ className }: ChangeEmailCardProps) {
 
   const form = useForm({
     defaultValues: {
-      newEmail: "",
+      newEmail: '',
     },
     onSubmit: async ({ value }) => {
       try {
@@ -41,7 +41,7 @@ export function ChangeEmailCard({ className }: ChangeEmailCardProps) {
   // Handle successful change request
   useEffect(() => {
     if (Result.isSuccess(changeResult)) {
-      form.setFieldValue("newEmail", "");
+      form.setFieldValue('newEmail', '');
     }
   }, [changeResult, form]);
 
@@ -58,8 +58,7 @@ export function ChangeEmailCard({ className }: ChangeEmailCardProps) {
           Change Email
         </Card.Title>
         <Card.Description>
-          Update your email address. You'll receive a verification link at your
-          new email.
+          Update your email address. You'll receive a verification link at your new email.
         </Card.Description>
       </Card.Header>
 
@@ -76,9 +75,9 @@ export function ChangeEmailCard({ className }: ChangeEmailCardProps) {
             name="newEmail"
             validators={{
               onChange: ({ value }) => {
-                if (!value) return "Email is required";
+                if (!value) return 'Email is required';
                 if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
-                  return "Invalid email format";
+                  return 'Invalid email format';
                 }
                 return undefined;
               },
@@ -101,9 +100,7 @@ export function ChangeEmailCard({ className }: ChangeEmailCardProps) {
                   className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                 />
                 {field.state.meta.errors.length > 0 && (
-                  <p className="text-xs text-destructive">
-                    {field.state.meta.errors.join(", ")}
-                  </p>
+                  <p className="text-xs text-destructive">{field.state.meta.errors.join(', ')}</p>
                 )}
               </div>
             )}
@@ -112,9 +109,7 @@ export function ChangeEmailCard({ className }: ChangeEmailCardProps) {
           {/* Error Message */}
           {error && (
             <div className="bg-destructive/10 border border-destructive/30 rounded p-3 text-sm text-destructive">
-              {error instanceof Error
-                ? error.message
-                : "Failed to change email. Please try again."}
+              {error instanceof Error ? error.message : 'Failed to change email. Please try again.'}
             </div>
           )}
 
@@ -132,7 +127,7 @@ export function ChangeEmailCard({ className }: ChangeEmailCardProps) {
                     Sending...
                   </>
                 ) : (
-                  "Change Email"
+                  'Change Email'
                 )}
               </Button>
             )}

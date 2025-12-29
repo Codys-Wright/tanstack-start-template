@@ -1,5 +1,5 @@
-import type { Question, QuestionId, UpsertQuestionPayload } from './questions/schema.js';
-import { Effect } from 'effect';
+import type { Question, QuestionId, UpsertQuestionPayload } from '../questions/schema.js';
+import * as Effect from 'effect/Effect';
 
 export class QuestionService extends Effect.Service<QuestionService>()('QuestionService', {
   effect: Effect.succeed({

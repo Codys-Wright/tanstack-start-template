@@ -1,8 +1,8 @@
-/**
- * @quiz/database - Database layer exports
- *
- * This package uses @core/database for database operations
- * Quiz repositories are in features/*/
- */
+// Database exports for @quiz/database
 
-export * from '@core/database';
+// Quiz repositories
+export * from './features/quiz/database/index.js';
+export * from './features/analysis/database/index.js';
+export * from './features/analysis-engine/database/index.js';
+export * from './features/responses/database/index.js';
+export * from './features/active-quiz/database/index.js';

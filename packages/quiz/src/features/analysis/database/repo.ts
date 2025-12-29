@@ -1,13 +1,16 @@
-import { SqlClient, SqlSchema } from '@effect/sql';
+import * as SqlClient from '@effect/sql/SqlClient';
+import * as SqlSchema from '@effect/sql/SqlSchema';
+import { PgLive } from '@core/database';
+import * as Effect from 'effect/Effect';
+import { flow } from 'effect/Function';
+import * as Schema from 'effect/Schema';
 import {
   AnalysisResult,
   AnalysisResultNotFoundError,
   AnalysisResultNotFoundForResponseError,
-} from '../analysis/schema.js';
-import { ResponseId } from '../responses/schema.js';
-import { AnalysisEngineId, AnalysisResultId } from './analysis-engine/schema.js';
-import { PgLive } from '@core/database';
-import { Effect, flow, Schema } from 'effect';
+} from '../domain/schema.js';
+import { ResponseId } from '../../responses/domain/schema.js';
+import { AnalysisEngineId, AnalysisResultId } from '../../analysis-engine/domain/schema.js';
 
 //1) Define the Inputs that the repository is expecting, we map these to UpsertPayload because it decouples them like a DTO and lets us
 //   easily see what our Repo is expecting to deal with

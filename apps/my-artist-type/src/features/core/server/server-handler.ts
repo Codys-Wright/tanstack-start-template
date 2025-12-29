@@ -5,7 +5,7 @@ import {
   AuthService,
   AuthApiRoutes,
 } from '@auth/server';
-import { TodosApiRoutes, TodosRpcLive } from '@todo/server';
+import { TodoApiRoutes, TodoRpcLive } from '@todo/server';
 import { ExampleApiLive, ExampleRpcLive } from '@example/server';
 import * as HttpLayerRouter from '@effect/platform/HttpLayerRouter';
 import * as HttpServerResponse from '@effect/platform/HttpServerResponse';
@@ -24,7 +24,7 @@ const RpcRouter = RpcServer.layerHttpRouter({
   spanPrefix: 'rpc',
   disableFatalDefects: true,
 }).pipe(
-  Layer.provide(TodosRpcLive),
+  Layer.provide(TodoRpcLive),
   Layer.provide(ExampleRpcLive),
   Layer.provide(RpcLoggerLive),
   Layer.provide(RpcAuthenticationMiddlewareLive),
@@ -42,7 +42,7 @@ const HealthRoute = HttpLayerRouter.use((router) =>
 // - AuthApiRoutes: /api/auth/* routes
 const AllRoutes = Layer.mergeAll(
   RpcRouter,
-  TodosApiRoutes,
+  TodoApiRoutes,
   ExampleApiLive,
   AuthApiRoutes,
   HealthRoute,

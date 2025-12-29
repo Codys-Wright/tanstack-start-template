@@ -1,7 +1,7 @@
-import { Avatar, cn, Skeleton } from "@shadcn";
-import { UserRoundIcon } from "lucide-react";
-import type { ComponentProps } from "react";
-import type { User } from "../user.schema";
+import { Avatar, cn, Skeleton } from '@shadcn';
+import { UserRoundIcon } from 'lucide-react';
+import type { ComponentProps } from 'react';
+import type { User } from '../domain/schema.js';
 
 export interface UserAvatarClassNames {
   base?: string;
@@ -14,7 +14,7 @@ export interface UserAvatarClassNames {
 export interface UserAvatarProps {
   classNames?: UserAvatarClassNames;
   isPending?: boolean;
-  size?: "sm" | "default" | "lg" | "xl" | null;
+  size?: 'sm' | 'default' | 'lg' | 'xl' | null;
   user?: User | null;
 }
 
@@ -41,17 +41,17 @@ export function UserAvatar({
     return (
       <Skeleton
         className={cn(
-          "shrink-0 rounded-full",
-          size === "sm"
-            ? "size-6"
-            : size === "lg"
-            ? "size-10"
-            : size === "xl"
-            ? "size-12"
-            : "size-8",
+          'shrink-0 rounded-full',
+          size === 'sm'
+            ? 'size-6'
+            : size === 'lg'
+              ? 'size-10'
+              : size === 'xl'
+                ? 'size-12'
+                : 'size-8',
           className,
           classNames?.base,
-          classNames?.skeleton
+          classNames?.skeleton,
         )}
       />
     );
@@ -60,33 +60,25 @@ export function UserAvatar({
   return (
     <Avatar
       className={cn(
-        "bg-muted",
-        size === "sm"
-          ? "size-6"
-          : size === "lg"
-          ? "size-10"
-          : size === "xl"
-          ? "size-12"
-          : "size-8",
+        'bg-muted',
+        size === 'sm' ? 'size-6' : size === 'lg' ? 'size-10' : size === 'xl' ? 'size-12' : 'size-8',
         className,
-        classNames?.base
+        classNames?.base,
       )}
       {...props}
     >
       <Avatar.Image
-        alt={name || "User"}
+        alt={name || 'User'}
         className={classNames?.image}
         src={userImage || undefined}
       />
 
       <Avatar.Fallback
-        className={cn("text-foreground uppercase", classNames?.fallback)}
+        className={cn('text-foreground uppercase', classNames?.fallback)}
         delayMs={userImage ? 600 : undefined}
       >
         {firstTwoCharacters(name) || (
-          <UserRoundIcon
-            className={cn("size-[50%]", classNames?.fallbackIcon)}
-          />
+          <UserRoundIcon className={cn('size-[50%]', classNames?.fallbackIcon)} />
         )}
       </Avatar.Fallback>
     </Avatar>

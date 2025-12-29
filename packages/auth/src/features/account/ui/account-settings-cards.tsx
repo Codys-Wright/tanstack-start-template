@@ -1,9 +1,9 @@
-import { cn } from "@shadcn";
-import { Result, useAtomValue } from "@effect-atom/atom-react";
-import { sessionAtom } from "../../session/session.atoms";
-import { UpdateNameCard } from "./update-name-card";
-import { UpdateAvatarCard } from "./update-avatar-card";
-import { ChangeEmailCard } from "./change-email-card";
+import { cn } from '@shadcn';
+import { Result, useAtomValue } from '@effect-atom/atom-react';
+import { sessionAtom } from '../../session/client/atoms.js';
+import { UpdateNameCard } from './update-name-card';
+import { UpdateAvatarCard } from './update-avatar-card';
+import { ChangeEmailCard } from './change-email-card';
 
 export interface AccountSettingsCardsProps {
   className?: string;
@@ -30,7 +30,7 @@ export function AccountSettingsCards({ className }: AccountSettingsCardsProps) {
   if (!user) return null;
 
   return (
-    <div className={cn("flex w-full flex-col gap-4 md:gap-6", className)}>
+    <div className={cn('flex w-full flex-col gap-4 md:gap-6', className)}>
       {/* Update Avatar Card */}
       <UpdateAvatarCard />
 

@@ -5,13 +5,13 @@ import * as Layer from 'effect/Layer';
 import * as Schema from 'effect/Schema';
 import { AuthApi } from '../_core/auth-api.js';
 import { AuthService } from '../_core/service.js';
-import { AuthError, toAuthError, Unauthenticated } from '../session/session.schema.js';
-import { User } from '../user/user.schema.js';
+import { AuthError, toAuthError, Unauthenticated } from '../session/domain/schema.js';
+import { User } from '../user/domain/schema.js';
 import {
   ChangeEmailResponse,
   ChangePasswordResponse,
   DeleteAccountResponse,
-} from './account-api.js';
+} from './domain/api.js';
 
 /**
  * AccountApiLive - HTTP API handlers for the account group within AuthApi.

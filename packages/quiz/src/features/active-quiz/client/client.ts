@@ -1,22 +1,18 @@
 import { RpcProtocol } from '@core/client/rpc-config';
 import { AtomRpc } from '@effect-atom/atom-react';
-import type { ActiveQuizId } from './schema.js';
-import { ActiveQuizGroup } from './schema.js';
-import { Data, Effect } from 'effect';
+import { ActiveQuizRpc } from '../domain/index.js';
 
-export class ActiveQuizClient extends AtomRpc.Tag<ActiveQuizClient>()('@quiz/active-quiz/Client', {
-  group: 'ActiveQuiz',
+/**
+ * ActiveQuizClient - RPC client for the Active Quiz feature.
+ *
+ * Provides:
+ * - ActiveQuizClient.query("active_quiz_list", ...) - for read queries
+ * - ActiveQuizClient.mutation("active_quiz_upsert") - for mutations
+ * - ActiveQuizClient.runtime - for custom atoms
+ * - ActiveQuizClient.layer - for Effect services
+ * - ActiveQuizClient (as Context.Tag) - yields the raw RPC client
+ */
+export class ActiveQuizClient extends AtomRpc.Tag<ActiveQuizClient>()('@quiz/ActiveQuizClient', {
+  group: ActiveQuizRpc,
   protocol: RpcProtocol,
 }) {}
-
-export const makeActiveQuizAtoms = (client: ActiveQuizClient) => {
-  const runtime = client.runtime;
-
-  // Remote atom for getting active quiz sessions (empty by default to avoid UUID validation errors)
-  const activeQuizSessionsRemoteAtom = runtime.atom(Effect.succeed([] as ReadonlyArray<any>));
-
-  // Export all atoms
-  return {
-    activeQuizSessionsAtom: activeQuizSessionsRemoteAtom,
-  };
-};

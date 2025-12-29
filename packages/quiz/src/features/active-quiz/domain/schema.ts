@@ -1,8 +1,10 @@
 import { Slug } from '@core/domain';
-import { HttpApiEndpoint, HttpApiGroup, HttpApiSchema } from '@effect/platform';
-import { Schema as S } from 'effect';
-import { AnalysisEngineId } from '../analysis/analysis-engine-rpc.js';
-import { QuizId } from '../quiz/quiz-rpc.js';
+import * as HttpApiEndpoint from '@effect/platform/HttpApiEndpoint';
+import * as HttpApiGroup from '@effect/platform/HttpApiGroup';
+import * as HttpApiSchema from '@effect/platform/HttpApiSchema';
+import * as S from 'effect/Schema';
+import { AnalysisEngineId } from '../../analysis-engine/domain/schema.js';
+import { QuizId } from '../../quiz/domain/schema.js';
 
 //1) Create a branded ID type for ActiveQuiz
 export const ActiveQuizId = S.UUID.pipe(S.brand('ActiveQuizId'));
@@ -40,7 +42,7 @@ export class ActiveQuizNotFoundError extends S.TaggedError<ActiveQuizNotFoundErr
     status: 404,
   }),
 ) {
-  get message() {
+  override get message() {
     return `Active quiz with slug ${this.slug} not found`;
   }
 }

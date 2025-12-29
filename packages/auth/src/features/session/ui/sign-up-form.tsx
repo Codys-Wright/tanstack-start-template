@@ -1,13 +1,13 @@
-import { Button, Card, Input, cn } from "@shadcn";
-import { Link } from "@tanstack/react-router";
-import { Result, useAtom } from "@effect-atom/atom-react";
-import { useForm } from "@tanstack/react-form";
-import { Loader2Icon } from "lucide-react";
-import { useEffect } from "react";
-import * as Schema from "effect/Schema";
+import { Button, Card, Input, cn } from '@shadcn';
+import { Link } from '@tanstack/react-router';
+import { Result, useAtom } from '@effect-atom/atom-react';
+import { useForm } from '@tanstack/react-form';
+import { Loader2Icon } from 'lucide-react';
+import { useEffect } from 'react';
+import * as Schema from 'effect/Schema';
 
-import { signUpAtom } from "../session.atoms";
-import type { SignUpInput } from "../../_core/schema";
+import { signUpAtom } from '../client/atoms.js';
+import type { SignUpInput } from '../domain/schema.js';
 
 // Define the form schema using Effect Schema
 const SignUpSchema = Schema.Struct({
@@ -22,15 +22,15 @@ export interface SignUpFormProps {
   redirectTo?: string;
 }
 
-export function SignUpForm({ className, redirectTo = "/" }: SignUpFormProps) {
+export function SignUpForm({ className, redirectTo = '/' }: SignUpFormProps) {
   const [signUpResult, signUp] = useAtom(signUpAtom);
 
   const form = useForm({
     defaultValues: {
-      name: "",
-      email: "",
-      password: "",
-      confirmPassword: "",
+      name: '',
+      email: '',
+      password: '',
+      confirmPassword: '',
     },
     onSubmit: async ({ value }) => {
       try {
@@ -71,7 +71,7 @@ export function SignUpForm({ className, redirectTo = "/" }: SignUpFormProps) {
     .orNull();
 
   return (
-    <Card className={cn("w-full max-w-sm", className)}>
+    <Card className={cn('w-full max-w-sm', className)}>
       <Card.Header>
         <Card.Title>Create Account</Card.Title>
         <Card.Description>Sign up to get started</Card.Description>
@@ -90,7 +90,7 @@ export function SignUpForm({ className, redirectTo = "/" }: SignUpFormProps) {
             name="name"
             validators={{
               onChange: ({ value }) => {
-                if (!value) return "Name is required";
+                if (!value) return 'Name is required';
                 return undefined;
               },
             }}
@@ -111,14 +111,10 @@ export function SignUpForm({ className, redirectTo = "/" }: SignUpFormProps) {
                   disabled={isLoading}
                   autoComplete="name"
                   required
-                  className={cn(
-                    field.state.meta.errors.length > 0 && "border-destructive"
-                  )}
+                  className={cn(field.state.meta.errors.length > 0 && 'border-destructive')}
                 />
                 {field.state.meta.errors.length > 0 && (
-                  <p className="text-xs text-destructive">
-                    {field.state.meta.errors.join(", ")}
-                  </p>
+                  <p className="text-xs text-destructive">{field.state.meta.errors.join(', ')}</p>
                 )}
               </div>
             )}
@@ -129,9 +125,9 @@ export function SignUpForm({ className, redirectTo = "/" }: SignUpFormProps) {
             name="email"
             validators={{
               onChange: ({ value }) => {
-                if (!value) return "Email is required";
+                if (!value) return 'Email is required';
                 if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
-                  return "Invalid email format";
+                  return 'Invalid email format';
                 }
                 return undefined;
               },
@@ -153,14 +149,10 @@ export function SignUpForm({ className, redirectTo = "/" }: SignUpFormProps) {
                   disabled={isLoading}
                   autoComplete="email"
                   required
-                  className={cn(
-                    field.state.meta.errors.length > 0 && "border-destructive"
-                  )}
+                  className={cn(field.state.meta.errors.length > 0 && 'border-destructive')}
                 />
                 {field.state.meta.errors.length > 0 && (
-                  <p className="text-xs text-destructive">
-                    {field.state.meta.errors.join(", ")}
-                  </p>
+                  <p className="text-xs text-destructive">{field.state.meta.errors.join(', ')}</p>
                 )}
               </div>
             )}
@@ -171,9 +163,9 @@ export function SignUpForm({ className, redirectTo = "/" }: SignUpFormProps) {
             name="password"
             validators={{
               onChange: ({ value }) => {
-                if (!value) return "Password is required";
+                if (!value) return 'Password is required';
                 if (value.length < 8) {
-                  return "Password must be at least 8 characters";
+                  return 'Password must be at least 8 characters';
                 }
                 return undefined;
               },
@@ -195,14 +187,10 @@ export function SignUpForm({ className, redirectTo = "/" }: SignUpFormProps) {
                   disabled={isLoading}
                   autoComplete="new-password"
                   required
-                  className={cn(
-                    field.state.meta.errors.length > 0 && "border-destructive"
-                  )}
+                  className={cn(field.state.meta.errors.length > 0 && 'border-destructive')}
                 />
                 {field.state.meta.errors.length > 0 && (
-                  <p className="text-xs text-destructive">
-                    {field.state.meta.errors.join(", ")}
-                  </p>
+                  <p className="text-xs text-destructive">{field.state.meta.errors.join(', ')}</p>
                 )}
               </div>
             )}
@@ -213,10 +201,10 @@ export function SignUpForm({ className, redirectTo = "/" }: SignUpFormProps) {
             name="confirmPassword"
             validators={{
               onChange: ({ value }) => {
-                if (!value) return "Confirm password is required";
-                const password = form.getFieldValue("password");
+                if (!value) return 'Confirm password is required';
+                const password = form.getFieldValue('password');
                 if (value !== password) {
-                  return "Passwords do not match";
+                  return 'Passwords do not match';
                 }
                 return undefined;
               },
@@ -238,14 +226,10 @@ export function SignUpForm({ className, redirectTo = "/" }: SignUpFormProps) {
                   disabled={isLoading}
                   autoComplete="new-password"
                   required
-                  className={cn(
-                    field.state.meta.errors.length > 0 && "border-destructive"
-                  )}
+                  className={cn(field.state.meta.errors.length > 0 && 'border-destructive')}
                 />
                 {field.state.meta.errors.length > 0 && (
-                  <p className="text-xs text-destructive">
-                    {field.state.meta.errors.join(", ")}
-                  </p>
+                  <p className="text-xs text-destructive">{field.state.meta.errors.join(', ')}</p>
                 )}
               </div>
             )}
@@ -254,27 +238,21 @@ export function SignUpForm({ className, redirectTo = "/" }: SignUpFormProps) {
           {/* Error Message */}
           {error && (
             <div className="bg-destructive/10 border border-destructive/30 rounded p-3 text-sm text-destructive">
-              {error instanceof Error
-                ? error.message
-                : "Failed to sign up. Please try again."}
+              {error instanceof Error ? error.message : 'Failed to sign up. Please try again.'}
             </div>
           )}
 
           {/* Submit Button */}
           <form.Subscribe selector={(state) => state.isSubmitting}>
             {(isSubmitting) => (
-              <Button
-                type="submit"
-                disabled={isLoading || isSubmitting}
-                className="w-full"
-              >
+              <Button type="submit" disabled={isLoading || isSubmitting} className="w-full">
                 {isLoading || isSubmitting ? (
                   <>
                     <Loader2Icon className="mr-2 size-4 animate-spin" />
                     Creating account...
                   </>
                 ) : (
-                  "Sign Up"
+                  'Sign Up'
                 )}
               </Button>
             )}
@@ -284,10 +262,10 @@ export function SignUpForm({ className, redirectTo = "/" }: SignUpFormProps) {
         {/* Footer Links */}
         <div className="mt-4 text-center text-sm text-muted-foreground">
           <p>
-            Already have an account?{" "}
+            Already have an account?{' '}
             <Link
               to="/auth/$authView"
-              params={{ authView: "sign-in" }}
+              params={{ authView: 'sign-in' }}
               className="text-primary hover:underline"
             >
               Sign in

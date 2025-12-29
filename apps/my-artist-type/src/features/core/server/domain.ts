@@ -1,6 +1,6 @@
 import { RpcAuthenticationMiddleware } from '@auth/server';
 import { FeatureRpc } from '@example';
-import { TodosRpc, TodosApi } from '@todo';
+import { TodoRpc, TodoApi } from '@todo';
 import * as RpcMiddleware from '@effect/rpc/RpcMiddleware';
 import * as Effect from 'effect/Effect';
 import * as Exit from 'effect/Exit';
@@ -47,7 +47,7 @@ export const RpcLoggerLive = Layer.succeed(
  * Add more RPC groups using .merge() as features are added:
  * e.g., TodosRpc.merge(QuizRpc).merge(AnalysisRpc)
  */
-export const DomainRpc = TodosRpc.merge(FeatureRpc)
+export const DomainRpc = TodoRpc.merge(FeatureRpc)
   .middleware(RpcAuthenticationMiddleware)
   .middleware(RpcLogger);
 
@@ -58,7 +58,7 @@ export const DomainRpc = TodosRpc.merge(FeatureRpc)
  * at /api/example/docs. It's not merged here to avoid handler type conflicts.
  */
 export class DomainApi extends HttpApi.make('api')
-  .addHttpApi(TodosApi)
+  .addHttpApi(TodoApi)
   .prefix('/api')
   .annotateContext(
     OpenApi.annotations({

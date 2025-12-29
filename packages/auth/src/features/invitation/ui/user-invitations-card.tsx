@@ -1,19 +1,13 @@
-import { Button, Card } from "@shadcn";
-import { Result, useAtom, useAtomValue } from "@effect-atom/atom-react";
-import {
-  UserPlusIcon,
-  CheckIcon,
-  XIcon,
-  BuildingIcon,
-  ClockIcon,
-} from "lucide-react";
-import { sessionAtom } from "../../session/session.atoms";
+import { Button, Card } from '@shadcn';
+import { Result, useAtom, useAtomValue } from '@effect-atom/atom-react';
+import { UserPlusIcon, CheckIcon, XIcon, BuildingIcon, ClockIcon } from 'lucide-react';
+import { sessionAtom } from '../../session/client/atoms.js';
 import {
   invitationsAtom,
   acceptInvitationAtom,
   cancelInvitationAtom,
-} from "../../organization/organization.atoms";
-import { toast } from "sonner";
+} from '../../organization/client/atoms.js';
+import { toast } from 'sonner';
 
 export interface UserInvitationsCardProps {
   className?: string;
@@ -27,8 +21,7 @@ export function UserInvitationsCard({ className }: UserInvitationsCardProps) {
     .onSuccess((s) => s?.user)
     .orNull();
 
-  const isPending =
-    Result.isInitial(invitationsResult) && invitationsResult.waiting;
+  const isPending = Result.isInitial(invitationsResult) && invitationsResult.waiting;
   const invitations = Result.builder(invitationsResult)
     .onSuccess((v) => v)
     .orElse(() => []);
@@ -79,21 +72,21 @@ function InvitationCard({ invitation }: InvitationCardProps) {
 
   const handleAccept = async () => {
     await accept({ invitationId: invitation.id });
-    toast.success("Invitation accepted");
+    toast.success('Invitation accepted');
   };
 
   const handleDecline = async () => {
     await cancel({ invitationId: invitation.id });
-    toast.success("Invitation declined");
+    toast.success('Invitation declined');
   };
 
   const isProcessing = acceptResult.waiting || cancelResult.waiting;
 
   const formatDate = (date: string) => {
-    return new Date(date).toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
+    return new Date(date).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
     });
   };
 
@@ -104,12 +97,9 @@ function InvitationCard({ invitation }: InvitationCardProps) {
           <BuildingIcon className="size-5" />
         </div>
         <div className="flex-1 min-w-0">
-          <h4 className="font-medium text-sm">
-            {invitation.organizationName || "Organization"}
-          </h4>
+          <h4 className="font-medium text-sm">{invitation.organizationName || 'Organization'}</h4>
           <p className="text-sm text-muted-foreground mt-1">
-            You've been invited to join as{" "}
-            <span className="font-medium">{invitation.role}</span>
+            You've been invited to join as <span className="font-medium">{invitation.role}</span>
           </p>
           <div className="flex items-center gap-1 mt-2 text-xs text-muted-foreground">
             <ClockIcon className="size-3" />
@@ -126,7 +116,7 @@ function InvitationCard({ invitation }: InvitationCardProps) {
           className="flex-1"
         >
           <CheckIcon className="size-4 mr-1" />
-          {isProcessing ? "Accepting..." : "Accept"}
+          {isProcessing ? 'Accepting...' : 'Accept'}
         </Button>
         <Button
           onClick={() => void handleDecline()}

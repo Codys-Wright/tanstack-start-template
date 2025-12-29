@@ -1,23 +1,25 @@
 // Analysis Service
 // Effect service for performing quiz analysis using analysis engines
 
-import { Config, DateTime, Effect } from 'effect';
-import { type Question } from '../quiz/questions/question-rpc.js';
-import { type Quiz } from '../quiz/quiz-rpc.js';
-import { type QuestionResponse, type QuizResponse } from '../responses/response-rpc.js';
+import * as Config from 'effect/Config';
+import * as DateTime from 'effect/DateTime';
+import * as Effect from 'effect/Effect';
+import { type Question } from '@/features/quiz/questions/schema.js';
+import { type Quiz } from '@/features/quiz/domain/schema.js';
+import { type QuestionResponse, type QuizResponse } from '@/features/responses/domain/schema.js';
 import {
   type AnalysisEngine,
   type AnalysisResultId,
   type EndingDefinition,
   type ScoringConfig,
   defaultScoringConfig,
-} from './analysis-engine-rpc.js';
+} from '@/features/analysis-engine/domain/schema.js';
 import {
   type AnalysisResult,
   type EndingResult,
   AnalysisFailedError,
   AnalysisResultNotFoundError,
-} from './analysis-rpc.js';
+} from '../domain/schema.js';
 
 // ============================================================================
 // ANALYSIS CONFIGURATION
@@ -374,14 +376,18 @@ export class AnalysisService extends Effect.Service<AnalysisService>()(
         Effect.gen(function* () {
           if (analysisResults.length === 0) {
             return yield* Effect.fail(
-              new AnalysisResultNotFoundError({ id: 'summary' as AnalysisResultId }),
+              new AnalysisResultNotFoundError({
+                id: 'summary' as AnalysisResultId,
+              }),
             );
           }
 
           const firstResult = analysisResults[0];
           if (firstResult === undefined) {
             return yield* Effect.fail(
-              new AnalysisResultNotFoundError({ id: 'summary' as AnalysisResultId }),
+              new AnalysisResultNotFoundError({
+                id: 'summary' as AnalysisResultId,
+              }),
             );
           }
 
