@@ -1,18 +1,18 @@
 import { Result, useAtomSet, useAtomValue } from '@effect-atom/atom-react';
-import type { AnalysisEngineId } from '../analysis-engine/schema.js';
-import type { ResponseId } from '../../responses/schema.js';
-import { Badge, Button, Card, DropdownMenu } from '@ui/shadcn';
+import type { AnalysisEngineId } from '../analysis-engine/domain/schema.js';
+import type { ResponseId } from '../../responses/domain/schema.js';
+import { Badge, Button, Card, DropdownMenu } from '@shadcn';
 import { CheckIcon, ChevronDownIcon } from 'lucide-react';
 import React, { useState } from 'react';
 import { ArtistTypeGraphCard } from '../components/artist-type/artist-type-graph-card.js';
-import { enginesAtom } from '../engines/engines-atoms.js';
-import { responsesAtom } from '../responses-atoms.js';
+import { enginesAtom } from '../../analysis-engine/client/atoms.js';
+import { responsesAtom } from '../../responses/client/atoms.js';
 import {
-  allAnalysisAtom,
+  analysesAtom,
   analysisSummaryAtom,
   analyzeResponseWithServiceAtom,
   getAnalysisSummaryWithServiceAtom,
-} from './analysis-atoms.js';
+} from '../client/atoms.js';
 import { transformAnalysisToArtistData } from './use-analysis-artist-data.js';
 
 // PageContainer component with padding and layout
@@ -31,7 +31,7 @@ const SuccessView: React.FC = () => {
 
   // Get analysis results
   const summaryResult = useAtomValue(analysisSummaryAtom);
-  const allAnalysisResult = useAtomValue(allAnalysisAtom);
+  const allAnalysisResult = useAtomValue(analysesAtom);
 
   // Get responses and engines for dropdowns
   const responsesResult = useAtomValue(responsesAtom);
@@ -332,7 +332,7 @@ const ErrorView: React.FC = () => {
 
 // Main Analysis Page Component
 export const AnalysisPage: React.FC = () => {
-  const allAnalysisResult = useAtomValue(allAnalysisAtom);
+  const allAnalysisResult = useAtomValue(analysesAtom);
 
   return (
     <PageContainer>

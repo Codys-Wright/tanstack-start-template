@@ -1,106 +1,129 @@
-import { ApiClient, makeAtomRuntime, withToast } from '@core/client';
-import { Atom, Registry, Result } from '@effect-atom/atom-react';
-import type { QuizId } from '../quiz/schema.js';
-import type { QuizResponse, ResponseId, UpsertResponsePayload } from './schema.js';
-import { Data, Effect, Array as EffectArray } from 'effect';
+import { serializable } from '@core/client/atom-utils';
+import { Atom, Result } from '@effect-atom/atom-react';
+import * as RpcClientError from '@effect/rpc/RpcClientError';
+import * as Arr from 'effect/Array';
+import * as Data from 'effect/Data';
+import * as Effect from 'effect/Effect';
+import * as Option from 'effect/Option';
+import * as Schema from 'effect/Schema';
+import type { QuizId } from '../../quiz/domain/schema.js';
+import { QuizResponse, ResponseId, UpsertResponsePayload } from '../domain/index.js';
+import { ResponsesClient } from './client.js';
 
-const runtime = makeAtomRuntime(ApiClient.Default);
+const ResponsesSchema = Schema.Array(QuizResponse);
 
-const remoteAtom = runtime.atom(
-  Effect.fn(function* () {
-    const api = yield* ApiClient;
-    return yield* api.http.Responses.list();
+// ============================================================================
+// Query Atoms
+// ============================================================================
+
+type ResponsesCacheUpdate = Data.TaggedEnum<{
+  Upsert: { readonly response: QuizResponse };
+  Delete: { readonly id: ResponseId };
+}>;
+
+/**
+ * Main responses atom with SSR support and optimistic updates.
+ */
+export const responsesAtom = (() => {
+  // Remote atom that fetches from the RPC
+  const remoteAtom = ResponsesClient.runtime
+    .atom(
+      Effect.gen(function* () {
+        const client = yield* ResponsesClient;
+        return yield* client('response_list', undefined);
+      }),
+    )
+    .pipe(
+      serializable({
+        key: '@quiz/responses',
+        schema: Result.Schema({
+          success: ResponsesSchema,
+          error: RpcClientError.RpcClientError,
+        }),
+      }),
+    );
+
+  // Writable atom with local cache updates
+  return Object.assign(
+    Atom.writable(
+      (get) => get(remoteAtom),
+      (ctx, update: ResponsesCacheUpdate) => {
+        const current = ctx.get(responsesAtom);
+        if (!Result.isSuccess(current)) return;
+
+        const nextValue = (() => {
+          switch (update._tag) {
+            case 'Upsert': {
+              const existingIndex = Arr.findFirstIndex(
+                current.value,
+                (r) => r.id === update.response.id,
+              );
+              return Option.match(existingIndex, {
+                onNone: () => Arr.prepend(current.value, update.response),
+                onSome: (index) => Arr.replace(current.value, index, update.response),
+              });
+            }
+            case 'Delete': {
+              return Arr.filter(current.value, (r) => r.id !== update.id);
+            }
+          }
+        })();
+
+        ctx.setSelf(Result.success(nextValue));
+      },
+      (refresh) => {
+        refresh(remoteAtom);
+      },
+    ),
+    { remote: remoteAtom },
+  );
+})();
+
+// ============================================================================
+// Mutation Atoms with Optimistic Updates
+// ============================================================================
+
+/**
+ * Upsert response with optimistic cache update.
+ */
+export const upsertResponseAtom = ResponsesClient.runtime.fn<{
+  input: UpsertResponsePayload;
+}>()(
+  Effect.fnUntraced(function* ({ input }, get) {
+    const client = yield* ResponsesClient;
+    const result = yield* client('response_upsert', { input });
+    get.set(responsesAtom, { _tag: 'Upsert', response: result });
+    return result;
   }),
 );
 
-type Action = Data.TaggedEnum<{
-  Upsert: { readonly response: QuizResponse };
-  Del: { readonly id: ResponseId };
-}>;
-const Action = Data.taggedEnum<Action>();
-
-export const responsesAtom = Object.assign(
-  Atom.writable(
-    (get: Atom.Context) => get(remoteAtom),
-    (ctx, action: Action) => {
-      const result = ctx.get(responsesAtom);
-      if (!Result.isSuccess(result)) return;
-
-      const update = Action.$match(action, {
-        Del: ({ id }) => result.value.filter((response) => response.id !== id),
-        Upsert: ({ response }) => {
-          const existing = result.value.find((r) => r.id === response.id);
-          if (existing !== undefined)
-            return result.value.map((r) => (r.id === response.id ? response : r));
-          return EffectArray.prepend(result.value, response);
-        },
-      });
-
-      ctx.setSelf(Result.success(update));
-    },
-  ),
-  {
-    remote: remoteAtom,
-  },
+/**
+ * Delete response with optimistic cache update.
+ */
+export const deleteResponseAtom = ResponsesClient.runtime.fn<ResponseId>()(
+  Effect.fnUntraced(function* (id, get) {
+    const client = yield* ResponsesClient;
+    yield* client('response_delete', { id });
+    get.set(responsesAtom, { _tag: 'Delete', id });
+  }),
 );
 
-export const upsertResponseAtom = runtime.fn(
-  Effect.fn(
-    function* (payload: UpsertResponsePayload) {
-      const registry = yield* Registry.AtomRegistry;
-      const api = yield* ApiClient;
-
-      const response = yield* api.http.Responses.upsert({ payload });
-      registry.set(responsesAtom, Action.Upsert({ response }));
-    },
-    withToast({
-      onWaiting: (payload) => `${payload.id !== undefined ? 'Updating' : 'Creating'} response...`,
-      onSuccess: 'Response saved',
-      onFailure: 'Failed to save response',
-    }),
-  ),
+/**
+ * Get response by ID.
+ */
+export const getResponseByIdAtom = ResponsesClient.runtime.fn<ResponseId>()(
+  Effect.fnUntraced(function* (id) {
+    const client = yield* ResponsesClient;
+    return yield* client('response_getById', { id });
+  }),
 );
 
-export const deleteResponseAtom = runtime.fn(
-  Effect.fn(
-    function* (id: ResponseId) {
-      const registry = yield* Registry.AtomRegistry;
-      const api = yield* ApiClient;
-      yield* api.http.Responses.delete({ payload: { id } });
-      registry.set(responsesAtom, Action.Del({ id }));
-    },
-    withToast({
-      onWaiting: 'Deleting response...',
-      onSuccess: 'Response deleted',
-      onFailure: 'Failed to delete response',
-    }),
-  ),
-);
-
-export const getResponsesByQuizAtom = runtime.fn(
-  Effect.fn(
-    function* (quizId: QuizId) {
-      const api = yield* ApiClient;
-      return yield* api.http.Responses.byQuiz({ payload: { quizId } });
-    },
-    withToast({
-      onWaiting: 'Loading responses...',
-      onSuccess: 'Responses loaded',
-      onFailure: 'Failed to load responses',
-    }),
-  ),
-);
-
-export const getResponseByIdAtom = runtime.fn(
-  Effect.fn(
-    function* (id: ResponseId) {
-      const api = yield* ApiClient;
-      return yield* api.http.Responses.byId({ payload: { id } });
-    },
-    withToast({
-      onWaiting: 'Loading response...',
-      onSuccess: 'Response loaded',
-      onFailure: 'Failed to load response',
-    }),
-  ),
+/**
+ * Get responses by quiz ID.
+ */
+export const getResponsesByQuizAtom = ResponsesClient.runtime.fn<QuizId>()(
+  Effect.fnUntraced(function* (quizId) {
+    const client = yield* ResponsesClient;
+    return yield* client('response_getByQuiz', { quizId });
+  }),
 );

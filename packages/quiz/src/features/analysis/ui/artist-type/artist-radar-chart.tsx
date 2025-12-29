@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { ChartContainer, ChartTooltip, ChartTooltipContent, cn } from "@shadcn";
-import React from "react";
-import { PolarAngleAxis, PolarGrid, Radar, RadarChart } from "recharts";
+import { Chart, cn } from '@shadcn';
+import React from 'react';
+import { PolarAngleAxis, PolarGrid, Radar, RadarChart } from 'recharts';
 
 // Import our artist data utilities
 import {
@@ -10,7 +10,7 @@ import {
   getArtistIconPath,
   useNormalizedArtistData,
   type ArtistData,
-} from "./artist-data-utils.js";
+} from './artist-data-utils.js';
 
 // =============================================================================
 // TYPES & INTERFACES
@@ -19,7 +19,7 @@ import {
 export type ArtistRadarChartProps = {
   data?: Array<ArtistData>;
   className?: string;
-  size?: "sm" | "md" | "lg";
+  size?: 'sm' | 'md' | 'lg';
   showIcons?: boolean;
   iconSize?: number;
   beta?: number;
@@ -60,18 +60,18 @@ type ArtistIconProps = {
 };
 
 const ArtistIcon: React.FC<ArtistIconProps> = ({
-  alt = "Artist Icon",
+  alt = 'Artist Icon',
   className,
   iconPath,
   size = 40,
 }) => {
   const [loadError, setLoadError] = React.useState(false);
 
-  if (iconPath === null || iconPath === undefined || iconPath === "" || loadError) {
+  if (iconPath === null || iconPath === undefined || iconPath === '' || loadError) {
     return (
       <div
         className={cn(
-          "flex items-center justify-center rounded-full bg-gray-400 text-xs font-bold text-white",
+          'flex items-center justify-center rounded-full bg-gray-400 text-xs font-bold text-white',
           className,
         )}
         style={{ width: size, height: size }}
@@ -85,11 +85,11 @@ const ArtistIcon: React.FC<ArtistIconProps> = ({
 
   return (
     <div
-      className={cn("flex items-center justify-center", className)}
+      className={cn('flex items-center justify-center', className)}
       style={{
         width: `${size}px`,
         height: `${size}px`,
-        aspectRatio: "1 / 1",
+        aspectRatio: '1 / 1',
         flexShrink: 0,
       }}
     >
@@ -98,10 +98,10 @@ const ArtistIcon: React.FC<ArtistIconProps> = ({
         alt={alt}
         className="rounded-full dark:brightness-0 dark:invert"
         style={{
-          width: "100%",
-          height: "100%",
-          objectFit: "fill",
-          aspectRatio: "1 / 1",
+          width: '100%',
+          height: '100%',
+          objectFit: 'fill',
+          aspectRatio: '1 / 1',
         }}
         onError={() => {
           setLoadError(true);
@@ -118,7 +118,7 @@ type CentralLogoProps = {
 const CentralLogo: React.FC<CentralLogoProps> = ({ className }) => (
   <div
     className={cn(
-      "absolute left-1/2 top-1/2 z-10 -translate-x-1/2 -translate-y-1/2 transform",
+      'absolute left-1/2 top-1/2 z-10 -translate-x-1/2 -translate-y-1/2 transform',
       className,
     )}
   >
@@ -126,11 +126,11 @@ const CentralLogo: React.FC<CentralLogoProps> = ({ className }) => (
     <div
       className="bg-background absolute inset-0 rounded-full"
       style={{
-        width: "50px",
-        height: "50px",
-        left: "50%",
-        top: "50%",
-        transform: "translate(-50%, -50%)",
+        width: '50px',
+        height: '50px',
+        left: '50%',
+        top: '50%',
+        transform: 'translate(-50%, -50%)',
       }}
     />
     {/* Logo image */}
@@ -139,7 +139,7 @@ const CentralLogo: React.FC<CentralLogoProps> = ({ className }) => (
       alt="My Artist Type Logo"
       className="relative z-10 h-[50px] w-[50px] dark:brightness-0 dark:invert"
       style={{
-        objectFit: "contain",
+        objectFit: 'contain',
       }}
     />
   </div>
@@ -201,11 +201,11 @@ const useIconPositions = ({
     const resizeHandler = () => {
       calculateIconPositions();
     };
-    window.addEventListener("resize", resizeHandler);
+    window.addEventListener('resize', resizeHandler);
 
     // Use ResizeObserver for more reliable updates
     let resizeObserver: ResizeObserver | null = null;
-    if (containerRef.current !== null && "ResizeObserver" in window) {
+    if (containerRef.current !== null && 'ResizeObserver' in window) {
       resizeObserver = new ResizeObserver(() => {
         calculateIconPositions();
       });
@@ -213,7 +213,7 @@ const useIconPositions = ({
     }
 
     return () => {
-      window.removeEventListener("resize", resizeHandler);
+      window.removeEventListener('resize', resizeHandler);
       if (resizeObserver !== null) resizeObserver.disconnect();
     };
   }, [data, containerRef, iconSize]);
@@ -227,22 +227,22 @@ type UseBlendedColorOptions = {
 
 const useBlendedColor = ({ data }: UseBlendedColorOptions): string => {
   return React.useMemo(() => {
-    if (!Array.isArray(data) || data.length === 0) return "#000000";
+    if (!Array.isArray(data) || data.length === 0) return '#000000';
 
     try {
       const totalPercentage = data.reduce(
         (sum: number, item: ArtistData) => sum + item.percentage,
         0,
       ) as number;
-      if (totalPercentage <= 0) return "#000000";
+      if (totalPercentage <= 0) return '#000000';
 
       // Convert hex to RGB
       const hexToRgb = (hex: string) => {
         const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
         if (result === null) return { r: 0, g: 0, b: 0 };
-        const r = Number.parseInt(result[1] ?? "0", 16);
-        const g = Number.parseInt(result[2] ?? "0", 16);
-        const b = Number.parseInt(result[3] ?? "0", 16);
+        const r = Number.parseInt(result[1] ?? '0', 16);
+        const g = Number.parseInt(result[2] ?? '0', 16);
+        const b = Number.parseInt(result[3] ?? '0', 16);
         return { r, g, b };
       };
 
@@ -263,7 +263,7 @@ const useBlendedColor = ({ data }: UseBlendedColorOptions): string => {
 
       data.forEach((item: ArtistData) => {
         const weight = item.percentage / totalPercentage;
-        const artistType = item.artistType.length > 0 ? item.artistType : "Analyzer";
+        const artistType = item.artistType.length > 0 ? item.artistType : 'Analyzer';
         const colorValue = getComputedArtistColor(artistType);
         const rgb = hexToRgb(colorValue);
 
@@ -278,7 +278,7 @@ const useBlendedColor = ({ data }: UseBlendedColorOptions): string => {
 
       return `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)}`;
     } catch {
-      return "#000000";
+      return '#000000';
     }
   }, [data]);
 };
@@ -292,7 +292,7 @@ type LoadingStateProps = {
 };
 
 const LoadingState: React.FC<LoadingStateProps> = ({ className }) => (
-  <div className={cn("flex h-full items-center justify-center", className)}>
+  <div className={cn('flex h-full items-center justify-center', className)}>
     <div className="flex items-center gap-2 text-gray-500">
       <div className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
       Loading chart data...
@@ -309,7 +309,7 @@ export const ArtistRadarChart: React.FC<ArtistRadarChartProps> = ({
   data,
   iconSize,
   showIcons: _showIcons = true,
-  size: _size = "md",
+  size: _size = 'md',
 }) => {
   const containerRef = React.useRef<HTMLDivElement>(null);
 
@@ -322,7 +322,7 @@ export const ArtistRadarChart: React.FC<ArtistRadarChartProps> = ({
   const chartData = useNormalizedArtistData(data, {
     ...(beta !== undefined && { beta }),
     ensureComplete: true,
-    normalizeFrom: "auto",
+    normalizeFrom: 'auto',
     preserveBetaEffect: false, // We'll apply beta transformation here instead
   });
 
@@ -359,7 +359,7 @@ export const ArtistRadarChart: React.FC<ArtistRadarChartProps> = ({
   const chartConfig: ChartConfig = React.useMemo(
     () => ({
       percentage: {
-        label: "Percentage",
+        label: 'Percentage',
         color: blendedColor,
       },
     }),
@@ -368,17 +368,17 @@ export const ArtistRadarChart: React.FC<ArtistRadarChartProps> = ({
 
   // Loading state
   if (!Array.isArray(finalChartData) || finalChartData.length === 0) {
-    return <LoadingState className={className ?? ""} />;
+    return <LoadingState className={className ?? ''} />;
   }
 
   return (
     <div
       ref={containerRef}
-      className={cn("relative h-full w-full", className)}
-      style={{ aspectRatio: "1 / 1.1" }}
+      className={cn('relative h-full w-full', className)}
+      style={{ aspectRatio: '1 / 1.1' }}
     >
       <div className="relative h-full w-full">
-        <ChartContainer config={chartConfig} className="h-full w-full">
+        <Chart config={chartConfig} className="h-full w-full">
           <RadarChart
             data={finalChartData}
             margin={{
@@ -389,15 +389,15 @@ export const ArtistRadarChart: React.FC<ArtistRadarChartProps> = ({
             }}
             innerRadius={30}
           >
-            <ChartTooltip
+            <Chart.Tooltip
               cursor={false}
               wrapperStyle={{ zIndex: 9999 }}
               content={
-                <ChartTooltipContent
+                <Chart.TooltipContent
                   indicator="line"
                   formatter={(value: unknown, _name: unknown, props: unknown) => {
                     const item = (props as { payload: ArtistData }).payload;
-                    const numValue = typeof value === "number" ? value : 0;
+                    const numValue = typeof value === 'number' ? value : 0;
                     return [`${numValue}% (${item.points} pts)`, item.fullName];
                   }}
                 />
@@ -413,11 +413,11 @@ export const ArtistRadarChart: React.FC<ArtistRadarChartProps> = ({
               strokeWidth={2}
               style={{
                 transition:
-                  "fill 800ms cubic-bezier(0.4, 0, 0.2, 1), stroke 800ms cubic-bezier(0.4, 0, 0.2, 1)",
+                  'fill 800ms cubic-bezier(0.4, 0, 0.2, 1), stroke 800ms cubic-bezier(0.4, 0, 0.2, 1)',
               }}
             />
           </RadarChart>
-        </ChartContainer>
+        </Chart>
 
         {/* Manually positioned icons - with null check and fallback positions */}
         {Array.isArray(iconPositions) &&
@@ -448,8 +448,8 @@ export const ArtistRadarChart: React.FC<ArtistRadarChartProps> = ({
                   top: position._top ?? (Number.isNaN(position.y) ? 0 : position.y),
                   width: `${position.size}px`,
                   height: `${position.size}px`,
-                  transform: "translate(-50%, -50%)", // Center the icon on the calculated position
-                  aspectRatio: "1 / 1", // Ensure container is square
+                  transform: 'translate(-50%, -50%)', // Center the icon on the calculated position
+                  aspectRatio: '1 / 1', // Ensure container is square
                 }}
               >
                 <ArtistIcon iconPath={iconPath ?? null} size={position.size} />

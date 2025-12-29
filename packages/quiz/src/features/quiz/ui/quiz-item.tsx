@@ -1,6 +1,6 @@
 import { useAtom } from '@effect-atom/atom-react';
-import type { Quiz } from '../schema.js';
-import { Button } from '@ui/shadcn';
+import type { Quiz } from '../domain/schema.js';
+import { Button } from '@shadcn';
 import { TrashIcon } from 'lucide-react';
 import React from 'react';
 import { deleteQuizAtom } from '../../quiz-atoms.js';

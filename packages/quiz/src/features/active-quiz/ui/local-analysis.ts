@@ -1,9 +1,16 @@
-import type { AnalysisEngine, Question, Quiz, QuizResponse } from "@features/quiz/domain";
-import { AnalysisConfig, AnalysisService } from "@features/quiz/domain";
-import { Config, DateTime, Effect } from "effect";
-import { endingNameToArtistType } from "../components/artist-type/artist-data-utils.js";
-import type { ArtistData } from "../components/artist-type/artist-type-graph-card.js";
-import type { AnalysisConfigOverrides } from "./dev-panel.js";
+import type { AnalysisEngine } from '@/features/analysis-engine/domain/schema.js';
+import { AnalysisConfig, AnalysisService } from '@/features/analysis/domain/service.js';
+import type { Question } from '@/features/quiz/questions/schema.js';
+import type { Quiz } from '@/features/quiz/domain/schema.js';
+import type { QuizResponse } from '@/features/responses/domain/schema.js';
+import * as Config from 'effect/Config';
+import * as DateTime from 'effect/DateTime';
+import * as Effect from 'effect/Effect';
+import {
+  endingNameToArtistType,
+  type ArtistData,
+} from '../components/artist-type/artist-data-utils.js';
+import type { AnalysisConfigOverrides } from '../client/atoms.js';
 
 // Create a reverse mapping from endingId to full artist names
 const createEndingIdToFullNameMapping = (): Record<string, string> => {
@@ -12,7 +19,7 @@ const createEndingIdToFullNameMapping = (): Record<string, string> => {
   // Create the reverse mapping from the existing endingNameToArtistType
   Object.keys(endingNameToArtistType).forEach((fullName) => {
     // Convert "The Visionary Artist" to "the-visionary-artist" (same as analysis engine)
-    const endingId = fullName.toLowerCase().replace(/\s+/g, "-");
+    const endingId = fullName.toLowerCase().replace(/\s+/g, '-');
     mapping[endingId] = fullName;
   });
 
@@ -119,7 +126,7 @@ export const performLocalAnalysis = (
   // Create a mock response object
   const now = Effect.runSync(DateTime.now);
   const mockResponse: QuizResponse = {
-    id: "local-response" as QuizResponse["id"],
+    id: 'local-response' as QuizResponse['id'],
     quizId: quiz.id,
     answers: serviceResponses,
     sessionMetadata: { startedAt: now },
@@ -129,7 +136,7 @@ export const performLocalAnalysis = (
   };
 
   if (engine === undefined) {
-    throw new Error("Analysis engine is required for local analysis");
+    throw new Error('Analysis engine is required for local analysis');
   }
   const analysisEngine = engine;
 
@@ -160,8 +167,8 @@ export const performLocalAnalysis = (
   const distribution = artistData
     .sort((a, b) => b.percentage - a.percentage)
     .map((item) => `${item.artistType}: ${item.percentage.toFixed(1)}%`)
-    .join(", ");
-  console.log("🎨 Artist Type Distribution:", distribution);
+    .join(', ');
+  console.log('🎨 Artist Type Distribution:', distribution);
 
   return artistData;
 };

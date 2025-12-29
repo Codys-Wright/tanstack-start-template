@@ -1,4 +1,4 @@
-import type { AnalysisResult } from './schema.js';
+import type { AnalysisResult } from './domain/schema.js';
 import { useMemo } from 'react';
 import { endingNameToArtistType } from './ui/artist-type/artist-data-utils.js';
 import type { ArtistData } from './ui/artist-type/artist-type-graph-card.js';

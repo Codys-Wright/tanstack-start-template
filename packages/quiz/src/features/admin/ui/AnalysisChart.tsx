@@ -1,8 +1,7 @@
 'use client';
 
-import { ApiClient } from '@core/client';
 import { Result, useAtomSet, useAtomValue } from '@effect-atom/atom-react';
-import { Effect } from 'effect';
+import * as Effect from 'effect/Effect';
 import { RefreshCwIcon, TrendingUpIcon } from 'lucide-react';
 import * as React from 'react';
 import { Label, Pie, PieChart } from 'recharts';
@@ -11,17 +10,11 @@ import {
   artistColors,
   endingNameToArtistType,
 } from '../../analysis/ui/artist-type/artist-data-utils.js';
-import type { AnalysisResult } from '../../analysis/schema.js';
-import {
-  Button,
-  Card,
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-  type ChartConfig,
-} from '@ui/shadcn';
-import { allAnalysisAtom } from '../analysis/analysis-atoms.js';
-import { responsesAtom } from '../responses-atoms.js';
+import type { AnalysisResult } from '../../analysis/domain/schema.js';
+import { Button, Card, Chart, type ChartConfig } from '@shadcn';
+import { AnalysisClient } from '../../analysis/client/client.js';
+import { analysesAtom } from '../../analysis/client/atoms.js';
+import { responsesAtom } from '../../responses/client/atoms.js';
 
 // Create a reverse mapping from endingId to full artist names
 const createEndingIdToFullNameMapping = (): Record<string, string> => {
@@ -104,28 +97,23 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 export function AnalysisChart() {
-  const analysisResult = useAtomValue(allAnalysisAtom);
+  const analysisResult = useAtomValue(analysesAtom);
   const responsesResult = useAtomValue(responsesAtom);
-  const setAllAnalysis = useAtomSet(allAnalysisAtom);
+  const setAllAnalysis = useAtomSet(analysesAtom);
 
   // Function to refresh the analysis data
   const refreshAnalysis = React.useCallback(async () => {
     try {
-      // Fetch fresh data from the API and update the atom
       const freshData = await Effect.runPromise(
-        Effect.provide(
-          Effect.gen(function* () {
-            const api = yield* ApiClient;
-            return yield* api.http.Analysis.list();
-          }),
-          ApiClient.Default,
-        ),
+        Effect.gen(function* () {
+          const client = yield* AnalysisClient;
+          return yield* client('analysis_list', undefined);
+        }).pipe(Effect.provide(AnalysisClient.layer)),
       );
 
-      // Update the atom with fresh data
-      setAllAnalysis({ _tag: 'BatchUpsert', analyses: freshData });
+      setAllAnalysis({ _tag: 'Upsert', analysis: freshData[0] });
     } catch (error) {
-      Effect.logError('Failed to refresh analysis data:', error);
+      console.error('Failed to refresh analysis data:', error);
     }
   }, [setAllAnalysis]);
 
@@ -193,16 +181,12 @@ export function AnalysisChart() {
         </div>
       </Card.Header>
       <Card.Content className="flex-1 pb-0">
-        <ChartContainer
-          config={chartConfig}
-          className="mx-auto aspect-square w-full max-w-[300px] max-h-96"
-        >
+        <Chart config={chartConfig} className="mx-auto aspect-square w-full max-w-[300px] max-h-96">
           <PieChart>
-            <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
+            <Chart.Tooltip cursor={false} content={<Chart.TooltipContent hideLabel />} />
             <Pie data={chartData} dataKey="count" nameKey="type" innerRadius={60} strokeWidth={5}>
               <Label
                 content={({ viewBox }) => {
-                  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
                   if (
                     viewBox &&
                     typeof viewBox === 'object' &&
@@ -238,7 +222,7 @@ export function AnalysisChart() {
               />
             </Pie>
           </PieChart>
-        </ChartContainer>
+        </Chart>
       </Card.Content>
       <Card.Footer className="flex-col gap-2 text-sm">
         <div className="flex items-center gap-2 leading-none font-medium">

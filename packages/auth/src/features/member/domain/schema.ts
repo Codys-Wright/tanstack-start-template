@@ -1,6 +1,7 @@
 import * as Schema from 'effect/Schema';
 import { UserId } from '../../user/domain/schema.js';
 import { OrganizationId } from '../../organization/domain/schema.js';
+import { AuthError } from '../../session/domain/schema.js';
 
 /**
  * Branded MemberId type for type safety
@@ -101,3 +102,15 @@ export const RemoveMemberInput = Schema.Struct({
   organizationId: Schema.optional(OrganizationId),
 });
 export type RemoveMemberInput = typeof RemoveMemberInput.Type;
+
+/**
+ * Member-related errors
+ */
+export class MemberNotFoundError extends Schema.TaggedError<MemberNotFoundError>()(
+  'MemberNotFoundError',
+  { message: Schema.String },
+) {}
+
+export class InvalidRoleError extends Schema.TaggedError<InvalidRoleError>()('InvalidRoleError', {
+  message: Schema.String,
+}) {}

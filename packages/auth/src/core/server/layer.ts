@@ -1,5 +1,6 @@
 import { SessionApiLive } from '../../features/session/server/api-live.js';
 import { AccountApiLive } from '../../features/account/server/api-live.js';
+import { OrganizationApiLive } from '../../features/organization/server/api-live.js';
 import * as HttpApiScalar from '@effect/platform/HttpApiScalar';
 import * as HttpLayerRouter from '@effect/platform/HttpLayerRouter';
 import * as HttpServer from '@effect/platform/HttpServer';

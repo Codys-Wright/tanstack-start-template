@@ -27,15 +27,15 @@ import {
   type SortingState,
   type VisibilityState,
 } from '@tanstack/react-table';
-import { Badge, Button, Checkbox, DropdownMenu, Label, Select, Table, Tabs } from '@ui/shadcn';
+import { Badge, Button, Checkbox, DropdownMenu, Label, Select, Table, Tabs } from '@shadcn';
 import * as React from 'react';
 
 import {
   getArtistColorHex,
   getArtistIconPath,
 } from '../../analysis/ui/artist-type/artist-data-utils.js';
-import type { AnalysisResult } from '../../analysis/schema.js';
-import type { QuizResponse } from '../../responses/schema.js';
+import type { AnalysisResult } from '../../analysis/domain/schema.js';
+import type { QuizResponse } from '../../responses/domain/schema.js';
 
 // Helper component for artist type badge with icon and color
 const ArtistTypeBadge: React.FC<{

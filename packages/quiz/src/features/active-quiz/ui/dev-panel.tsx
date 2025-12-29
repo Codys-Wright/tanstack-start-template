@@ -1,49 +1,15 @@
-import { AnalysisConfig, type AnalysisEngine } from "@features/quiz/domain";
-import { Badge, Button, Card, Input, Label, Tabs } from "@shadcn";
-import { formatHex, parse } from "culori";
-import { ConfigProvider, Effect } from "effect";
-import { RotateCcwIcon, SettingsIcon } from "lucide-react";
-import React from "react";
+import type { AnalysisEngine } from '@/features/analysis-engine/domain/schema.js';
+import { AnalysisConfig } from '@/features/analysis/domain/service.js';
+import { Badge, Button, Card, Input, Label, Tabs } from '@shadcn';
+import { formatHex, parse } from 'culori';
+import * as ConfigProvider from 'effect/ConfigProvider';
+import * as Effect from 'effect/Effect';
+import { RotateCcwIcon, SettingsIcon } from 'lucide-react';
+import React from 'react';
+import type { AnalysisConfigOverrides } from '../client/atoms.js';
 
-// Type for the analysis config overrides
-export type AnalysisConfigOverrides = {
-  // Point values for ideal answers
-  primaryPointValue: number;
-  secondaryPointValue: number;
-
-  // Point weight multipliers
-  primaryPointWeight: number;
-  secondaryPointWeight: number;
-
-  // Distance falloff for each type
-  primaryDistanceFalloff: number;
-  secondaryDistanceFalloff: number;
-
-  // Beta for visual separation
-  beta: number;
-
-  // Minimum point values (floor for scoring)
-  primaryMinPoints: number;
-  secondaryMinPoints: number;
-
-  // UI toggles
-  idealAnswerOverlay: boolean;
-  progressBarColors: boolean;
-
-  // Artist type colors (CSS variable values)
-  artistColors?: {
-    visionary?: string;
-    consummate?: string;
-    analyzer?: string;
-    tech?: string;
-    entertainer?: string;
-    maverick?: string;
-    dreamer?: string;
-    feeler?: string;
-    tortured?: string;
-    solo?: string;
-  };
-};
+// Re-export type for backward compatibility
+export type { AnalysisConfigOverrides };
 
 // Get actual defaults from the analysis service
 const getServiceDefaults = (): Partial<AnalysisConfigOverrides> => {
@@ -106,16 +72,16 @@ const defaultConfig: Partial<AnalysisConfigOverrides> = {};
 
 // Artist type names in order
 const artistTypes = [
-  "visionary",
-  "consummate",
-  "analyzer",
-  "tech",
-  "entertainer",
-  "maverick",
-  "dreamer",
-  "feeler",
-  "tortured",
-  "solo",
+  'visionary',
+  'consummate',
+  'analyzer',
+  'tech',
+  'entertainer',
+  'maverick',
+  'dreamer',
+  'feeler',
+  'tortured',
+  'solo',
 ] as const;
 
 // Function to convert oklch to hex
@@ -126,16 +92,16 @@ const oklchToHex = (oklchValue: string): string => {
       const hex = formatHex(color);
       return hex;
     }
-    return "#000000";
+    return '#000000';
   } catch {
-    return "#000000";
+    return '#000000';
   }
 };
 
 // Function to get current CSS variable values
 const getCurrentArtistColors = () => {
   // Return empty object during SSR
-  if (typeof window === "undefined" || typeof document === "undefined") {
+  if (typeof window === 'undefined' || typeof document === 'undefined') {
     return {};
   }
 
@@ -143,7 +109,7 @@ const getCurrentArtistColors = () => {
   artistTypes.forEach((type) => {
     const cssVar = `--artist-${type}`;
     const value = getComputedStyle(document.documentElement).getPropertyValue(cssVar).trim();
-    if (value !== "") {
+    if (value !== '') {
       colors[type] = oklchToHex(value);
     }
   });
@@ -152,7 +118,7 @@ const getCurrentArtistColors = () => {
 
 // Function to update CSS variable values
 const updateArtistColor = (type: string, value: string) => {
-  if (typeof window === "undefined" || typeof document === "undefined") {
+  if (typeof window === 'undefined' || typeof document === 'undefined') {
     return;
   }
   const cssVar = `--artist-${type}`;
@@ -286,12 +252,6 @@ export const DevPanel: React.FC<DevPanelProps> = ({
   const handleColorChange = (type: string, value: string) => {
     updateArtistColor(type, value);
     setCurrentColors((prev) => ({ ...prev, [type]: value }));
-    updateConfig({
-      artistColors: {
-        ...config.artistColors,
-        [type]: value,
-      },
-    });
   };
 
   if (!isVisible) {
@@ -482,12 +442,14 @@ export const DevPanel: React.FC<DevPanelProps> = ({
                     </div>
                     <Button
                       size="sm"
-                      variant={(config.idealAnswerOverlay ?? true) ? "default" : "outline"}
+                      variant={(config.idealAnswerOverlay ?? true) ? 'default' : 'outline'}
                       onClick={() => {
-                        updateConfig({ idealAnswerOverlay: !(config.idealAnswerOverlay ?? true) });
+                        updateConfig({
+                          idealAnswerOverlay: !(config.idealAnswerOverlay ?? true),
+                        });
                       }}
                     >
-                      {(config.idealAnswerOverlay ?? true) ? "ON" : "OFF"}
+                      {(config.idealAnswerOverlay ?? true) ? 'ON' : 'OFF'}
                     </Button>
                   </div>
                   <div className="flex items-center justify-between">
@@ -499,12 +461,14 @@ export const DevPanel: React.FC<DevPanelProps> = ({
                     </div>
                     <Button
                       size="sm"
-                      variant={(config.progressBarColors ?? true) ? "default" : "outline"}
+                      variant={(config.progressBarColors ?? true) ? 'default' : 'outline'}
                       onClick={() => {
-                        updateConfig({ progressBarColors: !(config.progressBarColors ?? true) });
+                        updateConfig({
+                          progressBarColors: !(config.progressBarColors ?? true),
+                        });
                       }}
                     >
-                      {(config.progressBarColors ?? true) ? "ON" : "OFF"}
+                      {(config.progressBarColors ?? true) ? 'ON' : 'OFF'}
                     </Button>
                   </div>
                 </div>
@@ -518,7 +482,7 @@ export const DevPanel: React.FC<DevPanelProps> = ({
                     <ArtistColorPicker
                       key={type}
                       type={type}
-                      value={currentColors[type] ?? "#000000"}
+                      value={currentColors[type] ?? '#000000'}
                       onChange={(value) => {
                         handleColorChange(type, value);
                       }}

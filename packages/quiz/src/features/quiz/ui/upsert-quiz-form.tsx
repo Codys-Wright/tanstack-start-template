@@ -1,11 +1,11 @@
 import { makeFormOptions } from '@core/client';
 import { useAtomSet } from '@effect-atom/atom-react';
-import { UpsertQuizPayload } from '../schema.js';
+import { UpsertQuizPayload } from '../domain/schema.js';
 import { useForm } from '@tanstack/react-form';
-import { Button, FieldInput, FieldTextarea } from '@ui/shadcn';
+import { Button, FieldInput, FieldTextarea } from '@shadcn';
 import { Schema } from 'effect';
 import React from 'react';
-import { upsertQuizAtom } from '../quizzes-atoms.js';
+import { upsertQuizAtom } from '../client/atoms.js';
 
 // 1) UpsertQuiz Component - Handles creating new quizzes
 //    This form allows users to create new quizzes with title, subtitle, description, version, and metadata

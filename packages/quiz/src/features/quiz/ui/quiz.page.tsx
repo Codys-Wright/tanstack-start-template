@@ -1,6 +1,6 @@
 import { Result, useAtomRefresh, useAtomValue } from '@effect-atom/atom-react';
-import type { Quiz } from '../schema.js';
-import { Button, Separator } from '@ui/shadcn';
+import type { Quiz } from '../domain/schema.js';
+import { Button, Separator } from '@shadcn';
 import React from 'react';
 import { QuizItem } from './quiz-item.js';
 import { UpsertQuizForm } from './upsert-quiz-form.js';

@@ -5,7 +5,7 @@ import { Atom, Result, useAtomSet, useAtomValue } from '@effect-atom/atom-react'
 import { BrowserKeyValueStore } from '@effect/platform-browser';
 import type { AnalysisEngine } from '../analysis/analysis-engine/schema.js';
 import type { Question } from './questions/schema.js';
-import type { Quiz } from '../schema.js';
+import type { Quiz } from '../domain/schema.js';
 import { Config, Effect, Schema } from 'effect';
 // Use the actual Result types from the atoms instead of importing platform types
 import {
@@ -27,7 +27,7 @@ import {
   Sidebar,
   Tabs,
   type ChartConfig,
-} from '@ui/shadcn';
+} from '@shadcn';
 import {
   ArrowLeftIcon,
   ArrowRightIcon,
@@ -59,7 +59,7 @@ import {
   EngineAction,
   enginesAtom,
 } from '../../engines/atoms.js';
-import { allAnalysisAtom } from '../../analysis/atoms.js';
+import { allAnalysisAtom } from '../../analysis/client/atoms.js';
 import { responsesAtom } from '../../responses/atoms.js';
 import {
   clearTempQuizzesAtom,
@@ -68,7 +68,7 @@ import {
   deleteQuizAtom,
   quizzesAtom,
   saveTempQuizAtom,
-} from '../quizzes-atoms.js';
+} from '../client/atoms.js';
 
 // Create a runtime for localStorage atoms
 const localStorageRuntime = Atom.runtime(BrowserKeyValueStore.layerLocalStorage);

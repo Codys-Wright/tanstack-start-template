@@ -1,20 +1,11 @@
-"use client";
+'use client';
 
-import { Result, useAtom } from "@effect-atom/atom-react";
-import * as React from "react";
-import { Area, AreaChart, CartesianGrid, XAxis } from "recharts";
+import { Result, useAtom } from '@effect-atom/atom-react';
+import * as React from 'react';
+import { Area, AreaChart, CartesianGrid, XAxis } from 'recharts';
 
-import {
-  Card,
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-  Select,
-  ToggleGroup,
-  ToggleGroupItem,
-  type ChartConfig,
-} from "@shadcn";
-import { responsesAtom } from "../responses-atoms.js";
+import { Card, Chart, Select, ToggleGroup, type ChartConfig } from '@shadcn';
+import { responsesAtom } from '../../responses/client/atoms.js';
 
 // Helper function to get the response date (now just uses createdAt since we set it properly in the database)
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -25,21 +16,21 @@ function getResponseDate(response: any): Date {
 
 const chartConfig = {
   completed: {
-    label: "Completed",
-    color: "var(--chart-1)",
+    label: 'Completed',
+    color: 'var(--chart-1)',
   },
   inProgress: {
-    label: "In Progress",
-    color: "var(--chart-2)",
+    label: 'In Progress',
+    color: 'var(--chart-2)',
   },
   notStarted: {
-    label: "Not Started",
-    color: "var(--chart-3)",
+    label: 'Not Started',
+    color: 'var(--chart-3)',
   },
 } satisfies ChartConfig;
 
 export function ResponsesOverTimeChart() {
-  const [timeRange, setTimeRange] = React.useState("all");
+  const [timeRange, setTimeRange] = React.useState('all');
   const [responsesResult] = useAtom(responsesAtom);
 
   const chartData = React.useMemo(() => {
@@ -57,7 +48,7 @@ export function ResponsesOverTimeChart() {
 
     responses.forEach((response) => {
       const responseDate = getResponseDate(response);
-      const dateKey = responseDate.toISOString().split("T")[0]; // YYYY-MM-DD format
+      const dateKey = responseDate.toISOString().split('T')[0]; // YYYY-MM-DD format
 
       if (dateKey && dateGroups[dateKey] === undefined) {
         dateGroups[dateKey] = { completed: 0, inProgress: 0, notStarted: 0 };
@@ -89,9 +80,9 @@ export function ResponsesOverTimeChart() {
   const filteredData = React.useMemo(() => {
     if (chartData.length === 0) return [];
 
-    if (timeRange === "all") {
+    if (timeRange === 'all') {
       // Show all data from 2024 onwards
-      const startOf2024 = new Date("2024-01-01");
+      const startOf2024 = new Date('2024-01-01');
       return chartData.filter((item) => {
         const date = new Date(item.date);
         return date >= startOf2024;
@@ -100,9 +91,9 @@ export function ResponsesOverTimeChart() {
 
     const now = new Date();
     let daysToSubtract = 90;
-    if (timeRange === "30d") {
+    if (timeRange === '30d') {
       daysToSubtract = 30;
-    } else if (timeRange === "7d") {
+    } else if (timeRange === '7d') {
       daysToSubtract = 7;
     }
 
@@ -139,16 +130,13 @@ export function ResponsesOverTimeChart() {
         </Card.Description>
         <div className="flex items-center gap-2">
           <ToggleGroup
-            type="single"
-            value={timeRange}
-            onValueChange={setTimeRange}
             variant="outline"
             className="hidden *:data-[slot=toggle-group-item]:!px-4 @[767px]/card:flex"
           >
-            <ToggleGroupItem value="all">All (2024+)</ToggleGroupItem>
-            <ToggleGroupItem value="90d">Last 3 months</ToggleGroupItem>
-            <ToggleGroupItem value="30d">Last 30 days</ToggleGroupItem>
-            <ToggleGroupItem value="7d">Last 7 days</ToggleGroupItem>
+            <ToggleGroup.Item value="all">All (2024+)</ToggleGroup.Item>
+            <ToggleGroup.Item value="90d">Last 3 months</ToggleGroup.Item>
+            <ToggleGroup.Item value="30d">Last 30 days</ToggleGroup.Item>
+            <ToggleGroup.Item value="7d">Last 7 days</ToggleGroup.Item>
           </ToggleGroup>
           <Select value={timeRange} onValueChange={setTimeRange}>
             <Select.Trigger
@@ -176,7 +164,7 @@ export function ResponsesOverTimeChart() {
         </div>
       </Card.Header>
       <Card.Content className="px-2 pt-4 sm:px-6 sm:pt-6 flex-1">
-        <ChartContainer config={chartConfig} className=" w-full max-h-56">
+        <Chart config={chartConfig} className=" w-full max-h-56">
           <AreaChart data={filteredData}>
             <defs>
               <linearGradient id="fillCompleted" x1="0" y1="0" x2="0" y2="1">
@@ -202,43 +190,43 @@ export function ResponsesOverTimeChart() {
               tickFormatter={(value) => {
                 const date = new Date(String(value));
 
-                // Show year only at the start of each year when time range spans more than a year
-                if (timeRange === "all") {
+                // Show year only at start of each year when time range spans more than a year
+                if (timeRange === 'all') {
                   const isStartOfYear = date.getMonth() === 0 && date.getDate() <= 7;
                   if (isStartOfYear) {
                     return date.getFullYear().toString();
                   }
-                  return date.toLocaleDateString("en-US", {
-                    month: "short",
-                    day: "numeric",
+                  return date.toLocaleDateString('en-US', {
+                    month: 'short',
+                    day: 'numeric',
                   });
                 }
 
-                return date.toLocaleDateString("en-US", {
-                  month: "short",
-                  day: "numeric",
+                return date.toLocaleDateString('en-US', {
+                  month: 'short',
+                  day: 'numeric',
                 });
               }}
             />
-            <ChartTooltip
+            <Chart.Tooltip
               cursor={false}
               content={
-                <ChartTooltipContent
+                <Chart.TooltipContent
                   labelFormatter={(value) => {
                     const date = new Date(String(value));
 
                     // Show year when time range spans more than a year
-                    if (timeRange === "all") {
-                      return date.toLocaleDateString("en-US", {
-                        month: "short",
-                        day: "numeric",
-                        year: "2-digit",
+                    if (timeRange === 'all') {
+                      return date.toLocaleDateString('en-US', {
+                        month: 'short',
+                        day: 'numeric',
+                        year: '2-digit',
                       });
                     }
 
-                    return date.toLocaleDateString("en-US", {
-                      month: "short",
-                      day: "numeric",
+                    return date.toLocaleDateString('en-US', {
+                      month: 'short',
+                      day: 'numeric',
                     });
                   }}
                   indicator="dot"
@@ -267,7 +255,7 @@ export function ResponsesOverTimeChart() {
               stackId="a"
             />
           </AreaChart>
-        </ChartContainer>
+        </Chart>
       </Card.Content>
     </Card>
   );

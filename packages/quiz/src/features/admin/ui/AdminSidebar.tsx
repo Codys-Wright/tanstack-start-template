@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { Atom } from "@effect-atom/atom-react";
-import { BrowserKeyValueStore } from "@effect/platform-browser";
+import { Atom } from '@effect-atom/atom-react';
+import { BrowserKeyValueStore } from '@effect/platform-browser';
 import {
   IconBuilding,
   IconChartBar,
@@ -9,11 +9,11 @@ import {
   IconFileText,
   IconSettings,
   IconUsers,
-} from "@tabler/icons-react";
-import { Schema } from "effect";
-import * as React from "react";
+} from '@tabler/icons-react';
+import type { Schema } from 'effect/Schema';
+import * as React from 'react';
 
-import { NavMain, NavSecondary, NavUser, Sidebar } from "@shadcn";
+import { NavMain, NavSecondary, NavUser, Sidebar } from '@shadcn';
 
 // Create a runtime for localStorage atoms
 const localStorageRuntime = Atom.runtime(BrowserKeyValueStore.layerLocalStorage);
@@ -21,59 +21,59 @@ const localStorageRuntime = Atom.runtime(BrowserKeyValueStore.layerLocalStorage)
 // Admin sidebar visibility atom using localStorage
 export const adminSidebarVisibleAtom = Atom.kvs({
   runtime: localStorageRuntime,
-  key: "admin-sidebar-visible",
+  key: 'admin-sidebar-visible',
   schema: Schema.Boolean,
   defaultValue: () => true,
 });
 
 const adminData = {
   user: {
-    name: "Admin User",
-    email: "admin@example.com",
-    avatar: "/placeholder-avatar.png",
+    name: 'Admin User',
+    email: 'admin@example.com',
+    avatar: '/placeholder-avatar.png',
   },
   navMain: [
     {
-      title: "Dashboard",
-      url: "/admin",
+      title: 'Dashboard',
+      url: '/admin',
       icon: IconDashboard,
     },
     {
-      title: "Quiz Responses",
-      url: "/admin/responses",
+      title: 'Quiz Responses',
+      url: '/admin/responses',
       icon: IconFileText,
       disabled: true,
-      tooltip: "Coming Soon!",
+      tooltip: 'Coming Soon!',
     },
     {
-      title: "Analytics",
-      url: "/admin/analytics",
+      title: 'Analytics',
+      url: '/admin/analytics',
       icon: IconChartBar,
       disabled: true,
-      tooltip: "Coming Soon!",
+      tooltip: 'Coming Soon!',
     },
     {
-      title: "Users",
-      url: "/admin/users",
+      title: 'Users',
+      url: '/admin/users',
       icon: IconUsers,
       disabled: true,
-      tooltip: "Authentication is disabled right now",
+      tooltip: 'Authentication is disabled right now',
     },
     {
-      title: "Organization",
-      url: "/admin/organizations",
+      title: 'Organization',
+      url: '/admin/organizations',
       icon: IconBuilding,
       disabled: true,
-      tooltip: "Authentication is disabled right now",
+      tooltip: 'Authentication is disabled right now',
     },
   ],
   navSecondary: [
     {
-      title: "Settings",
-      url: "/admin/settings",
+      title: 'Settings',
+      url: '/admin/settings',
       icon: IconSettings,
       disabled: true,
-      tooltip: "Authentication is disabled right now",
+      tooltip: 'Authentication is disabled right now',
     },
   ],
 };

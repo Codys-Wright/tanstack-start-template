@@ -1,26 +1,28 @@
-import { Result, useAtomRefresh, useAtomSet, useAtomValue } from "@effect-atom/atom-react";
-import { type Question, type Quiz } from "@features/quiz/domain";
-import { Button, Card, DropdownMenu } from "@shadcn";
-import { SettingsIcon } from "lucide-react";
-import React from "react";
-import { ArtistTypeGraphCard } from "../components/artist-type/artist-type-graph-card.js";
-import { QuestionCard } from "../components/question-card.js";
-import { QuizProgressBar } from "../components/quiz-progress-bar.js";
-import { enginesAtom } from "../engines/engines-atoms.js";
-import { activeQuizAtom, quizzesAtom } from "../quizzes-atoms.js";
-import { DevPanel, type AnalysisConfigOverrides } from "./dev-panel.js";
-import { performLocalAnalysis } from "./local-analysis.js";
+import { Result, useAtomRefresh, useAtomSet, useAtomValue } from '@effect-atom/atom-react';
+import type { Question } from '@/features/quiz/questions/schema.js';
+import type { Quiz } from '@/features/quiz/domain/schema.js';
+import { Button, Card, DropdownMenu } from '@shadcn';
+import { SettingsIcon } from 'lucide-react';
+import React from 'react';
+import { ArtistTypeGraphCard } from '../components/artist-type/artist-type-graph-card.js';
+import { QuestionCard } from '../components/question-card.js';
+import { QuizProgressBar } from '../components/quiz-progress-bar.js';
+import { enginesAtom } from '@/features/analysis-engine/client/atoms.js';
+import { quizzesAtom } from '@/features/quiz/client/atoms.js';
 import {
+  activeQuizAtom,
   currentQuestionAtom,
   initializeQuizAtom,
   navigateToQuestionAtom,
   navigationStateAtom,
-  QuizServices,
   quizSessionAtom,
   savedResponseAtom,
   selectAnswerAtom,
   submitQuizAtom,
-} from "./quiz-taker-atoms.js";
+  type AnalysisConfigOverrides,
+} from '../client/atoms.js';
+import { DevPanel } from './dev-panel.js';
+import { performLocalAnalysis } from './local-analysis.js';
 
 // PageContainer component with padding and layout (no background)
 type PageContainerProps = {
@@ -58,15 +60,15 @@ const SuccessView: React.FC<{ quizzes: ReadonlyArray<Quiz> }> = ({ quizzes }) =>
   // Add keyboard shortcut to toggle dev panel (Ctrl/Cmd + D)
   React.useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if ((event.ctrlKey || event.metaKey) && event.key === "d") {
+      if ((event.ctrlKey || event.metaKey) && event.key === 'd') {
         event.preventDefault();
         setDevPanelVisible((prev) => !prev);
       }
     };
 
-    window.addEventListener("keydown", handleKeyDown);
+    window.addEventListener('keydown', handleKeyDown);
     return () => {
-      window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener('keydown', handleKeyDown);
     };
   }, []);
 
@@ -97,7 +99,7 @@ const SuccessView: React.FC<{ quizzes: ReadonlyArray<Quiz> }> = ({ quizzes }) =>
       // Call the analysis function directly instead of the hook
       return performLocalAnalysis(quizSession.responses, currentQuiz, defaultEngine, devConfig);
     } catch (error) {
-      console.warn("Local analysis failed:", error);
+      console.warn('Local analysis failed:', error);
       return [];
     }
   }, [quizSession.responses, currentQuiz, defaultEngine, devConfig]);
@@ -131,8 +133,8 @@ const SuccessView: React.FC<{ quizzes: ReadonlyArray<Quiz> }> = ({ quizzes }) =>
     if (!Result.isSuccess(activeQuizResult)) {
       return undefined;
     }
-    const activeQuiz = activeQuizResult.value;
-    if (activeQuiz === undefined) {
+    const activeQuiz = activeQuizResult.value as any;
+    if (activeQuiz === undefined || activeQuiz === null) {
       return undefined;
     }
     return quizzes.find((quiz) => quiz.id === activeQuiz.quizId);
@@ -249,12 +251,14 @@ const SuccessView: React.FC<{ quizzes: ReadonlyArray<Quiz> }> = ({ quizzes }) =>
   };
 
   const handleSubmit = () => {
-    submitQuiz();
+    submitQuiz(true);
 
     // Handle quiz submission - this will eventually send data to server
     // Submission data is available in quizSession atom for backend integration
     alert(
-      `Quiz submitted! You answered ${Object.keys(quizSession.responses).length} out of ${questions.length} questions.`,
+      `Quiz submitted! You answered ${
+        Object.keys(quizSession.responses).length
+      } out of ${questions.length} questions.`,
     );
   };
 
@@ -264,20 +268,20 @@ const SuccessView: React.FC<{ quizzes: ReadonlyArray<Quiz> }> = ({ quizzes }) =>
     colorOn?: boolean,
     questionIndex?: number,
   ): string => {
-    if (colorOn !== true) return "bg-white dark:bg-black";
+    if (colorOn !== true) return 'bg-white dark:bg-black';
 
     // Map question index to artist type (0-based index)
     const artistTypes = [
-      "visionary",
-      "consummate",
-      "analyzer",
-      "tech",
-      "entertainer",
-      "maverick",
-      "dreamer",
-      "feeler",
-      "tortured",
-      "solo",
+      'visionary',
+      'consummate',
+      'analyzer',
+      'tech',
+      'entertainer',
+      'maverick',
+      'dreamer',
+      'feeler',
+      'tortured',
+      'solo',
     ];
 
     // Use question index to determine artist type, cycling through if there are more than 10 questions
@@ -286,28 +290,28 @@ const SuccessView: React.FC<{ quizzes: ReadonlyArray<Quiz> }> = ({ quizzes }) =>
 
     // Use CSS variables for artist type colors with subtle background tinting
     switch (artistType) {
-      case "visionary":
-        return "bg-[var(--artist-visionary)]/5";
-      case "consummate":
-        return "bg-[var(--artist-consummate)]/5";
-      case "analyzer":
-        return "bg-[var(--artist-analyzer)]/5";
-      case "tech":
-        return "bg-[var(--artist-tech)]/5";
-      case "entertainer":
-        return "bg-[var(--artist-entertainer)]/5";
-      case "maverick":
-        return "bg-[var(--artist-maverick)]/5";
-      case "dreamer":
-        return "bg-[var(--artist-dreamer)]/5";
-      case "feeler":
-        return "bg-[var(--artist-feeler)]/5";
-      case "tortured":
-        return "bg-[var(--artist-tortured)]/5";
-      case "solo":
-        return "bg-[var(--artist-solo)]/5";
+      case 'visionary':
+        return 'bg-[var(--artist-visionary)]/5';
+      case 'consummate':
+        return 'bg-[var(--artist-consummate)]/5';
+      case 'analyzer':
+        return 'bg-[var(--artist-analyzer)]/5';
+      case 'tech':
+        return 'bg-[var(--artist-tech)]/5';
+      case 'entertainer':
+        return 'bg-[var(--artist-entertainer)]/5';
+      case 'maverick':
+        return 'bg-[var(--artist-maverick)]/5';
+      case 'dreamer':
+        return 'bg-[var(--artist-dreamer)]/5';
+      case 'feeler':
+        return 'bg-[var(--artist-feeler)]/5';
+      case 'tortured':
+        return 'bg-[var(--artist-tortured)]/5';
+      case 'solo':
+        return 'bg-[var(--artist-solo)]/5';
       default:
-        return "bg-white dark:bg-black";
+        return 'bg-white dark:bg-black';
     }
   };
 
@@ -377,15 +381,15 @@ const SuccessView: React.FC<{ quizzes: ReadonlyArray<Quiz> }> = ({ quizzes }) =>
           <div className="flex items-center justify-center min-h-[70vh]">
             <QuestionCard
               title={currentQuestion.title}
-              content={currentQuestion.description ?? ""}
+              content={currentQuestion.description ?? ''}
               minLabel={
-                currentQuestion.data.type === "rating" ? currentQuestion.data.minLabel : "Min"
+                currentQuestion.data.type === 'rating' ? currentQuestion.data.minLabel : 'Min'
               }
               maxLabel={
-                currentQuestion.data.type === "rating" ? currentQuestion.data.maxLabel : "Max"
+                currentQuestion.data.type === 'rating' ? currentQuestion.data.maxLabel : 'Max'
               }
-              min={currentQuestion.data.type === "rating" ? currentQuestion.data.minRating : 1}
-              max={currentQuestion.data.type === "rating" ? currentQuestion.data.maxRating : 10}
+              min={currentQuestion.data.type === 'rating' ? currentQuestion.data.minRating : 1}
+              max={currentQuestion.data.type === 'rating' ? currentQuestion.data.maxRating : 10}
               selectedValues={savedResponse !== undefined ? [savedResponse] : []}
               idealAnswers={currentQuestionIdealAnswers}
               showIdealAnswers={devConfig.idealAnswerOverlay ?? true}
@@ -415,7 +419,9 @@ const SuccessView: React.FC<{ quizzes: ReadonlyArray<Quiz> }> = ({ quizzes }) =>
                   contentClassName="h-full w-full"
                   transparent
                   fill
-                  {...(devConfig.beta !== undefined && { beta: devConfig.beta })}
+                  {...(devConfig.beta !== undefined && {
+                    beta: devConfig.beta,
+                  })}
                 />
               </div>
             ) : (
@@ -464,7 +470,6 @@ export const QuizTakerPage: React.FC = () => {
 
   return (
     <>
-      <QuizServices />
       {Result.builder(quizzesResult)
         .onFailure(() => <ErrorView />)
         .onSuccess((quizzes) => <SuccessView quizzes={quizzes} />)

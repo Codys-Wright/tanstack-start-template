@@ -1,2 +1,3 @@
 // Server: Services - requires server environment
-export * from './service.js';
+// Re-export from domain for backwards compatibility
+export * from '../domain/service.js';
