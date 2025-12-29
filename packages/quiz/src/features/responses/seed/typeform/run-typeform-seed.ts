@@ -1,4 +1,5 @@
-import { NodeContext, NodeRuntime } from '@effect/platform-node';
+import * as BunContext from '@effect/platform-bun/BunContext';
+import * as BunRuntime from '@effect/platform-bun/BunRuntime';
 import { QuizzesRepo } from '../../../quiz/database/index.js';
 import { ResponsesRepo } from '../../database/index.js';
 import { PgLive } from '@core/database';
@@ -24,7 +25,7 @@ const seedTypeformResponses = Effect.gen(function* () {
   const quiz = quizzes.find((q) => q.title.toLowerCase().includes('artist type'));
 
   if (quiz === undefined) {
-    yield* Effect.fail(
+    return yield* Effect.fail(
       new Error("Quiz 'my-artist-type-quiz' not found. Please seed the quiz first."),
     );
   }
@@ -71,16 +72,16 @@ const seedTypeformResponses = Effect.gen(function* () {
 });
 
 // Run the seeding script
-NodeRuntime.runMain(
+BunRuntime.runMain(
   seedTypeformResponses.pipe(
     Effect.provide(ResponsesRepo.Default),
     Effect.provide(QuizzesRepo.Default),
-    Effect.provide(NodeContext.layer),
+    Effect.provide(BunContext.layer),
     Effect.provide(PgLive),
     Effect.catchAll((error) =>
       Effect.gen(function* () {
         yield* Effect.logError(`Seeding failed: ${error}`);
-        yield* Effect.sync(() => process.exit(1));
+        return yield* Effect.sync(() => process.exit(1));
       }),
     ),
   ),

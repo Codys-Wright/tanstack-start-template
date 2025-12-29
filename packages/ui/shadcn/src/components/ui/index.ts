@@ -25,9 +25,6 @@ export { Tooltip } from './tooltip.js';
 // Compound components (namespace pattern) - REFACTORED
 export { Carousel, type CarouselApi } from './carousel.js';
 export { Chart, type ChartConfig } from './chart.js';
-export { ChartContainer } from './chart.js';
-export { ChartTooltip } from './chart.js';
-export { ChartTooltipContent } from './chart.js';
 export { Command } from './command.js';
 export { Drawer } from './drawer.js';
 export { InputOTP } from './input-otp.js';
@@ -60,7 +57,17 @@ export * from './button-group.js';
 export * from './calendar.js';
 export * from './checkbox.js';
 export * from './empty.js';
-export * from './field.js';
+// Field components (excluding FieldDescription and FieldError which are in form.js)
+export {
+  Field,
+  FieldLabel,
+  FieldGroup,
+  FieldLegend,
+  FieldSeparator,
+  FieldSet,
+  FieldContent,
+  FieldTitle,
+} from './field.js';
 export * from './input.js';
 export * from './input-group.js';
 export * from './item.js';

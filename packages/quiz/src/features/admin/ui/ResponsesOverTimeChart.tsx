@@ -130,6 +130,11 @@ export function ResponsesOverTimeChart() {
         </Card.Description>
         <div className="flex items-center gap-2">
           <ToggleGroup
+            type="single"
+            value={timeRange}
+            onValueChange={(value) => {
+              if (value) setTimeRange(value);
+            }}
             variant="outline"
             className="hidden *:data-[slot=toggle-group-item]:!px-4 @[767px]/card:flex"
           >

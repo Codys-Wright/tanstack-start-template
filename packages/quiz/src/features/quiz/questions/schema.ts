@@ -120,7 +120,7 @@ export class QuestionNotFoundError extends S.TaggedError<QuestionNotFoundError>(
     status: 404,
   }),
 ) {
-  get message() {
+  override get message() {
     return `Question with id ${this.id} not found`;
   }
 }

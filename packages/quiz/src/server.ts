@@ -35,4 +35,4 @@ export * from './features/responses/database/index.js';
 // Active Quiz Feature
 // ============================================================================
 export * from './features/active-quiz/database/index.js';
-export * from './features/active-quiz/server/index.js';
+export * from './features/active-quiz/domain/index.js';

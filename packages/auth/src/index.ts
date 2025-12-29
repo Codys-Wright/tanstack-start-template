@@ -57,8 +57,7 @@ export * from './features/account/ui/api-keys-card.js';
 // ============================================================================
 // Security - Domain, Client & Atoms
 // ============================================================================
-export * from './features/security/domain/passkey.js';
-export * from './features/security/domain/two-factor.js';
+export * from './features/security/domain/api.js';
 export * from './features/security/client/atoms.js';
 
 // ============================================================================

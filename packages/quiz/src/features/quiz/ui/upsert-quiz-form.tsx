@@ -30,7 +30,7 @@ export const UpsertQuizForm: React.FC = () => {
       // Decode the form values using our schema to ensure type safety
       const decoded = Schema.decodeSync(UpsertQuizPayload)(value);
       // Call the upsert atom to create/update the quiz
-      await upsert(decoded);
+      await upsert({ input: decoded });
       // Reset form to initial state after successful submission
       form.reset();
     },
@@ -102,7 +102,7 @@ export const UpsertQuizForm: React.FC = () => {
               value={fieldApi.state.value?.semver ?? '1.0.0'}
               onChange={(event) => {
                 const value = event.currentTarget.value;
-                fieldApi.handleChange(value ? { semver: value, comment: null } : undefined);
+                fieldApi.handleChange(value ? { semver: value, comment: undefined } : undefined);
               }}
               placeholder="e.g., 1.0.0"
             />

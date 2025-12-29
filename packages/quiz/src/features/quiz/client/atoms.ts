@@ -360,18 +360,3 @@ export const createMatchingTempEngineAtom = QuizClient.runtime.fn<{
     return undefined;
   }),
 );
-
-/**
- * Active Quiz atom - for getting currently active quiz.
- */
-export const activeQuizAtom = (() => {
-  const remoteAtom = QuizClient.runtime.atom(
-    Effect.gen(function* () {
-      const client = yield* QuizClient;
-      const quizzes = yield* client('quiz_listPublished', undefined);
-      return quizzes[0];
-    }),
-  );
-
-  return Atom.readable((get) => get(remoteAtom));
-})();

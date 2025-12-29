@@ -19,7 +19,7 @@ import {
   DropdownMenu,
   Input,
   Label,
-  Resizable,
+  ResizablePanelGroup,
   ScrollArea,
   Select,
   Sidebar,
@@ -51,7 +51,12 @@ import {
 import { QuestionCard } from './question-card.js';
 import { QuizProgressBar } from './quiz-progress-bar.js';
 import { VersionIncrementDialog } from './version-increment-dialog.js';
-import { enginesAtom } from '../../analysis-engine/client/atoms.js';
+import {
+  autoSaveTempEngineAtom,
+  clearTempEnginesAtom,
+  EngineAction,
+  enginesAtom,
+} from '../../analysis-engine/client/atoms.js';
 import { analysesAtom } from '../../analysis/client/atoms.js';
 import { responsesAtom } from '../../responses/client/atoms.js';
 import {
@@ -1080,7 +1085,7 @@ const getPrimaryArtistType = (
 
 // Real Analysis Chart with Card wrapper (using exact admin logic)
 const RealAnalysisChart: React.FC = () => {
-  const analysisResult = useAtomValue(allAnalysisAtom);
+  const analysisResult = useAtomValue(analysesAtom);
   const responsesResult = useAtomValue(responsesAtom);
 
   const chartData = React.useMemo(() => {
@@ -1133,9 +1138,9 @@ const RealAnalysisChart: React.FC = () => {
             <div className="text-muted-foreground text-xs">Loading...</div>
           </div>
         ) : (
-          <ChartContainer config={chartConfig} className="w-full h-full">
+          <Chart config={chartConfig} className="w-full h-full">
             <PieChart>
-              <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
+              <Chart.Tooltip cursor={false} content={<Chart.TooltipContent hideLabel />} />
               <Pie data={chartData} dataKey="count" nameKey="type" innerRadius={40} strokeWidth={3}>
                 <LabelList
                   content={({ viewBox }) => {
@@ -1174,7 +1179,7 @@ const RealAnalysisChart: React.FC = () => {
                 />
               </Pie>
             </PieChart>
-          </ChartContainer>
+          </Chart>
         )}
       </Card.Content>
     </Card>
@@ -1239,9 +1244,9 @@ const ReanalysisChart: React.FC<{
             </div>
           </div>
         ) : (
-          <ChartContainer config={chartConfig} className="w-full h-full">
+          <Chart config={chartConfig} className="w-full h-full">
             <PieChart>
-              <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
+              <Chart.Tooltip cursor={false} content={<Chart.TooltipContent hideLabel />} />
               <Pie
                 data={[...displayData]}
                 dataKey="count"
@@ -1289,7 +1294,7 @@ const ReanalysisChart: React.FC<{
                 />
               </Pie>
             </PieChart>
-          </ChartContainer>
+          </Chart>
         )}
       </Card.Content>
     </Card>
@@ -1302,7 +1307,7 @@ const ArtistTypeComparison: React.FC<{
   onReanalyze?: () => void;
   selectedEngine: AnalysisEngine;
 }> = ({ isAnalyzing = false, onReanalyze, selectedEngine: _selectedEngine }) => {
-  const analysisResult = useAtomValue(allAnalysisAtom);
+  const analysisResult = useAtomValue(analysesAtom);
   const reanalysisData = useAtomValue(reanalysisDataAtom);
   const responsesResult = useAtomValue(responsesAtom);
 
@@ -1549,10 +1554,8 @@ const SidebarGraphsView: React.FC<{
                 );
               }
 
-              if (winningResult.artistType !== '') {
-                const artistType = winningResult.artistType;
-                artistTypeCounts[artistType] = (artistTypeCounts[artistType] ?? 0) + 1;
-              }
+              const artistType = winningResult.artistType;
+              artistTypeCounts[artistType] = (artistTypeCounts[artistType] ?? 0) + 1;
             }
           } catch {
             // Continue with other responses even if one fails
@@ -2270,7 +2273,12 @@ export const QuizEditorLayout: React.FC = () => {
       {/* Main Content Area */}
       <ResizablePanelGroup direction="horizontal" className="flex-1 min-h-0 overflow-hidden">
         {/* Left Sidebar - Quiz + Analysis tabs */}
-        <ResizablePanel defaultSize={25} minSize={20} maxSize={35} className="min-w-[220px]">
+        <ResizablePanelGroup.Panel
+          defaultSize={25}
+          minSize={20}
+          maxSize={35}
+          className="min-w-[220px]"
+        >
           <LeftSidebar
             engines={engines}
             questions={questions}
@@ -2281,12 +2289,12 @@ export const QuizEditorLayout: React.FC = () => {
             onAddQuestion={handleAddQuestion}
             onArtistTypeChange={setSelectedArtistType}
           />
-        </ResizablePanel>
+        </ResizablePanelGroup.Panel>
 
-        <ResizableHandle withHandle />
+        <ResizablePanelGroup.Handle withHandle />
 
         {/* Middle Section - Question Preview */}
-        <ResizablePanel defaultSize={sidebarVisible ? 50 : 75}>
+        <ResizablePanelGroup.Panel defaultSize={sidebarVisible ? 50 : 75}>
           <div className="h-full p-4 flex flex-col relative">
             {/* Sidebar Toggle Button */}
             <Button
@@ -2379,16 +2387,21 @@ export const QuizEditorLayout: React.FC = () => {
               </Button>
             </div>
           </div>
-        </ResizablePanel>
+        </ResizablePanelGroup.Panel>
 
         {sidebarVisible && (
           <>
-            <ResizableHandle withHandle />
+            <ResizablePanelGroup.Handle withHandle />
 
             {/* Right Sidebar - Graphs */}
-            <ResizablePanel defaultSize={25} minSize={20} maxSize={35} className="min-w-[280px]">
+            <ResizablePanelGroup.Panel
+              defaultSize={25}
+              minSize={20}
+              maxSize={35}
+              className="min-w-[280px]"
+            >
               <RightSidebar quiz={quiz} engines={engines} selectedEngineId={selectedEngineId} />
-            </ResizablePanel>
+            </ResizablePanelGroup.Panel>
           </>
         )}
       </ResizablePanelGroup>

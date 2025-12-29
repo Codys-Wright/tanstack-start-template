@@ -1,4 +1,5 @@
-import { NodeContext, NodeRuntime } from '@effect/platform-node';
+import * as BunContext from '@effect/platform-bun/BunContext';
+import * as BunRuntime from '@effect/platform-bun/BunRuntime';
 import { AnalysisService } from '../../../analysis/domain/index.js';
 import { AnalysisEngineRepo } from '../../../analysis-engine/database/index.js';
 import { AnalysisRepo } from '../../../analysis/database/index.js';
@@ -209,14 +210,14 @@ const analyzeTypeformResponses = Effect.gen(function* () {
 });
 
 // Run the analysis
-NodeRuntime.runMain(
+BunRuntime.runMain(
   analyzeTypeformResponses.pipe(
     Effect.provide(ResponsesRepo.Default),
     Effect.provide(AnalysisRepo.Default),
     Effect.provide(AnalysisEngineRepo.Default),
     Effect.provide(AnalysisService.Default),
     Effect.provide(QuizzesRepo.Default),
-    Effect.provide(NodeContext.layer),
+    Effect.provide(BunContext.layer),
     Effect.provide(PgLive),
   ),
 );

@@ -1,1 +1,1 @@
-export * from "./lib/components.js";
+export * from './aceternity/resizable-navbar.js';

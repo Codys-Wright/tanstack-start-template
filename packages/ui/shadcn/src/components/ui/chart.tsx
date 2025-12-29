@@ -311,12 +311,8 @@ function getPayloadConfigFromPayload(config: ChartConfig, payload: unknown, key:
   return configLabelKey in config ? config[configLabelKey] : config[key as keyof typeof config];
 }
 
-export const Chart: React.FC<
-  React.ComponentProps<'div'> & {
-    config: ChartConfig;
-    children: React.ComponentProps<typeof RechartsPrimitive.ResponsiveContainer>['children'];
-  }
-> & {
+// Chart namespace component - Chart itself is the container, with sub-components via dot notation
+export const Chart: typeof ChartContainerRoot & {
   Tooltip: typeof RechartsPrimitive.Tooltip;
   TooltipContent: typeof ChartTooltipContent;
   Legend: typeof RechartsPrimitive.Legend;
@@ -329,10 +325,3 @@ export const Chart: React.FC<
   LegendContent: ChartLegendContent,
   Style: ChartStyle,
 });
-
-// Keep ChartContainer as an alias for backward compatibility
-export { ChartContainerRoot as ChartContainer };
-
-// Export chart components for external use
-export const ChartTooltip = RechartsPrimitive.Tooltip;
-export { ChartTooltipContent };

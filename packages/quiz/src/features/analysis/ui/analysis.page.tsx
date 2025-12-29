@@ -45,15 +45,19 @@ const SuccessView: React.FC = () => {
   const handleGetAnalysis = () => {
     if (selectedResponseId !== '' && selectedEngineId !== '') {
       analyzeResponse({
-        responseId: selectedResponseId as ResponseId,
-        engineId: selectedEngineId as AnalysisEngineId,
+        input: {
+          responseId: selectedResponseId as ResponseId,
+          engineId: selectedEngineId as AnalysisEngineId,
+        },
       });
     }
   };
 
   const handleGetSummary = () => {
     if (selectedEngineId !== '') {
-      getAnalysisSummary({ engineId: selectedEngineId as AnalysisEngineId });
+      getAnalysisSummary({
+        input: { engineId: selectedEngineId as AnalysisEngineId },
+      });
     }
   };
 

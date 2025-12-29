@@ -7,9 +7,11 @@
     "tsBuildInfoFile": "dist/tsconfig.lib.tsbuildinfo",
     "emitDeclarationOnly": true,
     "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
     "types": ["node"],
     "jsx": "react-jsx",
     "lib": ["ES2021", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
     "moduleResolution": "bundler",
     "paths": {
       "@/*": ["./src/*"],
@@ -21,7 +23,7 @@
       "@shadcn/*": ["../ui/shadcn/src/*"]
     }
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx"],
+  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.json"],
   "references": [
     { "path": "../ui/shadcn/tsconfig.lib.json" },
     { "path": "../core/tsconfig.lib.json" }
