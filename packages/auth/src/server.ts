@@ -13,10 +13,10 @@ export * from './features/_core/router';
 export { AuthService, Unauthenticated } from './features/_core/service';
 
 // ============================================================================
-// Effect HttpApi - Typed authentication API
+// Effect HttpApi - Typed authentication API (server implementations)
 // ============================================================================
-export * from './features/_core/errors';
 export * from './features/_core/auth-api';
 export * from './features/_core/auth-api-live';
-export * from './features/session/session-api';
+export * from './features/_core/auth-api-routes';
 export * from './features/session/session-api-live';
+export * from './features/account/account-api-live';

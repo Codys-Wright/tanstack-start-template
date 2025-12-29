@@ -11,6 +11,10 @@
 // Core - Client & Domain
 // ============================================================================
 export { authClient } from './features/_core/client';
+export {
+  AuthApiClient,
+  AuthApiClientLive,
+} from './features/_core/auth-api-client';
 export * from './features/_core/schema';
 
 // ============================================================================
@@ -27,6 +31,7 @@ export * from './features/user/ui/user-view';
 export * from './features/session/session.schema';
 export * from './features/session/session.atoms';
 export { SessionApiGroup } from './features/session/session-api';
+export { AuthApi } from './features/_core/auth-api';
 export * from './features/session/ui/auth-view';
 export * from './features/session/ui/sign-in-form';
 export * from './features/session/ui/sign-up-form';
@@ -37,6 +42,7 @@ export * from './features/session/ui/two-factor-form';
 // Account - Domain & UI
 // ============================================================================
 export * from './features/account/account.schema';
+export { AccountApiGroup } from './features/account/account-api';
 export * from './features/account/ui/forgot-password-form';
 export * from './features/account/ui/reset-password-form';
 export * from './features/account/ui/recover-account-form';

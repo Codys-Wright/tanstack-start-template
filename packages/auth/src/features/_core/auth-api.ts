@@ -1,26 +1,18 @@
 import * as HttpApi from '@effect/platform/HttpApi';
-import * as OpenApi from '@effect/platform/OpenApi';
+import { AccountApiGroup } from '../account/account-api.js';
 import { SessionApiGroup } from '../session/session-api.js';
 
 /**
- * AuthHttpApi - Composed HTTP API for authentication operations
+ * AuthApi - Composed HTTP API for authentication operations
  *
- * Mounted at /effect-auth to coexist with Better Auth's /auth passthrough.
+ * Provides typed Effect endpoints for auth operations.
+ * Coexists with Better Auth's passthrough (Better Auth handles
+ * routes not defined here).
  *
- * Current groups:
- * - session: Sign in, sign up, sign out, get session
+ * Groups:
+ * - session: Sign in, sign up, sign out, get session (/session/*)
+ * - account: Profile management, change email/password, delete account (/account/*)
  *
- * Future groups (to be added):
- * - user: Update profile, delete account
- * - account: Change email/password, password reset, session management
+ * Note: No prefix here - composed at app level with AppApi.
  */
-export class AuthHttpApi extends HttpApi.make('effect-auth')
-  .add(SessionApiGroup)
-  .prefix('/effect-auth')
-  .annotateContext(
-    OpenApi.annotations({
-      title: 'Effect Auth API',
-      description: 'Typed authentication API with Effect HttpApi',
-      version: '1.0.0',
-    }),
-  ) {}
+export class AuthApi extends HttpApi.make('auth-api').add(SessionApiGroup).add(AccountApiGroup) {}

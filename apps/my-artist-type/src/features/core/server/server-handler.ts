@@ -1,65 +1,28 @@
 import {
   AuthContext,
   BetterAuthRouter,
-  HttpAuthenticationMiddlewareLive,
-  RpcAuthenticationMiddleware,
   RpcAuthenticationMiddlewareLive,
   AuthService,
-  makeSessionApiLive,
+  AuthApiRoutes,
 } from '@auth/server';
-import { makeTodosApiLive, TodosRpcLive } from '@todo/server';
+import { AuthApi } from '@auth';
+import { TodosApi } from '@todo';
+import { TodosApiRoutes, TodosRpcLive } from '@todo/server';
+import * as HttpApi from '@effect/platform/HttpApi';
 import * as HttpApiScalar from '@effect/platform/HttpApiScalar';
-import * as HttpApiSwagger from '@effect/platform/HttpApiSwagger';
 import * as HttpLayerRouter from '@effect/platform/HttpLayerRouter';
-import * as HttpServer from '@effect/platform/HttpServer';
 import * as HttpServerResponse from '@effect/platform/HttpServerResponse';
-import * as RpcMiddleware from '@effect/rpc/RpcMiddleware';
+import * as OpenApi from '@effect/platform/OpenApi';
 import * as RpcSerialization from '@effect/rpc/RpcSerialization';
 import * as RpcServer from '@effect/rpc/RpcServer';
 import * as Context from 'effect/Context';
-import * as Effect from 'effect/Effect';
-import * as Exit from 'effect/Exit';
 import * as Layer from 'effect/Layer';
+import * as Effect from 'effect/Effect';
 import * as Logger from 'effect/Logger';
-import { DomainApi, DomainRpc } from '../domain/index.js';
-
-// HttpApi handlers for todos - uses makeTodosApiLive from @todo
-const TodosApiLive = makeTodosApiLive(DomainApi);
-
-// HttpApi handlers for session auth - uses makeSessionApiLive from @auth/server
-const SessionApiLive = makeSessionApiLive(DomainApi);
-
-class RpcLogger extends RpcMiddleware.Tag<RpcLogger>()('RpcLogger', {
-  wrap: true,
-  optional: true,
-}) {}
-
-const RpcLoggerLive = Layer.succeed(
-  RpcLogger,
-  RpcLogger.of((opts) =>
-    Effect.flatMap(Effect.exit(opts.next), (exit) =>
-      Exit.match(exit, {
-        onSuccess: () => exit,
-        onFailure: (cause) =>
-          Effect.zipRight(
-            Effect.annotateLogs(Effect.logError(`RPC request failed: ${opts.rpc._tag}`, cause), {
-              'rpc.method': opts.rpc._tag,
-              'rpc.clientId': opts.clientId,
-            }),
-            exit,
-          ),
-      }),
-    ),
-  ),
-);
-
-// Apply authentication and logging middleware to RPC group
-const DomainRpcWithMiddleware = DomainRpc.middleware(RpcAuthenticationMiddleware).middleware(
-  RpcLogger,
-);
+import { DomainRpc, RpcLoggerLive } from './domain';
 
 const RpcRouter = RpcServer.layerHttpRouter({
-  group: DomainRpcWithMiddleware,
+  group: DomainRpc,
   path: '/api/rpc',
   protocol: 'http',
   spanPrefix: 'rpc',
@@ -72,20 +35,36 @@ const RpcRouter = RpcServer.layerHttpRouter({
   Layer.provide(RpcSerialization.layerNdjson),
 );
 
-// HttpApi router
-const HttpApiRouter = HttpLayerRouter.addHttpApi(DomainApi, {
-  openapiPath: '/api/openapi.json',
-}).pipe(
-  Layer.provide(TodosApiLive),
-  Layer.provide(SessionApiLive),
-  Layer.provide(HttpAuthenticationMiddlewareLive),
-  Layer.provide(AuthService.Default),
-  Layer.provide(HttpServer.layerContext),
-);
+// ============================================================================
+// HTTP API Setup - Routes imported from feature packages
+// ============================================================================
 
-// Scalar UI (modern OpenAPI docs) at /api/docs
+// TodosApiRoutes and AuthApiRoutes are imported from their respective packages
+// Each package provides pre-configured routes with middleware
+
+// ============================================================================
+// OpenAPI Documentation - Composed API for docs only
+// ============================================================================
+
+/**
+ * DocsApi - Composed API for OpenAPI documentation.
+ * Combines all feature APIs for unified Scalar docs.
+ */
+class DocsApi extends HttpApi.make('docs-api')
+  .addHttpApi(TodosApi)
+  .addHttpApi(AuthApi)
+  .prefix('/api')
+  .annotateContext(
+    OpenApi.annotations({
+      title: 'TanStack Start API',
+      description: 'API for the TanStack Start application',
+      version: '1.0.0',
+    }),
+  ) {}
+
+// Scalar docs from composed DocsApi
 const ScalarDocs = HttpApiScalar.layerHttpLayerRouter({
-  api: DomainApi,
+  api: DocsApi,
   path: '/api/docs',
   scalar: {
     theme: 'moon',
@@ -95,24 +74,26 @@ const ScalarDocs = HttpApiScalar.layerHttpLayerRouter({
   },
 });
 
-// Swagger UI (classic OpenAPI docs) at /api/swagger
-const SwaggerDocs = HttpApiSwagger.layerHttpLayerRouter({
-  api: DomainApi,
-  path: '/api/swagger',
-});
+// ============================================================================
+// Other Routes
+// ============================================================================
 
 const HealthRoute = HttpLayerRouter.use((router) =>
   router.add('GET', '/api/health', HttpServerResponse.text('OK')),
 );
 
-// Merge all routes - includes both Scalar and Swagger UIs
+// ============================================================================
+// Compose All Routes
+// ============================================================================
+
+// Merge all routes - individual APIs + RPC + other routes
 // Note: AuthContext.Mock is provided to satisfy type requirements, but the middleware
 // provides the actual AuthContext at runtime per-request
 const AllRoutes = Layer.mergeAll(
   RpcRouter,
-  HttpApiRouter,
+  TodosApiRoutes,
+  AuthApiRoutes,
   ScalarDocs,
-  SwaggerDocs,
   HealthRoute,
   BetterAuthRouter,
 ).pipe(
@@ -120,14 +101,9 @@ const AllRoutes = Layer.mergeAll(
   Layer.provide(Layer.mergeAll(AuthContext.Mock, Logger.pretty)),
 );
 
-// // Run Better Auth migrations first (creates user, session, etc. tables)
-// // Then run our Effect SQL migrations (AuthMigrations + TodoMigrations)
-// Effect.runPromise(
-//   Effect.gen(function* () {
-//     yield* runBetterAuthMigrations;
-//     yield* runMigrations(AuthMigrations, TodoMigrations);
-//   }),
-// );
+// ============================================================================
+// Web Handler Export
+// ============================================================================
 
 const memoMap = Effect.runSync(Layer.makeMemoMap);
 

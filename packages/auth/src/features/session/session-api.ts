@@ -1,8 +1,6 @@
 import * as HttpApiEndpoint from '@effect/platform/HttpApiEndpoint';
 import * as HttpApiGroup from '@effect/platform/HttpApiGroup';
-import { Unauthenticated } from '../_core/service.js';
-import { AuthError } from '../_core/errors.js';
-import { SessionData } from './session.schema.js';
+import { AuthError, SessionData, Unauthenticated } from './session.schema.js';
 import {
   SignInInput,
   SignInResponse,
@@ -12,7 +10,8 @@ import {
 } from '../_core/schema.js';
 
 /**
- * SessionApiGroup - HTTP API for session/authentication operations
+ * SessionApiGroup - HTTP API group for session/authentication operations.
+ * This is composed into AuthApi.
  *
  * Endpoints:
  * - GET /session - Get current session (returns null if not authenticated)

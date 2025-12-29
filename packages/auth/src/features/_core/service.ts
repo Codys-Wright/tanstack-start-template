@@ -1,4 +1,3 @@
-import * as HttpApiSchema from '@effect/platform/HttpApiSchema';
 import { passkey } from '@better-auth/passkey';
 import { betterAuth } from 'better-auth';
 import type { BetterAuthOptions } from 'better-auth';
@@ -13,26 +12,19 @@ import * as Layer from 'effect/Layer';
 import * as Option from 'effect/Option';
 import * as Redacted from 'effect/Redacted';
 import * as Runtime from 'effect/Runtime';
-import * as Schema from 'effect/Schema';
-import type { SessionData } from '../session/session.schema';
+import { Unauthenticated, type SessionData } from '../session/session.schema.js';
 import type { UserId } from '../user/user.schema';
 import { AuthConfig } from './config';
 import { AuthDatabase } from './database';
+
+// Re-export for backwards compatibility with existing server code
+export { Unauthenticated };
 
 // ============================================================================
 // Auth Service
 // ============================================================================
 
 export type BetterAuthInstance = ReturnType<typeof betterAuth>;
-
-/**
- * Error thrown when authentication is required but no valid session exists.
- */
-export class Unauthenticated extends Schema.TaggedError<Unauthenticated>()(
-  'Unauthenticated',
-  {},
-  HttpApiSchema.annotations({ status: 401 }),
-) {}
 
 /**
  * Creates Better Auth options.
