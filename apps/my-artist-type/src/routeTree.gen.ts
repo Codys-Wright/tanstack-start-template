@@ -18,6 +18,7 @@ import { Route as SplatRouteImport } from './routes/$';
 import { Route as IndexRouteImport } from './routes/index';
 import { Route as ExampleIndexRouteImport } from './routes/example/index';
 import { Route as OrganizationOrganizationViewRouteImport } from './routes/organization/$organizationView';
+import { Route as ExampleFeatureIdRouteImport } from './routes/example/$featureId';
 import { Route as AuthCallbackRouteImport } from './routes/auth/callback';
 import { Route as AuthAuthViewRouteImport } from './routes/auth/$authView';
 import { Route as ApiSplatRouteImport } from './routes/api/$';
@@ -68,6 +69,11 @@ const OrganizationOrganizationViewRoute = OrganizationOrganizationViewRouteImpor
   path: '/organization/$organizationView',
   getParentRoute: () => rootRouteImport,
 } as any);
+const ExampleFeatureIdRoute = ExampleFeatureIdRouteImport.update({
+  id: '/example/$featureId',
+  path: '/example/$featureId',
+  getParentRoute: () => rootRouteImport,
+} as any);
 const AuthCallbackRoute = AuthCallbackRouteImport.update({
   id: '/auth/callback',
   path: '/auth/callback',
@@ -101,6 +107,7 @@ export interface FileRoutesByFullPath {
   '/api/$': typeof ApiSplatRoute;
   '/auth/$authView': typeof AuthAuthViewRoute;
   '/auth/callback': typeof AuthCallbackRoute;
+  '/example/$featureId': typeof ExampleFeatureIdRoute;
   '/organization/$organizationView': typeof OrganizationOrganizationViewRoute;
   '/example': typeof ExampleIndexRoute;
 }
@@ -116,6 +123,7 @@ export interface FileRoutesByTo {
   '/api/$': typeof ApiSplatRoute;
   '/auth/$authView': typeof AuthAuthViewRoute;
   '/auth/callback': typeof AuthCallbackRoute;
+  '/example/$featureId': typeof ExampleFeatureIdRoute;
   '/organization/$organizationView': typeof OrganizationOrganizationViewRoute;
   '/example': typeof ExampleIndexRoute;
 }
@@ -132,6 +140,7 @@ export interface FileRoutesById {
   '/api/$': typeof ApiSplatRoute;
   '/auth/$authView': typeof AuthAuthViewRoute;
   '/auth/callback': typeof AuthCallbackRoute;
+  '/example/$featureId': typeof ExampleFeatureIdRoute;
   '/organization/$organizationView': typeof OrganizationOrganizationViewRoute;
   '/example/': typeof ExampleIndexRoute;
 }
@@ -149,6 +158,7 @@ export interface FileRouteTypes {
     | '/api/$'
     | '/auth/$authView'
     | '/auth/callback'
+    | '/example/$featureId'
     | '/organization/$organizationView'
     | '/example';
   fileRoutesByTo: FileRoutesByTo;
@@ -164,6 +174,7 @@ export interface FileRouteTypes {
     | '/api/$'
     | '/auth/$authView'
     | '/auth/callback'
+    | '/example/$featureId'
     | '/organization/$organizationView'
     | '/example';
   id:
@@ -179,6 +190,7 @@ export interface FileRouteTypes {
     | '/api/$'
     | '/auth/$authView'
     | '/auth/callback'
+    | '/example/$featureId'
     | '/organization/$organizationView'
     | '/example/';
   fileRoutesById: FileRoutesById;
@@ -195,6 +207,7 @@ export interface RootRouteChildren {
   ApiSplatRoute: typeof ApiSplatRoute;
   AuthAuthViewRoute: typeof AuthAuthViewRoute;
   AuthCallbackRoute: typeof AuthCallbackRoute;
+  ExampleFeatureIdRoute: typeof ExampleFeatureIdRoute;
   OrganizationOrganizationViewRoute: typeof OrganizationOrganizationViewRoute;
   ExampleIndexRoute: typeof ExampleIndexRoute;
 }
@@ -264,6 +277,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OrganizationOrganizationViewRouteImport;
       parentRoute: typeof rootRouteImport;
     };
+    '/example/$featureId': {
+      id: '/example/$featureId';
+      path: '/example/$featureId';
+      fullPath: '/example/$featureId';
+      preLoaderRoute: typeof ExampleFeatureIdRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
     '/auth/callback': {
       id: '/auth/callback';
       path: '/auth/callback';
@@ -307,6 +327,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiSplatRoute: ApiSplatRoute,
   AuthAuthViewRoute: AuthAuthViewRoute,
   AuthCallbackRoute: AuthCallbackRoute,
+  ExampleFeatureIdRoute: ExampleFeatureIdRoute,
   OrganizationOrganizationViewRoute: OrganizationOrganizationViewRoute,
   ExampleIndexRoute: ExampleIndexRoute,
 };

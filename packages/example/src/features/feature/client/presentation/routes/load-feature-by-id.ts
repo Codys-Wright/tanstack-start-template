@@ -8,7 +8,7 @@
  * import { FeatureDetailPage, loadFeatureById } from '@example';
  *
  * export const Route = createFileRoute('/example/$featureId')({
- *   loader: ({ params }) => loadFeatureById(params.featureId),
+ *   loader: ({ params }) => loadFeatureById({ data: params.featureId }),
  *   component: FeatureDetailPageWrapper,
  * });
  *
@@ -21,6 +21,7 @@
 
 import { AuthService } from '@auth/server';
 import { createServerFn } from '@tanstack/react-start';
+import * as Cause from 'effect/Cause';
 import * as Effect from 'effect/Effect';
 import * as Exit from 'effect/Exit';
 
@@ -46,9 +47,10 @@ export interface FeatureDetailLoaderData {
  *
  * Returns the feature data or an error message.
  */
-export const loadFeatureById = createServerFn({ method: 'GET' })
-  .validator((featureId: string) => featureId)
-  .handler(async ({ data: featureId }): Promise<FeatureDetailLoaderData> => {
+export const loadFeatureById = createServerFn({ method: 'GET' }).handler(
+  async (ctx: { data: string }): Promise<FeatureDetailLoaderData> => {
+    const featureId = ctx.data;
+
     const exit = await ExampleServerRuntime.runPromiseExit(
       Effect.gen(function* () {
         const auth = yield* AuthService;
@@ -71,12 +73,18 @@ export const loadFeatureById = createServerFn({ method: 'GET' })
       return { feature: exit.value, error: null };
     }
 
-    // Handle error case
-    const cause = exit.cause;
-    const errorMessage =
-      cause._tag === 'Fail' && cause.error._tag === 'FeatureNotFound'
-        ? `Feature not found: ${featureId}`
-        : 'An error occurred while loading the feature';
+    // Handle error case - check if it's a FeatureNotFound error
+    const failureOption = Cause.failureOption(exit.cause);
+    if (failureOption._tag === 'Some') {
+      const error = failureOption.value as { _tag?: string };
+      if (error._tag === 'FeatureNotFound') {
+        return { feature: null, error: `Feature not found: ${featureId}` };
+      }
+    }
 
-    return { feature: null, error: errorMessage };
-  });
+    return {
+      feature: null,
+      error: 'An error occurred while loading the feature',
+    };
+  },
+);

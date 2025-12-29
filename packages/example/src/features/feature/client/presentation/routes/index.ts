@@ -1,4 +1,3 @@
-export * from './features.js';
 export * from './features-page.js';
 export * from './load-features.js';
 export * from './load-feature-by-id.js';
