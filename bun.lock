@@ -149,6 +149,7 @@
         "@effect/rpc": "*",
         "@effect/sql": "*",
         "@effect/sql-pg": "*",
+        "@example": "*",
         "@faker-js/faker": "*",
         "@hookform/resolvers": "*",
         "@radix-ui/react-accordion": "*",
@@ -375,6 +376,18 @@
     "packages/email": {
       "name": "@email",
       "version": "0.0.1",
+    },
+    "packages/example": {
+      "name": "@example",
+      "version": "0.0.1",
+      "dependencies": {
+        "@auth": "*",
+        "@core": "*",
+        "@effect/platform": "*",
+        "@effect/rpc": "*",
+        "@effect/sql": "*",
+        "effect": "*",
+      },
     },
     "packages/playground": {
       "name": "@playground",
@@ -1084,6 +1097,8 @@
     "@eslint/object-schema": ["@eslint/object-schema@2.1.7", "", {}, "sha512-VtAOaymWVfZcmZbp6E2mympDIHvyjXs/12LqWYjVw6qjrfF+VK+fyG33kChz3nnK+SU5/NeHOqrTEHS8sXO3OA=="],
 
     "@eslint/plugin-kit": ["@eslint/plugin-kit@0.4.1", "", { "dependencies": { "@eslint/core": "^0.17.0", "levn": "^0.4.1" } }, "sha512-43/qtrDUokr7LJqoF2c3+RInu/t4zfrpYdoSDfYyhg52rwLV6TnOvdG4fXm7IkSB3wErkcmJS9iEhjVtOSEjjA=="],
+
+    "@example": ["@example@workspace:packages/example"],
 
     "@exodus/bytes": ["@exodus/bytes@1.6.0", "", { "peerDependencies": { "@exodus/crypto": "^1.0.0-rc.4" }, "optionalPeers": ["@exodus/crypto"] }, "sha512-y32mI9627q5LR/L8fLc4YyDRJQOi+jK0D9okzLilAdiU3F9we3zC7Y7CFrR/8vAvUyv7FgBAYcNHtvbmhKCFcw=="],
 

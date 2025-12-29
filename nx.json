@@ -41,7 +41,8 @@
         "packages/todo/*",
         "packages/email/*",
         "/packages/quiz/*",
-        "packages/ui/components/*"
+        "packages/ui/components/*",
+        "packages/example/*"
       ]
     },
     {
@@ -66,7 +67,8 @@
         "packages/todo/*",
         "packages/email/*",
         "/packages/quiz/*",
-        "packages/ui/components/*"
+        "packages/ui/components/*",
+        "packages/example/*"
       ],
       "options": {
         "typecheck": {

@@ -17,5 +17,9 @@
     }
   },
   "include": ["src/**/*.ts"],
-  "references": []
+  "references": [
+    {
+      "path": "../shadcn/tsconfig.lib.json"
+    }
+  ]
 }

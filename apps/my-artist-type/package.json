@@ -22,6 +22,7 @@
     "@better-auth/passkey": "*",
     "@effect-atom/atom": "*",
     "@effect-atom/atom-react": "*",
+    "@example": "*",
     "@effect/language-service": "*",
     "@effect/platform": "*",
     "@effect/platform-browser": "*",

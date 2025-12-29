@@ -1,9 +1,12 @@
 import { RpcAuthenticationMiddleware } from '@auth/server';
-import { TodosRpc } from '@todo';
+import { FeatureRpc } from '@example';
+import { TodosRpc, TodosApi } from '@todo';
 import * as RpcMiddleware from '@effect/rpc/RpcMiddleware';
 import * as Effect from 'effect/Effect';
 import * as Exit from 'effect/Exit';
 import * as Layer from 'effect/Layer';
+import * as OpenApi from '@effect/platform/OpenApi';
+import * as HttpApi from '@effect/platform/HttpApi';
 
 // ============================================================================
 // RPC Middleware
@@ -44,4 +47,23 @@ export const RpcLoggerLive = Layer.succeed(
  * Add more RPC groups using .merge() as features are added:
  * e.g., TodosRpc.merge(QuizRpc).merge(AnalysisRpc)
  */
-export const AppRpc = TodosRpc.middleware(RpcAuthenticationMiddleware).middleware(RpcLogger);
+export const DomainRpc = TodosRpc.merge(FeatureRpc)
+  .middleware(RpcAuthenticationMiddleware)
+  .middleware(RpcLogger);
+
+/**
+ * DomainApi - Core HTTP API for the application.
+ *
+ * Note: ExampleApi has its own route layer (ExampleApiLive) with separate docs
+ * at /api/example/docs. It's not merged here to avoid handler type conflicts.
+ */
+export class DomainApi extends HttpApi.make('api')
+  .addHttpApi(TodosApi)
+  .prefix('/api')
+  .annotateContext(
+    OpenApi.annotations({
+      title: 'TanStack Start API',
+      description: 'API for the TanStack Start application',
+      version: '1.0.0',
+    }),
+  ) {}

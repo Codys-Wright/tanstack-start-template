@@ -21,7 +21,9 @@
       "@core": ["../../packages/core/src/index.ts"],
       "@core/*": ["../../packages/core/src/*"],
       "@auth": ["../../packages/auth/src/index.ts"],
-      "@auth/*": ["../../packages/auth/src/*"]
+      "@auth/*": ["../../packages/auth/src/*"],
+      "@example": ["../../packages/example/src/index.ts"],
+      "@example/*": ["../../packages/example/src/*"]
     }
   },
   "exclude": [
@@ -39,19 +41,22 @@
   "include": ["src/**/*.js", "src/**/*.jsx", "src/**/*.ts", "src/**/*.tsx"],
   "references": [
     {
-      "path": "../../packages/ui/theme/tsconfig.lib.json"
-    },
-    {
-      "path": "../../packages/core/tsconfig.lib.json"
-    },
-    {
       "path": "../../packages/auth/tsconfig.lib.json"
+    },
+    {
+      "path": "../../packages/todo/tsconfig.lib.json"
+    },
+    {
+      "path": "../../packages/example/tsconfig.lib.json"
+    },
+    {
+      "path": "../../packages/ui/theme/tsconfig.lib.json"
     },
     {
       "path": "../../packages/ui/shadcn/tsconfig.lib.json"
     },
     {
-      "path": "../../packages/todo/tsconfig.lib.json"
+      "path": "../../packages/core/tsconfig.lib.json"
     }
   ]
 }
