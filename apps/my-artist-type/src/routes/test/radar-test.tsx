@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router';
 
-export const Route = createFileRoute('/radar-test')({
+export const Route = createFileRoute('/test/radar-test')({
   component: function RadarTestPage() {
     return (
       <div className="min-h-screen p-8">

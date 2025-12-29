@@ -6,4 +6,4 @@
  * For server code, import from "@core/server"
  */
 
-export * from "./client/index.js";
+export * from './client/index.js';

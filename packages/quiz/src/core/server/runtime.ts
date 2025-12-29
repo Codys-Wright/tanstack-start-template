@@ -2,10 +2,10 @@
  * QuizServerRuntime - Server runtime for the @quiz package.
  *
  * This runtime provides all layers needed for the quiz features:
- * - QuestionService for quiz CRUD operations
- * - AnalysisService for analysis operations
+ * - QuizService for quiz CRUD operations
+ * - AnalysisServerService for analysis operations
  * - QuizTakerService for active quiz session management
- * - AnalysisEngineService for analysis engine operations
+ * - AnalysisEngineServerService for analysis engine operations
  *
  * Apps can either:
  * 1. Use this runtime directly for quiz-related server functions
@@ -17,10 +17,10 @@ import * as Effect from 'effect/Effect';
 import * as Layer from 'effect/Layer';
 import * as ManagedRuntime from 'effect/ManagedRuntime';
 
-import { QuestionService } from '../../features/quiz/server/index.js';
-import { AnalysisService } from '../../features/analysis/server/index.js';
-import { AnalysisEngineService } from '../../features/analysis-engine/server/index.js';
-import { QuizTakerService } from '../../features/active-quiz/domain/index.js';
+import { QuizService } from '../../features/quiz/server/index.js';
+import { AnalysisServerService } from '../../features/analysis/server/index.js';
+import { AnalysisEngineServerService } from '../../features/analysis-engine/server/index.js';
+import { QuizTakerService } from '../../features/active-quiz/domain/quiz-taker.service.js';
 
 // Use globalValue to persist the memoMap across hot reloads
 const memoMap = GlobalValue.globalValue(Symbol.for('@quiz/server-memoMap'), () =>
@@ -31,9 +31,9 @@ const memoMap = GlobalValue.globalValue(Symbol.for('@quiz/server-memoMap'), () =
  * Layer combining all services needed for the quiz package.
  */
 export const QuizServerLayer = Layer.mergeAll(
-  QuestionService.Default,
-  AnalysisService.Default,
-  AnalysisEngineService.Default,
+  QuizService.Default,
+  AnalysisServerService.Default,
+  AnalysisEngineServerService.Default,
   QuizTakerService.Default,
 );
 

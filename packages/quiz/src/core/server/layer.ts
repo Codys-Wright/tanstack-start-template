@@ -2,6 +2,9 @@ import * as HttpApiScalar from '@effect/platform/HttpApiScalar';
 import * as HttpLayerRouter from '@effect/platform/HttpLayerRouter';
 import * as HttpServer from '@effect/platform/HttpServer';
 import * as Layer from 'effect/Layer';
+import { AnalysisRpcLive } from '../../features/analysis/server/index.js';
+import { AnalysisEngineRpcLive } from '../../features/analysis-engine/server/index.js';
+import { QuizzesRpcLive } from '../../features/quiz/server/index.js';
 import { QuizApi } from './api.js';
 
 /**
@@ -35,9 +38,16 @@ export const QuizApiLive = Layer.mergeAll(
 ).pipe(Layer.provide(HttpServer.layerContext));
 
 /**
- * QuizRpcLive - RPC handlers layer for the quiz package.
- * Provides RPC method implementations.
+ * QuizRpcLive - Combined RPC handlers layer for the quiz package.
+ * Merges all feature-level RPC implementations.
  *
- * TODO: Add RPC live layers as features are implemented
+ * Currently includes:
+ * - QuizzesRpcLive: Quiz CRUD operations
+ * - AnalysisRpcLive: Analysis result operations
+ * - AnalysisEngineRpcLive: Analysis engine CRUD operations
+ *
+ * TODO: Add more feature RPC layers as implemented:
+ * - ResponsesRpcLive
+ * - ActiveQuizRpcLive
  */
-export const QuizRpcLive = Layer.empty;
+export const QuizRpcLive = Layer.mergeAll(QuizzesRpcLive, AnalysisRpcLive, AnalysisEngineRpcLive);

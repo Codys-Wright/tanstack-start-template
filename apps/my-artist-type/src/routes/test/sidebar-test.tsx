@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router';
 
-export const Route = createFileRoute('/sidebar-test')({
+export const Route = createFileRoute('/test/sidebar-test')({
   component: function SidebarTestPage() {
     return (
       <div className="min-h-screen p-8">

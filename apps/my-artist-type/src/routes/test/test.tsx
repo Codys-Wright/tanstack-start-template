@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { ThemeDropdown } from "@theme";
 import { Button } from "@shadcn";
 
-export const Route = createFileRoute("/test")({
+export const Route = createFileRoute("/test/test")({
   component: TestPage,
 });
 

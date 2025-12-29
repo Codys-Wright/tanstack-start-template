@@ -1,6 +1,6 @@
 import { createFileRoute, useParams } from '@tanstack/react-router';
 
-export const Route = createFileRoute('/admin/responses/$responseId')({
+export const Route = createFileRoute('/admin/responses/$responseId_new')({
   component: function AdminResponseDetailPage() {
     const { responseId } = useParams({
       from: '/admin/responses/$responseId',
