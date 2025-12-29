@@ -1,5 +1,5 @@
-import type { QuestionResponse, ResponseMetadata, SessionMetadata } from "../../response-rpc.js";
-import typeformProcessedData from "./typeform-processed.json" with { type: "json" };
+import type { QuestionResponse, ResponseMetadata, SessionMetadata } from '../../domain/schema.js';
+import typeformProcessedData from './typeform-processed.json' with { type: 'json' };
 
 type TypeformResponse = {
   id: string;
@@ -77,11 +77,11 @@ export const getTypeformResponseSeedData = (): Array<TypeformResponseSeedData> =
     }));
 
     // Create session metadata using real dates from Typeform
-    const startDateStr = typeformResponse.metadata.startDate ?? "";
-    const submitDateStr = typeformResponse.metadata.submitDate ?? "";
+    const startDateStr = typeformResponse.metadata.startDate ?? '';
+    const submitDateStr = typeformResponse.metadata.submitDate ?? '';
 
-    const startDate = startDateStr !== "" ? new Date(startDateStr) : new Date();
-    const submitDate = submitDateStr !== "" ? new Date(submitDateStr) : new Date();
+    const startDate = startDateStr !== '' ? new Date(startDateStr) : new Date();
+    const submitDate = submitDateStr !== '' ? new Date(submitDateStr) : new Date();
     const durationMs = submitDate.getTime() - startDate.getTime();
 
     // Use Typeform dates as strings
@@ -92,8 +92,8 @@ export const getTypeformResponseSeedData = (): Array<TypeformResponseSeedData> =
       startedAt,
       completedAt,
       totalDurationMs: durationMs > 0 ? durationMs : undefined,
-      userAgent: "Typeform Import",
-      referrer: "typeform.com",
+      userAgent: 'Typeform Import',
+      referrer: 'typeform.com',
       customFields: {
         typeformId: typeformResponse.id,
         artistType: typeformResponse.artistType,
@@ -106,9 +106,9 @@ export const getTypeformResponseSeedData = (): Array<TypeformResponseSeedData> =
 
     // Create response metadata
     const responseMetadata: ResponseMetadata = {
-      tags: ["typeform", "imported", "legacy"],
+      tags: ['typeform', 'imported', 'legacy'],
       customFields: {
-        source: "typeform",
+        source: 'typeform',
         originalId: typeformResponse.id,
         artistType: typeformResponse.artistType,
         email: typeformResponse.metadata.email,

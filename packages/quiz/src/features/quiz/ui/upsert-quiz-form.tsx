@@ -3,7 +3,7 @@ import { useAtomSet } from '@effect-atom/atom-react';
 import { UpsertQuizPayload } from '../domain/schema.js';
 import { useForm } from '@tanstack/react-form';
 import { Button, FieldInput, FieldTextarea } from '@shadcn';
-import { Schema } from 'effect';
+import * as Schema from 'effect/Schema';
 import React from 'react';
 import { upsertQuizAtom } from '../client/atoms.js';
 

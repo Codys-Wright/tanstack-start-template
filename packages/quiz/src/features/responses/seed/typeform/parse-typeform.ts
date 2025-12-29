@@ -1,5 +1,5 @@
 import { parse } from "csv-parse/sync";
-import { Effect } from "effect";
+import * as Effect from 'effect/Effect';
 import { readFileSync, writeFileSync } from "fs";
 import { join, dirname as pathDirname } from "path";
 import { fileURLToPath } from "url";

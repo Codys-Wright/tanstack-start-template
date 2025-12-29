@@ -1,8 +1,8 @@
 'use client';
 
-import { type Icon } from '@tabler/icons-react';
+import { IconCirclePlusFilled, type Icon } from '@tabler/icons-react';
 
-import { Badge } from './badge';
+import { Badge } from '../badge';
 import { Sidebar } from './sidebar';
 
 export function NavMain({
@@ -19,9 +19,23 @@ export function NavMain({
   return (
     <Sidebar.Group>
       <Sidebar.GroupContent className="flex flex-col gap-2">
-        {items.map((item) => (
-          <Sidebar.Menu key={item.title}>
-            <Sidebar.MenuItem>
+        <Sidebar.Menu>
+          <Sidebar.MenuItem>
+            <Sidebar.MenuButton
+              asChild
+              tooltip="Quiz Editor"
+              className="bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground active:bg-primary/90 active:text-primary-foreground min-w-8 duration-200 ease-linear"
+            >
+              <a href="/admin/quiz-editor">
+                <IconCirclePlusFilled />
+                <span>Quiz Editor</span>
+              </a>
+            </Sidebar.MenuButton>
+          </Sidebar.MenuItem>
+        </Sidebar.Menu>
+        <Sidebar.Menu>
+          {items.map((item) => (
+            <Sidebar.MenuItem key={item.title}>
               {item.disabled === true ? (
                 <Sidebar.MenuButton
                   tooltip={item.tooltip ?? item.title}
@@ -47,8 +61,8 @@ export function NavMain({
                 </Sidebar.MenuButton>
               )}
             </Sidebar.MenuItem>
-          </Sidebar.Menu>
-        ))}
+          ))}
+        </Sidebar.Menu>
       </Sidebar.GroupContent>
     </Sidebar.Group>
   );

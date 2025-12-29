@@ -1,7 +1,7 @@
 'use client';
 
 import { Atom } from '@effect-atom/atom-react';
-import { BrowserKeyValueStore } from '@effect/platform-browser';
+import * as BrowserKeyValueStore from '@effect/platform-browser/BrowserKeyValueStore';
 import {
   IconBuilding,
   IconChartBar,
@@ -10,7 +10,7 @@ import {
   IconSettings,
   IconUsers,
 } from '@tabler/icons-react';
-import type { Schema } from 'effect/Schema';
+import * as Schema from 'effect/Schema';
 import * as React from 'react';
 
 import { NavMain, NavSecondary, NavUser, Sidebar } from '@shadcn';

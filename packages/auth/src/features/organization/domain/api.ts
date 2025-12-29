@@ -5,8 +5,6 @@ import {
   CreateOrganizationInput,
   DeleteOrganizationInput,
   Organization,
-  OrganizationNotFoundError,
-  OrganizationValidationError,
   OrganizationId,
   SetActiveOrganizationInput,
   UpdateOrganizationInput,
@@ -29,32 +27,26 @@ export class OrganizationApiGroup extends HttpApiGroup.make('organizations')
   .add(
     HttpApiEndpoint.get('getById', '/organizations/:id')
       .setPath(Schema.Struct({ id: OrganizationId }))
-      .addSuccess(Organization)
-      .addError(OrganizationNotFoundError),
+      .addSuccess(Organization),
   )
   .add(
     HttpApiEndpoint.post('create', '/organizations/create')
       .setPayload(CreateOrganizationInput)
-      .addSuccess(Organization)
-      .addError(OrganizationValidationError),
+      .addSuccess(Organization),
   )
   .add(
     HttpApiEndpoint.patch('update', '/organizations/update')
       .setPayload(UpdateOrganizationInput)
-      .addSuccess(Organization)
-      .addError(OrganizationNotFoundError)
-      .addError(OrganizationValidationError),
+      .addSuccess(Organization),
   )
   .add(
     HttpApiEndpoint.del('delete', '/organizations/delete')
       .setPayload(DeleteOrganizationInput)
-      .addSuccess(Schema.Struct({ success: Schema.Boolean }))
-      .addError(OrganizationNotFoundError),
+      .addSuccess(Schema.Struct({ success: Schema.Boolean })),
   )
   .add(
     HttpApiEndpoint.post('setActive', '/organizations/set-active')
       .setPayload(SetActiveOrganizationInput)
-      .addSuccess(Organization)
-      .addError(OrganizationNotFoundError),
+      .addSuccess(Organization),
   )
   .prefix('/organizations') {}

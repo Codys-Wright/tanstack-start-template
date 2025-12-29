@@ -1,19 +1,19 @@
 import { Result, useAtomSet, useAtomValue } from '@effect-atom/atom-react';
-import type { AnalysisEngineId } from '../analysis-engine/domain/schema.js';
-import type { ResponseId } from '../../responses/domain/schema.js';
+import type { AnalysisEngineId } from '@/features/analysis-engine/domain/schema.js';
+import type { ResponseId } from '@/features/responses/domain/schema.js';
 import { Badge, Button, Card, DropdownMenu } from '@shadcn';
 import { CheckIcon, ChevronDownIcon } from 'lucide-react';
 import React, { useState } from 'react';
-import { ArtistTypeGraphCard } from '../components/artist-type/artist-type-graph-card.js';
-import { enginesAtom } from '../../analysis-engine/client/atoms.js';
-import { responsesAtom } from '../../responses/client/atoms.js';
+import { ArtistTypeGraphCard } from '@/features/active-quiz/components/artist-type/artist-type-graph-card.js';
+import { enginesAtom } from '@/features/analysis-engine/client/atoms.js';
+import { responsesAtom } from '@/features/responses/client/atoms.js';
 import {
   analysesAtom,
   analysisSummaryAtom,
   analyzeResponseWithServiceAtom,
   getAnalysisSummaryWithServiceAtom,
 } from '../client/atoms.js';
-import { transformAnalysisToArtistData } from './use-analysis-artist-data.js';
+import { transformAnalysisToArtistData } from '../use-analysis-artist-data.js';
 
 // PageContainer component with padding and layout
 type PageContainerProps = {

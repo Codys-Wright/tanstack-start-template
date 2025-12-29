@@ -1,9 +1,11 @@
-import { Version } from "@core/domain";
-import type { UpsertQuestionPayload } from "../questions/question-rpc.js";
-import type { UpsertRatingQuestion } from "../questions/question-types.js";
-import artistTypeQuestions from "../questions/seed/data/artist-type-questions.json" with { type: "json" };
-import { type UpsertQuizPayload } from "../quiz-rpc.js";
-import artistTypeQuiz from "./data/artist-type-quiz.json" with { type: "json" };
+import { Version } from '@core/domain';
+import type { UpsertQuestionPayload } from '../questions/schema.js';
+import type { UpsertRatingQuestion } from '../questions/question-types.js';
+import artistTypeQuestions from '../questions/seed/data/artist-type-questions.json' with {
+  type: 'json',
+};
+import { type UpsertQuizPayload } from '../domain/index.js';
+import artistTypeQuiz from './data/artist-type-quiz.json' with { type: 'json' };
 
 /**
  * Creates the Artist Type quiz payload from seed data

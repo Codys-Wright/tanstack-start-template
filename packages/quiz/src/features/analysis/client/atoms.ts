@@ -6,8 +6,13 @@ import * as Data from 'effect/Data';
 import * as Effect from 'effect/Effect';
 import * as Option from 'effect/Option';
 import * as Schema from 'effect/Schema';
-import { AnalysisResult, UpsertAnalysisResultPayload } from '../domain/index.js';
-import { AnalysisResultId } from '../../analysis-engine/domain/schema.js';
+import {
+  AnalysisResult,
+  UpsertAnalysisResultPayload,
+  AnalyzeResponseRequest,
+  AnalysisSummary,
+} from '../domain/index.js';
+import { AnalysisEngineId, AnalysisResultId } from '../../analysis-engine/domain/schema.js';
 import { AnalysisClient } from './client.js';
 
 const AnalysesSchema = Schema.Array(AnalysisResult);
@@ -95,3 +100,49 @@ export const getAnalysisByIdAtom = AnalysisClient.runtime.fn<AnalysisResultId>()
     return yield* client('analysis_getById', { id });
   }),
 );
+
+export const analyzeResponseWithServiceAtom = AnalysisClient.runtime.fn<{
+  input: AnalyzeResponseRequest;
+}>()(
+  Effect.fnUntraced(function* ({ input }, get) {
+    const client = yield* AnalysisClient;
+    const result = yield* client('analysis_analyze', { request: input });
+    get.set(analysesAtom, { _tag: 'Upsert', analysis: result });
+    return result;
+  }),
+);
+
+export const getAnalysisSummaryWithServiceAtom = AnalysisClient.runtime.fn<{
+  input: { readonly engineId: AnalysisEngineId };
+}>()(
+  Effect.fnUntraced(function* ({ input }) {
+    const client = yield* AnalysisClient;
+    return yield* client('analysis_getSummary', { engineId: input.engineId });
+  }),
+);
+
+export const analysisSummaryAtom = (() => {
+  const remoteAtom = AnalysisClient.runtime
+    .atom(
+      Effect.gen(function* () {
+        const client = yield* AnalysisClient;
+        return yield* client('analysis_getSummary', {
+          engineId: undefined as any,
+        });
+      }),
+    )
+    .pipe(
+      serializable({
+        key: '@quiz/analysis-summary',
+        schema: Result.Schema({
+          success: AnalysisSummary,
+          error: RpcClientError.RpcClientError,
+        }),
+      }),
+    );
+
+  return Object.assign(
+    Atom.readable((get) => get(remoteAtom)),
+    { remote: remoteAtom },
+  );
+})();

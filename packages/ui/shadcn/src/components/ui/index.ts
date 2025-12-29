@@ -33,9 +33,9 @@ export { Pagination } from './pagination.js';
 export { ResizablePanelGroup } from './resizable.js';
 export { ScrollArea } from './scroll-area.js';
 export { Sidebar, useSidebar } from './sidebar.js';
-export { NavMain } from './nav-main.js';
-export { NavSecondary } from './nav-secondary.js';
-export { NavUser } from './nav-user.js';
+export { NavMain } from './sidebar/nav-main.js';
+export { NavSecondary } from './sidebar/nav-secondary.js';
+export { NavUser } from './sidebar/nav-user.js';
 export { ToggleGroup } from './toggle-group.js';
 
 // Compound components (already using namespace pattern)

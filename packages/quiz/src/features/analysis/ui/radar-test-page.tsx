@@ -1,6 +1,6 @@
-import React from "react";
-import type { ArtistData } from "../components/artist-type/artist-type-graph-card.js";
-import { ArtistTypeGraphCard } from "../components/artist-type/artist-type-graph-card.js";
+import React from 'react';
+import type { ArtistData } from '@/features/active-quiz/components/artist-type/artist-type-graph-card.js';
+import { ArtistTypeGraphCard } from '@/features/active-quiz/components/artist-type/artist-type-graph-card.js';
 
 // Test data for each artist type with extreme percentages
 const createExtremeTestData = (
@@ -8,16 +8,16 @@ const createExtremeTestData = (
   dominantPercentage: number,
 ): Array<ArtistData> => {
   const allTypes = [
-    "Visionary",
-    "Consummate",
-    "Analyzer",
-    "Tech",
-    "Entertainer",
-    "Maverick",
-    "Dreamer",
-    "Feeler",
-    "Tortured",
-    "Solo",
+    'Visionary',
+    'Consummate',
+    'Analyzer',
+    'Tech',
+    'Entertainer',
+    'Maverick',
+    'Dreamer',
+    'Feeler',
+    'Tortured',
+    'Solo',
   ];
 
   const remainingPercentage = 100 - dominantPercentage;
@@ -51,16 +51,16 @@ const createBlendedTestData = (
   secondaryPercentage: number,
 ): Array<ArtistData> => {
   const allTypes = [
-    "Visionary",
-    "Consummate",
-    "Analyzer",
-    "Tech",
-    "Entertainer",
-    "Maverick",
-    "Dreamer",
-    "Feeler",
-    "Tortured",
-    "Solo",
+    'Visionary',
+    'Consummate',
+    'Analyzer',
+    'Tech',
+    'Entertainer',
+    'Maverick',
+    'Dreamer',
+    'Feeler',
+    'Tortured',
+    'Solo',
   ];
 
   const remainingPercentage = 100 - primaryPercentage - secondaryPercentage;
@@ -96,36 +96,66 @@ const createBlendedTestData = (
 // Generate test data for each artist type
 const testDataSets = [
   // Pure extreme cases (85% dominant)
-  { name: "Visionary", data: createExtremeTestData("Visionary", 85) },
-  { name: "Consummate", data: createExtremeTestData("Consummate", 85) },
-  { name: "Analyzer", data: createExtremeTestData("Analyzer", 85) },
-  { name: "Tech", data: createExtremeTestData("Tech", 85) },
-  { name: "Entertainer", data: createExtremeTestData("Entertainer", 85) },
-  { name: "Maverick", data: createExtremeTestData("Maverick", 85) },
-  { name: "Dreamer", data: createExtremeTestData("Dreamer", 85) },
-  { name: "Feeler", data: createExtremeTestData("Feeler", 85) },
-  { name: "Tortured", data: createExtremeTestData("Tortured", 85) },
-  { name: "Solo", data: createExtremeTestData("Solo", 85) },
+  { name: 'Visionary', data: createExtremeTestData('Visionary', 85) },
+  { name: 'Consummate', data: createExtremeTestData('Consummate', 85) },
+  { name: 'Analyzer', data: createExtremeTestData('Analyzer', 85) },
+  { name: 'Tech', data: createExtremeTestData('Tech', 85) },
+  { name: 'Entertainer', data: createExtremeTestData('Entertainer', 85) },
+  { name: 'Maverick', data: createExtremeTestData('Maverick', 85) },
+  { name: 'Dreamer', data: createExtremeTestData('Dreamer', 85) },
+  { name: 'Feeler', data: createExtremeTestData('Feeler', 85) },
+  { name: 'Tortured', data: createExtremeTestData('Tortured', 85) },
+  { name: 'Solo', data: createExtremeTestData('Solo', 85) },
 
   // Blended examples - Creative combinations
-  { name: "Visionary + Analyzer", data: createBlendedTestData("Visionary", 50, "Analyzer", 30) },
   {
-    name: "Maverick + Entertainer",
-    data: createBlendedTestData("Maverick", 45, "Entertainer", 35),
+    name: 'Visionary + Analyzer',
+    data: createBlendedTestData('Visionary', 50, 'Analyzer', 30),
   },
-  { name: "Tech + Dreamer", data: createBlendedTestData("Tech", 40, "Dreamer", 40) },
-  { name: "Consummate + Feeler", data: createBlendedTestData("Consummate", 50, "Feeler", 25) },
-  { name: "Tortured + Solo", data: createBlendedTestData("Tortured", 35, "Solo", 35) },
+  {
+    name: 'Maverick + Entertainer',
+    data: createBlendedTestData('Maverick', 45, 'Entertainer', 35),
+  },
+  {
+    name: 'Tech + Dreamer',
+    data: createBlendedTestData('Tech', 40, 'Dreamer', 40),
+  },
+  {
+    name: 'Consummate + Feeler',
+    data: createBlendedTestData('Consummate', 50, 'Feeler', 25),
+  },
+  {
+    name: 'Tortured + Solo',
+    data: createBlendedTestData('Tortured', 35, 'Solo', 35),
+  },
 
   // Balanced blends
-  { name: "Balanced Creative", data: createBlendedTestData("Visionary", 25, "Dreamer", 25) },
-  { name: "Balanced Technical", data: createBlendedTestData("Analyzer", 25, "Tech", 25) },
-  { name: "Balanced Social", data: createBlendedTestData("Entertainer", 25, "Feeler", 25) },
+  {
+    name: 'Balanced Creative',
+    data: createBlendedTestData('Visionary', 25, 'Dreamer', 25),
+  },
+  {
+    name: 'Balanced Technical',
+    data: createBlendedTestData('Analyzer', 25, 'Tech', 25),
+  },
+  {
+    name: 'Balanced Social',
+    data: createBlendedTestData('Entertainer', 25, 'Feeler', 25),
+  },
 
   // Three-way blends
-  { name: "Triple Blend 1", data: createBlendedTestData("Visionary", 30, "Maverick", 25) },
-  { name: "Triple Blend 2", data: createBlendedTestData("Analyzer", 30, "Tech", 25) },
-  { name: "Triple Blend 3", data: createBlendedTestData("Dreamer", 30, "Feeler", 25) },
+  {
+    name: 'Triple Blend 1',
+    data: createBlendedTestData('Visionary', 30, 'Maverick', 25),
+  },
+  {
+    name: 'Triple Blend 2',
+    data: createBlendedTestData('Analyzer', 30, 'Tech', 25),
+  },
+  {
+    name: 'Triple Blend 3',
+    data: createBlendedTestData('Dreamer', 30, 'Feeler', 25),
+  },
 ];
 
 export const RadarTestPage: React.FC = () => {

@@ -1,6 +1,6 @@
-import { Button, Card, cn } from "@shadcn";
-import React from "react";
-import { getColorByEndingName } from "./artist-type/artist-data-utils.js";
+import { Button, Card, cn } from '@shadcn';
+import React from 'react';
+import { getColorByEndingName } from '@/features/active-quiz/components/artist-type/artist-data-utils.js';
 
 // 1) QuestionCard Component - Displays a single question with rating input and navigation
 //    Receives all data and callbacks as props to remain dumb and testable
@@ -52,9 +52,9 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
   idealAnswers,
   isLastQuestion = false,
   max = 10,
-  maxLabel = "Max",
+  maxLabel = 'Max',
   min = 0,
-  minLabel = "Min",
+  minLabel = 'Min',
   onBack,
   onNext,
   onRatingSelect,
@@ -119,7 +119,9 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
                     <div
                       key={`${answer.endingId}-${idealValue}-${index}`}
                       className="w-1.5 h-1.5 rounded-full border border-white/30 shadow-sm"
-                      style={{ backgroundColor: getColorByEndingName(answer.endingName) }}
+                      style={{
+                        backgroundColor: getColorByEndingName(answer.endingName),
+                      }}
                       title={`${answer.endingName}: ${idealValue}`}
                     />
                   );
@@ -166,7 +168,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
           // Get the first answer to get the ending name and color
           const [firstAnswer] = answers;
           const endingName = firstAnswer?.endingName;
-          const barColor = getColorByEndingName(endingName ?? "");
+          const barColor = getColorByEndingName(endingName ?? '');
 
           // Collect all ideal values for this ending
           const allValues = new Set<number>();
@@ -225,7 +227,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
                   backgroundColor: barColor,
                   opacity: 0.8,
                 }}
-                title={`${endingName} primary ideal answers: ${range.join(", ")}`}
+                title={`${endingName} primary ideal answers: ${range.join(', ')}`}
               />
             );
           });
@@ -263,10 +265,10 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
                     handleRatingClick(n);
                   }}
                   className={cn(
-                    "rounded-md border p-3 text-center text-sm transition-all",
+                    'rounded-md border p-3 text-center text-sm transition-all',
                     isSelected
-                      ? "bg-primary text-primary-foreground shadow-md scale-[1.02]"
-                      : "hover:bg-accent hover:scale-[1.01]",
+                      ? 'bg-primary text-primary-foreground shadow-md scale-[1.02]'
+                      : 'hover:bg-accent hover:scale-[1.01]',
                   )}
                 >
                   {n}

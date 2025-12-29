@@ -1,8 +1,9 @@
-import { NodeContext, NodeRuntime } from "@effect/platform-node";
-import { QuizzesRepo, ResponsesRepo } from "@features/quiz/server";
-import { PgLive } from "@core/database";
-import { Effect } from "effect";
-import { getTypeformResponseSeedData } from "./seed-typeform-responses.js";
+import { NodeContext, NodeRuntime } from '@effect/platform-node';
+import { QuizzesRepo } from '../../../quiz/database/index.js';
+import { ResponsesRepo } from '../../database/index.js';
+import { PgLive } from '@core/database';
+import * as Effect from 'effect/Effect';
+import { getTypeformResponseSeedData } from './seed-typeform-responses.js';
 
 /**
  * Seeds Typeform responses into the database
@@ -20,7 +21,7 @@ const seedTypeformResponses = Effect.gen(function* () {
 
   // Find the quiz by slug (assuming it's "my-artist-type-quiz")
   const quizzes = yield* quizzesRepo.findAll();
-  const quiz = quizzes.find((q) => q.title.toLowerCase().includes("artist type"));
+  const quiz = quizzes.find((q) => q.title.toLowerCase().includes('artist type'));
 
   if (quiz === undefined) {
     yield* Effect.fail(

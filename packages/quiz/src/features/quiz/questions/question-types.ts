@@ -1,5 +1,5 @@
 import { faker } from "@faker-js/faker";
-import { Schema as S } from "effect";
+import * as S from 'effect/Schema';
 
 const RatingQuestionData = S.Struct({
   type: S.Literal("rating"),

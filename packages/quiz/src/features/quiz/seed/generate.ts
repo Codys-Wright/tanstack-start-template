@@ -1,5 +1,6 @@
-import { Arbitrary, FastCheck } from "effect";
-import { UpsertQuizPayload } from "../quiz-rpc.js";
+import * as Arbitrary from 'effect/Arbitrary';
+import * as FastCheck from 'effect/FastCheck';
+import { UpsertQuizPayload } from '../domain/index.js';
 
 /**
  * Generate fake quiz data using Arbitrary.make()
@@ -14,7 +15,7 @@ export function generate(count?: number): UpsertQuizPayload | Array<UpsertQuizPa
   if (actualCount === 1) {
     const firstQuiz = quizzes[0];
     if (firstQuiz === undefined) {
-      throw new Error("Failed to generate quiz");
+      throw new Error('Failed to generate quiz');
     }
     return firstQuiz;
   }

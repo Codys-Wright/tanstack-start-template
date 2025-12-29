@@ -1,7 +1,7 @@
-import { useAtomRefresh, useAtomValue } from "@effect-atom/atom-react";
-import { Badge, Button, Card } from "@shadcn";
-import React from "react";
-import { responsesAtom } from "./responses-atoms.js";
+import { useAtomRefresh, useAtomValue } from '@effect-atom/atom-react';
+import { Badge, Button, Card } from '@shadcn';
+import React from 'react';
+import { responsesAtom } from '../client/atoms.js';
 
 // PageContainer component with padding and layout
 type PageContainerProps = {
@@ -35,7 +35,7 @@ export const ResponsesPage: React.FC = () => {
 
         {/* Responses List */}
         <div className="space-y-4">
-          {responsesResult._tag === "Success" ? (
+          {responsesResult._tag === 'Success' ? (
             responsesResult.value.length > 0 ? (
               responsesResult.value.map((response) => (
                 <Card key={response.id} className="w-full">
@@ -60,14 +60,14 @@ export const ResponsesPage: React.FC = () => {
                       {/* Session Info */}
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                         <div>
-                          <span className="font-medium">Started:</span>{" "}
+                          <span className="font-medium">Started:</span>{' '}
                           {new Date(
                             response.sessionMetadata.startedAt.epochMillis,
                           ).toLocaleString()}
                         </div>
                         {response.sessionMetadata.completedAt !== undefined && (
                           <div>
-                            <span className="font-medium">Completed:</span>{" "}
+                            <span className="font-medium">Completed:</span>{' '}
                             {new Date(
                               response.sessionMetadata.completedAt.epochMillis,
                             ).toLocaleString()}
@@ -76,16 +76,17 @@ export const ResponsesPage: React.FC = () => {
                         {response.sessionMetadata.totalDurationMs !== undefined &&
                           response.sessionMetadata.totalDurationMs > 0 && (
                             <div>
-                              <span className="font-medium">Duration:</span>{" "}
+                              <span className="font-medium">Duration:</span>{' '}
                               {Math.round(response.sessionMetadata.totalDurationMs / 1000)}s
                             </div>
                           )}
                         {response.sessionMetadata.userAgent !== undefined &&
                           response.sessionMetadata.userAgent.length > 0 && (
                             <div>
-                              <span className="font-medium">User Agent:</span>{" "}
+                              <span className="font-medium">User Agent:</span>{' '}
                               <span className="text-xs text-muted-foreground">
-                                {response.sessionMetadata.userAgent.slice(0, 50)}...
+                                {response.sessionMetadata.userAgent.slice(0, 50)}
+                                ...
                               </span>
                             </div>
                           )}

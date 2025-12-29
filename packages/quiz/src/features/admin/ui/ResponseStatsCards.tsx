@@ -1,5 +1,5 @@
 import type { Result } from '@effect-atom/atom-react';
-import type { QuizResponse } from '../../responses/domain/schema.js';
+import type { QuizResponse } from '../../responses/domain/schema.ts';
 import { Card } from '@shadcn';
 import { BarChart3Icon, CheckCircleIcon, ClockIcon, UsersIcon } from 'lucide-react';
 import React from 'react';

@@ -1,5 +1,6 @@
 import * as Effect from 'effect/Effect';
 import { AuthService } from '../../_core/service.js';
+import { OrganizationNotFoundError, OrganizationValidationError } from '../domain/schema.js';
 
 /**
  * Organization Service - Wraps organization operations in Effect
@@ -27,7 +28,10 @@ export class OrganizationService extends Effect.Service<OrganizationService>()(
         listOrganizations: () =>
           Effect.tryPromise({
             try: () => organizationClient.listOrganizations(),
-            catch: (error) => new Error(`Failed to list organizations: ${error}`),
+            catch: (error): OrganizationValidationError =>
+              new OrganizationValidationError({
+                message: `Failed to list organizations: ${String(error)}`,
+              }),
           }),
 
         /**
@@ -39,7 +43,10 @@ export class OrganizationService extends Effect.Service<OrganizationService>()(
               organizationClient.getFullOrganization({
                 query: { organizationId },
               }),
-            catch: (error) => new Error(`Failed to get organization: ${error}`),
+            catch: (error) =>
+              new OrganizationNotFoundError({
+                id: organizationId,
+              }),
           }),
 
         /**
@@ -55,7 +62,10 @@ export class OrganizationService extends Effect.Service<OrganizationService>()(
         }) =>
           Effect.tryPromise({
             try: () => organizationClient.create({ body: input }),
-            catch: (error) => new Error(`Failed to create organization: ${error}`),
+            catch: (error) =>
+              new OrganizationValidationError({
+                message: `Failed to create organization: ${String(error)}`,
+              }),
           }),
 
         /**
@@ -79,7 +89,10 @@ export class OrganizationService extends Effect.Service<OrganizationService>()(
                   metadata: input.metadata as string | null | undefined,
                 },
               }),
-            catch: (error) => new Error(`Failed to update organization: ${error}`),
+            catch: (error) =>
+              new OrganizationNotFoundError({
+                id: input.organizationId,
+              }),
           }),
 
         /**
@@ -91,7 +104,10 @@ export class OrganizationService extends Effect.Service<OrganizationService>()(
               organizationClient.delete({
                 body: { organizationId },
               }),
-            catch: (error) => new Error(`Failed to delete organization: ${error}`),
+            catch: (error) =>
+              new OrganizationNotFoundError({
+                id: organizationId,
+              }),
           }),
 
         /**
@@ -103,7 +119,10 @@ export class OrganizationService extends Effect.Service<OrganizationService>()(
               organizationClient.setActiveOrganization({
                 query: input,
               }),
-            catch: (error) => new Error(`Failed to set active organization: ${error}`),
+            catch: (error) =>
+              new OrganizationNotFoundError({
+                id: input.organizationId ?? 'unknown',
+              }),
           }),
       };
     }),

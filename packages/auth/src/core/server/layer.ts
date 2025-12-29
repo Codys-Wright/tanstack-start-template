@@ -20,6 +20,7 @@ import {
  * Includes handlers for:
  * - session: Sign in, sign up, sign out, get session
  * - account: Profile management, change email/password, delete account
+ * - organizations: Organization management
  *
  * @example
  * ```ts
@@ -32,7 +33,7 @@ import {
  * );
  * ```
  */
-export const AuthApiLive = Layer.mergeAll(SessionApiLive, AccountApiLive);
+export const AuthApiLive = Layer.mergeAll(SessionApiLive, AccountApiLive, OrganizationApiLive);
 
 /**
  * AuthApiRoutes - Pre-configured HTTP routes layer for the Auth API.

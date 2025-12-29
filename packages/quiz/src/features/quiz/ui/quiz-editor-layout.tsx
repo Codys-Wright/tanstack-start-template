@@ -2,26 +2,24 @@
 
 import { Version } from '@core/domain';
 import { Atom, Result, useAtomSet, useAtomValue } from '@effect-atom/atom-react';
-import { BrowserKeyValueStore } from '@effect/platform-browser';
-import type { AnalysisEngine } from '../analysis/analysis-engine/schema.js';
-import type { Question } from './questions/schema.js';
-import type { Quiz } from '../domain/schema.js';
-import { Config, Effect, Schema } from 'effect';
+import * as BrowserKeyValueStore from '@effect/platform-browser/BrowserKeyValueStore';
+import type { AnalysisEngine } from '@/features/analysis-engine/domain/schema.js';
+import type { Question } from '@/features/quiz/questions/schema.js';
+import type { Quiz } from '@/features/quiz/domain/schema.js';
+import * as Config from 'effect/Config';
+import * as Effect from 'effect/Effect';
+import * as Schema from 'effect/Schema';
 // Use the actual Result types from the atoms instead of importing platform types
 import {
   Badge,
   Button,
   Card,
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
+  Chart,
   cn,
   DropdownMenu,
   Input,
   Label,
-  ResizableHandle,
-  ResizablePanel,
-  ResizablePanelGroup,
+  Resizable,
   ScrollArea,
   Select,
   Sidebar,
@@ -44,7 +42,7 @@ import {
 } from 'lucide-react';
 import React from 'react';
 import { LabelList, Pie, PieChart } from 'recharts';
-import { AnalysisService } from '../../domain/analysis/analysis.service.js';
+import { AnalysisService } from '../../analysis/domain/service.js';
 import {
   artistColors,
   endingNameToArtistType,
@@ -53,14 +51,9 @@ import {
 import { QuestionCard } from './question-card.js';
 import { QuizProgressBar } from './quiz-progress-bar.js';
 import { VersionIncrementDialog } from './version-increment-dialog.js';
-import {
-  autoSaveTempEngineAtom,
-  clearTempEnginesAtom,
-  EngineAction,
-  enginesAtom,
-} from '../../engines/atoms.js';
-import { allAnalysisAtom } from '../../analysis/client/atoms.js';
-import { responsesAtom } from '../../responses/atoms.js';
+import { enginesAtom } from '../../analysis-engine/client/atoms.js';
+import { analysesAtom } from '../../analysis/client/atoms.js';
+import { responsesAtom } from '../../responses/client/atoms.js';
 import {
   clearTempQuizzesAtom,
   createNewQuizVersionAtom,

@@ -8,144 +8,145 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { Route as rootRouteImport } from './routes/__root';
-import { Route as TestRouteImport } from './routes/test';
-import { Route as SettingsRouteImport } from './routes/settings';
-import { Route as LoginRouteImport } from './routes/login';
-import { Route as AdminRouteImport } from './routes/admin';
-import { Route as AboutRouteImport } from './routes/about';
-import { Route as SplatRouteImport } from './routes/$';
-import { Route as IndexRouteImport } from './routes/index';
-import { Route as ExampleIndexRouteImport } from './routes/example/index';
-import { Route as OrganizationOrganizationViewRouteImport } from './routes/organization/$organizationView';
-import { Route as ExampleFeatureIdRouteImport } from './routes/example/$featureId';
-import { Route as AuthCallbackRouteImport } from './routes/auth/callback';
-import { Route as AuthAuthViewRouteImport } from './routes/auth/$authView';
-import { Route as ApiSplatRouteImport } from './routes/api/$';
-import { Route as AccountAccountViewRouteImport } from './routes/account/$accountView';
+import { Route as rootRouteImport } from './routes/__root'
+import { Route as TestRouteImport } from './routes/test'
+import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as AdminRouteImport } from './routes/admin'
+import { Route as AboutRouteImport } from './routes/about'
+import { Route as SplatRouteImport } from './routes/$'
+import { Route as IndexRouteImport } from './routes/index'
+import { Route as ExampleIndexRouteImport } from './routes/example/index'
+import { Route as OrganizationOrganizationViewRouteImport } from './routes/organization/$organizationView'
+import { Route as ExampleFeatureIdRouteImport } from './routes/example/$featureId'
+import { Route as AuthCallbackRouteImport } from './routes/auth/callback'
+import { Route as AuthAuthViewRouteImport } from './routes/auth/$authView'
+import { Route as ApiSplatRouteImport } from './routes/api/$'
+import { Route as AccountAccountViewRouteImport } from './routes/account/$accountView'
 
 const TestRoute = TestRouteImport.update({
   id: '/test',
   path: '/test',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const SettingsRoute = SettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const AdminRoute = AdminRouteImport.update({
   id: '/admin',
   path: '/admin',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const AboutRoute = AboutRouteImport.update({
   id: '/about',
   path: '/about',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const SplatRoute = SplatRouteImport.update({
   id: '/$',
   path: '/$',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const ExampleIndexRoute = ExampleIndexRouteImport.update({
   id: '/example/',
   path: '/example/',
   getParentRoute: () => rootRouteImport,
-} as any);
-const OrganizationOrganizationViewRoute = OrganizationOrganizationViewRouteImport.update({
-  id: '/organization/$organizationView',
-  path: '/organization/$organizationView',
-  getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
+const OrganizationOrganizationViewRoute =
+  OrganizationOrganizationViewRouteImport.update({
+    id: '/organization/$organizationView',
+    path: '/organization/$organizationView',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ExampleFeatureIdRoute = ExampleFeatureIdRouteImport.update({
   id: '/example/$featureId',
   path: '/example/$featureId',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const AuthCallbackRoute = AuthCallbackRouteImport.update({
   id: '/auth/callback',
   path: '/auth/callback',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const AuthAuthViewRoute = AuthAuthViewRouteImport.update({
   id: '/auth/$authView',
   path: '/auth/$authView',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const ApiSplatRoute = ApiSplatRouteImport.update({
   id: '/api/$',
   path: '/api/$',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const AccountAccountViewRoute = AccountAccountViewRouteImport.update({
   id: '/account/$accountView',
   path: '/account/$accountView',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute;
-  '/$': typeof SplatRoute;
-  '/about': typeof AboutRoute;
-  '/admin': typeof AdminRoute;
-  '/login': typeof LoginRoute;
-  '/settings': typeof SettingsRoute;
-  '/test': typeof TestRoute;
-  '/account/$accountView': typeof AccountAccountViewRoute;
-  '/api/$': typeof ApiSplatRoute;
-  '/auth/$authView': typeof AuthAuthViewRoute;
-  '/auth/callback': typeof AuthCallbackRoute;
-  '/example/$featureId': typeof ExampleFeatureIdRoute;
-  '/organization/$organizationView': typeof OrganizationOrganizationViewRoute;
-  '/example': typeof ExampleIndexRoute;
+  '/': typeof IndexRoute
+  '/$': typeof SplatRoute
+  '/about': typeof AboutRoute
+  '/admin': typeof AdminRoute
+  '/login': typeof LoginRoute
+  '/settings': typeof SettingsRoute
+  '/test': typeof TestRoute
+  '/account/$accountView': typeof AccountAccountViewRoute
+  '/api/$': typeof ApiSplatRoute
+  '/auth/$authView': typeof AuthAuthViewRoute
+  '/auth/callback': typeof AuthCallbackRoute
+  '/example/$featureId': typeof ExampleFeatureIdRoute
+  '/organization/$organizationView': typeof OrganizationOrganizationViewRoute
+  '/example': typeof ExampleIndexRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute;
-  '/$': typeof SplatRoute;
-  '/about': typeof AboutRoute;
-  '/admin': typeof AdminRoute;
-  '/login': typeof LoginRoute;
-  '/settings': typeof SettingsRoute;
-  '/test': typeof TestRoute;
-  '/account/$accountView': typeof AccountAccountViewRoute;
-  '/api/$': typeof ApiSplatRoute;
-  '/auth/$authView': typeof AuthAuthViewRoute;
-  '/auth/callback': typeof AuthCallbackRoute;
-  '/example/$featureId': typeof ExampleFeatureIdRoute;
-  '/organization/$organizationView': typeof OrganizationOrganizationViewRoute;
-  '/example': typeof ExampleIndexRoute;
+  '/': typeof IndexRoute
+  '/$': typeof SplatRoute
+  '/about': typeof AboutRoute
+  '/admin': typeof AdminRoute
+  '/login': typeof LoginRoute
+  '/settings': typeof SettingsRoute
+  '/test': typeof TestRoute
+  '/account/$accountView': typeof AccountAccountViewRoute
+  '/api/$': typeof ApiSplatRoute
+  '/auth/$authView': typeof AuthAuthViewRoute
+  '/auth/callback': typeof AuthCallbackRoute
+  '/example/$featureId': typeof ExampleFeatureIdRoute
+  '/organization/$organizationView': typeof OrganizationOrganizationViewRoute
+  '/example': typeof ExampleIndexRoute
 }
 export interface FileRoutesById {
-  __root__: typeof rootRouteImport;
-  '/': typeof IndexRoute;
-  '/$': typeof SplatRoute;
-  '/about': typeof AboutRoute;
-  '/admin': typeof AdminRoute;
-  '/login': typeof LoginRoute;
-  '/settings': typeof SettingsRoute;
-  '/test': typeof TestRoute;
-  '/account/$accountView': typeof AccountAccountViewRoute;
-  '/api/$': typeof ApiSplatRoute;
-  '/auth/$authView': typeof AuthAuthViewRoute;
-  '/auth/callback': typeof AuthCallbackRoute;
-  '/example/$featureId': typeof ExampleFeatureIdRoute;
-  '/organization/$organizationView': typeof OrganizationOrganizationViewRoute;
-  '/example/': typeof ExampleIndexRoute;
+  __root__: typeof rootRouteImport
+  '/': typeof IndexRoute
+  '/$': typeof SplatRoute
+  '/about': typeof AboutRoute
+  '/admin': typeof AdminRoute
+  '/login': typeof LoginRoute
+  '/settings': typeof SettingsRoute
+  '/test': typeof TestRoute
+  '/account/$accountView': typeof AccountAccountViewRoute
+  '/api/$': typeof ApiSplatRoute
+  '/auth/$authView': typeof AuthAuthViewRoute
+  '/auth/callback': typeof AuthCallbackRoute
+  '/example/$featureId': typeof ExampleFeatureIdRoute
+  '/organization/$organizationView': typeof OrganizationOrganizationViewRoute
+  '/example/': typeof ExampleIndexRoute
 }
 export interface FileRouteTypes {
-  fileRoutesByFullPath: FileRoutesByFullPath;
+  fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/$'
@@ -160,8 +161,8 @@ export interface FileRouteTypes {
     | '/auth/callback'
     | '/example/$featureId'
     | '/organization/$organizationView'
-    | '/example';
-  fileRoutesByTo: FileRoutesByTo;
+    | '/example'
+  fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/$'
@@ -176,7 +177,7 @@ export interface FileRouteTypes {
     | '/auth/callback'
     | '/example/$featureId'
     | '/organization/$organizationView'
-    | '/example';
+    | '/example'
   id:
     | '__root__'
     | '/'
@@ -192,126 +193,126 @@ export interface FileRouteTypes {
     | '/auth/callback'
     | '/example/$featureId'
     | '/organization/$organizationView'
-    | '/example/';
-  fileRoutesById: FileRoutesById;
+    | '/example/'
+  fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute;
-  SplatRoute: typeof SplatRoute;
-  AboutRoute: typeof AboutRoute;
-  AdminRoute: typeof AdminRoute;
-  LoginRoute: typeof LoginRoute;
-  SettingsRoute: typeof SettingsRoute;
-  TestRoute: typeof TestRoute;
-  AccountAccountViewRoute: typeof AccountAccountViewRoute;
-  ApiSplatRoute: typeof ApiSplatRoute;
-  AuthAuthViewRoute: typeof AuthAuthViewRoute;
-  AuthCallbackRoute: typeof AuthCallbackRoute;
-  ExampleFeatureIdRoute: typeof ExampleFeatureIdRoute;
-  OrganizationOrganizationViewRoute: typeof OrganizationOrganizationViewRoute;
-  ExampleIndexRoute: typeof ExampleIndexRoute;
+  IndexRoute: typeof IndexRoute
+  SplatRoute: typeof SplatRoute
+  AboutRoute: typeof AboutRoute
+  AdminRoute: typeof AdminRoute
+  LoginRoute: typeof LoginRoute
+  SettingsRoute: typeof SettingsRoute
+  TestRoute: typeof TestRoute
+  AccountAccountViewRoute: typeof AccountAccountViewRoute
+  ApiSplatRoute: typeof ApiSplatRoute
+  AuthAuthViewRoute: typeof AuthAuthViewRoute
+  AuthCallbackRoute: typeof AuthCallbackRoute
+  ExampleFeatureIdRoute: typeof ExampleFeatureIdRoute
+  OrganizationOrganizationViewRoute: typeof OrganizationOrganizationViewRoute
+  ExampleIndexRoute: typeof ExampleIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
     '/test': {
-      id: '/test';
-      path: '/test';
-      fullPath: '/test';
-      preLoaderRoute: typeof TestRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
+      id: '/test'
+      path: '/test'
+      fullPath: '/test'
+      preLoaderRoute: typeof TestRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/settings': {
-      id: '/settings';
-      path: '/settings';
-      fullPath: '/settings';
-      preLoaderRoute: typeof SettingsRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/login': {
-      id: '/login';
-      path: '/login';
-      fullPath: '/login';
-      preLoaderRoute: typeof LoginRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin': {
-      id: '/admin';
-      path: '/admin';
-      fullPath: '/admin';
-      preLoaderRoute: typeof AdminRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/about': {
-      id: '/about';
-      path: '/about';
-      fullPath: '/about';
-      preLoaderRoute: typeof AboutRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
+      id: '/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof AboutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/$': {
-      id: '/$';
-      path: '/$';
-      fullPath: '/$';
-      preLoaderRoute: typeof SplatRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
+      id: '/$'
+      path: '/$'
+      fullPath: '/$'
+      preLoaderRoute: typeof SplatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
-      id: '/';
-      path: '/';
-      fullPath: '/';
-      preLoaderRoute: typeof IndexRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/example/': {
-      id: '/example/';
-      path: '/example';
-      fullPath: '/example';
-      preLoaderRoute: typeof ExampleIndexRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
+      id: '/example/'
+      path: '/example'
+      fullPath: '/example'
+      preLoaderRoute: typeof ExampleIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/organization/$organizationView': {
-      id: '/organization/$organizationView';
-      path: '/organization/$organizationView';
-      fullPath: '/organization/$organizationView';
-      preLoaderRoute: typeof OrganizationOrganizationViewRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
+      id: '/organization/$organizationView'
+      path: '/organization/$organizationView'
+      fullPath: '/organization/$organizationView'
+      preLoaderRoute: typeof OrganizationOrganizationViewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/example/$featureId': {
-      id: '/example/$featureId';
-      path: '/example/$featureId';
-      fullPath: '/example/$featureId';
-      preLoaderRoute: typeof ExampleFeatureIdRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
+      id: '/example/$featureId'
+      path: '/example/$featureId'
+      fullPath: '/example/$featureId'
+      preLoaderRoute: typeof ExampleFeatureIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/auth/callback': {
-      id: '/auth/callback';
-      path: '/auth/callback';
-      fullPath: '/auth/callback';
-      preLoaderRoute: typeof AuthCallbackRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
+      id: '/auth/callback'
+      path: '/auth/callback'
+      fullPath: '/auth/callback'
+      preLoaderRoute: typeof AuthCallbackRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/auth/$authView': {
-      id: '/auth/$authView';
-      path: '/auth/$authView';
-      fullPath: '/auth/$authView';
-      preLoaderRoute: typeof AuthAuthViewRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
+      id: '/auth/$authView'
+      path: '/auth/$authView'
+      fullPath: '/auth/$authView'
+      preLoaderRoute: typeof AuthAuthViewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/$': {
-      id: '/api/$';
-      path: '/api/$';
-      fullPath: '/api/$';
-      preLoaderRoute: typeof ApiSplatRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
+      id: '/api/$'
+      path: '/api/$'
+      fullPath: '/api/$'
+      preLoaderRoute: typeof ApiSplatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/account/$accountView': {
-      id: '/account/$accountView';
-      path: '/account/$accountView';
-      fullPath: '/account/$accountView';
-      preLoaderRoute: typeof AccountAccountViewRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
+      id: '/account/$accountView'
+      path: '/account/$accountView'
+      fullPath: '/account/$accountView'
+      preLoaderRoute: typeof AccountAccountViewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -330,16 +331,16 @@ const rootRouteChildren: RootRouteChildren = {
   ExampleFeatureIdRoute: ExampleFeatureIdRoute,
   OrganizationOrganizationViewRoute: OrganizationOrganizationViewRoute,
   ExampleIndexRoute: ExampleIndexRoute,
-};
+}
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
-  ._addFileTypes<FileRouteTypes>();
+  ._addFileTypes<FileRouteTypes>()
 
-import type { getRouter } from './router.tsx';
-import type { createStart } from '@tanstack/react-start';
+import type { getRouter } from './router.tsx'
+import type { createStart } from '@tanstack/react-start'
 declare module '@tanstack/react-start' {
   interface Register {
-    ssr: true;
-    router: Awaited<ReturnType<typeof getRouter>>;
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
   }
 }

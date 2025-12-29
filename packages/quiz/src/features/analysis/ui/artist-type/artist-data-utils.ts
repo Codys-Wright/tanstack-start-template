@@ -1,5 +1,5 @@
 import { formatHex, parse } from "culori";
-import { Schema as S } from "effect";
+import * as S from 'effect/Schema';
 import React from "react";
 
 // =============================================================================

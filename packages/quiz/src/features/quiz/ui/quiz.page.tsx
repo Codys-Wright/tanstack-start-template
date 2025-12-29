@@ -4,7 +4,7 @@ import { Button, Separator } from '@shadcn';
 import React from 'react';
 import { QuizItem } from './quiz-item.js';
 import { UpsertQuizForm } from './upsert-quiz-form.js';
-import { quizzesAtom } from '../atoms.js';
+import { quizzesAtom } from '../client/atoms.js';
 
 const SuccessView: React.FC<{ quizzes: ReadonlyArray<Quiz> }> = ({ quizzes }) => {
   return (

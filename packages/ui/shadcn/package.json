@@ -83,6 +83,7 @@
     "react-day-picker": "*",
     "react-dom": "*",
     "react-hook-form": "*",
+    "@tabler/icons-react": "*",
     "react-resizable-panels": "*",
     "recharts": "*",
     "resend": "*",
