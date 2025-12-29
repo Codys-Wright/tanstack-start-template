@@ -2,8 +2,8 @@
 
 import { IconCirclePlusFilled, type Icon } from '@tabler/icons-react';
 
-import { Badge } from '../badge';
-import { Sidebar } from './sidebar';
+import { Badge } from '../badge.js';
+import { Sidebar } from './sidebar.js';
 
 export function NavMain({
   items,

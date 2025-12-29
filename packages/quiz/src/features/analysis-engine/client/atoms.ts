@@ -20,6 +20,9 @@ type EnginesCacheUpdate = Data.TaggedEnum<{
   Delete: { readonly id: AnalysisEngineId };
 }>;
 
+// Export EngineAction for optimistic updates
+export const EngineAction = Data.taggedEnum<EnginesCacheUpdate>();
+
 /**
  * Main engines atom with SSR support and optimistic updates.
  */
@@ -152,3 +155,58 @@ export const activeEngineAtom = Atom.make((get) => {
   if (!Result.isSuccess(enginesResult)) return undefined;
   return enginesResult.value.find((engine) => engine.isActive);
 });
+
+/**
+ * Auto-save temporary engine changes (silent, no toast).
+ */
+export const autoSaveTempEngineAtom = AnalysisEngineClient.runtime.fn<{
+  engine: AnalysisEngine;
+}>()(
+  Effect.fnUntraced(function* (args, get) {
+    const { engine } = args;
+    const client = yield* AnalysisEngineClient;
+
+    if (!engine.isTemp) return engine;
+
+    const updatedEngine = yield* client('engine_upsert', {
+      input: {
+        id: engine.id,
+        name: engine.name,
+        quizId: engine.quizId,
+        version: engine.version,
+        description: engine.description ?? undefined,
+        scoringConfig: engine.scoringConfig,
+        endings: engine.endings,
+        metadata: engine.metadata ?? undefined,
+        isActive: engine.isActive,
+        isPublished: false,
+        isTemp: true,
+      },
+    });
+
+    get.set(enginesAtom, { _tag: 'Upsert', engine: updatedEngine });
+    return updatedEngine;
+  }),
+);
+
+/**
+ * Clear all temporary engines.
+ */
+export const clearTempEnginesAtom = AnalysisEngineClient.runtime.fn<void>()(
+  Effect.fnUntraced(function* (_, get) {
+    const client = yield* AnalysisEngineClient;
+
+    const enginesResult = get(enginesAtom);
+    if (!Result.isSuccess(enginesResult)) return 0;
+
+    const tempEngines = enginesResult.value.filter((e) => e.isTemp === true);
+
+    yield* Effect.forEach(tempEngines, (engine) => client('engine_delete', { id: engine.id }));
+
+    for (const engine of tempEngines) {
+      get.set(enginesAtom, { _tag: 'Delete', id: engine.id });
+    }
+
+    return tempEngines.length;
+  }),
+);

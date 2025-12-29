@@ -133,7 +133,6 @@ export const activeQuizAtom = Atom.make((get) => {
   if (!Result.isSuccess(result)) {
     return result as any;
   }
-  // Return the first active quiz or undefined
   return Result.success(result.value[0] as ActiveQuiz | undefined);
 });
 
@@ -168,7 +167,7 @@ const createInitialSession = (): QuizSessionState => ({
 
 /**
  * Main quiz session atom - local state for quiz-taking.
- * This is a simple writable atom that stores the current session state.
+ * This is a simple writable atom that stores current session state.
  */
 export const quizSessionAtom = Atom.writable(
   () => Result.success(createInitialSession()),
@@ -304,7 +303,6 @@ export const navigateToQuestionAtom = Atom.writable(
     const questions = quiz.questions as Array<Question> | undefined;
     const totalQuestions = questions?.length ?? 0;
 
-    // Clamp to valid range
     const newIndex = Math.max(0, Math.min(targetIndex, totalQuestions - 1));
 
     const now = new Date() as unknown as InteractionLog['timestamp'];
@@ -325,7 +323,7 @@ export const navigateToQuestionAtom = Atom.writable(
 );
 
 /**
- * Submit the quiz (marks session as completed).
+ * Submit quiz (marks session as completed).
  */
 export const submitQuizAtom = Atom.writable(
   () => false,

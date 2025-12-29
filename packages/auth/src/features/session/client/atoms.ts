@@ -225,6 +225,42 @@ class AuthApi extends Effect.Service<AuthApi>()('@features/auth/AuthApi', {
             `Failed to change email: ${error instanceof Error ? error.message : String(error)}`,
           ),
       }),
+
+    changePassword: (currentPassword: string, newPassword: string, revokeOtherSessions?: boolean) =>
+      Effect.tryPromise({
+        try: async () => {
+          const result = await authClient.changePassword({
+            currentPassword,
+            newPassword,
+            revokeOtherSessions,
+          });
+          if (result.error) {
+            throw new Error(result.error.message || 'Failed to change password');
+          }
+          return result.data;
+        },
+        catch: (error) =>
+          new Error(
+            `Failed to change password: ${error instanceof Error ? error.message : String(error)}`,
+          ),
+      }),
+
+    deleteAccount: (password: string) =>
+      Effect.tryPromise({
+        try: async () => {
+          const result = await authClient.deleteUser({
+            password,
+          });
+          if (result.error) {
+            throw new Error(result.error.message || 'Failed to delete account');
+          }
+          return result.data;
+        },
+        catch: (error) =>
+          new Error(
+            `Failed to delete account: ${error instanceof Error ? error.message : String(error)}`,
+          ),
+      }),
   })),
 }) {}
 
@@ -481,5 +517,39 @@ export const changeEmailAtom = authRuntime.fn<{ newEmail: string }>()(
   Effect.fnUntraced(function* (input) {
     const api = yield* AuthApi;
     return yield* api.changeEmail(input.newEmail);
+  }),
+);
+
+/**
+ * changePasswordAtom - Atom effect for changing user password
+ *
+ * On success:
+ * 1. Changes user password
+ * 2. Optionally revokes other sessions
+ */
+export const changePasswordAtom = authRuntime.fn<{
+  currentPassword: string;
+  newPassword: string;
+  revokeOtherSessions?: boolean;
+}>()(
+  Effect.fnUntraced(function* (input) {
+    const api = yield* AuthApi;
+    return yield* api.changePassword(
+      input.currentPassword,
+      input.newPassword,
+      input.revokeOtherSessions,
+    );
+  }),
+);
+
+/**
+ * deleteAccountAtom - Atom effect for deleting user account
+ *
+ * Requires password confirmation
+ */
+export const deleteAccountAtom = authRuntime.fn<{ password: string }>()(
+  Effect.fnUntraced(function* (input) {
+    const api = yield* AuthApi;
+    return yield* api.deleteAccount(input.password);
   }),
 );

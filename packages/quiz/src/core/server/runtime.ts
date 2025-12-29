@@ -20,7 +20,7 @@ import * as ManagedRuntime from 'effect/ManagedRuntime';
 import { QuestionService } from '../../features/quiz/server/index.js';
 import { AnalysisService } from '../../features/analysis/server/index.js';
 import { AnalysisEngineService } from '../../features/analysis-engine/server/index.js';
-import { QuizTakerService } from '../../features/active-quiz/server/index.js';
+import { QuizTakerService } from '../../features/active-quiz/domain/index.js';
 
 // Use globalValue to persist the memoMap across hot reloads
 const memoMap = GlobalValue.globalValue(Symbol.for('@quiz/server-memoMap'), () =>

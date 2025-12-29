@@ -5,14 +5,14 @@ import { Slot } from '@radix-ui/react-slot';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { PanelLeftIcon } from 'lucide-react';
 
-import { useIsMobile } from '../../hooks/use-mobile.js';
-import { cn } from '../../lib/utils.js';
-import { Button } from './button.js';
-import { Input } from './input.js';
-import { Separator } from './separator.js';
-import { Sheet } from './sheet.js';
-import { Skeleton } from './skeleton.js';
-import { Tooltip } from './tooltip.js';
+import { useIsMobile } from '../../../hooks/use-mobile.js';
+import { cn } from '../../../lib/utils.js';
+import { Button } from '../button.js';
+import { Input } from '../input.js';
+import { Separator } from '../separator.js';
+import { Sheet } from '../sheet.js';
+import { Skeleton } from '../skeleton.js';
+import { Tooltip } from '../tooltip.js';
 
 const SIDEBAR_COOKIE_NAME = 'sidebar_state';
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7;
@@ -35,7 +35,7 @@ const SidebarContext = React.createContext<SidebarContextProps | null>(null);
 
 function useSidebar() {
   const context = React.useContext(SidebarContext);
-  if (!context) {
+  if (context === null) {
     throw new Error('useSidebar must be used within a SidebarProvider.');
   }
 
@@ -43,17 +43,17 @@ function useSidebar() {
 }
 
 function SidebarProvider({
-  defaultOpen = true,
-  open: openProp,
-  onOpenChange: setOpenProp,
-  className,
-  style,
   children,
+  className,
+  defaultOpen = true,
+  onOpenChange: setOpenProp,
+  open: openProp,
+  style,
   ...props
 }: React.ComponentProps<'div'> & {
   defaultOpen?: boolean;
-  open?: boolean;
   onOpenChange?: (open: boolean) => void;
+  open?: boolean;
 }) {
   const isMobile = useIsMobile();
   const [openMobile, setOpenMobile] = React.useState(false);
@@ -65,7 +65,7 @@ function SidebarProvider({
   const setOpen = React.useCallback(
     (value: boolean | ((value: boolean) => boolean)) => {
       const openState = typeof value === 'function' ? value(open) : value;
-      if (setOpenProp) {
+      if (setOpenProp !== undefined) {
         setOpenProp(openState);
       } else {
         _setOpen(openState);
@@ -79,8 +79,12 @@ function SidebarProvider({
 
   // Helper to toggle the sidebar.
   const toggleSidebar = React.useCallback(() => {
-    return isMobile ? setOpenMobile((open) => !open) : setOpen((open) => !open);
-  }, [isMobile, setOpen]);
+    if (isMobile) {
+      setOpenMobile((prevOpen) => !prevOpen);
+    } else {
+      setOpen((prevOpen) => !prevOpen);
+    }
+  }, [isMobile, setOpen, setOpenMobile]);
 
   // Adds a keyboard shortcut to toggle the sidebar.
   React.useEffect(() => {
@@ -92,7 +96,9 @@ function SidebarProvider({
     };
 
     window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
   }, [toggleSidebar]);
 
   // We add a state so that we can do data-state="expanded" or "collapsed".
@@ -109,47 +115,45 @@ function SidebarProvider({
       setOpenMobile,
       toggleSidebar,
     }),
-    [state, open, setOpen, isMobile, openMobile, toggleSidebar],
+    [state, open, setOpen, isMobile, openMobile, setOpenMobile, toggleSidebar],
   );
 
   return (
     <SidebarContext.Provider value={contextValue}>
-      <Tooltip.Provider delayDuration={0}>
-        <div
-          data-slot="sidebar-wrapper"
-          style={
-            {
-              '--sidebar-width': SIDEBAR_WIDTH,
-              '--sidebar-width-icon': SIDEBAR_WIDTH_ICON,
-              ...style,
-            } as React.CSSProperties
-          }
-          className={cn(
-            'group/sidebar-wrapper has-data-[variant=inset]:bg-sidebar flex min-h-svh w-full',
-            className,
-          )}
-          {...props}
-        >
-          {children}
-        </div>
-      </Tooltip.Provider>
+      <div
+        data-slot="sidebar-wrapper"
+        style={
+          {
+            '--sidebar-width': SIDEBAR_WIDTH,
+            '--sidebar-width-icon': SIDEBAR_WIDTH_ICON,
+            ...style,
+          } as React.CSSProperties
+        }
+        className={cn(
+          'group/sidebar-wrapper has-data-[variant=inset]:bg-sidebar flex min-h-svh w-full',
+          className,
+        )}
+        {...props}
+      >
+        {children}
+      </div>
     </SidebarContext.Provider>
   );
 }
 
-function Sidebar({
+function SidebarRoot({
+  children,
+  className,
+  collapsible = 'offcanvas',
   side = 'left',
   variant = 'sidebar',
-  collapsible = 'offcanvas',
-  className,
-  children,
   ...props
 }: React.ComponentProps<'div'> & {
+  collapsible?: 'offcanvas' | 'icon' | 'none';
   side?: 'left' | 'right';
   variant?: 'sidebar' | 'floating' | 'inset';
-  collapsible?: 'offcanvas' | 'icon' | 'none';
 }) {
-  const { isMobile, state, openMobile, setOpenMobile } = useSidebar();
+  const { isMobile, openMobile, setOpenMobile, state } = useSidebar();
 
   if (collapsible === 'none') {
     return (
@@ -181,10 +185,6 @@ function Sidebar({
           }
           side={side}
         >
-          <Sheet.Header className="sr-only">
-            <Sheet.Title>Sidebar</Sheet.Title>
-            <Sheet.Description>Displays the mobile sidebar.</Sheet.Description>
-          </Sheet.Header>
           <div className="flex h-full w-full flex-col">{children}</div>
         </Sheet.Content>
       </Sheet>
@@ -370,8 +370,8 @@ function SidebarGroup({ className, ...props }: React.ComponentProps<'div'>) {
 }
 
 function SidebarGroupLabel({
-  className,
   asChild = false,
+  className,
   ...props
 }: React.ComponentProps<'div'> & { asChild?: boolean }) {
   const Comp = asChild ? Slot : 'div';
@@ -391,8 +391,8 @@ function SidebarGroupLabel({
 }
 
 function SidebarGroupAction({
-  className,
   asChild = false,
+  className,
   ...props
 }: React.ComponentProps<'button'> & { asChild?: boolean }) {
   const Comp = asChild ? Slot : 'button';
@@ -470,11 +470,11 @@ const sidebarMenuButtonVariants = cva(
 
 function SidebarMenuButton({
   asChild = false,
+  className,
   isActive = false,
-  variant = 'default',
   size = 'default',
   tooltip,
-  className,
+  variant = 'default',
   ...props
 }: React.ComponentProps<'button'> & {
   asChild?: boolean;
@@ -495,7 +495,7 @@ function SidebarMenuButton({
     />
   );
 
-  if (!tooltip) {
+  if (tooltip === undefined) {
     return button;
   }
 
@@ -519,8 +519,8 @@ function SidebarMenuButton({
 }
 
 function SidebarMenuAction({
-  className,
   asChild = false,
+  className,
   showOnHover = false,
   ...props
 }: React.ComponentProps<'button'> & {
@@ -630,14 +630,14 @@ function SidebarMenuSubItem({ className, ...props }: React.ComponentProps<'li'>)
 
 function SidebarMenuSubButton({
   asChild = false,
-  size = 'md',
-  isActive = false,
   className,
+  isActive = false,
+  size = 'md',
   ...props
 }: React.ComponentProps<'a'> & {
   asChild?: boolean;
-  size?: 'sm' | 'md';
   isActive?: boolean;
+  size?: 'sm' | 'md';
 }) {
   const Comp = asChild ? Slot : 'a';
 
@@ -660,30 +660,54 @@ function SidebarMenuSubButton({
   );
 }
 
-// Main Sidebar component with namespace pattern
-const SidebarRoot = Object.assign(Sidebar, {
-  Content: SidebarContent,
-  Footer: SidebarFooter,
-  Group: SidebarGroup,
-  GroupAction: SidebarGroupAction,
-  GroupContent: SidebarGroupContent,
-  GroupLabel: SidebarGroupLabel,
-  Header: SidebarHeader,
-  Input: SidebarInput,
-  Inset: SidebarInset,
-  Menu: SidebarMenu,
-  MenuAction: SidebarMenuAction,
-  MenuBadge: SidebarMenuBadge,
-  MenuButton: SidebarMenuButton,
-  MenuItem: SidebarMenuItem,
-  MenuSkeleton: SidebarMenuSkeleton,
-  MenuSub: SidebarMenuSub,
-  MenuSubButton: SidebarMenuSubButton,
-  MenuSubItem: SidebarMenuSubItem,
-  Provider: SidebarProvider,
-  Rail: SidebarRail,
-  Separator: SidebarSeparator,
-  Trigger: SidebarTrigger,
-});
+// Main Sidebar component with sub-components as properties
+const Sidebar = SidebarRoot as typeof SidebarRoot & {
+  Content: typeof SidebarContent;
+  Footer: typeof SidebarFooter;
+  Group: typeof SidebarGroup;
+  GroupAction: typeof SidebarGroupAction;
+  GroupContent: typeof SidebarGroupContent;
+  GroupLabel: typeof SidebarGroupLabel;
+  Header: typeof SidebarHeader;
+  Input: typeof SidebarInput;
+  Inset: typeof SidebarInset;
+  Menu: typeof SidebarMenu;
+  MenuAction: typeof SidebarMenuAction;
+  MenuBadge: typeof SidebarMenuBadge;
+  MenuButton: typeof SidebarMenuButton;
+  MenuItem: typeof SidebarMenuItem;
+  MenuSkeleton: typeof SidebarMenuSkeleton;
+  MenuSub: typeof SidebarMenuSub;
+  MenuSubButton: typeof SidebarMenuSubButton;
+  MenuSubItem: typeof SidebarMenuSubItem;
+  Provider: typeof SidebarProvider;
+  Rail: typeof SidebarRail;
+  Separator: typeof SidebarSeparator;
+  Trigger: typeof SidebarTrigger;
+};
 
-export { SidebarRoot as Sidebar, useSidebar };
+// Assign sub-components
+Sidebar.Content = SidebarContent;
+Sidebar.Footer = SidebarFooter;
+Sidebar.Group = SidebarGroup;
+Sidebar.GroupAction = SidebarGroupAction;
+Sidebar.GroupContent = SidebarGroupContent;
+Sidebar.GroupLabel = SidebarGroupLabel;
+Sidebar.Header = SidebarHeader;
+Sidebar.Input = SidebarInput;
+Sidebar.Inset = SidebarInset;
+Sidebar.Menu = SidebarMenu;
+Sidebar.MenuAction = SidebarMenuAction;
+Sidebar.MenuBadge = SidebarMenuBadge;
+Sidebar.MenuButton = SidebarMenuButton;
+Sidebar.MenuItem = SidebarMenuItem;
+Sidebar.MenuSkeleton = SidebarMenuSkeleton;
+Sidebar.MenuSub = SidebarMenuSub;
+Sidebar.MenuSubButton = SidebarMenuSubButton;
+Sidebar.MenuSubItem = SidebarMenuSubItem;
+Sidebar.Provider = SidebarProvider;
+Sidebar.Rail = SidebarRail;
+Sidebar.Separator = SidebarSeparator;
+Sidebar.Trigger = SidebarTrigger;
+
+export { Sidebar, SidebarInset, SidebarProvider, useSidebar };

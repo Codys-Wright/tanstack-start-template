@@ -25,6 +25,9 @@ export { Tooltip } from './tooltip.js';
 // Compound components (namespace pattern) - REFACTORED
 export { Carousel, type CarouselApi } from './carousel.js';
 export { Chart, type ChartConfig } from './chart.js';
+export { ChartContainer } from './chart.js';
+export { ChartTooltip } from './chart.js';
+export { ChartTooltipContent } from './chart.js';
 export { Command } from './command.js';
 export { Drawer } from './drawer.js';
 export { InputOTP } from './input-otp.js';
@@ -32,11 +35,18 @@ export { Menubar } from './menubar.js';
 export { Pagination } from './pagination.js';
 export { ResizablePanelGroup } from './resizable.js';
 export { ScrollArea } from './scroll-area.js';
-export { Sidebar, useSidebar } from './sidebar.js';
-export { NavMain } from './sidebar/nav-main.js';
-export { NavSecondary } from './sidebar/nav-secondary.js';
-export { NavUser } from './sidebar/nav-user.js';
 export { ToggleGroup } from './toggle-group.js';
+
+// Sidebar components (from sidebar folder)
+export {
+  NavMain,
+  NavSecondary,
+  NavUser,
+  Sidebar,
+  SidebarInset,
+  SidebarProvider,
+  useSidebar,
+} from './sidebar/index.js';
 
 // Compound components (already using namespace pattern)
 export * from './form.js';

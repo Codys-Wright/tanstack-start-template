@@ -8,9 +8,9 @@ import {
   IconUserCircle,
 } from '@tabler/icons-react';
 
-import { Avatar } from '../avatar';
-import { DropdownMenu } from '../dropdown-menu';
-import { Sidebar, useSidebar } from './sidebar';
+import { Avatar } from '../avatar.js';
+import { DropdownMenu } from '../dropdown-menu.js';
+import { Sidebar, useSidebar } from './sidebar.js';
 
 export function NavUser({
   user,

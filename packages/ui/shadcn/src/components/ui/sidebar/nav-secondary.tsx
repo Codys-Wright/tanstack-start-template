@@ -1,8 +1,9 @@
 'use client';
 
 import { type Icon } from '@tabler/icons-react';
+import * as React from 'react';
 
-import { Sidebar } from './sidebar';
+import { Sidebar } from './sidebar.js';
 
 export function NavSecondary({
   items,

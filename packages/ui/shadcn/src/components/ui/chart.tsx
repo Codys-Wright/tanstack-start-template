@@ -2,7 +2,6 @@
 
 import * as React from 'react';
 import * as RechartsPrimitive from 'recharts';
-
 import { cn } from '../../lib/utils.js';
 
 // Format: { THEME_NAME: CSS_SELECTOR }
@@ -333,3 +332,7 @@ export const Chart: React.FC<
 
 // Keep ChartContainer as an alias for backward compatibility
 export { ChartContainerRoot as ChartContainer };
+
+// Export chart components for external use
+export const ChartTooltip = RechartsPrimitive.Tooltip;
+export { ChartTooltipContent };
