@@ -2,9 +2,9 @@ import * as HttpApiBuilder from '@effect/platform/HttpApiBuilder';
 import * as HttpApiGroup from '@effect/platform/HttpApiGroup';
 import * as Effect from 'effect/Effect';
 import * as Layer from 'effect/Layer';
-import { AuthApi } from '../../_core/auth-api';
+import { AuthApi } from '../../../../core/auth-api';
 import { AdminService } from './service';
-import { AuthError } from '../session/domain/schema.js';
+import { AuthError } from '../../../../features/session/domain/schema';
 import {
   AdminUpdateUserInput,
   BanUserInput,

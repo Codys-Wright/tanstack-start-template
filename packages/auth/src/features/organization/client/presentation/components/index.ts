@@ -1,1 +1,1 @@
-export * from './organizations-card.js';
+export * from './organizations-card';

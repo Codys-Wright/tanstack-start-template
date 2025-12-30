@@ -47,7 +47,7 @@ export function UpdateTeamDialog({ team, children, onSuccess }: UpdateTeamDialog
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <Dialog.Trigger asChild>{children}</Dialog.Trigger>
+      <Dialog.Trigger>{children}</Dialog.Trigger>
       <Dialog.Content>
         <Dialog.Header>
           <Dialog.Title>Update Team</Dialog.Title>

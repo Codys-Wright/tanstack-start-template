@@ -4,24 +4,24 @@ import {
   RpcAuthenticationMiddlewareLive,
   AuthService,
   AuthApiRoutes,
-} from '@auth/server';
-import { TodoApiRoutes, TodoRpcLive } from '@todo/server';
-import { ExampleApiLive, ExampleRpcLive } from '@example/server';
-import * as HttpLayerRouter from '@effect/platform/HttpLayerRouter';
-import * as HttpServerResponse from '@effect/platform/HttpServerResponse';
-import * as RpcSerialization from '@effect/rpc/RpcSerialization';
-import * as RpcServer from '@effect/rpc/RpcServer';
-import * as Context from 'effect/Context';
-import * as Layer from 'effect/Layer';
-import * as Effect from 'effect/Effect';
-import * as Logger from 'effect/Logger';
-import { DomainRpc, RpcLoggerLive } from './domain';
+} from "@auth/server";
+import { TodoApiRoutes, TodoRpcLive } from "@todo/server";
+import { ExampleApiLive, ExampleRpcLive } from "@example/server";
+import * as HttpLayerRouter from "@effect/platform/HttpLayerRouter";
+import * as HttpServerResponse from "@effect/platform/HttpServerResponse";
+import * as RpcSerialization from "@effect/rpc/RpcSerialization";
+import * as RpcServer from "@effect/rpc/RpcServer";
+import * as Context from "effect/Context";
+import * as Layer from "effect/Layer";
+import * as Effect from "effect/Effect";
+import * as Logger from "effect/Logger";
+import { DomainRpc, RpcLoggerLive } from "./domain";
 
 const RpcRouter = RpcServer.layerHttpRouter({
   group: DomainRpc,
-  path: '/api/rpc',
-  protocol: 'http',
-  spanPrefix: 'rpc',
+  path: "/api/rpc",
+  protocol: "http",
+  spanPrefix: "rpc",
   disableFatalDefects: true,
 }).pipe(
   Layer.provide(TodoRpcLive),
@@ -33,7 +33,7 @@ const RpcRouter = RpcServer.layerHttpRouter({
 );
 
 const HealthRoute = HttpLayerRouter.use((router) =>
-  router.add('GET', '/api/health', HttpServerResponse.text('OK')),
+  router.add("GET", "/api/health", HttpServerResponse.text("OK")),
 );
 
 // Each package provides its own complete route layer with docs:
@@ -44,7 +44,6 @@ const AllRoutes = Layer.mergeAll(
   RpcRouter,
   TodoApiRoutes,
   ExampleApiLive,
-  AuthApiRoutes,
   HealthRoute,
   BetterAuthRouter,
 ).pipe(

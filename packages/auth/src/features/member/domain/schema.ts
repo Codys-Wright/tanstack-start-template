@@ -1,7 +1,7 @@
 import * as Schema from 'effect/Schema';
-import { UserId } from '../../user/domain/schema.js';
-import { OrganizationId } from '../../organization/domain/schema.js';
-import { AuthError } from '../../session/domain/schema.js';
+import { UserId } from '../../user/domain/schema';
+import { OrganizationId } from '../../organization/domain/schema';
+import { AuthError } from '../../session/domain/schema';
 
 /**
  * Branded MemberId type for type safety

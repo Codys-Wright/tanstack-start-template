@@ -41,14 +41,14 @@ export function TeamCell({
             </Button>
           </DropdownMenu.Trigger>
           <DropdownMenu.Content align="end">
-            <DropdownMenu.Item asChild>
-              <TeamMembersDialog team={team}>
+            <TeamMembersDialog team={team}>
+              <DropdownMenu.Item onSelect={(e) => e.preventDefault()}>
                 <div className="flex items-center">
                   <UserPlusIcon className="h-4 w-4 mr-2" />
                   <span>Manage Members</span>
                 </div>
-              </TeamMembersDialog>
-            </DropdownMenu.Item>
+              </DropdownMenu.Item>
+            </TeamMembersDialog>
             <DropdownMenu.Separator />
             <UpdateTeamDialog team={team} onSuccess={onUpdate}>
               <DropdownMenu.Item onSelect={(e) => e.preventDefault()} disabled={!canUpdate}>

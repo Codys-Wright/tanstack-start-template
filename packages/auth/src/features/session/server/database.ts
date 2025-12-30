@@ -2,7 +2,7 @@ import * as Effect from 'effect/Effect';
 import * as Redacted from 'effect/Redacted';
 import { Kysely, PostgresDialect } from 'kysely';
 import pg from 'pg';
-import { AuthConfig } from './config.js';
+import { AuthConfig } from './config';
 
 const { Pool } = pg;
 

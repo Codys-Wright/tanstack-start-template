@@ -1,2 +1,2 @@
 // Database exports
-export * from './repo.js';
+export * from './repo';

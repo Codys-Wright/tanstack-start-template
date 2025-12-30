@@ -1,6 +1,6 @@
 import { Atom } from '@effect-atom/atom-react';
 import * as Effect from 'effect/Effect';
-import { AdminApi } from './client.js';
+import { AdminApi } from './client';
 
 /**
  * Runtime for admin atoms - provides AdminApi service

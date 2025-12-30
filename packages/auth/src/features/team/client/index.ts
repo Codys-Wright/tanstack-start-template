@@ -1,8 +1,8 @@
 // Atoms - re-exported from organization feature
-export * from './atoms.js';
+export * from './atoms';
 
 // Hooks
-export * from './hooks.js';
+export * from './hooks';
 
 // Presentation components
-export * from './presentation/index.js';
+export * from './presentation/index';

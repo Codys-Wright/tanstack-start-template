@@ -1,6 +1,6 @@
-import * as Layer from 'effect/Layer';
-import { AccountApiLive } from '@auth/account/account-api-live.js';
-import { SessionApiLive } from '@auth/session/session-api-live.js';
+import * as Layer from "effect/Layer";
+import { AccountApiLive } from "../../../features/account/server";
+import { SessionApiLive } from "../../../features/session/server";
 
 /**
  * AuthApiLive - All Auth API handlers composed together.

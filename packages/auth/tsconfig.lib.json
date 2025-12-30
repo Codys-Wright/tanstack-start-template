@@ -16,6 +16,8 @@
     "moduleResolution": "bundler",
     "tsBuildInfoFile": "dist/tsconfig.lib.tsbuildinfo",
     "paths": {
+      "@auth": ["../auth/src/index.ts"],
+      "@auth/*": ["../auth/src/*"],
       "@/*": ["./src/*"],
       "@core": ["../core/src/index.ts"],
       "@core/*": ["../core/src/*"],

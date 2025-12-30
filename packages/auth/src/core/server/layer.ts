@@ -1,15 +1,15 @@
-import { SessionApiLive } from '../../features/session/server/api-live.js';
-import { AccountApiLive } from '../../features/account/server/api-live.js';
-import { OrganizationApiLive } from '../../features/organization/server/api-live.js';
-import * as HttpApiScalar from '@effect/platform/HttpApiScalar';
-import * as HttpLayerRouter from '@effect/platform/HttpLayerRouter';
-import * as HttpServer from '@effect/platform/HttpServer';
-import * as Layer from 'effect/Layer';
-import { AuthApi } from './api.js';
+import { SessionApiLive } from "../../../features/session/server";
+import { AccountApiLive } from "../../../features/account/server";
+import { OrganizationApiLive } from "../../../features/organization/server";
+import * as HttpApiScalar from "@effect/platform/HttpApiScalar";
+import * as HttpLayerRouter from "@effect/platform/HttpLayerRouter";
+import * as HttpServer from "@effect/platform/HttpServer";
+import * as Layer from "effect/Layer";
+import { AuthApi } from "./api";
 import {
   HttpAuthenticationMiddlewareLive,
   AuthService,
-} from '../../features/session/server/index.js';
+} from "../../../features/session/server";
 
 /**
  * AuthApiLive - All Auth API handlers composed together.
@@ -33,7 +33,11 @@ import {
  * );
  * ```
  */
-export const AuthApiLive = Layer.mergeAll(SessionApiLive, AccountApiLive, OrganizationApiLive);
+export const AuthApiLive = Layer.mergeAll(
+  SessionApiLive,
+  AccountApiLive,
+  OrganizationApiLive,
+);
 
 /**
  * AuthApiRoutes - Pre-configured HTTP routes layer for the Auth API.
@@ -60,10 +64,10 @@ export const AuthApiRoutes = Layer.mergeAll(
   HttpLayerRouter.addHttpApi(AuthApi),
   HttpApiScalar.layerHttpLayerRouter({
     api: AuthApi,
-    path: '/api/auth/docs',
+    path: "/api/auth/docs",
     scalar: {
-      theme: 'default',
-      layout: 'modern',
+      theme: "default",
+      layout: "modern",
       darkMode: true,
       defaultOpenAllTags: true,
     },

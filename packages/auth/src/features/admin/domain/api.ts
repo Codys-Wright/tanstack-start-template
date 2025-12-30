@@ -1,10 +1,10 @@
 import * as HttpApiEndpoint from '@effect/platform/HttpApiEndpoint';
 import * as HttpApiGroup from '@effect/platform/HttpApiGroup';
 import * as Schema from 'effect/Schema';
-import { AuthError } from '../../session/domain/schema.js';
-import { User } from '../../user/domain/schema.js';
-import { InvitationStatus } from '../../invitation/domain/schema.js';
-import { OrganizationRole } from '../../member/domain/schema.js';
+import { AuthError } from '../../session/domain/schema';
+import { User } from '../../user/domain/schema';
+import { InvitationStatus } from '../../invitation/domain/schema';
+import { OrganizationRole } from '../../member/domain/schema';
 
 /**
  * Organization with member count for admin list view

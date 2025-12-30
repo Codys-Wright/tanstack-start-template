@@ -3,7 +3,7 @@ import * as SqlSchema from '@effect/sql/SqlSchema';
 import * as Effect from 'effect/Effect';
 import * as Schema from 'effect/Schema';
 import { PgLive } from '@core/database';
-import { InvitationStatus } from '../domain/schema.js';
+import { InvitationStatus } from '../domain/schema';
 
 /**
  * InvitationRepository - Database access layer for invitations using Effect SQL.

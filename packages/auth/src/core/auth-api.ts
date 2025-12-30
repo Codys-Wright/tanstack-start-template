@@ -1,9 +1,10 @@
-import * as HttpApi from '@effect/platform/HttpApi';
-import { AccountApiGroup } from '@auth/account/domain/api.js';
-import { SessionApiGroup } from '@auth/session/domain/api.js';
-import { AdminApiGroup } from '@auth/admin/domain/api.js';
+import * as HttpApi from "@effect/platform/HttpApi";
+import { AccountApiGroup } from "../../features/account";
+import { SessionApiGroup } from "../../features/session";
+import { AdminApiGroup } from "../../features/admin";
 
-export class AuthApi extends HttpApi.make('auth-api')
+export class AuthApi extends HttpApi.make("auth-api")
   .add(SessionApiGroup)
+  .add(AdminApiGroup)
   .add(AccountApiGroup)
-  .prefix('/effect-auth') {}
+  .prefix("/effect-auth") {}

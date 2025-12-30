@@ -1,8 +1,8 @@
 import * as HttpApiBuilder from '@effect/platform/HttpApiBuilder';
 import * as Effect from 'effect/Effect';
 import * as Layer from 'effect/Layer';
-import { AuthApi } from '../../../core/server/api.js';
-import { OrganizationService } from './service.js';
+import { AuthApi } from '../../../../core/server/api';
+import { OrganizationService } from './service';
 
 /**
  * OrganizationApiLive - HTTP API handlers for organization group within AuthApi.

@@ -1,21 +1,25 @@
-import { Card } from '@shadcn';
-import { Result, useAtomValue } from '@effect-atom/atom-react';
-import { ShieldIcon, KeyIcon, ClockIcon, SmartphoneIcon } from 'lucide-react';
-import { sessionAtom } from '../../session/client/atoms.js';
-import { SettingsCard } from './settings-card';
+import { Card } from "@shadcn";
+import { Result, useAtomValue } from "@effect-atom/atom-react";
+import { ShieldIcon, KeyIcon, ClockIcon, SmartphoneIcon } from "lucide-react";
+import { sessionAtom } from "../../session/client/atoms.js";
+import { SettingsCard } from "./settings-card";
 
 export interface SecuritySettingsCardsProps {
   className?: string;
 }
 
-export function SecuritySettingsCards({ className }: SecuritySettingsCardsProps) {
+export function SecuritySettingsCards({
+  className,
+}: SecuritySettingsCardsProps) {
   const sessionResult = useAtomValue(sessionAtom);
-  const user = Result.isSuccess(sessionResult) ? sessionResult.value?.user : null;
+  const user = Result.isSuccess(sessionResult)
+    ? sessionResult.value?.user
+    : null;
 
   if (!user) return null;
 
   return (
-    <div className={`flex w-full flex-col gap-4 md:gap-6 ${className || ''}`}>
+    <div className={`flex w-full flex-col gap-4 md:gap-6 ${className || ""}`}>
       {/* Change Password Card */}
       <ChangePasswordCard />
 
@@ -40,14 +44,18 @@ function ChangePasswordCard() {
           <KeyIcon className="size-5" />
           Change Password
         </Card.Title>
-        <Card.Description>Update your password to keep your account secure.</Card.Description>
+        <Card.Description>
+          Update your password to keep your account secure.
+        </Card.Description>
       </Card.Header>
 
       <Card.Content>
         <div className="text-center py-8 text-muted-foreground">
           <KeyIcon className="mx-auto size-8 mb-2" />
           <p>Password change functionality coming soon...</p>
-          <p className="text-sm mt-1">For now, use the forgot password feature if needed.</p>
+          <p className="text-sm mt-1">
+            For now, use the forgot password feature if needed.
+          </p>
         </div>
       </Card.Content>
     </SettingsCard>
@@ -63,14 +71,18 @@ function ActiveSessionsCard() {
           <ClockIcon className="size-5" />
           Active Sessions
         </Card.Title>
-        <Card.Description>Manage your active login sessions across devices.</Card.Description>
+        <Card.Description>
+          Manage your active login sessions across devices.
+        </Card.Description>
       </Card.Header>
 
       <Card.Content>
         <div className="text-center py-8 text-muted-foreground">
           <ClockIcon className="mx-auto size-8 mb-2" />
           <p>Session management coming soon...</p>
-          <p className="text-sm mt-1">View and revoke access from other devices.</p>
+          <p className="text-sm mt-1">
+            View and revoke access from other devices.
+          </p>
         </div>
       </Card.Content>
     </SettingsCard>
@@ -95,7 +107,9 @@ function TwoFactorCard() {
         <div className="text-center py-8 text-muted-foreground">
           <SmartphoneIcon className="mx-auto size-8 mb-2" />
           <p>Two-factor authentication coming soon...</p>
-          <p className="text-sm mt-1">Use authenticator apps or SMS for added security.</p>
+          <p className="text-sm mt-1">
+            Use authenticator apps or SMS for added security.
+          </p>
         </div>
       </Card.Content>
     </SettingsCard>
@@ -120,7 +134,9 @@ function ApiKeysCard() {
         <div className="text-center py-8 text-muted-foreground">
           <ShieldIcon className="mx-auto size-8 mb-2" />
           <p>API key management coming soon...</p>
-          <p className="text-sm mt-1">Generate and manage secure API access tokens.</p>
+          <p className="text-sm mt-1">
+            Generate and manage secure API access tokens.
+          </p>
         </div>
       </Card.Content>
     </SettingsCard>

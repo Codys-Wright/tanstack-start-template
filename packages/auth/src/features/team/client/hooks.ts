@@ -1,8 +1,8 @@
 import { useMemo, useState, useEffect } from 'react';
 import { Result, useAtomValue } from '@effect-atom/atom-react';
-import { sessionAtom } from '../../session/client/atoms.js';
-import { authClient } from '../../session/client/client.js';
-import type { TeamPermissions } from '../domain/schema.js';
+import { sessionAtom } from '../../session/client/atoms';
+import { authClient } from '../../session/client/client';
+import type { TeamPermissions } from '../domain/schema';
 
 /**
  * Hook to check team permissions for the current user

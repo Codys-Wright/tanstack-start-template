@@ -1,8 +1,8 @@
 import * as HttpApiEndpoint from '@effect/platform/HttpApiEndpoint';
 import * as HttpApiGroup from '@effect/platform/HttpApiGroup';
 import * as Schema from 'effect/Schema';
-import { Invitation, InvitationStatus, InvitationWithDetails, InvitationId } from './schema.js';
-import { AuthError } from '../session/domain/schema.js';
+import { Invitation, InvitationStatus, InvitationWithDetails, InvitationId } from './schema';
+import { AuthError } from '../../../../features/session/domain/schema';
 
 export class InvitationApiGroup extends HttpApiGroup.make('invitations')
   .add(

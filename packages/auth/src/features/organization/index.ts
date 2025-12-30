@@ -1,8 +1,8 @@
 // Domain: Schema (shared between client and server)
-export * from './domain/index.js';
+export * from './domain/index';
 
 // Client: API client, Atoms, Presentation
-export * from './client/index.js';
+export * from './client/index';
 
 // Server: Service and HTTP API handlers
-export * from './server/index.js';
+export * from './server/index';

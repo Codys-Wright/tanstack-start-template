@@ -1,2 +1,2 @@
-export { AdminApi } from './client.js';
-export * from './atoms.js';
+export { AdminApi } from './client';
+export * from './atoms';

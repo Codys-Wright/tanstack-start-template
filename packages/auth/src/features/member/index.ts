@@ -1,5 +1,5 @@
 // Domain types and schemas
-export * from './domain/index.js';
+export * from './domain/index';
 
 // Database repository
-export * from './database/index.js';
+export * from './database/index';

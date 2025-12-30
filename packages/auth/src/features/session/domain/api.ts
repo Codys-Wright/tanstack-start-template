@@ -9,7 +9,7 @@ import {
   SignUpInput,
   SignUpResponse,
   SignOutResponse,
-} from './schema.js';
+} from './schema';
 
 /**
  * SessionApiGroup - HTTP API group for session/authentication operations.

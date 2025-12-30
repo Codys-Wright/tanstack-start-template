@@ -9,70 +9,20 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as SettingsRouteImport } from './routes/settings'
-import { Route as ResponsesRouteImport } from './routes/responses'
-import { Route as QuizTakerRouteImport } from './routes/quiz-taker'
-import { Route as QuizEditorRouteImport } from './routes/quiz-editor'
-import { Route as ArtistTypesRouteImport } from './routes/artist-types'
-import { Route as AnalysisRouteImport } from './routes/analysis'
 import { Route as AdminRouteImport } from './routes/admin'
-import { Route as AboutRouteImport } from './routes/about'
 import { Route as SplatRouteImport } from './routes/$'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ExampleIndexRouteImport } from './routes/example/index'
-import { Route as TestTestRouteImport } from './routes/test/test'
-import { Route as TestSidebarTestRouteImport } from './routes/test/sidebar-test'
-import { Route as TestRadarTestRouteImport } from './routes/test/radar-test'
 import { Route as ExampleFeatureIdRouteImport } from './routes/example/$featureId'
-import { Route as AuthLoginRouteImport } from './routes/auth/login'
-import { Route as AuthCallbackRouteImport } from './routes/auth/callback'
-import { Route as AuthOrganizationViewRouteImport } from './routes/auth/$organizationView'
-import { Route as AuthAuthViewRouteImport } from './routes/auth/$authView'
-import { Route as AuthAccountViewRouteImport } from './routes/auth/$accountView'
 import { Route as ApiSplatRouteImport } from './routes/api/$'
 import { Route as AdminQuizEditorRouteImport } from './routes/admin/quiz-editor'
 import { Route as AdminResponsesResponseId_newRouteImport } from './routes/admin/responses/$responseId_new'
 import { Route as AdminResponsesResponseIdRouteImport } from './routes/admin/responses/$responseId'
 import { Route as AdminResponsesResponseIdAnalysisRouteImport } from './routes/admin/responses/$responseId/analysis'
 
-const SettingsRoute = SettingsRouteImport.update({
-  id: '/settings',
-  path: '/settings',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ResponsesRoute = ResponsesRouteImport.update({
-  id: '/responses',
-  path: '/responses',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const QuizTakerRoute = QuizTakerRouteImport.update({
-  id: '/quiz-taker',
-  path: '/quiz-taker',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const QuizEditorRoute = QuizEditorRouteImport.update({
-  id: '/quiz-editor',
-  path: '/quiz-editor',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ArtistTypesRoute = ArtistTypesRouteImport.update({
-  id: '/artist-types',
-  path: '/artist-types',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AnalysisRoute = AnalysisRouteImport.update({
-  id: '/analysis',
-  path: '/analysis',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const AdminRoute = AdminRouteImport.update({
   id: '/admin',
   path: '/admin',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AboutRoute = AboutRouteImport.update({
-  id: '/about',
-  path: '/about',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SplatRoute = SplatRouteImport.update({
@@ -90,49 +40,9 @@ const ExampleIndexRoute = ExampleIndexRouteImport.update({
   path: '/example/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const TestTestRoute = TestTestRouteImport.update({
-  id: '/test/test',
-  path: '/test/test',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const TestSidebarTestRoute = TestSidebarTestRouteImport.update({
-  id: '/test/sidebar-test',
-  path: '/test/sidebar-test',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const TestRadarTestRoute = TestRadarTestRouteImport.update({
-  id: '/test/radar-test',
-  path: '/test/radar-test',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const ExampleFeatureIdRoute = ExampleFeatureIdRouteImport.update({
   id: '/example/$featureId',
   path: '/example/$featureId',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AuthLoginRoute = AuthLoginRouteImport.update({
-  id: '/auth/login',
-  path: '/auth/login',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AuthCallbackRoute = AuthCallbackRouteImport.update({
-  id: '/auth/callback',
-  path: '/auth/callback',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AuthOrganizationViewRoute = AuthOrganizationViewRouteImport.update({
-  id: '/auth/$organizationView',
-  path: '/auth/$organizationView',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AuthAuthViewRoute = AuthAuthViewRouteImport.update({
-  id: '/auth/$authView',
-  path: '/auth/$authView',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AuthAccountViewRoute = AuthAccountViewRouteImport.update({
-  id: '/auth/$accountView',
-  path: '/auth/$accountView',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiSplatRoute = ApiSplatRouteImport.update({
@@ -167,25 +77,10 @@ const AdminResponsesResponseIdAnalysisRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/$': typeof SplatRoute
-  '/about': typeof AboutRoute
   '/admin': typeof AdminRouteWithChildren
-  '/analysis': typeof AnalysisRoute
-  '/artist-types': typeof ArtistTypesRoute
-  '/quiz-editor': typeof QuizEditorRoute
-  '/quiz-taker': typeof QuizTakerRoute
-  '/responses': typeof ResponsesRoute
-  '/settings': typeof SettingsRoute
   '/admin/quiz-editor': typeof AdminQuizEditorRoute
   '/api/$': typeof ApiSplatRoute
-  '/auth/$accountView': typeof AuthAccountViewRoute
-  '/auth/$authView': typeof AuthAuthViewRoute
-  '/auth/$organizationView': typeof AuthOrganizationViewRoute
-  '/auth/callback': typeof AuthCallbackRoute
-  '/auth/login': typeof AuthLoginRoute
   '/example/$featureId': typeof ExampleFeatureIdRoute
-  '/test/radar-test': typeof TestRadarTestRoute
-  '/test/sidebar-test': typeof TestSidebarTestRoute
-  '/test/test': typeof TestTestRoute
   '/example': typeof ExampleIndexRoute
   '/admin/responses/$responseId': typeof AdminResponsesResponseIdRouteWithChildren
   '/admin/responses/$responseId_new': typeof AdminResponsesResponseId_newRoute
@@ -194,25 +89,10 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/$': typeof SplatRoute
-  '/about': typeof AboutRoute
   '/admin': typeof AdminRouteWithChildren
-  '/analysis': typeof AnalysisRoute
-  '/artist-types': typeof ArtistTypesRoute
-  '/quiz-editor': typeof QuizEditorRoute
-  '/quiz-taker': typeof QuizTakerRoute
-  '/responses': typeof ResponsesRoute
-  '/settings': typeof SettingsRoute
   '/admin/quiz-editor': typeof AdminQuizEditorRoute
   '/api/$': typeof ApiSplatRoute
-  '/auth/$accountView': typeof AuthAccountViewRoute
-  '/auth/$authView': typeof AuthAuthViewRoute
-  '/auth/$organizationView': typeof AuthOrganizationViewRoute
-  '/auth/callback': typeof AuthCallbackRoute
-  '/auth/login': typeof AuthLoginRoute
   '/example/$featureId': typeof ExampleFeatureIdRoute
-  '/test/radar-test': typeof TestRadarTestRoute
-  '/test/sidebar-test': typeof TestSidebarTestRoute
-  '/test/test': typeof TestTestRoute
   '/example': typeof ExampleIndexRoute
   '/admin/responses/$responseId': typeof AdminResponsesResponseIdRouteWithChildren
   '/admin/responses/$responseId_new': typeof AdminResponsesResponseId_newRoute
@@ -222,25 +102,10 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/$': typeof SplatRoute
-  '/about': typeof AboutRoute
   '/admin': typeof AdminRouteWithChildren
-  '/analysis': typeof AnalysisRoute
-  '/artist-types': typeof ArtistTypesRoute
-  '/quiz-editor': typeof QuizEditorRoute
-  '/quiz-taker': typeof QuizTakerRoute
-  '/responses': typeof ResponsesRoute
-  '/settings': typeof SettingsRoute
   '/admin/quiz-editor': typeof AdminQuizEditorRoute
   '/api/$': typeof ApiSplatRoute
-  '/auth/$accountView': typeof AuthAccountViewRoute
-  '/auth/$authView': typeof AuthAuthViewRoute
-  '/auth/$organizationView': typeof AuthOrganizationViewRoute
-  '/auth/callback': typeof AuthCallbackRoute
-  '/auth/login': typeof AuthLoginRoute
   '/example/$featureId': typeof ExampleFeatureIdRoute
-  '/test/radar-test': typeof TestRadarTestRoute
-  '/test/sidebar-test': typeof TestSidebarTestRoute
-  '/test/test': typeof TestTestRoute
   '/example/': typeof ExampleIndexRoute
   '/admin/responses/$responseId': typeof AdminResponsesResponseIdRouteWithChildren
   '/admin/responses/$responseId_new': typeof AdminResponsesResponseId_newRoute
@@ -251,25 +116,10 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/$'
-    | '/about'
     | '/admin'
-    | '/analysis'
-    | '/artist-types'
-    | '/quiz-editor'
-    | '/quiz-taker'
-    | '/responses'
-    | '/settings'
     | '/admin/quiz-editor'
     | '/api/$'
-    | '/auth/$accountView'
-    | '/auth/$authView'
-    | '/auth/$organizationView'
-    | '/auth/callback'
-    | '/auth/login'
     | '/example/$featureId'
-    | '/test/radar-test'
-    | '/test/sidebar-test'
-    | '/test/test'
     | '/example'
     | '/admin/responses/$responseId'
     | '/admin/responses/$responseId_new'
@@ -278,25 +128,10 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/$'
-    | '/about'
     | '/admin'
-    | '/analysis'
-    | '/artist-types'
-    | '/quiz-editor'
-    | '/quiz-taker'
-    | '/responses'
-    | '/settings'
     | '/admin/quiz-editor'
     | '/api/$'
-    | '/auth/$accountView'
-    | '/auth/$authView'
-    | '/auth/$organizationView'
-    | '/auth/callback'
-    | '/auth/login'
     | '/example/$featureId'
-    | '/test/radar-test'
-    | '/test/sidebar-test'
-    | '/test/test'
     | '/example'
     | '/admin/responses/$responseId'
     | '/admin/responses/$responseId_new'
@@ -305,25 +140,10 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/$'
-    | '/about'
     | '/admin'
-    | '/analysis'
-    | '/artist-types'
-    | '/quiz-editor'
-    | '/quiz-taker'
-    | '/responses'
-    | '/settings'
     | '/admin/quiz-editor'
     | '/api/$'
-    | '/auth/$accountView'
-    | '/auth/$authView'
-    | '/auth/$organizationView'
-    | '/auth/callback'
-    | '/auth/login'
     | '/example/$featureId'
-    | '/test/radar-test'
-    | '/test/sidebar-test'
-    | '/test/test'
     | '/example/'
     | '/admin/responses/$responseId'
     | '/admin/responses/$responseId_new'
@@ -333,83 +153,19 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   SplatRoute: typeof SplatRoute
-  AboutRoute: typeof AboutRoute
   AdminRoute: typeof AdminRouteWithChildren
-  AnalysisRoute: typeof AnalysisRoute
-  ArtistTypesRoute: typeof ArtistTypesRoute
-  QuizEditorRoute: typeof QuizEditorRoute
-  QuizTakerRoute: typeof QuizTakerRoute
-  ResponsesRoute: typeof ResponsesRoute
-  SettingsRoute: typeof SettingsRoute
   ApiSplatRoute: typeof ApiSplatRoute
-  AuthAccountViewRoute: typeof AuthAccountViewRoute
-  AuthAuthViewRoute: typeof AuthAuthViewRoute
-  AuthOrganizationViewRoute: typeof AuthOrganizationViewRoute
-  AuthCallbackRoute: typeof AuthCallbackRoute
-  AuthLoginRoute: typeof AuthLoginRoute
   ExampleFeatureIdRoute: typeof ExampleFeatureIdRoute
-  TestRadarTestRoute: typeof TestRadarTestRoute
-  TestSidebarTestRoute: typeof TestSidebarTestRoute
-  TestTestRoute: typeof TestTestRoute
   ExampleIndexRoute: typeof ExampleIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/settings': {
-      id: '/settings'
-      path: '/settings'
-      fullPath: '/settings'
-      preLoaderRoute: typeof SettingsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/responses': {
-      id: '/responses'
-      path: '/responses'
-      fullPath: '/responses'
-      preLoaderRoute: typeof ResponsesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/quiz-taker': {
-      id: '/quiz-taker'
-      path: '/quiz-taker'
-      fullPath: '/quiz-taker'
-      preLoaderRoute: typeof QuizTakerRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/quiz-editor': {
-      id: '/quiz-editor'
-      path: '/quiz-editor'
-      fullPath: '/quiz-editor'
-      preLoaderRoute: typeof QuizEditorRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/artist-types': {
-      id: '/artist-types'
-      path: '/artist-types'
-      fullPath: '/artist-types'
-      preLoaderRoute: typeof ArtistTypesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/analysis': {
-      id: '/analysis'
-      path: '/analysis'
-      fullPath: '/analysis'
-      preLoaderRoute: typeof AnalysisRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/admin': {
       id: '/admin'
       path: '/admin'
       fullPath: '/admin'
       preLoaderRoute: typeof AdminRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/about': {
-      id: '/about'
-      path: '/about'
-      fullPath: '/about'
-      preLoaderRoute: typeof AboutRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/$': {
@@ -433,67 +189,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ExampleIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/test/test': {
-      id: '/test/test'
-      path: '/test/test'
-      fullPath: '/test/test'
-      preLoaderRoute: typeof TestTestRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/test/sidebar-test': {
-      id: '/test/sidebar-test'
-      path: '/test/sidebar-test'
-      fullPath: '/test/sidebar-test'
-      preLoaderRoute: typeof TestSidebarTestRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/test/radar-test': {
-      id: '/test/radar-test'
-      path: '/test/radar-test'
-      fullPath: '/test/radar-test'
-      preLoaderRoute: typeof TestRadarTestRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/example/$featureId': {
       id: '/example/$featureId'
       path: '/example/$featureId'
       fullPath: '/example/$featureId'
       preLoaderRoute: typeof ExampleFeatureIdRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/auth/login': {
-      id: '/auth/login'
-      path: '/auth/login'
-      fullPath: '/auth/login'
-      preLoaderRoute: typeof AuthLoginRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/auth/callback': {
-      id: '/auth/callback'
-      path: '/auth/callback'
-      fullPath: '/auth/callback'
-      preLoaderRoute: typeof AuthCallbackRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/auth/$organizationView': {
-      id: '/auth/$organizationView'
-      path: '/auth/$organizationView'
-      fullPath: '/auth/$organizationView'
-      preLoaderRoute: typeof AuthOrganizationViewRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/auth/$authView': {
-      id: '/auth/$authView'
-      path: '/auth/$authView'
-      fullPath: '/auth/$authView'
-      preLoaderRoute: typeof AuthAuthViewRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/auth/$accountView': {
-      id: '/auth/$accountView'
-      path: '/auth/$accountView'
-      fullPath: '/auth/$accountView'
-      preLoaderRoute: typeof AuthAccountViewRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/$': {
@@ -566,24 +266,9 @@ const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   SplatRoute: SplatRoute,
-  AboutRoute: AboutRoute,
   AdminRoute: AdminRouteWithChildren,
-  AnalysisRoute: AnalysisRoute,
-  ArtistTypesRoute: ArtistTypesRoute,
-  QuizEditorRoute: QuizEditorRoute,
-  QuizTakerRoute: QuizTakerRoute,
-  ResponsesRoute: ResponsesRoute,
-  SettingsRoute: SettingsRoute,
   ApiSplatRoute: ApiSplatRoute,
-  AuthAccountViewRoute: AuthAccountViewRoute,
-  AuthAuthViewRoute: AuthAuthViewRoute,
-  AuthOrganizationViewRoute: AuthOrganizationViewRoute,
-  AuthCallbackRoute: AuthCallbackRoute,
-  AuthLoginRoute: AuthLoginRoute,
   ExampleFeatureIdRoute: ExampleFeatureIdRoute,
-  TestRadarTestRoute: TestRadarTestRoute,
-  TestSidebarTestRoute: TestSidebarTestRoute,
-  TestTestRoute: TestTestRoute,
   ExampleIndexRoute: ExampleIndexRoute,
 }
 export const routeTree = rootRouteImport

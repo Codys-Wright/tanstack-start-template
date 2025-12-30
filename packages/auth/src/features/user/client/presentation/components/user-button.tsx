@@ -37,20 +37,21 @@ export function UserButton({ size = 'icon', className }: UserButtonProps) {
     );
   }
 
+  const triggerButton =
+    size === 'icon' ? (
+      <Button variant="ghost" size="icon" className={cn('rounded-full', className)}>
+        <UserAvatar user={user} />
+      </Button>
+    ) : (
+      <Button variant="ghost" className={cn('h-auto py-2 px-3', className)}>
+        <UserView user={user} size="sm" />
+        <ChevronsUpDown className="ml-2 size-4" />
+      </Button>
+    );
+
   return (
     <DropdownMenu>
-      <DropdownMenu.Trigger asChild>
-        {size === 'icon' ? (
-          <Button variant="ghost" size="icon" className={cn('rounded-full', className)}>
-            <UserAvatar user={user} />
-          </Button>
-        ) : (
-          <Button variant="ghost" className={cn('h-auto py-2 px-3', className)}>
-            <UserView user={user} size="sm" />
-            <ChevronsUpDown className="ml-2 size-4" />
-          </Button>
-        )}
-      </DropdownMenu.Trigger>
+      <DropdownMenu.Trigger asChild>{triggerButton}</DropdownMenu.Trigger>
 
       <DropdownMenu.Content align="end" className="w-56">
         <div className="px-2 py-1.5">
@@ -59,11 +60,11 @@ export function UserButton({ size = 'icon', className }: UserButtonProps) {
 
         <DropdownMenu.Separator />
 
-        <DropdownMenu.Item asChild>
+        <DropdownMenu.Item>
           <Link
             to="/account/$accountView"
             params={{ accountView: 'settings' }}
-            className="flex items-center gap-2"
+            className="flex items-center gap-2 block w-full"
           >
             <SettingsIcon className="size-4" />
             Account Settings

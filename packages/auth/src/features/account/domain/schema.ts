@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker';
 import * as Schema from 'effect/Schema';
-import { UserId } from '../../user/domain/schema.js';
+import { UserId } from '../../user/domain/schema';
 
 /**
  * Account entity matching Better Auth OpenAPI spec

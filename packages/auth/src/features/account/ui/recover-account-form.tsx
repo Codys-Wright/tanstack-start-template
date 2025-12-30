@@ -1,12 +1,12 @@
-import { Button, Card, Input, cn } from '@shadcn';
-import { Link } from '@tanstack/react-router';
-import { Result, useAtom } from '@effect-atom/atom-react';
-import { useForm } from '@tanstack/react-form';
-import { Loader2Icon } from 'lucide-react';
-import { useEffect } from 'react';
-import * as Schema from 'effect/Schema';
+import { Button, Card, Input, cn } from "@shadcn";
+import { Link } from "@tanstack/react-router";
+import { Result, useAtom } from "@effect-atom/atom-react";
+import { useForm } from "@tanstack/react-form";
+import { Loader2Icon } from "lucide-react";
+import { useEffect } from "react";
+import * as Schema from "effect/Schema";
 
-import { recoverAccountAtom } from '../../session/client/atoms.js';
+import { recoverAccountAtom } from "../../session/client/atoms.js";
 
 // Define the form schema using Effect Schema
 const RecoverAccountSchema = Schema.Struct({
@@ -22,7 +22,7 @@ export function RecoverAccountForm({ className }: RecoverAccountFormProps) {
 
   const form = useForm({
     defaultValues: {
-      code: '',
+      code: "",
     },
     onSubmit: async ({ value }) => {
       try {
@@ -42,7 +42,7 @@ export function RecoverAccountForm({ className }: RecoverAccountFormProps) {
   useEffect(() => {
     if (Result.isSuccess(recoverResult)) {
       // Redirect to home or dashboard
-      window.location.href = '/';
+      window.location.href = "/";
     }
   }, [recoverResult]);
 
@@ -52,7 +52,7 @@ export function RecoverAccountForm({ className }: RecoverAccountFormProps) {
     .orNull();
 
   return (
-    <Card className={cn('w-full max-w-sm', className)}>
+    <Card className={cn("w-full max-w-sm", className)}>
       <Card.Header>
         <Card.Title>Recover Account</Card.Title>
         <Card.Description>
@@ -73,7 +73,7 @@ export function RecoverAccountForm({ className }: RecoverAccountFormProps) {
             name="code"
             validators={{
               onChange: ({ value }) => {
-                if (!value) return 'Backup code is required';
+                if (!value) return "Backup code is required";
                 return undefined;
               },
             }}
@@ -94,10 +94,14 @@ export function RecoverAccountForm({ className }: RecoverAccountFormProps) {
                   disabled={isLoading}
                   autoComplete="off"
                   required
-                  className={cn(field.state.meta.errors.length > 0 && 'border-destructive')}
+                  className={cn(
+                    field.state.meta.errors.length > 0 && "border-destructive",
+                  )}
                 />
                 {field.state.meta.errors.length > 0 && (
-                  <p className="text-xs text-destructive">{field.state.meta.errors.join(', ')}</p>
+                  <p className="text-xs text-destructive">
+                    {field.state.meta.errors.join(", ")}
+                  </p>
                 )}
                 <p className="text-xs text-muted-foreground">
                   You can find backup codes in your account security settings
@@ -111,21 +115,25 @@ export function RecoverAccountForm({ className }: RecoverAccountFormProps) {
             <div className="bg-destructive/10 border border-destructive/30 rounded p-3 text-sm text-destructive">
               {error instanceof Error
                 ? error.message
-                : 'Failed to recover account. Please try again.'}
+                : "Failed to recover account. Please try again."}
             </div>
           )}
 
           {/* Submit Button */}
           <form.Subscribe selector={(state) => state.isSubmitting}>
             {(isSubmitting) => (
-              <Button type="submit" disabled={isLoading || isSubmitting} className="w-full">
+              <Button
+                type="submit"
+                disabled={isLoading || isSubmitting}
+                className="w-full"
+              >
                 {isLoading || isSubmitting ? (
                   <>
                     <Loader2Icon className="mr-2 size-4 animate-spin" />
                     Recovering...
                   </>
                 ) : (
-                  'Recover Account'
+                  "Recover Account"
                 )}
               </Button>
             )}
@@ -137,7 +145,7 @@ export function RecoverAccountForm({ className }: RecoverAccountFormProps) {
           <p>
             <Link
               to="/auth/$authView"
-              params={{ authView: 'two-factor' }}
+              params={{ authView: "two-factor" }}
               className="text-primary hover:underline"
             >
               Back to 2FA

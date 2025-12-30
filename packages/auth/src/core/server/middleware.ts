@@ -1,14 +1,14 @@
-import * as HttpApiError from '@effect/platform/HttpApiError';
-import * as HttpApiMiddleware from '@effect/platform/HttpApiMiddleware';
-import * as HttpApiSecurity from '@effect/platform/HttpApiSecurity';
-import * as HttpServerRequest from '@effect/platform/HttpServerRequest';
-import * as RpcMiddleware from '@effect/rpc/RpcMiddleware';
-import * as Context from 'effect/Context';
-import * as Effect from 'effect/Effect';
-import * as Layer from 'effect/Layer';
-import * as Schema from 'effect/Schema';
-import type { UserId } from '@auth/user/domain/schema.js';
-import { AuthService } from './service';
+import * as HttpApiError from "@effect/platform/HttpApiError";
+import * as HttpApiMiddleware from "@effect/platform/HttpApiMiddleware";
+import * as HttpApiSecurity from "@effect/platform/HttpApiSecurity";
+import * as HttpServerRequest from "@effect/platform/HttpServerRequest";
+import * as RpcMiddleware from "@effect/rpc/RpcMiddleware";
+import * as Context from "effect/Context";
+import * as Effect from "effect/Effect";
+import * as Layer from "effect/Layer";
+import * as Schema from "effect/Schema";
+import type { UserId } from "../../../features/user";
+import { AuthService } from "./service";
 
 // ============================================================================
 // Auth Context
@@ -22,7 +22,7 @@ import { AuthService } from './service';
  *   const currentUser = yield* AuthContext;
  *   const userId = currentUser.userId;
  */
-export class AuthContext extends Context.Tag('AuthContext')<
+export class AuthContext extends Context.Tag("AuthContext")<
   AuthContext,
   { readonly userId: UserId }
 >() {
@@ -31,7 +31,7 @@ export class AuthContext extends Context.Tag('AuthContext')<
    * No database or Better Auth required.
    */
   static Mock = Layer.succeed(this, {
-    userId: '00000000-0000-0000-0000-000000000001' as UserId,
+    userId: "00000000-0000-0000-0000-000000000001" as UserId,
   });
 
   /**
@@ -60,14 +60,14 @@ export class AuthContext extends Context.Tag('AuthContext')<
  * Uses cookie-based authentication to validate sessions with Better Auth.
  */
 export class HttpAuthenticationMiddleware extends HttpApiMiddleware.Tag<HttpAuthenticationMiddleware>()(
-  'HttpAuthenticationMiddleware',
+  "HttpAuthenticationMiddleware",
   {
     failure: HttpApiError.Unauthorized,
     provides: AuthContext,
     security: {
       cookieAuth: HttpApiSecurity.apiKey({
-        in: 'cookie',
-        key: 'better-auth.session_token',
+        in: "cookie",
+        key: "better-auth.session_token",
       }),
     },
   },
@@ -81,7 +81,7 @@ export class HttpAuthenticationMiddleware extends HttpApiMiddleware.Tag<HttpAuth
     this.of({
       cookieAuth: () =>
         Effect.succeed({
-          userId: '00000000-0000-0000-0000-000000000001' as UserId,
+          userId: "00000000-0000-0000-0000-000000000001" as UserId,
         }),
     }),
   );
@@ -111,10 +111,10 @@ export const HttpAuthenticationMiddlewareLive = Layer.effect(
           // Forward to Better Auth
           const forwardedHeaders = new Headers();
           if (headers.cookie) {
-            forwardedHeaders.set('cookie', headers.cookie);
+            forwardedHeaders.set("cookie", headers.cookie);
           }
           if (headers.authorization) {
-            forwardedHeaders.set('authorization', headers.authorization);
+            forwardedHeaders.set("authorization", headers.authorization);
           }
 
           // Get session from Better Auth
@@ -143,7 +143,7 @@ export const HttpAuthenticationMiddlewareLive = Layer.effect(
  * Used to protect RPC endpoints requiring authenticated users.
  */
 export class RpcAuthenticationMiddleware extends RpcMiddleware.Tag<RpcAuthenticationMiddleware>()(
-  'RpcAuthenticationMiddleware',
+  "RpcAuthenticationMiddleware",
   {
     failure: HttpApiError.Unauthorized,
     provides: AuthContext,

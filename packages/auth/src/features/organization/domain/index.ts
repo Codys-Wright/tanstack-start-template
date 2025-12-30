@@ -1,3 +1,3 @@
 // Domain: Schema (shared between client and server)
-export * from './schema.js';
-export * from './api.js';
+export * from './schema';
+export * from './api';

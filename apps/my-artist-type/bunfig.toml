@@ -1,0 +1,5 @@
+# Bun configuration for my-artist-type app
+
+[resolve]
+# Try these extensions when resolving imports
+extensions = [".ts", ".tsx", ".js", ".jsx", ".json"]

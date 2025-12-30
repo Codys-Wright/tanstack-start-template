@@ -1,7 +1,7 @@
 import { Atom, Result } from '@effect-atom/atom-react';
 import * as Data from 'effect/Data';
 import * as Effect from 'effect/Effect';
-import { OrganizationApi } from './client.js';
+import { OrganizationApi } from './client';
 
 /**
  * Runtime for organization atoms - provides OrganizationApi service

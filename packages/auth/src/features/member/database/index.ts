@@ -1,1 +1,1 @@
-export { MemberRepository } from './repo.js';
+export { MemberRepository } from './repo';

@@ -13,7 +13,7 @@ export function TeamMembersDialog({ team, children }: TeamMembersDialogProps) {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <Dialog.Trigger asChild>{children}</Dialog.Trigger>
+      <Dialog.Trigger>{children}</Dialog.Trigger>
       <Dialog.Content className="max-w-2xl max-h-[80vh] overflow-y-auto">
         <Dialog.Header>
           <Dialog.Title>Manage Team Members</Dialog.Title>

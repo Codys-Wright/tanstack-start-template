@@ -51,7 +51,7 @@ export function CreateTeamDialog({ children, onSuccess }: CreateTeamDialogProps)
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <Dialog.Trigger asChild>{children}</Dialog.Trigger>
+      <Dialog.Trigger>{children}</Dialog.Trigger>
       <Dialog.Content>
         <Dialog.Header>
           <Dialog.Title>Create Team</Dialog.Title>

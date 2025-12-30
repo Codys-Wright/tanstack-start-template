@@ -65,7 +65,7 @@ export function AddTeamMemberDialog({ team, children, onSuccess }: AddTeamMember
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <Dialog.Trigger asChild>{children}</Dialog.Trigger>
+      <Dialog.Trigger>{children}</Dialog.Trigger>
       <Dialog.Content className="max-w-md">
         <Dialog.Header>
           <Dialog.Title>Add Team Member</Dialog.Title>

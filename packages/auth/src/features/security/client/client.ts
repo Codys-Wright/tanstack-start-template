@@ -1,6 +1,5 @@
-import { Atom } from '@effect-atom/atom-react';
 import * as Effect from 'effect/Effect';
-import { authClient } from '../session/client/client.js';
+import { authClient } from '../../../../features/session/client/client';
 
 /**
  * SecurityApi - Effect Service wrapper around Better Auth security operations
@@ -14,10 +13,10 @@ export class SecurityApi extends Effect.Service<SecurityApi>()('@features/auth/S
   effect: Effect.sync(() => ({
     // ===== TWO-FACTOR =====
 
-    getTwoFactorStatus: () =>
+    getTwoFactorStatus: (password: string) =>
       Effect.tryPromise({
         try: async () => {
-          const result = await authClient.twoFactor.getTotpUri();
+          const result = await authClient.twoFactor.getTotpUri({ password });
           if (result.error) {
             throw new Error(result.error.message || 'Failed to get 2FA status');
           }
@@ -29,10 +28,10 @@ export class SecurityApi extends Effect.Service<SecurityApi>()('@features/auth/S
         catch: (error) => new Error(`Failed to get 2FA status: ${error}`),
       }),
 
-    enableTwoFactor: () =>
+    enableTwoFactor: (password: string) =>
       Effect.tryPromise({
         try: async () => {
-          const result = await authClient.twoFactor.enable();
+          const result = await authClient.twoFactor.enable({ password });
           if (result.error) {
             throw new Error(result.error.message || 'Failed to enable 2FA');
           }
@@ -47,10 +46,10 @@ export class SecurityApi extends Effect.Service<SecurityApi>()('@features/auth/S
           ),
       }),
 
-    disableTwoFactor: () =>
+    disableTwoFactor: (password: string) =>
       Effect.tryPromise({
         try: async () => {
-          const result = await authClient.twoFactor.disable();
+          const result = await authClient.twoFactor.disable({ password });
           if (result.error) {
             throw new Error(result.error.message || 'Failed to disable 2FA');
           }
@@ -80,10 +79,12 @@ export class SecurityApi extends Effect.Service<SecurityApi>()('@features/auth/S
           ),
       }),
 
-    generateBackupCodes: () =>
+    generateBackupCodes: (password: string) =>
       Effect.tryPromise({
         try: async () => {
-          const result = await authClient.twoFactor.generateBackupCodes();
+          const result = await authClient.twoFactor.generateBackupCodes({
+            password,
+          });
           if (result.error) {
             throw new Error(result.error.message || 'Failed to generate backup codes');
           }
@@ -159,7 +160,7 @@ export class SecurityApi extends Effect.Service<SecurityApi>()('@features/auth/S
     listSessions: () =>
       Effect.tryPromise({
         try: async () => {
-          const result = await authClient.session.list();
+          const result = await authClient.listSessions();
           if (result.error) {
             throw new Error(result.error.message || 'Failed to list sessions');
           }
@@ -171,7 +172,7 @@ export class SecurityApi extends Effect.Service<SecurityApi>()('@features/auth/S
     revokeSession: (token: string) =>
       Effect.tryPromise({
         try: async () => {
-          const result = await authClient.session.revoke({ token });
+          const result = await authClient.revokeSession({ token });
           if (result.error) {
             throw new Error(result.error.message || 'Failed to revoke session');
           }
@@ -183,7 +184,7 @@ export class SecurityApi extends Effect.Service<SecurityApi>()('@features/auth/S
     revokeOtherSessions: () =>
       Effect.tryPromise({
         try: async () => {
-          const result = await authClient.session.revokeOther();
+          const result = await authClient.revokeOtherSessions();
           if (result.error) {
             throw new Error(result.error.message || 'Failed to revoke other sessions');
           }
@@ -206,10 +207,13 @@ export class SecurityApi extends Effect.Service<SecurityApi>()('@features/auth/S
         catch: (error) => new Error(`Failed to list accounts: ${error}`),
       }),
 
-    unlinkAccount: (accountId: string) =>
+    unlinkAccount: (providerId: string, accountId: string) =>
       Effect.tryPromise({
         try: async () => {
-          const result = await authClient.unlinkAccount({ accountId });
+          const result = await authClient.unlinkAccount({
+            providerId,
+            accountId,
+          });
           if (result.error) {
             throw new Error(result.error.message || 'Failed to unlink account');
           }

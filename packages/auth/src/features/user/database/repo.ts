@@ -3,7 +3,7 @@ import * as SqlSchema from '@effect/sql/SqlSchema';
 import * as Effect from 'effect/Effect';
 import * as Schema from 'effect/Schema';
 import { PgLive } from '@core/database';
-import { User } from '../domain/schema.js';
+import { User } from '../domain/schema';
 
 /**
  * UserRepository - Database access layer for users using Effect SQL.

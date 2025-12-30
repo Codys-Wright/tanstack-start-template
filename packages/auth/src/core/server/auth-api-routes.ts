@@ -1,10 +1,10 @@
 import * as HttpLayerRouter from '@effect/platform/HttpLayerRouter';
 import * as HttpServer from '@effect/platform/HttpServer';
 import * as Layer from 'effect/Layer';
-import { AuthApi } from '../auth-api.js';
-import { AuthApiLive } from './auth-api-live.js';
-import { HttpAuthenticationMiddlewareLive } from './middleware.js';
-import { AuthService } from './service.js';
+import { AuthApi } from '../../../core/auth-api';
+import { AuthApiLive } from './auth-api-live';
+import { HttpAuthenticationMiddlewareLive } from './middleware';
+import { AuthService } from './service';
 
 /**
  * AuthApiRoutes - Pre-configured HTTP routes layer for the Auth API.

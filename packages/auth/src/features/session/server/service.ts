@@ -12,10 +12,10 @@ import * as Layer from 'effect/Layer';
 import * as Option from 'effect/Option';
 import * as Redacted from 'effect/Redacted';
 import * as Runtime from 'effect/Runtime';
-import { Unauthenticated, type SessionData } from '../domain/schema.js';
-import type { UserId } from '../../user/domain/schema.js';
-import { AuthConfig } from './config.js';
-import { AuthDatabase } from './database.js';
+import { Unauthenticated, type SessionData } from '../domain/schema';
+import type { UserId } from '../../user/domain/schema';
+import { AuthConfig } from './config';
+import { AuthDatabase } from './database';
 
 // Re-export for backwards compatibility with existing server code
 export { Unauthenticated };

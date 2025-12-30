@@ -1,3 +1,3 @@
-export * from './user-avatar.js';
-export * from './user-view.js';
-export * from './user-button.js';
+export * from './user-avatar';
+export * from './user-view';
+export * from './user-button';

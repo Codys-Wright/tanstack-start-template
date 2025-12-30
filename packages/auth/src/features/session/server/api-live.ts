@@ -3,7 +3,7 @@ import * as HttpServerRequest from '@effect/platform/HttpServerRequest';
 import * as Effect from 'effect/Effect';
 import * as Layer from 'effect/Layer';
 import * as Schema from 'effect/Schema';
-import { AuthApi } from '../../../core/server/api.js';
+import { AuthApi } from '../../../../core/server/api';
 import {
   AuthError,
   SessionData,
@@ -12,8 +12,8 @@ import {
   SignInResponse,
   SignUpResponse,
   SignOutResponse,
-} from '../domain/schema.js';
-import { AuthService } from './service.js';
+} from '../domain/schema';
+import { AuthService } from './service';
 
 /**
  * SessionApiLive - HTTP API handlers for the session group within AuthApi.

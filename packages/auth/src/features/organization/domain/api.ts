@@ -8,7 +8,7 @@ import {
   OrganizationId,
   SetActiveOrganizationInput,
   UpdateOrganizationInput,
-} from './schema.js';
+} from './schema';
 
 /**
  * OrganizationApiGroup - HTTP API group for organization management operations.

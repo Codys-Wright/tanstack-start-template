@@ -1,16 +1,16 @@
-import { AuthService } from '@auth/server';
-import { dehydrate } from '../features/core/client';
-import { todosAtom } from '@todo';
-import { TodoService } from '@todo/server';
-import { Result } from '@effect-atom/atom-react';
-import { HydrationBoundary } from '@effect-atom/atom-react/ReactHydration';
-import { createFileRoute } from '@tanstack/react-router';
-import { createServerFn } from '@tanstack/react-start';
-import * as Effect from 'effect/Effect';
-import { serverRuntime } from '../features/core/server';
-import { App } from './-index/app';
+import { AuthService } from "@auth/server";
+import { dehydrate } from "../features/core/client";
+import { todosAtom } from "@todo";
+import { TodoService } from "@todo/server";
+import { Result } from "@effect-atom/atom-react";
+import { HydrationBoundary } from "@effect-atom/atom-react/ReactHydration";
+import { createFileRoute } from "@tanstack/react-router";
+import { createServerFn } from "@tanstack/react-start";
+import * as Effect from "effect/Effect";
+import { serverRuntime } from "../features/core/server";
+import { App } from "./-index/app";
 
-const listTodos = createServerFn({ method: 'GET' }).handler(async () => {
+const listTodos = createServerFn({ method: "GET" }).handler(async () => {
   const todos = await serverRuntime.runPromiseExit(
     Effect.gen(function* () {
       const auth = yield* AuthService;
@@ -23,9 +23,11 @@ const listTodos = createServerFn({ method: 'GET' }).handler(async () => {
       return todos;
     }).pipe(
       // If unauthenticated, return empty array instead of failing
-      Effect.catchTag('Unauthenticated', () =>
+      Effect.catchTag("Unauthenticated", () =>
         Effect.gen(function* () {
-          yield* Effect.logInfo('[listTodos] No session - returning empty todos');
+          yield* Effect.logInfo(
+            "[listTodos] No session - returning empty todos",
+          );
           return [];
         }),
       ),
@@ -36,7 +38,7 @@ const listTodos = createServerFn({ method: 'GET' }).handler(async () => {
   return dehydrate(todosAtom.remote, Result.fromExit(todos));
 });
 
-export const Route = createFileRoute('/')({
+export const Route = createFileRoute("/")({
   loader: () => listTodos(),
   component: AppWrapper,
 });

@@ -1,1 +1,1 @@
-export { InvitationRepository } from './repo.js';
+export { InvitationRepository } from './repo';

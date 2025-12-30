@@ -1,6 +1,6 @@
 import { Atom } from '@effect-atom/atom-react';
 import * as Effect from 'effect/Effect';
-import { SecurityApi } from './client.js';
+import { SecurityApi } from './client';
 
 /**
  * Runtime for security atoms - provides SecurityApi service

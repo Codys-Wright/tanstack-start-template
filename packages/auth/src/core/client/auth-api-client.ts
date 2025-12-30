@@ -3,7 +3,7 @@ import * as HttpApiClient from '@effect/platform/HttpApiClient';
 import * as HttpClient from '@effect/platform/HttpClient';
 import * as Effect from 'effect/Effect';
 import * as Schedule from 'effect/Schedule';
-import { AuthApi } from '../auth-api.js';
+import { AuthApi } from '../../../core/auth-api';
 
 const getBaseUrl = (): string =>
   typeof window !== 'undefined' ? window.location.origin : 'http://localhost:3000';

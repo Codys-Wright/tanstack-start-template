@@ -22,6 +22,10 @@
       "@core/*": ["../../packages/core/src/*"],
       "@auth": ["../../packages/auth/src/index.ts"],
       "@auth/*": ["../../packages/auth/src/*"],
+      "@shadcn": ["../../packages/ui/shadcn/src/index.ts"],
+      "@shadcn/*": ["../../packages/ui/shadcn/src/*"],
+      "@components": ["../../packages/ui/components/src/index.ts"],
+      "@components/*": ["../../packages/ui/components/src/*"],
       "@example": ["../../packages/example/src/index.ts"],
       "@example/*": ["../../packages/example/src/*"]
     }
@@ -41,13 +45,19 @@
   "include": ["src/**/*.js", "src/**/*.jsx", "src/**/*.ts", "src/**/*.tsx"],
   "references": [
     {
+      "path": "../../packages/ui/components/tsconfig.lib.json"
+    },
+    {
+      "path": "../../packages/quiz/tsconfig.lib.json"
+    },
+    {
       "path": "../../packages/auth/tsconfig.lib.json"
     },
     {
-      "path": "../../packages/todo/tsconfig.lib.json"
+      "path": "../../packages/example/tsconfig.lib.json"
     },
     {
-      "path": "../../packages/example/tsconfig.lib.json"
+      "path": "../../packages/todo/tsconfig.lib.json"
     },
     {
       "path": "../../packages/ui/theme/tsconfig.lib.json"

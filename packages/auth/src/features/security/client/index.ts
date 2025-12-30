@@ -1,2 +1,2 @@
-export * from './client.js';
-export * from './atoms.js';
+export * from './client';
+export * from './atoms';

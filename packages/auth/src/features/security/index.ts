@@ -1,5 +1,5 @@
 // Domain types and schemas
-export * from './domain/index.js';
+export * from './domain/index';
 
 // Client - API and Atoms
-export * from './client/index.js';
+export * from './client/index';

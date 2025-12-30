@@ -7,16 +7,16 @@
 // ============================================================================
 // Core - Server infrastructure
 // ============================================================================
-export * from './features/_core/config';
-export * from './features/_core/middleware';
-export * from './features/_core/router';
-export { AuthService, Unauthenticated } from './features/_core/service';
+export * from "./core/config.js";
+export * from "./core/server/middleware.js";
+export * from "./core/server/router.js";
+export { AuthService, Unauthenticated } from "./core/server/service.js";
 
 // ============================================================================
 // Effect HttpApi - Typed authentication API (server implementations)
 // ============================================================================
-export * from './features/_core/auth-api';
-export * from './features/_core/auth-api-live';
-export * from './features/_core/auth-api-routes';
-export * from './features/session/session-api-live';
-export * from './features/account/account-api-live';
+export * from "./core/auth-api.js";
+export * from "./core/server/auth-api-live.js";
+export * from "./core/server/auth-api-routes.js";
+export * from "./features/session/session-api-live.js";
+export * from "./features/account/account-api-live.js";

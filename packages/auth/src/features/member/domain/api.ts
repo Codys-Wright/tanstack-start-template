@@ -1,7 +1,7 @@
 import * as HttpApiEndpoint from '@effect/platform/HttpApiEndpoint';
 import * as HttpApiGroup from '@effect/platform/HttpApiGroup';
 import * as Schema from 'effect/Schema';
-import { AuthError } from '../session/domain/schema.js';
+import { AuthError } from '../../../../features/session/domain/schema';
 import {
   OrganizationRole,
   InviteMemberInput,
@@ -13,7 +13,7 @@ import {
   MemberId,
   RemoveMemberInput,
   UpdateMemberRoleInput,
-} from './schema.js';
+} from './schema';
 
 export class MemberApiGroup extends HttpApiGroup.make('members')
   .add(

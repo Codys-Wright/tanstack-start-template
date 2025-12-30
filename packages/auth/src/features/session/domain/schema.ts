@@ -1,7 +1,7 @@
 import * as HttpApiSchema from '@effect/platform/HttpApiSchema';
 import * as Schema from 'effect/Schema';
 import { faker } from '@faker-js/faker';
-import { User, UserId } from '../../user/domain/schema.js';
+import { User, UserId } from '../../user/domain/schema';
 
 // ============================================================================
 // Auth Errors (client-safe, can be used in API definitions)

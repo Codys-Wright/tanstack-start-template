@@ -9,15 +9,15 @@
  * 2. Compose their own runtime that includes these layers
  */
 
-import { globalValue } from 'effect/GlobalValue';
-import * as Effect from 'effect/Effect';
-import * as Layer from 'effect/Layer';
-import * as ManagedRuntime from 'effect/ManagedRuntime';
+import { globalValue } from "effect/GlobalValue";
+import * as Effect from "effect/Effect";
+import * as Layer from "effect/Layer";
+import * as ManagedRuntime from "effect/ManagedRuntime";
 
-import { AuthService } from '../../features/session/server/index.js';
+import { AuthService } from "../../../features/session/server";
 
 // Use globalValue to persist the memoMap across hot reloads
-const memoMap = globalValue(Symbol.for('@auth/server-memoMap'), () =>
+const memoMap = globalValue(Symbol.for("@auth/server-memoMap"), () =>
   Effect.runSync(Layer.makeMemoMap),
 );
 
@@ -44,8 +44,9 @@ export const AuthServerLayer = AuthService.Default;
  * );
  * ```
  */
-export const AuthServerRuntime = globalValue(Symbol.for('@auth/server-runtime'), () =>
-  ManagedRuntime.make(AuthServerLayer, memoMap),
+export const AuthServerRuntime = globalValue(
+  Symbol.for("@auth/server-runtime"),
+  () => ManagedRuntime.make(AuthServerLayer, memoMap),
 );
 
 /**
