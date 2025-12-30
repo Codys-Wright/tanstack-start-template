@@ -22,12 +22,16 @@
       "@core/*": ["../../packages/core/src/*"],
       "@auth": ["../../packages/auth/src/index.ts"],
       "@auth/*": ["../../packages/auth/src/*"],
+      "@quiz": ["../../packages/quiz/src/index.ts"],
+      "@quiz/*": ["../../packages/quiz/src/*"],
       "@shadcn": ["../../packages/ui/shadcn/src/index.ts"],
       "@shadcn/*": ["../../packages/ui/shadcn/src/*"],
       "@components": ["../../packages/ui/components/src/index.ts"],
       "@components/*": ["../../packages/ui/components/src/*"],
       "@example": ["../../packages/example/src/index.ts"],
-      "@example/*": ["../../packages/example/src/*"]
+      "@example/*": ["../../packages/example/src/*"],
+      "@theme": ["../../packages/ui/theme/src/index.ts"],
+      "@theme/*": ["../../packages/ui/theme/src/*"]
     }
   },
   "exclude": [

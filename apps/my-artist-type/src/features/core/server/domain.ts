@@ -1,6 +1,7 @@
 import { RpcAuthenticationMiddleware } from '@auth/server';
 import { FeatureRpc } from '@example';
 import { TodoRpc, TodoApi } from '@todo';
+import { QuizRpc } from '@quiz';
 import * as RpcMiddleware from '@effect/rpc/RpcMiddleware';
 import * as Effect from 'effect/Effect';
 import * as Exit from 'effect/Exit';
@@ -45,9 +46,10 @@ export const RpcLoggerLive = Layer.succeed(
  * Global middleware (auth, logging) is applied once here.
  *
  * Add more RPC groups using .merge() as features are added:
- * e.g., TodosRpc.merge(QuizRpc).merge(AnalysisRpc)
+ * e.g., TodosRpc.merge(QuizRpc)
  */
 export const DomainRpc = TodoRpc.merge(FeatureRpc)
+  .merge(QuizRpc)
   .middleware(RpcAuthenticationMiddleware)
   .middleware(RpcLogger);
 

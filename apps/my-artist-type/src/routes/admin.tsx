@@ -1,327 +1,176 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { Badge, Button, Card, Table, Tabs } from "@shadcn";
-import { Result, useAtomValue } from "@effect-atom/atom-react";
+import { Result, useAtomSet, useAtomValue } from '@effect-atom/atom-react';
+import { HydrationBoundary } from '@effect-atom/atom-react/ReactHydration';
 import {
-  CalendarIcon,
-  MailIcon,
-  ShieldIcon,
-  UserIcon,
-  BuildingIcon,
-  MonitorIcon,
-  MailCheckIcon,
-  UsersIcon,
-} from "lucide-react";
-import { listUsersAtom } from "@auth";
-import { sessionAtom } from "@auth";
+  AdminSidebar,
+  adminSidebarVisibleAtom,
+  AnalysisChart,
+  analysesAtom,
+  combineResponseWithAnalysis,
+  loadAdmin,
+  responsesAtom,
+  ResponsesOverTimeChart,
+  ResponsesTable,
+  ResponseStatsCards,
+  type AdminLoaderData,
+  type AnalysisResult,
+  type QuizResponse,
+} from '@quiz';
+import { createFileRoute, Link, Outlet, useLocation } from '@tanstack/react-router';
+import { Button, SidebarInset, SidebarProvider } from '@shadcn';
+import { ChevronLeftIcon, ChevronRightIcon, EditIcon } from 'lucide-react';
+import React from 'react';
 
-export const Route = createFileRoute("/admin")({
-  component: AdminPage,
-});
+// ============================================================================
+// Admin Layout Content (inside HydrationBoundary)
+// ============================================================================
 
-function AdminPage() {
-  const sessionResult = useAtomValue(sessionAtom);
-  const usersResult = useAtomValue(listUsersAtom);
+const AdminLayoutContent: React.FC = () => {
+  const location = useLocation();
 
-  const isPending = Result.isInitial(usersResult) && usersResult.waiting;
-  const users = Result.builder(usersResult)
-    .onSuccess((v) => v?.users || [])
-    .orElse(() => []);
+  // Check if we're on the quiz-editor route
+  const isQuizEditorRoute = location.pathname === '/admin/quiz-editor';
 
-  const currentUser = Result.builder(sessionResult)
-    .onSuccess((s) => s?.user)
-    .orNull();
+  // Control sidebar state with atom - prevent hydration mismatch
+  const [isHydrated, setIsHydrated] = React.useState(false);
+  const sidebarOpen = useAtomValue(adminSidebarVisibleAtom) as boolean;
+  const setSidebarOpen = useAtomSet(adminSidebarVisibleAtom) as (value: boolean) => void;
+
+  // Prevent hydration mismatch by waiting for client hydration
+  React.useEffect(() => {
+    setIsHydrated(true);
+  }, []);
+
+  // Get actual responses data from the atom
+  const responsesResult = useAtomValue(responsesAtom) as Result.Result<
+    ReadonlyArray<QuizResponse>,
+    unknown
+  >;
+  const analysisResult = useAtomValue(analysesAtom) as Result.Result<
+    ReadonlyArray<AnalysisResult>,
+    unknown
+  >;
+
+  // Combine response and analysis data
+  const combinedData = React.useMemo(() => {
+    if (Result.isSuccess(responsesResult) && Result.isSuccess(analysisResult)) {
+      return combineResponseWithAnalysis(responsesResult.value, analysisResult.value);
+    }
+    return [] as const;
+  }, [responsesResult, analysisResult]);
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
-      <div className="container mx-auto p-6 max-w-7xl">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-6">
-          <div className="flex items-center gap-3">
-            <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
-              <ShieldIcon className="h-6 w-6 text-primary" />
-            </div>
-            <div>
-              <h1 className="text-3xl font-bold">Admin Panel</h1>
-              <p className="text-muted-foreground">
-                Manage users, organizations, and system data
-              </p>
-            </div>
-          </div>
-          <Badge variant="outline" className="gap-2">
-            <UserIcon className="h-3 w-3" />
-            {currentUser?.name || currentUser?.email}
-          </Badge>
-        </div>
+    <SidebarProvider open={isHydrated ? sidebarOpen : true} onOpenChange={setSidebarOpen}>
+      <AdminSidebar variant="inset" />
+      <SidebarInset>
+        <div className="flex flex-1 flex-col">
+          <div className="@container/main flex flex-1 flex-col gap-2">
+            <div
+              className={`flex flex-col gap-4 ${
+                !isQuizEditorRoute ? 'py-4 md:py-6' : ''
+              } md:gap-6 relative`}
+            >
+              {!isQuizEditorRoute && (
+                <>
+                  {/* Sidebar Toggle Button */}
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => {
+                      setSidebarOpen(!sidebarOpen);
+                    }}
+                    className="absolute top-4 left-4 z-10 h-8 w-8 p-0"
+                    title={sidebarOpen ? 'Hide sidebar' : 'Show sidebar'}
+                  >
+                    {sidebarOpen ? (
+                      <ChevronLeftIcon className="h-4 w-4" />
+                    ) : (
+                      <ChevronRightIcon className="h-4 w-4" />
+                    )}
+                  </Button>
 
-        {/* Tabs */}
-        <Tabs defaultValue="users" className="space-y-4">
-          <Tabs.List>
-            <Tabs.Trigger value="users" className="gap-2">
-              <UserIcon className="h-4 w-4" />
-              Users
-            </Tabs.Trigger>
-            <Tabs.Trigger value="organizations" className="gap-2">
-              <BuildingIcon className="h-4 w-4" />
-              Organizations
-            </Tabs.Trigger>
-            <Tabs.Trigger value="sessions" className="gap-2">
-              <MonitorIcon className="h-4 w-4" />
-              Sessions
-            </Tabs.Trigger>
-            <Tabs.Trigger value="invitations" className="gap-2">
-              <MailCheckIcon className="h-4 w-4" />
-              Invitations
-            </Tabs.Trigger>
-            <Tabs.Trigger value="members" className="gap-2">
-              <UsersIcon className="h-4 w-4" />
-              Members
-            </Tabs.Trigger>
-          </Tabs.List>
-
-          {/* Users Tab */}
-          <Tabs.Content value="users">
-            <Card>
-              <Card.Header>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <Card.Title className="flex items-center gap-2">
-                      <UserIcon className="h-5 w-5" />
-                      Users
-                    </Card.Title>
-                    <Card.Description>
-                      Manage all users in the system ({users.length} total)
-                    </Card.Description>
+                  {/* Go To Editor Button */}
+                  <Link to="/admin/quiz-editor">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="absolute top-4 right-4 z-10 h-8 px-3"
+                      title="Go to Quiz Editor"
+                    >
+                      <EditIcon className="h-4 w-4 mr-2" />
+                      Go To Editor
+                    </Button>
+                  </Link>
+                  {/* Response Statistics */}
+                  <div className="px-4 lg:px-6 pt-12">
+                    <h2 className="text-xl font-semibold mb-4">Response Statistics</h2>
+                    <ResponseStatsCards responsesResult={responsesResult} />
                   </div>
-                </div>
-              </Card.Header>
-              <Card.Content>
-                {isPending ? (
-                  <div className="space-y-3">
-                    {["user-1", "user-2", "user-3", "user-4", "user-5"].map(
-                      (key) => (
-                        <div
-                          key={key}
-                          className="flex items-center gap-3 p-3 border rounded-lg"
-                        >
-                          <div className="w-10 h-10 bg-muted rounded-full animate-pulse" />
-                          <div className="flex-1 space-y-2">
-                            <div className="h-4 bg-muted rounded animate-pulse w-1/3" />
-                            <div className="h-3 bg-muted rounded animate-pulse w-1/2" />
-                          </div>
-                        </div>
-                      ),
+
+                  {/* Charts Section */}
+                  <div className="px-4 lg:px-6">
+                    <div className="grid grid-cols-1 lg:grid-cols-10 gap-6">
+                      {/* Analysis Chart */}
+                      <div className="lg:col-span-3">
+                        <AnalysisChart />
+                      </div>
+
+                      {/* Responses Over Time Chart */}
+                      <div className="lg:col-span-7">
+                        <ResponsesOverTimeChart />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Responses Table */}
+                  <div className="px-4 lg:px-6">
+                    <h2 className="text-xl font-semibold mb-4">Recent Responses</h2>
+                    {Result.isSuccess(responsesResult) && Result.isSuccess(analysisResult) ? (
+                      <ResponsesTable data={combinedData} />
+                    ) : (
+                      <div className="text-center py-8 text-muted-foreground">
+                        Loading responses and analysis data...
+                      </div>
                     )}
                   </div>
-                ) : users.length === 0 ? (
-                  <div className="text-center py-12 text-muted-foreground">
-                    <UserIcon className="mx-auto h-12 w-12 mb-3 opacity-50" />
-                    <p className="text-lg font-medium">No users found</p>
-                    <p className="text-sm mt-1">
-                      Create your first user to get started.
-                    </p>
-                  </div>
-                ) : (
-                  <Table>
-                    <Table.Header>
-                      <Table.Row>
-                        <Table.Head>User</Table.Head>
-                        <Table.Head>Email</Table.Head>
-                        <Table.Head>Role</Table.Head>
-                        <Table.Head>Created</Table.Head>
-                        <Table.Head>Status</Table.Head>
-                        <Table.Head className="text-right">Actions</Table.Head>
-                      </Table.Row>
-                    </Table.Header>
-                    <Table.Body>
-                      {users.map((user: any) => {
-                        const roles = Array.isArray(user.role)
-                          ? user.role
-                          : user.role
-                            ? [user.role]
-                            : [];
-                        const isAdmin = roles.includes("admin");
-                        const isBanned = user.banned;
+                </>
+              )}
 
-                        return (
-                          <Table.Row key={user.id}>
-                            <Table.Cell>
-                              <div className="flex items-center gap-3">
-                                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-muted">
-                                  <UserIcon className="h-5 w-5" />
-                                </div>
-                                <div>
-                                  <p className="font-medium">
-                                    {user.name || "Unnamed User"}
-                                  </p>
-                                  <p className="text-sm text-muted-foreground">
-                                    ID: {user.id.slice(0, 8)}...
-                                  </p>
-                                </div>
-                              </div>
-                            </Table.Cell>
-                            <Table.Cell>
-                              <div className="flex items-center gap-2">
-                                <MailIcon className="h-4 w-4 text-muted-foreground" />
-                                <span>{user.email}</span>
-                              </div>
-                            </Table.Cell>
-                            <Table.Cell>
-                              {isAdmin ? (
-                                <Badge variant="default" className="gap-1">
-                                  <ShieldIcon className="h-3 w-3" />
-                                  Admin
-                                </Badge>
-                              ) : (
-                                <Badge variant="secondary">User</Badge>
-                              )}
-                            </Table.Cell>
-                            <Table.Cell>
-                              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                                <CalendarIcon className="h-4 w-4" />
-                                {new Date(user.createdAt).toLocaleDateString()}
-                              </div>
-                            </Table.Cell>
-                            <Table.Cell>
-                              {isBanned ? (
-                                <Badge variant="destructive">Banned</Badge>
-                              ) : (
-                                <Badge
-                                  variant="outline"
-                                  className="text-green-600 border-green-600"
-                                >
-                                  Active
-                                </Badge>
-                              )}
-                            </Table.Cell>
-                            <Table.Cell className="text-right">
-                              <div className="flex items-center justify-end gap-2">
-                                <Button size="sm" variant="outline" disabled>
-                                  Edit
-                                </Button>
-                                <Button
-                                  size="sm"
-                                  variant="outline"
-                                  disabled={user.id === currentUser?.id}
-                                >
-                                  {isBanned ? "Unban" : "Ban"}
-                                </Button>
-                              </div>
-                            </Table.Cell>
-                          </Table.Row>
-                        );
-                      })}
-                    </Table.Body>
-                  </Table>
-                )}
-              </Card.Content>
-            </Card>
-          </Tabs.Content>
-
-          {/* Organizations Tab */}
-          <Tabs.Content value="organizations">
-            <Card>
-              <Card.Header>
-                <Card.Title className="flex items-center gap-2">
-                  <BuildingIcon className="h-5 w-5" />
-                  Organizations
-                </Card.Title>
-                <Card.Description>
-                  View all organizations in the system
-                </Card.Description>
-              </Card.Header>
-              <Card.Content>
-                <div className="text-center py-12 text-muted-foreground">
-                  <BuildingIcon className="mx-auto h-12 w-12 mb-3 opacity-50" />
-                  <p className="text-lg font-medium">
-                    Organizations data coming soon
-                  </p>
-                  <p className="text-sm mt-1">
-                    Organization repository integration in progress
-                  </p>
-                </div>
-              </Card.Content>
-            </Card>
-          </Tabs.Content>
-
-          {/* Sessions Tab */}
-          <Tabs.Content value="sessions">
-            <Card>
-              <Card.Header>
-                <Card.Title className="flex items-center gap-2">
-                  <MonitorIcon className="h-5 w-5" />
-                  Sessions
-                </Card.Title>
-                <Card.Description>
-                  View all active sessions in the system
-                </Card.Description>
-              </Card.Header>
-              <Card.Content>
-                <div className="text-center py-12 text-muted-foreground">
-                  <MonitorIcon className="mx-auto h-12 w-12 mb-3 opacity-50" />
-                  <p className="text-lg font-medium">
-                    Sessions data coming soon
-                  </p>
-                  <p className="text-sm mt-1">
-                    Session repository integration in progress
-                  </p>
-                </div>
-              </Card.Content>
-            </Card>
-          </Tabs.Content>
-
-          {/* Invitations Tab */}
-          <Tabs.Content value="invitations">
-            <Card>
-              <Card.Header>
-                <Card.Title className="flex items-center gap-2">
-                  <MailCheckIcon className="h-5 w-5" />
-                  Invitations
-                </Card.Title>
-                <Card.Description>
-                  View all organization invitations
-                </Card.Description>
-              </Card.Header>
-              <Card.Content>
-                <div className="text-center py-12 text-muted-foreground">
-                  <MailCheckIcon className="mx-auto h-12 w-12 mb-3 opacity-50" />
-                  <p className="text-lg font-medium">
-                    Invitations data coming soon
-                  </p>
-                  <p className="text-sm mt-1">
-                    Invitation repository integration in progress
-                  </p>
-                </div>
-              </Card.Content>
-            </Card>
-          </Tabs.Content>
-
-          {/* Members Tab */}
-          <Tabs.Content value="members">
-            <Card>
-              <Card.Header>
-                <Card.Title className="flex items-center gap-2">
-                  <UsersIcon className="h-5 w-5" />
-                  Members
-                </Card.Title>
-                <Card.Description>
-                  View all organization members
-                </Card.Description>
-              </Card.Header>
-              <Card.Content>
-                <div className="text-center py-12 text-muted-foreground">
-                  <UsersIcon className="mx-auto h-12 w-12 mb-3 opacity-50" />
-                  <p className="text-lg font-medium">
-                    Members data coming soon
-                  </p>
-                  <p className="text-sm mt-1">
-                    Member repository integration in progress
-                  </p>
-                </div>
-              </Card.Content>
-            </Card>
-          </Tabs.Content>
-        </Tabs>
-      </div>
-    </div>
+              <Outlet />
+            </div>
+          </div>
+        </div>
+      </SidebarInset>
+    </SidebarProvider>
   );
+};
+
+// ============================================================================
+// Admin Layout with Hydration
+// ============================================================================
+
+interface AdminLayoutProps {
+  loaderData: AdminLoaderData;
+}
+
+const AdminLayout: React.FC<AdminLayoutProps> = ({ loaderData }) => {
+  const hydrationState = [loaderData.responses, loaderData.analyses];
+  return (
+    <HydrationBoundary state={hydrationState}>
+      <AdminLayoutContent />
+    </HydrationBoundary>
+  );
+};
+
+// ============================================================================
+// Route Definition
+// ============================================================================
+
+export const Route = createFileRoute('/admin')({
+  loader: () => loadAdmin(),
+  component: AdminPageWrapper,
+});
+
+function AdminPageWrapper() {
+  const loaderData = Route.useLoaderData();
+  return <AdminLayout loaderData={loaderData} />;
 }

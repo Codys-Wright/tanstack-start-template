@@ -30,6 +30,8 @@ const config = defineConfig({
       '@example/server': path.resolve(import.meta.dirname, '../../packages/example/src/server.ts'),
       '@todo/server': path.resolve(import.meta.dirname, '../../packages/todo/src/server.ts'),
       '@todo/database': path.resolve(import.meta.dirname, '../../packages/todo/src/database.ts'),
+      '@quiz/server': path.resolve(import.meta.dirname, '../../packages/quiz/src/server.ts'),
+      '@quiz/database': path.resolve(import.meta.dirname, '../../packages/quiz/src/database.ts'),
     },
   },
   optimizeDeps: {

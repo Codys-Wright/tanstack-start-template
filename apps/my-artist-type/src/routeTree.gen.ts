@@ -9,12 +9,19 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TodosRouteImport } from './routes/todos'
+import { Route as ResponsesRouteImport } from './routes/responses'
+import { Route as QuizTakerRouteImport } from './routes/quiz-taker'
+import { Route as QuizRouteImport } from './routes/quiz'
+import { Route as ArtistTypesRouteImport } from './routes/artist-types'
+import { Route as AnalysisRouteImport } from './routes/analysis'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as SplatRouteImport } from './routes/$'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as OrganizationIndexRouteImport } from './routes/organization/index'
 import { Route as ExampleIndexRouteImport } from './routes/example/index'
 import { Route as AccountIndexRouteImport } from './routes/account/index'
+import { Route as TestAdminRouteImport } from './routes/test/admin'
 import { Route as OrganizationOrganizationViewRouteImport } from './routes/organization/$organizationView'
 import { Route as ExampleFeatureIdRouteImport } from './routes/example/$featureId'
 import { Route as AuthAuthViewRouteImport } from './routes/auth/$authView'
@@ -25,6 +32,36 @@ import { Route as AdminResponsesResponseId_newRouteImport } from './routes/admin
 import { Route as AdminResponsesResponseIdRouteImport } from './routes/admin/responses/$responseId'
 import { Route as AdminResponsesResponseIdAnalysisRouteImport } from './routes/admin/responses/$responseId/analysis'
 
+const TodosRoute = TodosRouteImport.update({
+  id: '/todos',
+  path: '/todos',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResponsesRoute = ResponsesRouteImport.update({
+  id: '/responses',
+  path: '/responses',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const QuizTakerRoute = QuizTakerRouteImport.update({
+  id: '/quiz-taker',
+  path: '/quiz-taker',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const QuizRoute = QuizRouteImport.update({
+  id: '/quiz',
+  path: '/quiz',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ArtistTypesRoute = ArtistTypesRouteImport.update({
+  id: '/artist-types',
+  path: '/artist-types',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AnalysisRoute = AnalysisRouteImport.update({
+  id: '/analysis',
+  path: '/analysis',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminRoute = AdminRouteImport.update({
   id: '/admin',
   path: '/admin',
@@ -53,6 +90,11 @@ const ExampleIndexRoute = ExampleIndexRouteImport.update({
 const AccountIndexRoute = AccountIndexRouteImport.update({
   id: '/account/',
   path: '/account/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TestAdminRoute = TestAdminRouteImport.update({
+  id: '/test/admin',
+  path: '/test/admin',
   getParentRoute: () => rootRouteImport,
 } as any)
 const OrganizationOrganizationViewRoute =
@@ -109,12 +151,19 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/$': typeof SplatRoute
   '/admin': typeof AdminRouteWithChildren
+  '/analysis': typeof AnalysisRoute
+  '/artist-types': typeof ArtistTypesRoute
+  '/quiz': typeof QuizRoute
+  '/quiz-taker': typeof QuizTakerRoute
+  '/responses': typeof ResponsesRoute
+  '/todos': typeof TodosRoute
   '/account/$accountView': typeof AccountAccountViewRoute
   '/admin/quiz-editor': typeof AdminQuizEditorRoute
   '/api/$': typeof ApiSplatRoute
   '/auth/$authView': typeof AuthAuthViewRoute
   '/example/$featureId': typeof ExampleFeatureIdRoute
   '/organization/$organizationView': typeof OrganizationOrganizationViewRoute
+  '/test/admin': typeof TestAdminRoute
   '/account': typeof AccountIndexRoute
   '/example': typeof ExampleIndexRoute
   '/organization': typeof OrganizationIndexRoute
@@ -126,12 +175,19 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/$': typeof SplatRoute
   '/admin': typeof AdminRouteWithChildren
+  '/analysis': typeof AnalysisRoute
+  '/artist-types': typeof ArtistTypesRoute
+  '/quiz': typeof QuizRoute
+  '/quiz-taker': typeof QuizTakerRoute
+  '/responses': typeof ResponsesRoute
+  '/todos': typeof TodosRoute
   '/account/$accountView': typeof AccountAccountViewRoute
   '/admin/quiz-editor': typeof AdminQuizEditorRoute
   '/api/$': typeof ApiSplatRoute
   '/auth/$authView': typeof AuthAuthViewRoute
   '/example/$featureId': typeof ExampleFeatureIdRoute
   '/organization/$organizationView': typeof OrganizationOrganizationViewRoute
+  '/test/admin': typeof TestAdminRoute
   '/account': typeof AccountIndexRoute
   '/example': typeof ExampleIndexRoute
   '/organization': typeof OrganizationIndexRoute
@@ -144,12 +200,19 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/$': typeof SplatRoute
   '/admin': typeof AdminRouteWithChildren
+  '/analysis': typeof AnalysisRoute
+  '/artist-types': typeof ArtistTypesRoute
+  '/quiz': typeof QuizRoute
+  '/quiz-taker': typeof QuizTakerRoute
+  '/responses': typeof ResponsesRoute
+  '/todos': typeof TodosRoute
   '/account/$accountView': typeof AccountAccountViewRoute
   '/admin/quiz-editor': typeof AdminQuizEditorRoute
   '/api/$': typeof ApiSplatRoute
   '/auth/$authView': typeof AuthAuthViewRoute
   '/example/$featureId': typeof ExampleFeatureIdRoute
   '/organization/$organizationView': typeof OrganizationOrganizationViewRoute
+  '/test/admin': typeof TestAdminRoute
   '/account/': typeof AccountIndexRoute
   '/example/': typeof ExampleIndexRoute
   '/organization/': typeof OrganizationIndexRoute
@@ -163,12 +226,19 @@ export interface FileRouteTypes {
     | '/'
     | '/$'
     | '/admin'
+    | '/analysis'
+    | '/artist-types'
+    | '/quiz'
+    | '/quiz-taker'
+    | '/responses'
+    | '/todos'
     | '/account/$accountView'
     | '/admin/quiz-editor'
     | '/api/$'
     | '/auth/$authView'
     | '/example/$featureId'
     | '/organization/$organizationView'
+    | '/test/admin'
     | '/account'
     | '/example'
     | '/organization'
@@ -180,12 +250,19 @@ export interface FileRouteTypes {
     | '/'
     | '/$'
     | '/admin'
+    | '/analysis'
+    | '/artist-types'
+    | '/quiz'
+    | '/quiz-taker'
+    | '/responses'
+    | '/todos'
     | '/account/$accountView'
     | '/admin/quiz-editor'
     | '/api/$'
     | '/auth/$authView'
     | '/example/$featureId'
     | '/organization/$organizationView'
+    | '/test/admin'
     | '/account'
     | '/example'
     | '/organization'
@@ -197,12 +274,19 @@ export interface FileRouteTypes {
     | '/'
     | '/$'
     | '/admin'
+    | '/analysis'
+    | '/artist-types'
+    | '/quiz'
+    | '/quiz-taker'
+    | '/responses'
+    | '/todos'
     | '/account/$accountView'
     | '/admin/quiz-editor'
     | '/api/$'
     | '/auth/$authView'
     | '/example/$featureId'
     | '/organization/$organizationView'
+    | '/test/admin'
     | '/account/'
     | '/example/'
     | '/organization/'
@@ -215,11 +299,18 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   SplatRoute: typeof SplatRoute
   AdminRoute: typeof AdminRouteWithChildren
+  AnalysisRoute: typeof AnalysisRoute
+  ArtistTypesRoute: typeof ArtistTypesRoute
+  QuizRoute: typeof QuizRoute
+  QuizTakerRoute: typeof QuizTakerRoute
+  ResponsesRoute: typeof ResponsesRoute
+  TodosRoute: typeof TodosRoute
   AccountAccountViewRoute: typeof AccountAccountViewRoute
   ApiSplatRoute: typeof ApiSplatRoute
   AuthAuthViewRoute: typeof AuthAuthViewRoute
   ExampleFeatureIdRoute: typeof ExampleFeatureIdRoute
   OrganizationOrganizationViewRoute: typeof OrganizationOrganizationViewRoute
+  TestAdminRoute: typeof TestAdminRoute
   AccountIndexRoute: typeof AccountIndexRoute
   ExampleIndexRoute: typeof ExampleIndexRoute
   OrganizationIndexRoute: typeof OrganizationIndexRoute
@@ -227,6 +318,48 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/todos': {
+      id: '/todos'
+      path: '/todos'
+      fullPath: '/todos'
+      preLoaderRoute: typeof TodosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/responses': {
+      id: '/responses'
+      path: '/responses'
+      fullPath: '/responses'
+      preLoaderRoute: typeof ResponsesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/quiz-taker': {
+      id: '/quiz-taker'
+      path: '/quiz-taker'
+      fullPath: '/quiz-taker'
+      preLoaderRoute: typeof QuizTakerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/quiz': {
+      id: '/quiz'
+      path: '/quiz'
+      fullPath: '/quiz'
+      preLoaderRoute: typeof QuizRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/artist-types': {
+      id: '/artist-types'
+      path: '/artist-types'
+      fullPath: '/artist-types'
+      preLoaderRoute: typeof ArtistTypesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/analysis': {
+      id: '/analysis'
+      path: '/analysis'
+      fullPath: '/analysis'
+      preLoaderRoute: typeof AnalysisRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin': {
       id: '/admin'
       path: '/admin'
@@ -267,6 +400,13 @@ declare module '@tanstack/react-router' {
       path: '/account'
       fullPath: '/account'
       preLoaderRoute: typeof AccountIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/test/admin': {
+      id: '/test/admin'
+      path: '/test/admin'
+      fullPath: '/test/admin'
+      preLoaderRoute: typeof TestAdminRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/organization/$organizationView': {
@@ -368,11 +508,18 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   SplatRoute: SplatRoute,
   AdminRoute: AdminRouteWithChildren,
+  AnalysisRoute: AnalysisRoute,
+  ArtistTypesRoute: ArtistTypesRoute,
+  QuizRoute: QuizRoute,
+  QuizTakerRoute: QuizTakerRoute,
+  ResponsesRoute: ResponsesRoute,
+  TodosRoute: TodosRoute,
   AccountAccountViewRoute: AccountAccountViewRoute,
   ApiSplatRoute: ApiSplatRoute,
   AuthAuthViewRoute: AuthAuthViewRoute,
   ExampleFeatureIdRoute: ExampleFeatureIdRoute,
   OrganizationOrganizationViewRoute: OrganizationOrganizationViewRoute,
+  TestAdminRoute: TestAdminRoute,
   AccountIndexRoute: AccountIndexRoute,
   ExampleIndexRoute: ExampleIndexRoute,
   OrganizationIndexRoute: OrganizationIndexRoute,

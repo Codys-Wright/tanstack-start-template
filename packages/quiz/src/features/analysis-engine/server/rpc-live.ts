@@ -16,7 +16,12 @@ export const AnalysisEngineRpcLive = AnalysisEngineRpc.toLayer(
     return AnalysisEngineRpc.of({
       engine_list: Effect.fn(function* () {
         yield* Effect.log('[RPC] Listing analysis engines');
-        return yield* engineService.list();
+        const engines = yield* engineService.list();
+        yield* Effect.log(`[RPC] Found ${engines.length} analysis engines`);
+        if (engines.length > 0) {
+          yield* Effect.log(`[RPC] First engine: ${engines[0].name}, id: ${engines[0].id}`);
+        }
+        return engines;
       }),
 
       engine_listPublished: Effect.fn(function* () {

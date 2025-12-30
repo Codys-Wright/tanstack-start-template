@@ -1,16 +1,16 @@
-import * as BunFileSystem from "@effect/platform-bun/BunFileSystem";
-import * as FileSystem from "@effect/platform/FileSystem";
-import * as PgClient from "@effect/sql-pg/PgClient";
-import * as SqlClient from "@effect/sql/SqlClient";
-import { PostgreSqlContainer } from "@testcontainers/postgresql";
-import * as Config from "effect/Config";
-import * as Effect from "effect/Effect";
-import { identity } from "effect/Function";
-import * as Layer from "effect/Layer";
-import * as Redacted from "effect/Redacted";
-import * as Schema from "effect/Schema";
-import * as Str from "effect/String";
-import { types } from "pg";
+import * as BunFileSystem from '@effect/platform-bun/BunFileSystem';
+import * as FileSystem from '@effect/platform/FileSystem';
+import * as PgClient from '@effect/sql-pg/PgClient';
+import * as SqlClient from '@effect/sql/SqlClient';
+import { PostgreSqlContainer } from '@testcontainers/postgresql';
+import * as Config from 'effect/Config';
+import * as Effect from 'effect/Effect';
+import { identity } from 'effect/Function';
+import * as Layer from 'effect/Layer';
+import * as Redacted from 'effect/Redacted';
+import * as Schema from 'effect/Schema';
+import * as Str from 'effect/String';
+import { types } from 'pg';
 
 types.setTypeParser(types.builtins.DATE, identity);
 types.setTypeParser(types.builtins.TIMESTAMP, identity);
@@ -21,18 +21,19 @@ types.setTypeParser(types.builtins.JSONB, identity);
 export const pgConfig: PgClient.PgClientConfig = {
   transformQueryNames: Str.camelToSnake,
   transformResultNames: Str.snakeToCamel,
-  transformJson: true,
+  // Don't auto-parse JSON - let S.parseJson() in schemas handle it
+  // This ensures JSONB columns are returned as strings for schema parsing
   types,
 };
 
 export const PgLive = Layer.unwrapEffect(
   Effect.gen(function* () {
-    const databaseUrl = yield* Config.redacted("DATABASE_URL");
+    const databaseUrl = yield* Config.redacted('DATABASE_URL');
 
     return PgClient.layer({
       url: databaseUrl,
-      idleTimeout: "10 seconds",
-      connectTimeout: "10 seconds",
+      idleTimeout: '10 seconds',
+      connectTimeout: '10 seconds',
       ...pgConfig,
     });
   }),
@@ -42,9 +43,9 @@ export const PgLive = Layer.unwrapEffect(
 // Testcontainers
 // ===============================
 
-class PgContainer extends Effect.Service<PgContainer>()("PgContainer", {
+class PgContainer extends Effect.Service<PgContainer>()('PgContainer', {
   scoped: Effect.acquireRelease(
-    Effect.promise(() => new PostgreSqlContainer("postgres:alpine").start()),
+    Effect.promise(() => new PostgreSqlContainer('postgres:alpine').start()),
     (container) => Effect.promise(() => container.stop()),
   ),
 }) {}
@@ -84,15 +85,14 @@ export const makePgTest = (schemaPath: string) =>
 // Test Utils
 // ===============================
 
-class TransactionRollback extends Schema.TaggedError<TransactionRollback>(
-  "TestRollback",
-)("TestRollback", {
-  value: Schema.Any,
-}) {}
+class TransactionRollback extends Schema.TaggedError<TransactionRollback>('TestRollback')(
+  'TestRollback',
+  {
+    value: Schema.Any,
+  },
+) {}
 
-export const withTransactionRollback = <A, E, R>(
-  self: Effect.Effect<A, E, R>,
-) =>
+export const withTransactionRollback = <A, E, R>(self: Effect.Effect<A, E, R>) =>
   Effect.gen(function* () {
     const sql = yield* SqlClient.SqlClient;
     return yield* sql
@@ -103,8 +103,6 @@ export const withTransactionRollback = <A, E, R>(
         }),
       )
       .pipe(
-        Effect.catchIf(Schema.is(TransactionRollback), (error) =>
-          Effect.succeed(error.value as A),
-        ),
+        Effect.catchIf(Schema.is(TransactionRollback), (error) => Effect.succeed(error.value as A)),
       );
   });

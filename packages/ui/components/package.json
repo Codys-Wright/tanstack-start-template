@@ -13,8 +13,13 @@
     },
     "./package.json": "./package.json"
   },
-  "dependencies": {},
+  "dependencies": {
+    "lucide-react": "*",
+    "motion": "*",
+    "react": "*"
+  },
   "devDependencies": {
-    "@shadcn": "*"
+    "@shadcn": "*",
+    "@types/react": "*"
   }
 }

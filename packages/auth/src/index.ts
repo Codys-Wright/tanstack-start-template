@@ -17,6 +17,13 @@ export {
 } from './core/client/auth-api-client.js';
 
 // ============================================================================
+// Components - Conditional Wrappers
+// ============================================================================
+export { SignedIn } from './components/signed-in.js';
+export { SignedOut } from './components/signed-out.js';
+export { AuthLoading } from './components/auth-loading.js';
+
+// ============================================================================
 // User - Domain & UI
 // ============================================================================
 export * from './features/user/domain/schema.js';

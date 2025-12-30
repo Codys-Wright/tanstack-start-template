@@ -5,6 +5,8 @@ import * as Layer from 'effect/Layer';
 import { AnalysisRpcLive } from '../../features/analysis/server/index.js';
 import { AnalysisEngineRpcLive } from '../../features/analysis-engine/server/index.js';
 import { QuizzesRpcLive } from '../../features/quiz/server/index.js';
+import { ActiveQuizRpcLive } from '../../features/active-quiz/server/index.js';
+import { ResponsesRpcLive } from '../../features/responses/server/index.js';
 import { QuizApi } from './api.js';
 
 /**
@@ -45,9 +47,13 @@ export const QuizApiLive = Layer.mergeAll(
  * - QuizzesRpcLive: Quiz CRUD operations
  * - AnalysisRpcLive: Analysis result operations
  * - AnalysisEngineRpcLive: Analysis engine CRUD operations
- *
- * TODO: Add more feature RPC layers as implemented:
- * - ResponsesRpcLive
- * - ActiveQuizRpcLive
+ * - ActiveQuizRpcLive: Active quiz CRUD operations
+ * - ResponsesRpcLive: Quiz response CRUD operations
  */
-export const QuizRpcLive = Layer.mergeAll(QuizzesRpcLive, AnalysisRpcLive, AnalysisEngineRpcLive);
+export const QuizRpcLive = Layer.mergeAll(
+  QuizzesRpcLive,
+  AnalysisRpcLive,
+  AnalysisEngineRpcLive,
+  ActiveQuizRpcLive,
+  ResponsesRpcLive,
+);

@@ -1,8 +1,8 @@
-'use client';
-import { artistColors, getArtistColorHex } from '@quiz';
-import { cn } from '@ui/shadcn';
-import { AnimatePresence, motion } from 'motion/react';
-import React, { useRef } from 'react';
+"use client";
+import { artistColors, getArtistColorHex } from "@quiz";
+import { cn } from "@shadcn";
+import { AnimatePresence, motion } from "motion/react";
+import React, { useRef } from "react";
 
 type BackgroundWrapperProps = {
   children: React.ReactNode;
@@ -13,7 +13,7 @@ type BackgroundWrapperProps = {
 
 export const BackgroundWrapper: React.FC<BackgroundWrapperProps> = ({
   children,
-  className = '',
+  className = "",
   showBeams = true,
   showGrids = true,
 }) => {
@@ -24,7 +24,7 @@ export const BackgroundWrapper: React.FC<BackgroundWrapperProps> = ({
     <div
       ref={parentRef}
       className={cn(
-        'relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-4 min-w-screen',
+        "relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-4 min-w-screen",
         className,
       )}
     >
@@ -33,9 +33,9 @@ export const BackgroundWrapper: React.FC<BackgroundWrapperProps> = ({
         <>
           <CollisionMechanism
             beamOptions={{
-              initialX: '-25vw',
-              translateX: '80vw',
-              translateY: '120vh',
+              initialX: "-25vw",
+              translateX: "80vw",
+              translateY: "120vh",
               duration: 7,
               repeatDelay: 3,
             }}
@@ -44,9 +44,9 @@ export const BackgroundWrapper: React.FC<BackgroundWrapperProps> = ({
           />
           <CollisionMechanism
             beamOptions={{
-              initialX: '-12vw',
-              translateX: '100vw',
-              translateY: '120vh',
+              initialX: "-12vw",
+              translateX: "100vw",
+              translateY: "120vh",
               duration: 4,
               repeatDelay: 3,
             }}
@@ -55,9 +55,9 @@ export const BackgroundWrapper: React.FC<BackgroundWrapperProps> = ({
           />
           <CollisionMechanism
             beamOptions={{
-              initialX: '12vw',
-              translateX: '120vw',
-              translateY: '120vh',
+              initialX: "12vw",
+              translateX: "120vw",
+              translateY: "120vh",
               duration: 5,
               repeatDelay: 3,
             }}
@@ -68,9 +68,9 @@ export const BackgroundWrapper: React.FC<BackgroundWrapperProps> = ({
             containerRef={containerRef}
             parentRef={parentRef}
             beamOptions={{
-              initialX: '25vw',
-              translateX: '140vw',
-              translateY: '120vh',
+              initialX: "25vw",
+              translateX: "140vw",
+              translateY: "120vh",
               duration: 6,
               repeatDelay: 3,
             }}
@@ -129,9 +129,13 @@ const CollisionMechanism = React.forwardRef<
     coordinates: { x: number; y: number } | null;
   }>({ detected: false, coordinates: null });
   const [beamKey, setBeamKey] = React.useState(0);
-  const [cycleCollisionDetected, setCycleCollisionDetected] = React.useState(false);
-  const [colorChoices, setColorChoices] = React.useState<Array<string>>(['#6366f1']);
-  const pickRandomColor = () => colorChoices[Math.floor(Math.random() * colorChoices.length)];
+  const [cycleCollisionDetected, setCycleCollisionDetected] =
+    React.useState(false);
+  const [colorChoices, setColorChoices] = React.useState<Array<string>>([
+    "#6366f1",
+  ]);
+  const pickRandomColor = () =>
+    colorChoices[Math.floor(Math.random() * colorChoices.length)];
 
   React.useEffect(() => {
     const choices = Object.keys(artistColors).map((artistType) =>
@@ -139,10 +143,11 @@ const CollisionMechanism = React.forwardRef<
     );
     setColorChoices(choices);
   }, []);
-  const [currentColorHex, setCurrentColorHex] = React.useState<string>('#6366f1');
+  const [currentColorHex, setCurrentColorHex] =
+    React.useState<string>("#6366f1");
 
   React.useEffect(() => {
-    setCurrentColorHex(getArtistColorHex('Visionary'));
+    setCurrentColorHex(getArtistColorHex("Visionary"));
   }, []);
 
   React.useEffect(() => {
@@ -151,17 +156,24 @@ const CollisionMechanism = React.forwardRef<
       const container = containerRef.current;
       const parent = parentRef.current;
 
-      if (beam !== null && container !== null && parent !== null && !cycleCollisionDetected) {
+      if (
+        beam !== null &&
+        container !== null &&
+        parent !== null &&
+        !cycleCollisionDetected
+      ) {
         const beamRect = beam.getBoundingClientRect();
         const containerRect = container.getBoundingClientRect();
         const parentRect = parent.getBoundingClientRect();
 
         const horizontallyOverlapping =
-          beamRect.right >= containerRect.left && beamRect.left <= containerRect.right;
+          beamRect.right >= containerRect.left &&
+          beamRect.left <= containerRect.right;
         const nearTopEdge = Math.abs(beamRect.bottom - containerRect.top) <= 6;
 
         if (horizontallyOverlapping && nearTopEdge) {
-          const relativeX = beamRect.left - parentRect.left + beamRect.width / 2;
+          const relativeX =
+            beamRect.left - parentRect.left + beamRect.width / 2;
           const relativeY = containerRect.top - parentRect.top;
 
           setCollision({
@@ -173,7 +185,7 @@ const CollisionMechanism = React.forwardRef<
             setCurrentColorHex(color);
           }
           setCycleCollisionDetected(true);
-          beam.style.opacity = '0';
+          beam.style.opacity = "0";
         }
       }
     };
@@ -193,7 +205,7 @@ const CollisionMechanism = React.forwardRef<
         setCycleCollisionDetected(false);
         const beam = beamRef.current;
         if (beam !== null) {
-          beam.style.opacity = '1';
+          beam.style.opacity = "1";
         }
         setBeamKey((prevKey) => prevKey + 1);
       };
@@ -212,27 +224,27 @@ const CollisionMechanism = React.forwardRef<
         ref={beamRef}
         animate="animate"
         initial={{
-          translateY: beamOptions.initialY ?? '-20vh',
-          translateX: beamOptions.initialX ?? '0px',
+          translateY: beamOptions.initialY ?? "-20vh",
+          translateX: beamOptions.initialX ?? "0px",
           rotate: beamOptions.rotate ?? -45,
         }}
         variants={{
           animate: {
-            translateY: beamOptions.translateY ?? '120vh',
-            translateX: beamOptions.translateX ?? '100vw',
+            translateY: beamOptions.translateY ?? "120vh",
+            translateX: beamOptions.translateX ?? "100vw",
             rotate: beamOptions.rotate ?? -45,
           },
         }}
         transition={{
           duration: beamOptions.duration ?? 8,
           repeat: Infinity,
-          repeatType: 'loop',
-          ease: 'linear',
+          repeatType: "loop",
+          ease: "linear",
           delay: beamOptions.delay ?? 0,
           repeatDelay: beamOptions.repeatDelay ?? 0,
         }}
         className={cn(
-          'absolute left-96 top-20 m-auto h-14 w-px rounded-full',
+          "absolute left-96 top-20 m-auto h-14 w-px rounded-full",
           beamOptions.className,
         )}
         style={{
@@ -248,7 +260,7 @@ const CollisionMechanism = React.forwardRef<
             style={{
               left: `${collision.coordinates.x + 20}px`,
               top: `${collision.coordinates.y}px`,
-              transform: 'translate(-50%, -50%)',
+              transform: "translate(-50%, -50%)",
             }}
           />
         )}
@@ -257,10 +269,10 @@ const CollisionMechanism = React.forwardRef<
   );
 });
 
-CollisionMechanism.displayName = 'CollisionMechanism';
+CollisionMechanism.displayName = "CollisionMechanism";
 
 const Explosion = ({
-  colorHex = '#FB8500',
+  colorHex = "#FB8500",
   ...props
 }: React.HTMLProps<HTMLDivElement> & { colorHex?: string }) => {
   const spans = Array.from({ length: 20 }, (_, index) => ({
@@ -272,12 +284,12 @@ const Explosion = ({
   }));
 
   return (
-    <div {...props} className={cn('absolute z-50 h-2 w-2', props.className)}>
+    <div {...props} className={cn("absolute z-50 h-2 w-2", props.className)}>
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: [0, 1, 0] }}
         exit={{ opacity: 0 }}
-        transition={{ duration: 1, ease: 'easeOut' }}
+        transition={{ duration: 1, ease: "easeOut" }}
         className="absolute -inset-x-10 top-0 m-auto h-[4px] w-10 rounded-full blur-sm"
         style={{
           background: `linear-gradient(to right, transparent, ${colorHex}, transparent)`,
@@ -288,7 +300,7 @@ const Explosion = ({
           key={span.id}
           initial={{ x: span.initialX, y: span.initialY, opacity: 1 }}
           animate={{ x: span.directionX, y: span.directionY, opacity: 0 }}
-          transition={{ duration: Math.random() * 1.5 + 0.5, ease: 'easeOut' }}
+          transition={{ duration: Math.random() * 1.5 + 0.5, ease: "easeOut" }}
           className="absolute h-1 w-1 rounded-full"
           style={{ backgroundColor: colorHex }}
         />
@@ -297,29 +309,35 @@ const Explosion = ({
   );
 };
 
-const GridLineVertical = ({ className, offset }: { className?: string; offset?: string }) => {
+const GridLineVertical = ({
+  className,
+  offset,
+}: {
+  className?: string;
+  offset?: string;
+}) => {
   return (
     <div
       style={
         {
-          '--background': '#ffffff',
-          '--color': 'rgba(0, 0, 0, 0.2)',
-          '--height': '5px',
-          '--width': '1px',
-          '--fade-stop': '90%',
-          '--offset': offset ?? '150px',
-          '--color-dark': 'rgba(255, 255, 255, 0.3)',
-          maskComposite: 'exclude',
+          "--background": "#ffffff",
+          "--color": "rgba(0, 0, 0, 0.2)",
+          "--height": "5px",
+          "--width": "1px",
+          "--fade-stop": "90%",
+          "--offset": offset ?? "150px",
+          "--color-dark": "rgba(255, 255, 255, 0.3)",
+          maskComposite: "exclude",
         } as React.CSSProperties
       }
       className={cn(
-        'absolute top-[calc(var(--offset)/2*-1)] h-[calc(100%+var(--offset))] w-[var(--width)]',
-        'bg-[linear-gradient(to_bottom,var(--color),var(--color)_50%,transparent_0,transparent)]',
-        '[background-size:var(--width)_var(--height)]',
-        '[mask:linear-gradient(to_top,var(--background)_var(--fade-stop),transparent),_linear-gradient(to_bottom,var(--background)_var(--fade-stop),transparent),_linear-gradient(black,black)]',
-        '[mask-composite:exclude]',
-        'z-30',
-        'dark:bg-[linear-gradient(to_bottom,var(--color-dark),var(--color-dark)_50%,transparent_0,transparent)]',
+        "absolute top-[calc(var(--offset)/2*-1)] h-[calc(100%+var(--offset))] w-[var(--width)]",
+        "bg-[linear-gradient(to_bottom,var(--color),var(--color)_50%,transparent_0,transparent)]",
+        "[background-size:var(--width)_var(--height)]",
+        "[mask:linear-gradient(to_top,var(--background)_var(--fade-stop),transparent),_linear-gradient(to_bottom,var(--background)_var(--fade-stop),transparent),_linear-gradient(black,black)]",
+        "[mask-composite:exclude]",
+        "z-30",
+        "dark:bg-[linear-gradient(to_bottom,var(--color-dark),var(--color-dark)_50%,transparent_0,transparent)]",
         className,
       )}
     ></div>

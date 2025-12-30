@@ -81,6 +81,7 @@
     "input-otp": "*",
     "kysely": "*",
     "lucide-react": "*",
+    "motion": "^12.23.26",
     "next-themes": "*",
     "nitro": "3.0.1-alpha.1",
     "react": "*",

@@ -29,7 +29,7 @@ export * from './features/analysis-engine/database/index.js';
 // Responses Feature
 // ============================================================================
 export * from './features/responses/database/index.js';
-// export * from './features/responses/server/index.js';
+export * from './features/responses/server/index.js';
 
 // ============================================================================
 // Active Quiz Feature

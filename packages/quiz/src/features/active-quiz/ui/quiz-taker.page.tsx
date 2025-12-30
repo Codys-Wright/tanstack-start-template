@@ -1,4 +1,6 @@
 import { Result, useAtomRefresh, useAtomSet, useAtomValue } from '@effect-atom/atom-react';
+import { HydrationBoundary } from '@effect-atom/atom-react/ReactHydration';
+import { activeQuizzesAtom } from '../client/atoms.js';
 import type { Question } from '@/features/quiz/questions/schema.js';
 import type { Quiz } from '@/features/quiz/domain/schema.js';
 import { Button, Card, DropdownMenu } from '@shadcn';
@@ -23,6 +25,7 @@ import {
 } from '../client/atoms.js';
 import { DevPanel } from './dev-panel.js';
 import { performLocalAnalysis } from './local-analysis.js';
+import type { QuizTakerLoaderData } from './load-quiz-taker.js';
 
 // PageContainer component with padding and layout (no background)
 type PageContainerProps = {
@@ -147,13 +150,36 @@ const SuccessView: React.FC<{ quizzes: ReadonlyArray<Quiz> }> = ({ quizzes }) =>
     }
   }, [targetQuiz, currentQuiz, initializeQuiz]);
 
+  // Debug logging for SuccessView
+  React.useEffect(() => {
+    console.log('[SuccessView] enginesResult state:', {
+      isSuccess: Result.isSuccess(enginesResult),
+      isWaiting: Result.isWaiting(enginesResult),
+      isInitial: Result.isInitial(enginesResult),
+      isFailure: Result.isFailure(enginesResult),
+      raw: enginesResult,
+    });
+    console.log('[SuccessView] activeQuizResult state:', {
+      isSuccess: Result.isSuccess(activeQuizResult),
+      isWaiting: Result.isWaiting(activeQuizResult),
+      isInitial: Result.isInitial(activeQuizResult),
+      isFailure: Result.isFailure(activeQuizResult),
+      raw: activeQuizResult,
+    });
+  }, [enginesResult, activeQuizResult]);
+
   // Show loading state if engines are not loaded yet
   if (!Result.isSuccess(enginesResult)) {
+    console.log('[SuccessView] Showing Loading Analysis Engine - enginesResult not success');
     return (
       <div className="flex items-center justify-center min-h-[50vh]">
         <div className="text-center">
           <h2 className="text-xl font-semibold mb-2">Loading Analysis Engine...</h2>
           <p className="text-muted-foreground">Setting up analysis capabilities</p>
+          <p className="text-xs text-muted-foreground mt-2">
+            Debug: isWaiting={String(Result.isWaiting(enginesResult))}, isInitial=
+            {String(Result.isInitial(enginesResult))}
+          </p>
         </div>
       </div>
     );
@@ -465,8 +491,76 @@ const ErrorView: React.FC = () => {
   );
 };
 
-export const QuizTakerPage: React.FC = () => {
+// ============================================================================
+// Types
+// ============================================================================
+
+export interface QuizTakerPageProps {
+  /**
+   * Loader data from TanStack Router containing dehydrated atoms.
+   * If not provided, atoms will fetch client-side.
+   */
+  loaderData?: QuizTakerLoaderData;
+}
+
+// ============================================================================
+// Page Content Component (used inside HydrationBoundary)
+// ============================================================================
+
+const QuizTakerPageContent: React.FC = () => {
   const quizzesResult = useAtomValue(quizzesAtom);
+  const enginesResult = useAtomValue(enginesAtom);
+  const activeQuizzesResult = useAtomValue(activeQuizzesAtom);
+
+  // Debug logging
+  React.useEffect(() => {
+    const quizzesState = {
+      isSuccess: Result.isSuccess(quizzesResult),
+      isWaiting: Result.isWaiting(quizzesResult),
+      isInitial: Result.isInitial(quizzesResult),
+      isFailure: Result.isFailure(quizzesResult),
+      _tag: (quizzesResult as any)?._tag,
+      waiting: (quizzesResult as any)?.waiting,
+      valueCount: Result.isSuccess(quizzesResult) ? quizzesResult.value.length : 'N/A',
+      cause: Result.isFailure(quizzesResult) ? String((quizzesResult as any).cause) : undefined,
+    };
+    const enginesState = {
+      isSuccess: Result.isSuccess(enginesResult),
+      isWaiting: Result.isWaiting(enginesResult),
+      isInitial: Result.isInitial(enginesResult),
+      isFailure: Result.isFailure(enginesResult),
+      _tag: (enginesResult as any)?._tag,
+      waiting: (enginesResult as any)?.waiting,
+      valueCount: Result.isSuccess(enginesResult) ? enginesResult.value.length : 'N/A',
+      cause: Result.isFailure(enginesResult) ? String((enginesResult as any).cause) : undefined,
+    };
+    const activeQuizzesState = {
+      isSuccess: Result.isSuccess(activeQuizzesResult),
+      isWaiting: Result.isWaiting(activeQuizzesResult),
+      isInitial: Result.isInitial(activeQuizzesResult),
+      isFailure: Result.isFailure(activeQuizzesResult),
+      _tag: (activeQuizzesResult as any)?._tag,
+      waiting: (activeQuizzesResult as any)?.waiting,
+      valueCount: Result.isSuccess(activeQuizzesResult) ? activeQuizzesResult.value.length : 'N/A',
+      cause: Result.isFailure(activeQuizzesResult)
+        ? String((activeQuizzesResult as any).cause)
+        : undefined,
+    };
+    console.log('[QuizTakerPage] quizzes:', JSON.stringify(quizzesState));
+    console.log('[QuizTakerPage] engines:', JSON.stringify(enginesState));
+    console.log('[QuizTakerPage] activeQuizzes:', JSON.stringify(activeQuizzesState));
+
+    // Log the full cause object for failures
+    if (Result.isFailure(enginesResult)) {
+      console.log('[QuizTakerPage] engines failure cause:', (enginesResult as any).cause);
+    }
+    if (Result.isFailure(activeQuizzesResult)) {
+      console.log(
+        '[QuizTakerPage] activeQuizzes failure cause:',
+        (activeQuizzesResult as any).cause,
+      );
+    }
+  }, [quizzesResult, enginesResult, activeQuizzesResult]);
 
   return (
     <>
@@ -477,4 +571,46 @@ export const QuizTakerPage: React.FC = () => {
         .orNull()}
     </>
   );
+};
+
+// ============================================================================
+// Page Component with Hydration
+// ============================================================================
+
+/**
+ * QuizTakerPage - Route component with built-in SSR hydration support.
+ *
+ * Use this component in your TanStack Start route with loader data
+ * for instant page loads with SSR, or without for client-side fetching.
+ *
+ * @example With SSR (recommended)
+ * ```tsx
+ * import { createFileRoute } from '@tanstack/react-router';
+ * import { QuizTakerPage, loadQuizTaker } from '@quiz';
+ *
+ * export const Route = createFileRoute('/quiz')({
+ *   loader: () => loadQuizTaker(),
+ *   component: QuizPageWrapper,
+ * });
+ *
+ * function QuizPageWrapper() {
+ *   const loaderData = Route.useLoaderData();
+ *   return <QuizTakerPage loaderData={loaderData} />;
+ * }
+ * ```
+ */
+export const QuizTakerPage: React.FC<QuizTakerPageProps> = ({ loaderData }) => {
+  // If we have loader data, hydrate the atoms from SSR
+  if (loaderData) {
+    const hydrationState = [loaderData.quizzes, loaderData.engines, loaderData.activeQuizzes];
+    return (
+      <HydrationBoundary state={hydrationState}>
+        <QuizTakerPageContent />
+      </HydrationBoundary>
+    );
+  }
+
+  // No loader data - atoms will fetch client-side
+  // Note: This path may show loading states as atoms fetch
+  return <QuizTakerPageContent />;
 };

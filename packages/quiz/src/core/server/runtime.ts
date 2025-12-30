@@ -21,6 +21,8 @@ import { QuizService } from '../../features/quiz/server/index.js';
 import { AnalysisServerService } from '../../features/analysis/server/index.js';
 import { AnalysisEngineServerService } from '../../features/analysis-engine/server/index.js';
 import { QuizTakerService } from '../../features/active-quiz/domain/quiz-taker.service.js';
+import { ActiveQuizServerService } from '../../features/active-quiz/server/service.js';
+import { ResponsesServerService } from '../../features/responses/server/service.js';
 
 // Use globalValue to persist the memoMap across hot reloads
 const memoMap = GlobalValue.globalValue(Symbol.for('@quiz/server-memoMap'), () =>
@@ -35,6 +37,8 @@ export const QuizServerLayer = Layer.mergeAll(
   AnalysisServerService.Default,
   AnalysisEngineServerService.Default,
   QuizTakerService.Default,
+  ActiveQuizServerService.Default,
+  ResponsesServerService.Default,
 );
 
 /**

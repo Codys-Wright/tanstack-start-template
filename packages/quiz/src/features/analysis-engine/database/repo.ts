@@ -216,7 +216,16 @@ export class AnalysisEngineRepo extends Effect.Service<AnalysisEngineRepo>()('An
     //    Each method transforms database errors into domain-appropriate responses
     return {
       // findAll: If it fails, crash the program (orDie) - this should always work
-      findAll: flow(findAll, Effect.orDie),
+      findAll: flow(
+        findAll,
+        Effect.tap((engines) =>
+          Effect.log(`[AnalysisEngineRepo] findAll returned ${engines.length} engines`),
+        ),
+        Effect.tapError((error) =>
+          Effect.log(`[AnalysisEngineRepo] findAll error: ${JSON.stringify(error)}`),
+        ),
+        Effect.orDie,
+      ),
 
       // findById: Get a specific analysis engine by ID
       findById: (id: AnalysisEngineId) =>

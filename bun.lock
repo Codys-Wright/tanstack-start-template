@@ -201,6 +201,7 @@
         "input-otp": "*",
         "kysely": "*",
         "lucide-react": "*",
+        "motion": "^12.23.26",
         "next-themes": "*",
         "nitro": "3.0.1-alpha.1",
         "react": "*",
@@ -496,8 +497,14 @@
     "packages/ui/components": {
       "name": "@components",
       "version": "0.0.1",
+      "dependencies": {
+        "lucide-react": "*",
+        "motion": "*",
+        "react": "*",
+      },
       "devDependencies": {
         "@shadcn": "*",
+        "@types/react": "*",
       },
     },
     "packages/ui/shadcn": {

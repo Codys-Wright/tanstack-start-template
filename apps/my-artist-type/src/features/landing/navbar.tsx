@@ -1,4 +1,4 @@
-'use client';
+"use client";
 import {
   MobileNav,
   MobileNavHeader,
@@ -8,25 +8,26 @@ import {
   NavbarButton,
   NavbarLogo,
   NavBody,
-} from '@components';
-import { ModeToggle, Tooltip } from '@ui/shadcn';
-import { motion } from 'motion/react';
-import { useState, type ReactNode } from 'react';
+} from "@components";
+import { SignedIn, SignedOut, UserButton } from "@auth";
+import { ModeToggle } from "@theme";
+import { motion } from "motion/react";
+import { useState, type ReactNode } from "react";
 
 export function NavbarHome({ children }: { children?: ReactNode }) {
   const navItems = [
     {
-      name: 'Artist Types',
-      link: '/artist-types',
+      name: "Artist Types",
+      link: "/artist-types",
       disabled: true,
     },
     {
-      name: 'Quiz',
-      link: '/quiz',
+      name: "Quiz",
+      link: "/quiz",
     },
     {
-      name: 'Admin',
-      link: '/admin',
+      name: "Admin",
+      link: "/admin",
     },
   ];
 
@@ -45,7 +46,7 @@ export function NavbarHome({ children }: { children?: ReactNode }) {
             {navItems.map((item, idx) => (
               <a
                 key={`desktop-link-${idx}`}
-                href={item.disabled ? '#' : item.link}
+                href={item.disabled ? "#" : item.link}
                 onMouseEnter={() => !item.disabled && setHovered(idx)}
                 onClick={(e) => {
                   if (item.disabled) {
@@ -54,8 +55,8 @@ export function NavbarHome({ children }: { children?: ReactNode }) {
                 }}
                 className={`relative px-4 py-2 ${
                   item.disabled
-                    ? 'text-neutral-400 dark:text-neutral-600 cursor-not-allowed opacity-50'
-                    : 'text-neutral-600 dark:text-neutral-300'
+                    ? "text-neutral-400 dark:text-neutral-600 cursor-not-allowed opacity-50"
+                    : "text-neutral-600 dark:text-neutral-300"
                 }`}
               >
                 {hovered === idx && !item.disabled && (
@@ -69,19 +70,17 @@ export function NavbarHome({ children }: { children?: ReactNode }) {
             ))}
           </motion.div>
           <div className="flex items-center gap-4">
-            <Tooltip>
-              <Tooltip.Trigger asChild>
-                <NavbarButton
-                  variant="secondary"
-                  disabled
-                  className="opacity-50 cursor-not-allowed"
-                >
-                  Login
-                </NavbarButton>
-              </Tooltip.Trigger>
-              <Tooltip.Content>Authentication is disabled right now</Tooltip.Content>
-            </Tooltip>
-            <NavbarButton variant="primary">Take the Quiz!</NavbarButton>
+            <SignedOut>
+              <NavbarButton href="/auth/sign-in" variant="secondary">
+                Login
+              </NavbarButton>
+            </SignedOut>
+            <SignedIn>
+              <UserButton size="icon" />
+            </SignedIn>
+            <NavbarButton href="/quiz" variant="primary">
+              Take the Quiz!
+            </NavbarButton>
             <div className="relative z-[70]">
               <ModeToggle />
             </div>
@@ -108,7 +107,7 @@ export function NavbarHome({ children }: { children?: ReactNode }) {
             {navItems.map((item, idx) => (
               <a
                 key={`mobile-link-${idx}`}
-                href={item.disabled ? '#' : item.link}
+                href={item.disabled ? "#" : item.link}
                 onClick={(e) => {
                   if (item.disabled) {
                     e.preventDefault();
@@ -118,30 +117,33 @@ export function NavbarHome({ children }: { children?: ReactNode }) {
                 }}
                 className={`relative ${
                   item.disabled
-                    ? 'text-neutral-400 dark:text-neutral-600 cursor-not-allowed opacity-50'
-                    : 'text-neutral-600 dark:text-neutral-300'
+                    ? "text-neutral-400 dark:text-neutral-600 cursor-not-allowed opacity-50"
+                    : "text-neutral-600 dark:text-neutral-300"
                 }`}
               >
                 <span className="block">{item.name}</span>
               </a>
             ))}
             <div className="flex w-full flex-col gap-4">
-              <Tooltip>
-                <Tooltip.Trigger asChild>
-                  <NavbarButton
-                    onClick={() => {
-                      setIsMobileMenuOpen(false);
-                    }}
-                    variant="primary"
-                    className="w-full opacity-50 cursor-not-allowed"
-                    disabled
-                  >
-                    Login
-                  </NavbarButton>
-                </Tooltip.Trigger>
-                <Tooltip.Content>Authentication is disabled right now</Tooltip.Content>
-              </Tooltip>
+              <SignedOut>
+                <NavbarButton
+                  href="/auth/sign-in"
+                  onClick={() => {
+                    setIsMobileMenuOpen(false);
+                  }}
+                  variant="secondary"
+                  className="w-full"
+                >
+                  Login
+                </NavbarButton>
+              </SignedOut>
+              <SignedIn>
+                <div className="flex justify-center">
+                  <UserButton size="default" />
+                </div>
+              </SignedIn>
               <NavbarButton
+                href="/quiz"
                 onClick={() => {
                   setIsMobileMenuOpen(false);
                 }}
