@@ -1,14 +1,11 @@
 import { cn, Button } from '@shadcn';
 import { Link } from '@tanstack/react-router';
-import { AccountSettingsCards } from './account-settings-cards.js';
-import { SecuritySettingsCards } from './security-settings-cards.js';
-import { ApiKeysCard } from './api-keys-card.js';
-import { OrganizationsCard } from '@auth/features/organization/ui/organizations-card.js';
-import { UserInvitationsCard } from '@auth/features/invitation/ui/user-invitations-card.js';
+import { OrganizationSettingsCards } from './organization-settings-cards.js';
+import { OrganizationMembersCard } from './organization-members-card.js';
 
-export type AccountViewPath = 'SETTINGS' | 'SECURITY' | 'TEAMS' | 'API_KEYS' | 'ORGANIZATIONS';
+export type OrganizationViewPath = 'SETTINGS' | 'MEMBERS' | 'TEAMS' | 'API_KEYS';
 
-export interface AccountViewProps {
+export interface OrganizationViewProps {
   className?: string;
   classNames?: {
     base?: string;
@@ -18,65 +15,75 @@ export interface AccountViewProps {
     card?: Record<string, string>;
   };
   pathname?: string;
-  view?: AccountViewPath;
+  view?: OrganizationViewPath;
   hideNav?: boolean;
-  showTeams?: boolean;
   /**
-   * Base path for account routes
-   * @default "/account"
+   * Organization slug for slug-based routing
+   */
+  slug?: string;
+  /**
+   * Base path for organization routes
+   * @default "/organization"
    */
   basePath?: string;
 }
 
-const viewPaths: Record<AccountViewPath, string> = {
+const viewPaths: Record<OrganizationViewPath, string> = {
   SETTINGS: 'settings',
-  SECURITY: 'security',
+  MEMBERS: 'members',
   TEAMS: 'teams',
   API_KEYS: 'api-keys',
-  ORGANIZATIONS: 'organizations',
 };
 
 /**
- * AccountView - Renders the appropriate account settings view based on the pathname
+ * OrganizationView - Renders the appropriate organization settings view based on the pathname
  *
  * Supports the following views:
- * - settings: Account profile settings (name, email, avatar)
- * - security: Password, 2FA, sessions, passkeys
- * - teams: User's teams (if enabled)
- * - api-keys: API key management (if enabled)
- * - organizations: Organization management
+ * - settings: Organization profile settings (name, slug, logo)
+ * - members: Organization members management
+ * - teams: Teams within the organization (if enabled)
+ * - api-keys: Organization API keys (if enabled)
  *
  * @example
  * ```tsx
  * // In your route file:
- * function AccountPage() {
- *   const { accountView } = Route.useParams();
- *   return <AccountView pathname={accountView} />;
+ * function OrganizationPage() {
+ *   const { organizationView } = Route.useParams();
+ *   return <OrganizationView pathname={organizationView} />;
  * }
  * ```
  */
-export function AccountView({
+export function OrganizationView({
   className,
   classNames,
   pathname,
   view: viewProp,
   hideNav = false,
-  showTeams = false,
-  basePath = '/account',
-}: AccountViewProps) {
+  slug,
+  basePath = '/organization',
+}: OrganizationViewProps) {
   // Determine current view from pathname or prop
   const path = pathname?.split('/').pop();
   const view = viewProp || getViewByPath(path) || 'SETTINGS';
 
-  // TODO: Add configuration for which nav items to show
-  const navItems: { view: AccountViewPath; label: string }[] = [
-    { view: 'SETTINGS', label: 'Account' },
-    { view: 'SECURITY', label: 'Security' },
+  // TODO: Add authentication check - redirect if not authenticated
+  // TODO: Add organization check - redirect if no active organization
+
+  const navItems: { view: OrganizationViewPath; label: string }[] = [
+    { view: 'SETTINGS', label: 'Settings' },
+    { view: 'MEMBERS', label: 'Members' },
     // TODO: Conditionally show based on feature flags
     // { view: 'TEAMS', label: 'Teams' },
     // { view: 'API_KEYS', label: 'API Keys' },
-    { view: 'ORGANIZATIONS', label: 'Organizations' },
   ];
+
+  // Build path with optional slug
+  const buildPath = (viewPath: string) => {
+    if (slug) {
+      return `${basePath}/${slug}/${viewPath}`;
+    }
+    return `${basePath}/${viewPath}`;
+  };
 
   return (
     <div
@@ -101,7 +108,7 @@ export function AccountView({
         <div className="hidden md:block">
           <div className={cn('flex w-48 flex-col gap-1 lg:w-60', classNames?.sidebar?.base)}>
             {navItems.map((item) => (
-              <Link key={item.view} to={`${basePath}/${viewPaths[item.view]}`}>
+              <Link key={item.view} to={buildPath(viewPaths[item.view])}>
                 <Button
                   size="lg"
                   className={cn(
@@ -122,25 +129,19 @@ export function AccountView({
 
       {/* Content Area */}
       <div className={cn('flex-1', classNames?.cards)}>
-        {view === 'SETTINGS' && <AccountSettingsCards />}
-        {view === 'SECURITY' && <SecuritySettingsCards />}
-        {view === 'TEAMS' && showTeams && <TeamsPlaceholder />}
-        {view === 'API_KEYS' && <ApiKeysCard />}
-        {view === 'ORGANIZATIONS' && (
-          <div className="space-y-4 md:space-y-6">
-            <OrganizationsCard />
-            <UserInvitationsCard />
-          </div>
-        )}
+        {view === 'SETTINGS' && <OrganizationSettingsCards />}
+        {view === 'MEMBERS' && <OrganizationMembersCard />}
+        {view === 'TEAMS' && <TeamsPlaceholder />}
+        {view === 'API_KEYS' && <ApiKeysPlaceholder />}
       </div>
     </div>
   );
 }
 
-function getViewByPath(path?: string): AccountViewPath | undefined {
+function getViewByPath(path?: string): OrganizationViewPath | undefined {
   if (!path) return undefined;
   const entry = Object.entries(viewPaths).find(([_, p]) => p === path);
-  return entry ? (entry[0] as AccountViewPath) : undefined;
+  return entry ? (entry[0] as OrganizationViewPath) : undefined;
 }
 
 // ============================================================================
@@ -151,6 +152,14 @@ function TeamsPlaceholder() {
   return (
     <div className="text-center py-8 text-muted-foreground">
       <p>Teams feature coming soon...</p>
+    </div>
+  );
+}
+
+function ApiKeysPlaceholder() {
+  return (
+    <div className="text-center py-8 text-muted-foreground">
+      <p>Organization API keys coming soon...</p>
     </div>
   );
 }

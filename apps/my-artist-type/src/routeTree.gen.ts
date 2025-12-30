@@ -12,10 +12,15 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as SplatRouteImport } from './routes/$'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as OrganizationIndexRouteImport } from './routes/organization/index'
 import { Route as ExampleIndexRouteImport } from './routes/example/index'
+import { Route as AccountIndexRouteImport } from './routes/account/index'
+import { Route as OrganizationOrganizationViewRouteImport } from './routes/organization/$organizationView'
 import { Route as ExampleFeatureIdRouteImport } from './routes/example/$featureId'
+import { Route as AuthAuthViewRouteImport } from './routes/auth/$authView'
 import { Route as ApiSplatRouteImport } from './routes/api/$'
 import { Route as AdminQuizEditorRouteImport } from './routes/admin/quiz-editor'
+import { Route as AccountAccountViewRouteImport } from './routes/account/$accountView'
 import { Route as AdminResponsesResponseId_newRouteImport } from './routes/admin/responses/$responseId_new'
 import { Route as AdminResponsesResponseIdRouteImport } from './routes/admin/responses/$responseId'
 import { Route as AdminResponsesResponseIdAnalysisRouteImport } from './routes/admin/responses/$responseId/analysis'
@@ -35,14 +40,35 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const OrganizationIndexRoute = OrganizationIndexRouteImport.update({
+  id: '/organization/',
+  path: '/organization/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ExampleIndexRoute = ExampleIndexRouteImport.update({
   id: '/example/',
   path: '/example/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AccountIndexRoute = AccountIndexRouteImport.update({
+  id: '/account/',
+  path: '/account/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OrganizationOrganizationViewRoute =
+  OrganizationOrganizationViewRouteImport.update({
+    id: '/organization/$organizationView',
+    path: '/organization/$organizationView',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ExampleFeatureIdRoute = ExampleFeatureIdRouteImport.update({
   id: '/example/$featureId',
   path: '/example/$featureId',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthAuthViewRoute = AuthAuthViewRouteImport.update({
+  id: '/auth/$authView',
+  path: '/auth/$authView',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiSplatRoute = ApiSplatRouteImport.update({
@@ -54,6 +80,11 @@ const AdminQuizEditorRoute = AdminQuizEditorRouteImport.update({
   id: '/quiz-editor',
   path: '/quiz-editor',
   getParentRoute: () => AdminRoute,
+} as any)
+const AccountAccountViewRoute = AccountAccountViewRouteImport.update({
+  id: '/account/$accountView',
+  path: '/account/$accountView',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AdminResponsesResponseId_newRoute =
   AdminResponsesResponseId_newRouteImport.update({
@@ -78,10 +109,15 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/$': typeof SplatRoute
   '/admin': typeof AdminRouteWithChildren
+  '/account/$accountView': typeof AccountAccountViewRoute
   '/admin/quiz-editor': typeof AdminQuizEditorRoute
   '/api/$': typeof ApiSplatRoute
+  '/auth/$authView': typeof AuthAuthViewRoute
   '/example/$featureId': typeof ExampleFeatureIdRoute
+  '/organization/$organizationView': typeof OrganizationOrganizationViewRoute
+  '/account': typeof AccountIndexRoute
   '/example': typeof ExampleIndexRoute
+  '/organization': typeof OrganizationIndexRoute
   '/admin/responses/$responseId': typeof AdminResponsesResponseIdRouteWithChildren
   '/admin/responses/$responseId_new': typeof AdminResponsesResponseId_newRoute
   '/admin/responses/$responseId/analysis': typeof AdminResponsesResponseIdAnalysisRoute
@@ -90,10 +126,15 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/$': typeof SplatRoute
   '/admin': typeof AdminRouteWithChildren
+  '/account/$accountView': typeof AccountAccountViewRoute
   '/admin/quiz-editor': typeof AdminQuizEditorRoute
   '/api/$': typeof ApiSplatRoute
+  '/auth/$authView': typeof AuthAuthViewRoute
   '/example/$featureId': typeof ExampleFeatureIdRoute
+  '/organization/$organizationView': typeof OrganizationOrganizationViewRoute
+  '/account': typeof AccountIndexRoute
   '/example': typeof ExampleIndexRoute
+  '/organization': typeof OrganizationIndexRoute
   '/admin/responses/$responseId': typeof AdminResponsesResponseIdRouteWithChildren
   '/admin/responses/$responseId_new': typeof AdminResponsesResponseId_newRoute
   '/admin/responses/$responseId/analysis': typeof AdminResponsesResponseIdAnalysisRoute
@@ -103,10 +144,15 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/$': typeof SplatRoute
   '/admin': typeof AdminRouteWithChildren
+  '/account/$accountView': typeof AccountAccountViewRoute
   '/admin/quiz-editor': typeof AdminQuizEditorRoute
   '/api/$': typeof ApiSplatRoute
+  '/auth/$authView': typeof AuthAuthViewRoute
   '/example/$featureId': typeof ExampleFeatureIdRoute
+  '/organization/$organizationView': typeof OrganizationOrganizationViewRoute
+  '/account/': typeof AccountIndexRoute
   '/example/': typeof ExampleIndexRoute
+  '/organization/': typeof OrganizationIndexRoute
   '/admin/responses/$responseId': typeof AdminResponsesResponseIdRouteWithChildren
   '/admin/responses/$responseId_new': typeof AdminResponsesResponseId_newRoute
   '/admin/responses/$responseId/analysis': typeof AdminResponsesResponseIdAnalysisRoute
@@ -117,10 +163,15 @@ export interface FileRouteTypes {
     | '/'
     | '/$'
     | '/admin'
+    | '/account/$accountView'
     | '/admin/quiz-editor'
     | '/api/$'
+    | '/auth/$authView'
     | '/example/$featureId'
+    | '/organization/$organizationView'
+    | '/account'
     | '/example'
+    | '/organization'
     | '/admin/responses/$responseId'
     | '/admin/responses/$responseId_new'
     | '/admin/responses/$responseId/analysis'
@@ -129,10 +180,15 @@ export interface FileRouteTypes {
     | '/'
     | '/$'
     | '/admin'
+    | '/account/$accountView'
     | '/admin/quiz-editor'
     | '/api/$'
+    | '/auth/$authView'
     | '/example/$featureId'
+    | '/organization/$organizationView'
+    | '/account'
     | '/example'
+    | '/organization'
     | '/admin/responses/$responseId'
     | '/admin/responses/$responseId_new'
     | '/admin/responses/$responseId/analysis'
@@ -141,10 +197,15 @@ export interface FileRouteTypes {
     | '/'
     | '/$'
     | '/admin'
+    | '/account/$accountView'
     | '/admin/quiz-editor'
     | '/api/$'
+    | '/auth/$authView'
     | '/example/$featureId'
+    | '/organization/$organizationView'
+    | '/account/'
     | '/example/'
+    | '/organization/'
     | '/admin/responses/$responseId'
     | '/admin/responses/$responseId_new'
     | '/admin/responses/$responseId/analysis'
@@ -154,9 +215,14 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   SplatRoute: typeof SplatRoute
   AdminRoute: typeof AdminRouteWithChildren
+  AccountAccountViewRoute: typeof AccountAccountViewRoute
   ApiSplatRoute: typeof ApiSplatRoute
+  AuthAuthViewRoute: typeof AuthAuthViewRoute
   ExampleFeatureIdRoute: typeof ExampleFeatureIdRoute
+  OrganizationOrganizationViewRoute: typeof OrganizationOrganizationViewRoute
+  AccountIndexRoute: typeof AccountIndexRoute
   ExampleIndexRoute: typeof ExampleIndexRoute
+  OrganizationIndexRoute: typeof OrganizationIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -182,6 +248,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/organization/': {
+      id: '/organization/'
+      path: '/organization'
+      fullPath: '/organization'
+      preLoaderRoute: typeof OrganizationIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/example/': {
       id: '/example/'
       path: '/example'
@@ -189,11 +262,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ExampleIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/account/': {
+      id: '/account/'
+      path: '/account'
+      fullPath: '/account'
+      preLoaderRoute: typeof AccountIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/organization/$organizationView': {
+      id: '/organization/$organizationView'
+      path: '/organization/$organizationView'
+      fullPath: '/organization/$organizationView'
+      preLoaderRoute: typeof OrganizationOrganizationViewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/example/$featureId': {
       id: '/example/$featureId'
       path: '/example/$featureId'
       fullPath: '/example/$featureId'
       preLoaderRoute: typeof ExampleFeatureIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth/$authView': {
+      id: '/auth/$authView'
+      path: '/auth/$authView'
+      fullPath: '/auth/$authView'
+      preLoaderRoute: typeof AuthAuthViewRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/$': {
@@ -209,6 +303,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin/quiz-editor'
       preLoaderRoute: typeof AdminQuizEditorRouteImport
       parentRoute: typeof AdminRoute
+    }
+    '/account/$accountView': {
+      id: '/account/$accountView'
+      path: '/account/$accountView'
+      fullPath: '/account/$accountView'
+      preLoaderRoute: typeof AccountAccountViewRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/admin/responses/$responseId_new': {
       id: '/admin/responses/$responseId_new'
@@ -267,9 +368,14 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   SplatRoute: SplatRoute,
   AdminRoute: AdminRouteWithChildren,
+  AccountAccountViewRoute: AccountAccountViewRoute,
   ApiSplatRoute: ApiSplatRoute,
+  AuthAuthViewRoute: AuthAuthViewRoute,
   ExampleFeatureIdRoute: ExampleFeatureIdRoute,
+  OrganizationOrganizationViewRoute: OrganizationOrganizationViewRoute,
+  AccountIndexRoute: AccountIndexRoute,
   ExampleIndexRoute: ExampleIndexRoute,
+  OrganizationIndexRoute: OrganizationIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
