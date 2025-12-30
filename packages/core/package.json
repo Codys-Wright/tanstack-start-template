@@ -21,6 +21,7 @@
   "dependencies": {
     "@effect-atom/atom": "*",
     "@effect-atom/atom-react": "*",
+    "@effect/opentelemetry": "*",
     "@effect/platform": "*",
     "@effect/platform-bun": "*",
     "@effect/rpc": "*",

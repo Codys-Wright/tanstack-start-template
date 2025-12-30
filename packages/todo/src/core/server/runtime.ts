@@ -4,6 +4,7 @@
  * This runtime provides all layers needed for the todo feature:
  * - TodoService for CRUD operations
  * - AuthService for authentication
+ * - TracerLive for OpenTelemetry tracing (exports Effect.fn spans to Jaeger)
  *
  * Apps can either:
  * 1. Use this runtime directly for todo-related server functions
@@ -16,6 +17,7 @@ import * as Layer from 'effect/Layer';
 import * as ManagedRuntime from 'effect/ManagedRuntime';
 
 import { AuthService } from '@auth/server';
+import { TracerLive } from '@core/server';
 
 import { TodoService } from '../../features/todo/server/index.js';
 
@@ -26,9 +28,12 @@ const memoMap = globalValue(Symbol.for('@todo/server-memoMap'), () =>
 
 /**
  * Layer combining all services needed for the todo package.
- * Includes AuthService for authentication and TodoService for todos.
+ * Includes AuthService for authentication, TodoService for todos,
+ * and TracerLive for OpenTelemetry span exports.
  */
-export const TodoServerLayer = Layer.merge(AuthService.Default, TodoService.Default);
+export const TodoServerLayer = Layer.merge(AuthService.Default, TodoService.Default).pipe(
+  Layer.provideMerge(TracerLive),
+);
 
 /**
  * Server runtime for the todo package.

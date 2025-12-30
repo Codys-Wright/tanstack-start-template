@@ -143,6 +143,7 @@
         "@effect-atom/atom": "*",
         "@effect-atom/atom-react": "*",
         "@effect/language-service": "*",
+        "@effect/opentelemetry": "*",
         "@effect/platform": "*",
         "@effect/platform-browser": "*",
         "@effect/platform-bun": "*",
@@ -358,6 +359,7 @@
       "dependencies": {
         "@effect-atom/atom": "*",
         "@effect-atom/atom-react": "*",
+        "@effect/opentelemetry": "*",
         "@effect/platform": "*",
         "@effect/platform-bun": "*",
         "@effect/rpc": "*",

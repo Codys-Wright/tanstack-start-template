@@ -10,7 +10,47 @@ import * as OpenApi from '@effect/platform/OpenApi';
 import * as HttpApi from '@effect/platform/HttpApi';
 
 // ============================================================================
-// RPC Middleware
+// RPC Middleware - Tracing
+// ============================================================================
+
+/**
+ * RpcTracer - OpenTelemetry tracing middleware for RPC handlers.
+ *
+ * Wraps each RPC handler execution with an Effect.withSpan to create
+ * traceable spans that are exported to Jaeger via OtlpTracer.
+ *
+ * This middleware uses `wrap: true` to wrap the handler execution,
+ * and `optional: true` so it doesn't block RPC execution if not provided.
+ */
+export class RpcTracer extends RpcMiddleware.Tag<RpcTracer>()('RpcTracer', {
+  wrap: true,
+  optional: true,
+}) {}
+
+/**
+ * RpcTracerLive - Live implementation of RpcTracer middleware.
+ *
+ * Creates an OpenTelemetry span for each RPC call with:
+ * - Span name: `rpc.<method>` (e.g., `rpc.quiz_list`)
+ * - Attributes: clientId, method name
+ *
+ * The span wraps the entire handler execution including nested Effect.fn spans.
+ */
+export const RpcTracerLive = Layer.succeed(
+  RpcTracer,
+  RpcTracer.of((opts) =>
+    Effect.withSpan(opts.next, `rpc.${opts.rpc._tag}`, {
+      attributes: {
+        'rpc.method': opts.rpc._tag,
+        'rpc.clientId': String(opts.clientId),
+      },
+      captureStackTrace: false,
+    }),
+  ),
+);
+
+// ============================================================================
+// RPC Middleware - Logging
 // ============================================================================
 
 export class RpcLogger extends RpcMiddleware.Tag<RpcLogger>()('RpcLogger', {
@@ -43,7 +83,12 @@ export const RpcLoggerLive = Layer.succeed(
 
 /**
  * AppRpc - Composed RPC group with all feature RPCs merged.
- * Global middleware (auth, logging) is applied once here.
+ * Global middleware (auth, tracing, logging) is applied once here.
+ *
+ * Middleware order (outermost to innermost):
+ * 1. RpcTracer - Creates OpenTelemetry spans for each RPC call
+ * 2. RpcLogger - Logs errors (inside the tracing span)
+ * 3. RpcAuthenticationMiddleware - Validates authentication
  *
  * Add more RPC groups using .merge() as features are added:
  * e.g., TodosRpc.merge(QuizRpc)
@@ -51,7 +96,8 @@ export const RpcLoggerLive = Layer.succeed(
 export const DomainRpc = TodoRpc.merge(FeatureRpc)
   .merge(QuizRpc)
   .middleware(RpcAuthenticationMiddleware)
-  .middleware(RpcLogger);
+  .middleware(RpcLogger)
+  .middleware(RpcTracer);
 
 /**
  * DomainApi - Core HTTP API for the application.

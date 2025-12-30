@@ -6,6 +6,7 @@
  * - AnalysisServerService for analysis operations
  * - QuizTakerService for active quiz session management
  * - AnalysisEngineServerService for analysis engine operations
+ * - TracerLive for OpenTelemetry tracing (exports Effect.fn spans to Jaeger)
  *
  * Apps can either:
  * 1. Use this runtime directly for quiz-related server functions
@@ -16,6 +17,8 @@ import * as GlobalValue from 'effect/GlobalValue';
 import * as Effect from 'effect/Effect';
 import * as Layer from 'effect/Layer';
 import * as ManagedRuntime from 'effect/ManagedRuntime';
+
+import { TracerLive } from '@core/server';
 
 import { QuizService } from '../../features/quiz/server/index.js';
 import { AnalysisServerService } from '../../features/analysis/server/index.js';
@@ -31,6 +34,7 @@ const memoMap = GlobalValue.globalValue(Symbol.for('@quiz/server-memoMap'), () =
 
 /**
  * Layer combining all services needed for the quiz package.
+ * Includes TracerLive for OpenTelemetry span exports.
  */
 export const QuizServerLayer = Layer.mergeAll(
   QuizService.Default,
@@ -39,7 +43,7 @@ export const QuizServerLayer = Layer.mergeAll(
   QuizTakerService.Default,
   ActiveQuizServerService.Default,
   ResponsesServerService.Default,
-);
+).pipe(Layer.provideMerge(TracerLive));
 
 /**
  * Server runtime for the quiz package.

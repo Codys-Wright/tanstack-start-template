@@ -9,6 +9,8 @@ import type { QuizId } from '../../quiz/domain/schema.js';
  * This service wraps ResponsesRepo and provides:
  * - CRUD operations for quiz responses
  * - Upsert logic (create or update based on id presence)
+ *
+ * All methods use Effect.fn for automatic OpenTelemetry tracing.
  */
 export class ResponsesServerService extends Effect.Service<ResponsesServerService>()(
   'ResponsesServerService',
@@ -19,41 +21,59 @@ export class ResponsesServerService extends Effect.Service<ResponsesServerServic
 
       return {
         /** List all responses */
-        list: () => repo.findAll(),
+        list: Effect.fn('ResponsesService.list')(function* () {
+          const responses = yield* repo.findAll();
+          yield* Effect.annotateCurrentSpan('response.count', responses.length);
+          return responses;
+        }),
 
         /** Get response by ID */
-        getById: (id: ResponseId) => repo.findById(id),
+        getById: Effect.fn('ResponsesService.getById')(function* (id: ResponseId) {
+          yield* Effect.annotateCurrentSpan('response.id', id);
+          return yield* repo.findById(id);
+        }),
 
         /** Get responses by quiz ID */
-        getByQuizId: (quizId: QuizId) => repo.findByQuizId(quizId),
+        getByQuizId: Effect.fn('ResponsesService.getByQuizId')(function* (quizId: QuizId) {
+          yield* Effect.annotateCurrentSpan('quiz.id', quizId);
+          const responses = yield* repo.findByQuizId(quizId);
+          yield* Effect.annotateCurrentSpan('response.count', responses.length);
+          return responses;
+        }),
 
         /** Upsert a response (create if no id, update if id provided) */
-        upsert: (input: UpsertResponsePayload) =>
-          Effect.gen(function* () {
-            if (input.id !== undefined) {
-              // Update existing response
-              return yield* repo.update({
-                id: input.id,
-                quizId: input.quizId,
-                answers: input.answers,
-                sessionMetadata: input.sessionMetadata,
-                interactionLogs: input.interactionLogs,
-                metadata: input.metadata,
-              });
-            }
+        upsert: Effect.fn('ResponsesService.upsert')(function* (input: UpsertResponsePayload) {
+          yield* Effect.annotateCurrentSpan('quiz.id', input.quizId);
+          yield* Effect.annotateCurrentSpan('operation', input.id ? 'update' : 'create');
 
-            // Create new response
-            return yield* repo.create({
+          if (input.id !== undefined) {
+            yield* Effect.annotateCurrentSpan('response.id', input.id);
+            // Update existing response
+            return yield* repo.update({
+              id: input.id,
               quizId: input.quizId,
               answers: input.answers,
               sessionMetadata: input.sessionMetadata,
               interactionLogs: input.interactionLogs,
               metadata: input.metadata,
             });
-          }),
+          }
+
+          // Create new response
+          return yield* repo.create({
+            quizId: input.quizId,
+            answers: input.answers,
+            sessionMetadata: input.sessionMetadata,
+            interactionLogs: input.interactionLogs,
+            metadata: input.metadata,
+          });
+        }),
 
         /** Delete a response by ID */
-        delete: (id: ResponseId) => repo.del(id),
+        delete: Effect.fn('ResponsesService.delete')(function* (id: ResponseId) {
+          yield* Effect.annotateCurrentSpan('response.id', id);
+          return yield* repo.del(id);
+        }),
       } as const;
     }),
   },

@@ -5,4 +5,4 @@
  * - TracerLive: OpenTelemetry tracing layer for Effect.fn spans
  */
 
-export * from './server/index.js';
+export * from './tracing.js';

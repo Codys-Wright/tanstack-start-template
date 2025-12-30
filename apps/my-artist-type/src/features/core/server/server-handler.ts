@@ -16,18 +16,21 @@ import * as Context from 'effect/Context';
 import * as Layer from 'effect/Layer';
 import * as Effect from 'effect/Effect';
 import * as Logger from 'effect/Logger';
-import { DomainRpc, RpcLoggerLive } from './domain';
+import { DomainRpc, RpcLoggerLive, RpcTracerLive } from './domain';
+import { TracerLive } from './tracing.js';
 
 const RpcRouter = RpcServer.layerHttpRouter({
   group: DomainRpc,
   path: '/api/rpc',
   protocol: 'http',
-  spanPrefix: 'rpc',
+  // Disable built-in RPC tracing since we use RpcTracer middleware
+  disableTracing: true,
   disableFatalDefects: true,
 }).pipe(
   Layer.provide(TodoRpcLive),
   Layer.provide(ExampleRpcLive),
   Layer.provide(QuizRpcLive),
+  Layer.provide(RpcTracerLive),
   Layer.provide(RpcLoggerLive),
   Layer.provide(RpcAuthenticationMiddlewareLive),
   Layer.provide(AuthService.Default),
@@ -57,7 +60,11 @@ const AllRoutes = Layer.mergeAll(
 
 const memoMap = Effect.runSync(Layer.makeMemoMap);
 
-const { handler, dispose } = HttpLayerRouter.toWebHandler(AllRoutes, {
+// Merge tracing layer with routes - must use provideMerge so the tracer is available
+// at the runtime level for Effect.fn spans to be exported
+const AllRoutesWithTracing = AllRoutes.pipe(Layer.provideMerge(TracerLive));
+
+const { handler, dispose } = HttpLayerRouter.toWebHandler(AllRoutesWithTracing, {
   memoMap,
 });
 

@@ -4,6 +4,7 @@
  * This runtime provides all layers needed for the example feature:
  * - FeatureService for CRUD operations
  * - AuthService for authentication
+ * - TracerLive for OpenTelemetry tracing (exports Effect.fn spans to Jaeger)
  *
  * Apps can either:
  * 1. Use this runtime directly for example-related server functions
@@ -16,6 +17,7 @@ import * as Layer from 'effect/Layer';
 import * as ManagedRuntime from 'effect/ManagedRuntime';
 
 import { AuthService } from '@auth/server';
+import { TracerLive } from '@core/server';
 
 import { FeatureService } from '../../features/feature/server/index.js';
 
@@ -26,14 +28,18 @@ const memoMap = globalValue(Symbol.for('@example/server-memoMap'), () =>
 
 /**
  * Layer combining all services needed for the example package.
- * Includes AuthService for authentication and FeatureService for features.
+ * Includes AuthService for authentication, FeatureService for features,
+ * and TracerLive for OpenTelemetry span exports.
  */
-export const ExampleServerLayer = Layer.merge(AuthService.Default, FeatureService.Default);
+export const ExampleServerLayer = Layer.merge(AuthService.Default, FeatureService.Default).pipe(
+  Layer.provideMerge(TracerLive),
+);
 
 /**
  * Server runtime for the example package.
  *
  * Use this runtime to run server-side effects that need FeatureService and AuthService.
+ * All Effect.fn spans will be exported to Jaeger via OpenTelemetry.
  *
  * @example
  * ```ts

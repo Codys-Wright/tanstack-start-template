@@ -10,6 +10,11 @@ import { FeatureService } from './service';
  * Uses ExampleApi (the package-level HttpApi) to implement handlers.
  * The handlers are provided to ExampleHttpLive layer for composition.
  *
+ * Each handler uses Effect.withSpan for explicit tracing. The span hierarchy will be:
+ *   http.server GET /api/example/features (HttpMiddleware.tracer)
+ *     └─ FeatureApi.list (this handler)
+ *         └─ FeatureService.list (service layer)
+ *
  * @example
  * ```ts
  * import { ExampleHttpLive } from "@example/server";
@@ -23,38 +28,57 @@ import { FeatureService } from './service';
 export const FeatureApiLive = HttpApiBuilder.group(ExampleApi, 'features', (handlers) =>
   handlers
     .handle('list', () =>
-      Effect.gen(function* () {
-        yield* Effect.log(`[HTTP API] Listing features`);
-        const features = yield* FeatureService;
-        return yield* features.list();
-      }),
+      Effect.withSpan(
+        Effect.gen(function* () {
+          yield* Effect.log(`[HTTP API] Listing features`);
+          const features = yield* FeatureService;
+          return yield* features.list();
+        }),
+        'FeatureApi.list',
+      ),
     )
     .handle('getById', ({ path }) =>
-      Effect.gen(function* () {
-        yield* Effect.log(`[HTTP API] Getting feature ${path.id}`);
-        const features = yield* FeatureService;
-        return yield* features.getById(path.id);
-      }),
+      Effect.withSpan(
+        Effect.gen(function* () {
+          yield* Effect.annotateCurrentSpan('feature.id', path.id);
+          yield* Effect.log(`[HTTP API] Getting feature ${path.id}`);
+          const features = yield* FeatureService;
+          return yield* features.getById(path.id);
+        }),
+        'FeatureApi.getById',
+      ),
     )
     .handle('create', ({ payload }) =>
-      Effect.gen(function* () {
-        yield* Effect.log(`[HTTP API] Creating feature`);
-        const features = yield* FeatureService;
-        return yield* features.create(payload);
-      }),
+      Effect.withSpan(
+        Effect.gen(function* () {
+          yield* Effect.annotateCurrentSpan('feature.name', payload.name);
+          yield* Effect.log(`[HTTP API] Creating feature`);
+          const features = yield* FeatureService;
+          return yield* features.create(payload);
+        }),
+        'FeatureApi.create',
+      ),
     )
     .handle('update', ({ path, payload }) =>
-      Effect.gen(function* () {
-        yield* Effect.log(`[HTTP API] Updating feature ${path.id}`);
-        const features = yield* FeatureService;
-        return yield* features.update(path.id, payload);
-      }),
+      Effect.withSpan(
+        Effect.gen(function* () {
+          yield* Effect.annotateCurrentSpan('feature.id', path.id);
+          yield* Effect.log(`[HTTP API] Updating feature ${path.id}`);
+          const features = yield* FeatureService;
+          return yield* features.update(path.id, payload);
+        }),
+        'FeatureApi.update',
+      ),
     )
     .handle('remove', ({ path }) =>
-      Effect.gen(function* () {
-        yield* Effect.log(`[HTTP API] Removing feature ${path.id}`);
-        const features = yield* FeatureService;
-        return yield* features.remove(path.id);
-      }),
+      Effect.withSpan(
+        Effect.gen(function* () {
+          yield* Effect.annotateCurrentSpan('feature.id', path.id);
+          yield* Effect.log(`[HTTP API] Removing feature ${path.id}`);
+          const features = yield* FeatureService;
+          return yield* features.remove(path.id);
+        }),
+        'FeatureApi.remove',
+      ),
     ),
 ).pipe(Layer.provide(FeatureService.Default));
