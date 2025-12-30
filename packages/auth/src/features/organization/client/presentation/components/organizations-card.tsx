@@ -1,12 +1,12 @@
 import { Button, Card } from '@shadcn';
 import { Result, useAtom, useAtomValue } from '@effect-atom/atom-react';
 import { BuildingIcon, PlusIcon, CheckIcon } from 'lucide-react';
-import { sessionAtom } from '../../../../session/client/atoms.js';
+import { sessionAtom } from '@auth/features/session/client/atoms';
 import {
   organizationsAtom,
   setActiveOrganizationAtom,
   createOrganizationAtom,
-} from '../../atoms.js';
+} from '@auth/features/organization/client/atoms.js';
 import { useForm } from '@tanstack/react-form';
 import * as Schema from 'effect/Schema';
 import { toast } from 'sonner';

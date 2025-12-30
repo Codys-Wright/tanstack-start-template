@@ -4,7 +4,7 @@ import { useForm } from '@tanstack/react-form';
 import { useAtom, useAtomValue, Result } from '@effect-atom/atom-react';
 import { toast } from 'sonner';
 import { createTeamAtom } from '../../atoms.js';
-import { sessionAtom } from '../../../../session/client/atoms.js';
+import { sessionAtom } from '../../../../session/client/atoms';
 
 export interface CreateTeamDialogProps {
   children: React.ReactNode;

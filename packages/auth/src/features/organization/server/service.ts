@@ -1,6 +1,9 @@
 import * as Effect from 'effect/Effect';
-import { AuthService } from '../../../../core/server/service';
-import { OrganizationNotFoundError, OrganizationValidationError } from '../domain/schema';
+import { AuthService } from '@auth/core/server/service';
+import {
+  OrganizationNotFoundError,
+  OrganizationValidationError,
+} from '@auth/features/organization/domain/schema';
 
 /**
  * Organization Service - Wraps organization operations in Effect

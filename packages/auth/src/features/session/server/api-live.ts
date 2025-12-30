@@ -3,7 +3,7 @@ import * as HttpServerRequest from '@effect/platform/HttpServerRequest';
 import * as Effect from 'effect/Effect';
 import * as Layer from 'effect/Layer';
 import * as Schema from 'effect/Schema';
-import { AuthApi } from '../../../../core/server/api';
+import { AuthApi } from '@auth/core/server/api';
 import {
   AuthError,
   SessionData,
@@ -12,7 +12,7 @@ import {
   SignInResponse,
   SignUpResponse,
   SignOutResponse,
-} from '../domain/schema';
+} from '@auth/features/session/domain/schema';
 import { AuthService } from './service';
 
 /**

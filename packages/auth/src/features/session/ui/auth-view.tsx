@@ -1,10 +1,10 @@
-import { Card } from "@shadcn";
-import { SignInForm } from "./sign-in-form";
-import { SignUpForm } from "./sign-up-form";
-import { ForgotPasswordForm } from "../../account/ui/forgot-password-form";
-import { ResetPasswordForm } from "../../account/ui/reset-password-form";
-import { TwoFactorForm } from "./two-factor-form";
-import { RecoverAccountForm } from "../../account/ui/recover-account-form";
+import { Card } from '@shadcn';
+import { SignInForm } from './sign-in-form';
+import { SignUpForm } from './sign-up-form';
+import { ForgotPasswordForm } from '@auth/features/account/ui/forgot-password-form';
+import { ResetPasswordForm } from '@auth/features/account/ui/reset-password-form';
+import { TwoFactorForm } from './two-factor-form';
+import { RecoverAccountForm } from '@auth/features/account/ui/recover-account-form';
 
 export interface AuthViewProps {
   pathname: string;
@@ -26,26 +26,24 @@ export interface AuthViewProps {
 export function AuthView({ pathname, className }: AuthViewProps) {
   const renderView = () => {
     switch (pathname) {
-      case "sign-in":
+      case 'sign-in':
         return <SignInForm className={className} />;
-      case "sign-up":
+      case 'sign-up':
         return <SignUpForm className={className} />;
-      case "forgot-password":
+      case 'forgot-password':
         return <ForgotPasswordForm className={className} />;
-      case "reset-password":
+      case 'reset-password':
         return <ResetPasswordForm className={className} />;
-      case "two-factor":
+      case 'two-factor':
         return <TwoFactorForm className={className} />;
-      case "recover-account":
+      case 'recover-account':
         return <RecoverAccountForm className={className} />;
-      case "callback":
+      case 'callback':
         return (
           <Card className={className}>
             <Card.Header>
               <Card.Title>Processing</Card.Title>
-              <Card.Description>
-                Processing your authentication...
-              </Card.Description>
+              <Card.Description>Processing your authentication...</Card.Description>
             </Card.Header>
             <Card.Content>
               <p className="text-muted-foreground">Redirecting you...</p>

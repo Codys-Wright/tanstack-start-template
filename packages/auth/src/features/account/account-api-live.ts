@@ -3,15 +3,15 @@ import * as HttpServerRequest from '@effect/platform/HttpServerRequest';
 import * as Effect from 'effect/Effect';
 import * as Layer from 'effect/Layer';
 import * as Schema from 'effect/Schema';
-import { AuthApi } from '../../../core/auth-api';
-import { AuthService } from '../../../core/server/service';
-import { AuthError, toAuthError, Unauthenticated } from '../../../features/session/domain/schema';
-import { User } from '../../../features/user/domain/schema';
+import { AuthApi } from '@auth/core/auth-api';
+import { AuthService } from '@auth/core/server/service';
+import { AuthError, toAuthError, Unauthenticated } from '@auth/features/session/domain/schema';
+import { User } from '@auth/features/user/domain/schema';
 import {
   ChangeEmailResponse,
   ChangePasswordResponse,
   DeleteAccountResponse,
-} from '../../../features/account/domain/api';
+} from '@auth/features/account/domain/api';
 
 /**
  * AccountApiLive - HTTP API handlers for the account group within AuthApi.

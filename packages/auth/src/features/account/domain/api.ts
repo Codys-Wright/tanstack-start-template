@@ -1,8 +1,8 @@
 import * as HttpApiEndpoint from '@effect/platform/HttpApiEndpoint';
 import * as HttpApiGroup from '@effect/platform/HttpApiGroup';
 import * as Schema from 'effect/Schema';
-import { AuthError, Unauthenticated } from '../../session/domain/schema';
-import { User } from '../../user/domain/schema';
+import { AuthError, Unauthenticated } from '@auth/features/session/domain/schema';
+import { User } from '@auth/features/user/domain/schema';
 import { ChangeEmailInput, ChangePasswordInput, UpdateUserInput } from './schema';
 
 /**

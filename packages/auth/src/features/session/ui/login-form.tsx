@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Button, Input, Card } from '@shadcn';
-import { authClient } from '../../../../core/client/client';
+import { authClient } from '@auth/core/client/';
 
 export function LoginForm() {
   const [email, setEmail] = useState('');

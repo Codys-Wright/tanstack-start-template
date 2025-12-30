@@ -2,7 +2,7 @@ import { Button, cn, DropdownMenu, Skeleton } from '@shadcn';
 import { Result, useAtom, useAtomValue } from '@effect-atom/atom-react';
 import { Link } from '@tanstack/react-router';
 import { ChevronsUpDown, LogOutIcon, SettingsIcon } from 'lucide-react';
-import { sessionAtom, signOutAtom } from '../../../../session/client/atoms.js';
+import { sessionAtom, signOutAtom } from '@auth/features/session/client/atoms';
 import { UserAvatar } from './user-avatar.js';
 import { UserView } from './user-view.js';
 

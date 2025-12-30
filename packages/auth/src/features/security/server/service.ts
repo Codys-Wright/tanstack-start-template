@@ -1,5 +1,5 @@
 import * as Effect from 'effect/Effect';
-import { AuthService } from '../../../../core/server/service';
+import { AuthService } from '@auth/core/server/service';
 
 /**
  * Security Service - Wraps Better Auth security operations in Effect

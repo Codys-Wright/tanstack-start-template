@@ -1,5 +1,5 @@
 import * as Schema from 'effect/Schema';
-import { UserId } from '../../user/domain/schema';
+import { UserId } from '@auth/features/user/domain/schema';
 
 /**
  * Branded PasskeyId type for type safety

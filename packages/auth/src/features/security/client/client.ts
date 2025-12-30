@@ -1,5 +1,5 @@
 import * as Effect from 'effect/Effect';
-import { authClient } from '../../../../features/session/client/client';
+import { authClient } from '@auth/features/session/client/client';
 
 /**
  * SecurityApi - Effect Service wrapper around Better Auth security operations

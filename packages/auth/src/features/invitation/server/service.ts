@@ -1,5 +1,5 @@
 import * as Effect from 'effect/Effect';
-import { authClient } from '../../../../features/session/client/client';
+import { authClient } from '@auth/features/session/client/client';
 
 /**
  * Invitation Service - Wraps invitation operations in Effect

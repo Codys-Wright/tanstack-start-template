@@ -1,5 +1,5 @@
 import * as Effect from 'effect/Effect';
-import { authClient } from '../../session/client/client';
+import { authClient } from '@auth/features/session/client/client';
 
 /**
  * AdminApi - Effect Service wrapper around Better Auth admin client

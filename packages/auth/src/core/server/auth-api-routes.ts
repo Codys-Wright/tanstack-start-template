@@ -1,7 +1,7 @@
 import * as HttpLayerRouter from '@effect/platform/HttpLayerRouter';
 import * as HttpServer from '@effect/platform/HttpServer';
 import * as Layer from 'effect/Layer';
-import { AuthApi } from '../../../core/auth-api';
+import { AuthApi } from '@auth/core/auth-api';
 import { AuthApiLive } from './auth-api-live';
 import { HttpAuthenticationMiddlewareLive } from './middleware';
 import { AuthService } from './service';

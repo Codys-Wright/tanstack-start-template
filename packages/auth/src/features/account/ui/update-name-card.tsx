@@ -1,12 +1,12 @@
-import { Button, Card } from "@shadcn";
-import { Result, useAtom } from "@effect-atom/atom-react";
-import { useForm } from "@tanstack/react-form";
-import { Loader2Icon, UserIcon } from "lucide-react";
-import { useEffect } from "react";
-import * as Schema from "effect/Schema";
+import { Button, Card } from '@shadcn';
+import { Result, useAtom } from '@effect-atom/atom-react';
+import { useForm } from '@tanstack/react-form';
+import { Loader2Icon, UserIcon } from 'lucide-react';
+import { useEffect } from 'react';
+import * as Schema from 'effect/Schema';
 
-import { updateNameAtom } from "../../session/client/atoms.js";
-import { SettingsCard } from "./settings-card";
+import { updateNameAtom } from '@auth/features/session/client/atoms';
+import { SettingsCard } from './settings-card';
 
 export interface UpdateNameCardProps {
   className?: string;
@@ -22,7 +22,7 @@ export function UpdateNameCard({ className }: UpdateNameCardProps) {
 
   const form = useForm({
     defaultValues: {
-      name: "",
+      name: '',
     },
     onSubmit: async ({ value }) => {
       try {
@@ -73,9 +73,9 @@ export function UpdateNameCard({ className }: UpdateNameCardProps) {
             name="name"
             validators={{
               onChange: ({ value }) => {
-                if (!value) return "Name is required";
+                if (!value) return 'Name is required';
                 if (value.length > 100) {
-                  return "Name must be less than 100 characters";
+                  return 'Name must be less than 100 characters';
                 }
                 return undefined;
               },
@@ -98,9 +98,7 @@ export function UpdateNameCard({ className }: UpdateNameCardProps) {
                   className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                 />
                 {field.state.meta.errors.length > 0 && (
-                  <p className="text-xs text-destructive">
-                    {field.state.meta.errors.join(", ")}
-                  </p>
+                  <p className="text-xs text-destructive">{field.state.meta.errors.join(', ')}</p>
                 )}
               </div>
             )}
@@ -109,9 +107,7 @@ export function UpdateNameCard({ className }: UpdateNameCardProps) {
           {/* Error Message */}
           {error && (
             <div className="bg-destructive/10 border border-destructive/30 rounded p-3 text-sm text-destructive">
-              {error instanceof Error
-                ? error.message
-                : "Failed to update name. Please try again."}
+              {error instanceof Error ? error.message : 'Failed to update name. Please try again.'}
             </div>
           )}
 
@@ -129,7 +125,7 @@ export function UpdateNameCard({ className }: UpdateNameCardProps) {
                     Saving...
                   </>
                 ) : (
-                  "Save Changes"
+                  'Save Changes'
                 )}
               </Button>
             )}

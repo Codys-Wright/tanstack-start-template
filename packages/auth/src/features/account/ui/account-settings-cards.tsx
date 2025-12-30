@@ -1,6 +1,6 @@
 import { cn } from '@shadcn';
 import { Result, useAtomValue } from '@effect-atom/atom-react';
-import { sessionAtom } from '../../session/client/atoms.js';
+import { sessionAtom } from '@auth/features/session/client/atoms';
 import { UpdateNameCard } from './update-name-card';
 import { UpdateAvatarCard } from './update-avatar-card';
 import { ChangeEmailCard } from './change-email-card';

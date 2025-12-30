@@ -1,8 +1,8 @@
 import * as Schema from 'effect/Schema';
-import { UserId } from '../../user/domain/schema';
-import { OrganizationId } from '../../organization/domain/schema';
-import { OrganizationRole } from '../../member/domain/schema';
-import { TeamId } from '../../team/domain/schema';
+import { UserId } from '@auth/features/user/domain/schema';
+import { OrganizationId } from '@auth/features/organization/domain/schema';
+import { OrganizationRole } from '@auth/features/member/domain/schema';
+import { TeamId } from '@auth/features/team/domain/schema';
 
 /**
  * Branded InvitationId type for type safety

@@ -1,9 +1,9 @@
 import * as HttpApiBuilder from '@effect/platform/HttpApiBuilder';
 import * as Effect from 'effect/Effect';
 import * as Layer from 'effect/Layer';
-import { AuthApi } from '../../../../core/auth-api';
+import { AuthApi } from '@auth/core/auth-api';
 import { MemberService } from './service';
-import { InviteMemberInput, InvalidRoleError, Member, MemberNotFound, MemberWithFullDetails, MemberWithUser, MemberId, RemoveMemberInput, UpdateMemberRoleInput } from '../../../../features/member/domain/schema';
+import { InviteMemberInput, InvalidRoleError, Member, MemberNotFound, MemberWithFullDetails, MemberWithUser, MemberId, RemoveMemberInput, UpdateMemberRoleInput } from '@auth/features/member/domain/schema';
 
 /**
  * MemberApiLive - HTTP API handlers for member group.

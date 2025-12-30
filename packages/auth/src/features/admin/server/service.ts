@@ -1,6 +1,6 @@
 import { admin } from 'better-auth/plugins';
 import * as Effect from 'effect/Effect';
-import { AuthService } from '../../../../core/server/service';
+import { AuthService } from '@auth/core/server/service';
 
 /**
  * Admin Service - Wraps Better Auth admin operations in Effect

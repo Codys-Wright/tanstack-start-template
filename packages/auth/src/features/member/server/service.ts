@@ -1,5 +1,5 @@
 import * as Effect from 'effect/Effect';
-import { AuthService } from '../../../../core/server/service';
+import { AuthService } from '@auth/core/server/service';
 
 /**
  * Member Service - Wraps organization member operations in Effect

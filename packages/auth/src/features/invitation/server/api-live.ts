@@ -1,9 +1,9 @@
 import * as HttpApiBuilder from '@effect/platform/HttpApiBuilder';
 import * as Effect from 'effect/Effect';
 import * as Layer from 'effect/Layer';
-import { AuthApi } from '../../../../core/auth-api';
+import { AuthApi } from '@auth/core/auth-api';
 import { InvitationService } from './service';
-import { AuthError } from '../../../../features/session/domain/api';
+import { AuthError } from '@auth/features/session/domain/api';
 
 /**
  * InvitationApiLive - HTTP API handlers for invitation group.

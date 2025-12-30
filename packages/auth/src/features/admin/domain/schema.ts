@@ -1,6 +1,6 @@
 import * as Schema from 'effect/Schema';
-import { User } from '../../user/domain/schema';
-import { OrganizationRole } from '../../member/domain/schema';
+import { User } from '@auth/features/user/domain/schema';
+import { OrganizationRole } from '@auth/features/member/domain/schema';
 
 /**
  * Admin RPC Response Schemas
@@ -45,7 +45,7 @@ export type SessionWithUser = typeof SessionWithUser.Type;
  * Invitation with organization and inviter details for admin list view
  * Note: Re-exported from invitation domain for admin convenience
  */
-export { InvitationWithDetails } from '../../invitation/domain/schema';
+export { InvitationWithDetails } from '@auth/features/invitation/domain/schema';
 
 /**
  * Member with user and organization details for admin list view

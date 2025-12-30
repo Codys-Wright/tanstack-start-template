@@ -1,24 +1,22 @@
-import * as HttpApiEndpoint from "@effect/platform/HttpApiEndpoint";
-import * as HttpApiGroup from "@effect/platform/HttpApiGroup";
-import * as Schema from "effect/Schema";
-import { AuthError, Unauthenticated } from "../../session/domain/schema";
+import * as HttpApiEndpoint from '@effect/platform/HttpApiEndpoint';
+import * as HttpApiGroup from '@effect/platform/HttpApiGroup';
+import * as Schema from 'effect/Schema';
+import { AuthError, Unauthenticated } from '@auth/features/session/domain/schema';
 
 export const ChangePasswordInput = Schema.Struct({
   currentPassword: Schema.String.pipe(
-    Schema.minLength(1, { message: () => "Current password is required" }),
+    Schema.minLength(1, { message: () => 'Current password is required' }),
   ),
   newPassword: Schema.String.pipe(
     Schema.minLength(8, {
-      message: () => "Password must be at least 8 characters",
+      message: () => 'Password must be at least 8 characters',
     }),
   ),
   revokeOtherSessions: Schema.optional(Schema.Boolean),
 });
 
 export const DeleteAccountInput = Schema.Struct({
-  password: Schema.String.pipe(
-    Schema.minLength(1, { message: () => "Password is required" }),
-  ),
+  password: Schema.String.pipe(Schema.minLength(1, { message: () => 'Password is required' })),
 });
 
 export const EnableTwoFactorInput = Schema.Struct({});
@@ -34,9 +32,9 @@ export const VerifyBackupCodeInput = Schema.Struct({
 
 export const AddPasskeyInput = Schema.Struct({
   name: Schema.String.pipe(
-    Schema.minLength(1, { message: () => "Passkey name is required" }),
+    Schema.minLength(1, { message: () => 'Passkey name is required' }),
     Schema.maxLength(50, {
-      message: () => "Passkey name must be less than 50 characters",
+      message: () => 'Passkey name must be less than 50 characters',
     }),
   ),
 });
@@ -126,103 +124,100 @@ export const ListAccountsResult = Schema.Struct({
  * - POST /security/change-password - Change password
  * - DELETE /security/account - Delete account
  */
-export class SecurityApiGroup extends HttpApiGroup.make("security")
+export class SecurityApiGroup extends HttpApiGroup.make('security')
   .add(
-    HttpApiEndpoint.get("getTwoFactorStatus", "/two-factor/status")
+    HttpApiEndpoint.get('getTwoFactorStatus', '/two-factor/status')
       .addSuccess(TwoFactorStatus)
       .addError(AuthError),
   )
   .add(
-    HttpApiEndpoint.post("enableTwoFactor", "/two-factor/enable")
+    HttpApiEndpoint.post('enableTwoFactor', '/two-factor/enable')
       .setPayload(EnableTwoFactorInput)
       .addSuccess(EnableTwoFactorResult)
       .addError(AuthError),
   )
   .add(
-    HttpApiEndpoint.post("disableTwoFactor", "/two-factor/disable")
+    HttpApiEndpoint.post('disableTwoFactor', '/two-factor/disable')
       .addSuccess(Schema.Struct({ success: Schema.Boolean }))
       .addError(AuthError),
   )
   .add(
-    HttpApiEndpoint.post("verifyTwoFactor", "/two-factor/verify")
+    HttpApiEndpoint.post('verifyTwoFactor', '/two-factor/verify')
       .setPayload(VerifyTwoFactorInput)
       .addSuccess(Schema.Struct({ success: Schema.Boolean }))
       .addError(AuthError),
   )
   .add(
-    HttpApiEndpoint.post("verifyBackupCode", "/two-factor/verify-backup")
+    HttpApiEndpoint.post('verifyBackupCode', '/two-factor/verify-backup')
       .setPayload(VerifyBackupCodeInput)
       .addSuccess(Schema.Struct({ success: Schema.Boolean }))
       .addError(AuthError),
   )
   .add(
-    HttpApiEndpoint.post(
-      "generateBackupCodes",
-      "/two-factor/generate-backup-codes",
-    )
+    HttpApiEndpoint.post('generateBackupCodes', '/two-factor/generate-backup-codes')
       .addSuccess(EnableTwoFactorResult)
       .addError(AuthError),
   )
   .add(
-    HttpApiEndpoint.get("listPasskeys", "/passkeys")
+    HttpApiEndpoint.get('listPasskeys', '/passkeys')
       .addSuccess(ListPasskeysResult)
       .addError(AuthError),
   )
   .add(
-    HttpApiEndpoint.post("registerPasskey", "/passkey/register")
+    HttpApiEndpoint.post('registerPasskey', '/passkey/register')
       .setPayload(AddPasskeyInput)
       .addSuccess(ListPasskeysResult)
       .addSuccess(Schema.Struct({ success: Schema.Boolean }))
       .addError(AuthError),
   )
   .add(
-    HttpApiEndpoint.post("deletePasskey", "/passkey/delete")
+    HttpApiEndpoint.post('deletePasskey', '/passkey/delete')
       .setPayload(DeletePasskeyInput)
       .addSuccess(Schema.Struct({ success: Schema.Boolean }))
       .addError(AuthError),
   )
   .add(
-    HttpApiEndpoint.get("listSessions", "/sessions")
+    HttpApiEndpoint.get('listSessions', '/sessions')
       .addSuccess(ListSessionsResult)
       .addError(AuthError),
   )
   .add(
-    HttpApiEndpoint.post("revokeSession", "/sessions/revoke")
+    HttpApiEndpoint.post('revokeSession', '/sessions/revoke')
       .setPayload(RevokeSessionInput)
       .addSuccess(Schema.Struct({ success: Schema.Boolean }))
       .addError(AuthError),
   )
   .add(
-    HttpApiEndpoint.post("revokeOtherSessions", "/sessions/revoke-other")
+    HttpApiEndpoint.post('revokeOtherSessions', '/sessions/revoke-other')
       .addSuccess(Schema.Struct({ success: Schema.Boolean }))
       .addError(AuthError),
   )
   .add(
-    HttpApiEndpoint.post("revokeAllSessions", "/sessions/revoke-all")
+    HttpApiEndpoint.post('revokeAllSessions', '/sessions/revoke-all')
       .addSuccess(Schema.Struct({ success: Schema.Boolean }))
       .addError(AuthError),
   )
   .add(
-    HttpApiEndpoint.get("listAccounts", "/accounts")
+    HttpApiEndpoint.get('listAccounts', '/accounts')
       .addSuccess(ListAccountsResult)
       .addError(AuthError),
   )
   .add(
-    HttpApiEndpoint.del("unlinkAccount", "/accounts/:accountId")
+    HttpApiEndpoint.del('unlinkAccount', '/accounts/:accountId')
       .setPayload(UnlinkAccountInput)
       .addSuccess(Schema.Struct({ success: Schema.Boolean }))
       .addError(AuthError),
   )
   .add(
-    HttpApiEndpoint.post("changePassword", "/change-password")
+    HttpApiEndpoint.post('changePassword', '/change-password')
       .setPayload(ChangePasswordInput)
       .addSuccess(Schema.Struct({ success: Schema.Boolean }))
       .addError(AuthError),
   )
   .add(
-    HttpApiEndpoint.del("deleteAccount", "/account")
+    HttpApiEndpoint.del('deleteAccount', '/account')
       .setPayload(DeleteAccountInput)
       .addSuccess(Schema.Struct({ success: Schema.Boolean }))
       .addError(AuthError),
   )
-  .prefix("/security") {}
+  .prefix('/security') {}

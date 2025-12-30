@@ -1,24 +1,21 @@
-import { passkey } from "@better-auth/passkey";
-import { betterAuth } from "better-auth";
-import type { BetterAuthOptions } from "better-auth";
-import { getMigrations } from "better-auth/db";
-import { admin, openAPI } from "better-auth/plugins";
-import { organization } from "better-auth/plugins/organization";
-import { twoFactor } from "better-auth/plugins/two-factor";
-import { getRequestHeaders } from "@tanstack/react-start/server";
-import { EmailService } from "@email";
-import * as Effect from "effect/Effect";
-import * as Layer from "effect/Layer";
-import * as Option from "effect/Option";
-import * as Redacted from "effect/Redacted";
-import * as Runtime from "effect/Runtime";
-import {
-  Unauthenticated,
-  type SessionData,
-} from "../../../features/session/index.js";
-import type { UserId } from "../../../features/user/domain/index.js";
-import { AuthConfig } from "../config.js";
-import { AuthDatabase } from "../database.js";
+import { passkey } from '@better-auth/passkey';
+import { betterAuth } from 'better-auth';
+import type { BetterAuthOptions } from 'better-auth';
+import { getMigrations } from 'better-auth/db';
+import { admin, openAPI } from 'better-auth/plugins';
+import { organization } from 'better-auth/plugins/organization';
+import { twoFactor } from 'better-auth/plugins/two-factor';
+import { getRequestHeaders } from '@tanstack/react-start/server';
+import { EmailService } from '@email';
+import * as Effect from 'effect/Effect';
+import * as Layer from 'effect/Layer';
+import * as Option from 'effect/Option';
+import * as Redacted from 'effect/Redacted';
+import * as Runtime from 'effect/Runtime';
+import { Unauthenticated, type SessionData } from '@auth/features/session/index';
+import type { UserId } from '@auth/features/user/domain/index';
+import { AuthConfig } from '../config';
+import { AuthDatabase } from '../database';
 
 // Re-export for backwards compatibility with existing server code
 export { Unauthenticated };
@@ -53,7 +50,7 @@ export const makeBetterAuthOptions = (params: {
     sendResetPassword: async ({ user, url }) => {
       await params.sendEmail(
         user.email,
-        "Reset your password",
+        'Reset your password',
         `<p>Click the link below to reset your password:</p><p><a href="${url}">${url}</a></p>`,
       );
     },
@@ -61,14 +58,14 @@ export const makeBetterAuthOptions = (params: {
 
   database: {
     db: params.db,
-    type: "postgres" as const,
-    casing: "camel" as const,
+    type: 'postgres' as const,
+    casing: 'camel' as const,
   },
 
   user: {
     additionalFields: {
       fake: {
-        type: "boolean",
+        type: 'boolean',
         defaultValue: false,
         required: false,
         input: false, // Don't allow setting via input, only programmatically
@@ -90,15 +87,15 @@ export const makeBetterAuthOptions = (params: {
     openAPI(),
 
     admin({
-      defaultRole: "user",
-      adminRoles: ["admin"],
+      defaultRole: 'user',
+      adminRoles: ['admin'],
       impersonationSessionDuration: 60 * 60, // 1 hour
       defaultBanExpiresIn: undefined, // Bans never expire by default
     }),
 
     organization({
       allowUserToCreateOrganization: true,
-      creatorRole: "owner",
+      creatorRole: 'owner',
       membershipLimit: 100,
       organizationLimit: 10,
 
@@ -121,7 +118,7 @@ export const makeBetterAuthOptions = (params: {
           fields: {},
           additionalFields: {
             fake: {
-              type: "boolean",
+              type: 'boolean',
               defaultValue: false,
               required: false,
               input: false,
@@ -167,9 +164,7 @@ const makeAuthService = Effect.gen(function* () {
       : undefined,
     appName: env.APP_NAME,
     sendEmail: async (to, subject, html) => {
-      await Runtime.runPromise(runtime)(
-        emailService.send({ to, subject, html }),
-      );
+      await Runtime.runPromise(runtime)(emailService.send({ to, subject, html }));
     },
   });
 
@@ -220,9 +215,7 @@ const makeAuthService = Effect.gen(function* () {
      * }
      * ```
      */
-    getUserIdFromHeaders: (
-      headers?: HeadersInit,
-    ): Effect.Effect<UserId | null, never, never> =>
+    getUserIdFromHeaders: (headers?: HeadersInit): Effect.Effect<UserId | null, never, never> =>
       Effect.sync(() => headers ?? getRequestHeaders()).pipe(
         Effect.flatMap((requestHeaders) =>
           Effect.tryPromise({
@@ -230,19 +223,15 @@ const makeAuthService = Effect.gen(function* () {
               auth.api.getSession({
                 headers: requestHeaders,
               }) as Promise<SessionData | null>,
-            catch: () => new Error("Failed to get session"),
+            catch: () => new Error('Failed to get session'),
           }).pipe(
             Effect.catchAll(() =>
               Effect.gen(function* () {
-                yield* Effect.logInfo(
-                  "[getUserIdFromHeaders] Session error - returning null",
-                );
+                yield* Effect.logInfo('[getUserIdFromHeaders] Session error - returning null');
                 return null;
               }),
             ),
-            Effect.map((session) =>
-              session ? (session.user.id as UserId) : null,
-            ),
+            Effect.map((session) => (session ? (session.user.id as UserId) : null)),
           ),
         ),
       ),
@@ -262,9 +251,7 @@ const makeAuthService = Effect.gen(function* () {
      * // currentUserId is guaranteed to be valid here
      * ```
      */
-    currentUserId: (
-      headers?: HeadersInit,
-    ): Effect.Effect<UserId, Unauthenticated, never> =>
+    currentUserId: (headers?: HeadersInit): Effect.Effect<UserId, Unauthenticated, never> =>
       Effect.sync(() => headers ?? getRequestHeaders()).pipe(
         Effect.flatMap((requestHeaders) =>
           Effect.tryPromise({
@@ -285,7 +272,7 @@ const makeAuthService = Effect.gen(function* () {
   };
 });
 
-export class AuthService extends Effect.Service<AuthService>()("AuthService", {
+export class AuthService extends Effect.Service<AuthService>()('AuthService', {
   effect: makeAuthService,
   accessors: true,
   // Use Layer.orDie to convert ConfigError into defects

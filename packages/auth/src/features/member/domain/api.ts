@@ -1,7 +1,7 @@
 import * as HttpApiEndpoint from '@effect/platform/HttpApiEndpoint';
 import * as HttpApiGroup from '@effect/platform/HttpApiGroup';
 import * as Schema from 'effect/Schema';
-import { AuthError } from '../../../../features/session/domain/schema';
+import { AuthError } from '@auth/features/session/domain/schema';
 import {
   OrganizationRole,
   InviteMemberInput,
