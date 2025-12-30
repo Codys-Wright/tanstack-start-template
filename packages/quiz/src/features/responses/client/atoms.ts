@@ -7,16 +7,23 @@ import * as Effect from 'effect/Effect';
 import * as Option from 'effect/Option';
 import * as Schema from 'effect/Schema';
 import type { QuizId } from '../../quiz/domain/schema.js';
-import { QuizResponse, ResponseId, UpsertResponsePayload } from '../domain/index.js';
+import {
+  QuizResponse,
+  QuizResponseSummary,
+  ResponseId,
+  UpsertResponsePayload,
+} from '../domain/index.js';
 import { ResponsesClient } from './client.js';
 
-const ResponsesSchema = Schema.Array(QuizResponse);
+// List endpoint returns lightweight summaries (excludes large metadata)
+const ResponsesSchema = Schema.Array(QuizResponseSummary);
 
 // ============================================================================
 // Query Atoms
 // ============================================================================
 
 type ResponsesCacheUpdate = Data.TaggedEnum<{
+  // Upsert accepts full QuizResponse (from server) and extracts summary fields for cache
   Upsert: { readonly response: QuizResponse };
   Delete: { readonly id: ResponseId };
 }>;
@@ -54,13 +61,19 @@ export const responsesAtom = (() => {
         const nextValue = (() => {
           switch (update._tag) {
             case 'Upsert': {
-              const existingIndex = Arr.findFirstIndex(
-                current.value,
-                (r) => r.id === update.response.id,
-              );
+              // Convert full response to summary for cache
+              const summary: QuizResponseSummary = {
+                id: update.response.id,
+                quizId: update.response.quizId,
+                answers: update.response.answers,
+                sessionMetadata: update.response.sessionMetadata,
+                createdAt: update.response.createdAt,
+                updatedAt: update.response.updatedAt,
+              };
+              const existingIndex = Arr.findFirstIndex(current.value, (r) => r.id === summary.id);
               return Option.match(existingIndex, {
-                onNone: () => Arr.prepend(current.value, update.response),
-                onSome: (index) => Arr.replace(current.value, index, update.response),
+                onNone: () => Arr.prepend(current.value, summary),
+                onSome: (index) => Arr.replace(current.value, index, summary),
               });
             }
             case 'Delete': {

@@ -34,6 +34,9 @@ export const PgLive = Layer.unwrapEffect(
       url: databaseUrl,
       idleTimeout: '10 seconds',
       connectTimeout: '10 seconds',
+      // Connection pool settings for better performance
+      minConnections: 2,
+      maxConnections: 10,
       ...pgConfig,
     });
   }),

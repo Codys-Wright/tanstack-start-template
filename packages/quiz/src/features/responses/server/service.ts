@@ -20,8 +20,15 @@ export class ResponsesServerService extends Effect.Service<ResponsesServerServic
       const repo = yield* ResponsesRepo;
 
       return {
-        /** List all responses */
+        /** List all responses (lightweight - excludes large metadata column) */
         list: Effect.fn('ResponsesService.list')(function* () {
+          const responses = yield* repo.findAllSummary();
+          yield* Effect.annotateCurrentSpan('response.count', responses.length);
+          return responses;
+        }),
+
+        /** List all responses with full data including metadata */
+        listFull: Effect.fn('ResponsesService.listFull')(function* () {
           const responses = yield* repo.findAll();
           yield* Effect.annotateCurrentSpan('response.count', responses.length);
           return responses;
