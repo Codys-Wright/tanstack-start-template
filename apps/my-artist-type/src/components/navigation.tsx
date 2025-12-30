@@ -1,37 +1,37 @@
-import { UserButton } from '@auth';
-import { Button, cn, DropdownMenu } from '@shadcn';
-import { Link, useRouterState } from '@tanstack/react-router';
-import { ChevronDownIcon } from 'lucide-react';
+import { UserButton } from "@auth";
+import { Button, cn, DropdownMenu } from "@shadcn";
+import { Link, useRouterState } from "@tanstack/react-router";
+import { ChevronDownIcon } from "lucide-react";
 
 const navItems = [
-  { path: '/', label: 'Home' },
-  { path: '/about', label: 'About' },
-  { path: '/settings', label: 'Settings' },
-  { path: '/test', label: 'Test Page' },
-  { path: '/auth-test', label: 'Auth Test' },
+  { path: "/", label: "Home" },
+  { path: "/about", label: "About" },
+  { path: "/settings", label: "Settings" },
+  { path: "/test", label: "Test Page" },
+  { path: "/auth-test", label: "Auth Test" },
 ];
 
 const authPages = [
-  { path: '/auth/sign-in', label: 'Sign In' },
-  { path: '/auth/sign-up', label: 'Sign Up' },
-  { path: '/auth/forgot-password', label: 'Forgot Password' },
-  { path: '/auth/reset-password', label: 'Reset Password' },
-  { path: '/auth/two-factor', label: 'Two-Factor Auth' },
-  { path: '/auth/recover-account', label: 'Recover Account' },
-  { path: '/auth/callback', label: 'OAuth Callback' },
+  { path: "/auth/sign-in", label: "Sign In" },
+  { path: "/auth/sign-up", label: "Sign Up" },
+  { path: "/auth/forgot-password", label: "Forgot Password" },
+  { path: "/auth/reset-password", label: "Reset Password" },
+  { path: "/auth/two-factor", label: "Two-Factor Auth" },
+  { path: "/auth/recover-account", label: "Recover Account" },
+  { path: "/auth/callback", label: "OAuth Callback" },
 ];
 
 const accountPages = [
-  { path: '/account/settings', label: 'Account Settings' },
-  { path: '/account/security', label: 'Security' },
-  { path: '/account/api-keys', label: 'API Keys' },
+  { path: "/account/settings", label: "Account Settings" },
+  { path: "/account/security", label: "Security" },
+  { path: "/account/api-keys", label: "API Keys" },
 ];
 
 const organizationPages = [
-  { path: '/organization/settings', label: 'Org Settings' },
-  { path: '/organization/members', label: 'Members' },
-  { path: '/organization/invitations', label: 'Invitations' },
-  { path: '/organization/teams', label: 'Teams' },
+  { path: "/organization/settings", label: "Org Settings" },
+  { path: "/organization/members", label: "Members" },
+  { path: "/organization/invitations", label: "Invitations" },
+  { path: "/organization/teams", label: "Teams" },
 ];
 
 export function Navigation() {
@@ -50,10 +50,10 @@ export function Navigation() {
                   key={item.path}
                   to={item.path}
                   className={cn(
-                    'text-sm font-medium transition-colors hover:text-primary',
+                    "text-sm font-medium transition-colors hover:text-primary",
                     isActive
-                      ? 'text-foreground border-b-2 border-primary pb-1'
-                      : 'text-muted-foreground',
+                      ? "text-foreground border-b-2 border-primary pb-1"
+                      : "text-muted-foreground",
                   )}
                 >
                   {item.label}

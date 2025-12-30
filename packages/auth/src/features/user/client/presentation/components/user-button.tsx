@@ -29,11 +29,11 @@ export function UserButton({ size = 'icon', className }: UserButtonProps) {
 
   if (!isSignedIn) {
     return (
-      <Button asChild variant="outline" className={className}>
-        <Link to="/auth/$authView" params={{ authView: 'sign-in' }}>
+      <Link to="/auth/$authView" params={{ authView: 'sign-in' }}>
+        <Button variant="outline" className={className}>
           Sign In
-        </Link>
-      </Button>
+        </Button>
+      </Link>
     );
   }
 

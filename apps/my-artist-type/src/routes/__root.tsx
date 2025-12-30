@@ -79,7 +79,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
             <RegistryProvider defaultIdleTTL={60_000}>
               {children}
             </RegistryProvider>
-            <TanStackDevtools
+            {/* <TanStackDevtools
               config={{
                 position: "bottom-right",
               }}
@@ -89,7 +89,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
                   render: <TanStackRouterDevtoolsPanel />,
                 },
               ]}
-            />
+            /> */}
           </ThemeSystemProviderWithContext>
         </ThemeProvider>
         <Scripts />
