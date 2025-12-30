@@ -1,6 +1,6 @@
 import * as Schema from 'effect/Schema';
-import { OrganizationId } from '../../organization/domain/schema';
-import { UserId } from '../../user/domain/schema';
+import { OrganizationId } from '@auth/features/organization/domain/schema';
+import { UserId } from '@auth/features/user/domain/schema';
 
 /**
  * Branded Team ID type for type safety

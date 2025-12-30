@@ -3,8 +3,8 @@ import { Dialog, Button, Input } from '@shadcn';
 import { useForm } from '@tanstack/react-form';
 import { useAtom } from '@effect-atom/atom-react';
 import { toast } from 'sonner';
-import { updateTeamAtom } from '../../atoms.js';
-import type { Team } from '../../../domain/schema.js';
+import { updateTeamAtom } from '@auth/features/team/client/atoms.js';
+import type { Team } from '@auth/features/team/domain/schema.js';
 
 export interface UpdateTeamDialogProps {
   team: Team;

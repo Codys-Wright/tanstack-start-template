@@ -3,9 +3,9 @@ import { Dialog, Button } from '@shadcn';
 import { UsersIcon, PlusIcon, Loader2 } from 'lucide-react';
 import { useAtomValue, useAtom, Result } from '@effect-atom/atom-react';
 import { toast } from 'sonner';
-import { addTeamMemberAtom, teamMembersAtom } from '../../atoms.js';
-import { organizationMembersAtom } from '../../../../organization/client/atoms.js';
-import type { Team } from '../../../domain/schema.js';
+import { addTeamMemberAtom, teamMembersAtom } from '@auth/features/team/client/atoms.js';
+import { organizationMembersAtom } from '@auth/features/organization/client/atoms.js';
+import type { Team } from '@auth/features/team/domain/schema.js';
 
 export interface AddTeamMemberDialogProps {
   team: Team;

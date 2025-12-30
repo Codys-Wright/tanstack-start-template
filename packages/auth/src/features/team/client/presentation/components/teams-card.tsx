@@ -5,9 +5,9 @@ import { useMemo } from 'react';
 import { Result, useAtomValue } from '@effect-atom/atom-react';
 import { CreateTeamDialog } from './create-team-dialog.js';
 import { TeamCell } from './team-cell.js';
-import { teamsAtom } from '../../atoms.js';
-import { sessionAtom } from '../../../../session/client/atoms.js';
-import { useTeamPermissions } from '../../hooks.js';
+import { teamsAtom } from '@auth/features/team/client/atoms.js';
+import { sessionAtom } from '@auth/features/session/client/atoms.js';
+import { useTeamPermissions } from '@auth/features/team/client/hooks.js';
 
 export interface TeamsCardProps {
   className?: string;

@@ -20,4 +20,4 @@ export {
   removeTeamMemberAtom,
   // Active team
   setActiveTeamAtom,
-} from '../../organization/client/atoms';
+} from '@auth/features/organization/client/atoms';

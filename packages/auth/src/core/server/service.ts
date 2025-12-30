@@ -14,8 +14,8 @@ import * as Redacted from 'effect/Redacted';
 import * as Runtime from 'effect/Runtime';
 import { Unauthenticated, type SessionData } from '@auth/features/session/index';
 import type { UserId } from '@auth/features/user/domain/index';
-import { AuthConfig } from '../config';
-import { AuthDatabase } from '../database';
+import { AuthConfig } from '@auth/core/config';
+import { AuthDatabase } from '@auth/core/database';
 
 // Re-export for backwards compatibility with existing server code
 export { Unauthenticated };

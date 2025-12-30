@@ -3,11 +3,11 @@ import { UsersIcon, PlusIcon, UserMinusIcon } from 'lucide-react';
 import { useMemo } from 'react';
 import { Result, useAtomValue, useAtom } from '@effect-atom/atom-react';
 import { toast } from 'sonner';
-import { teamMembersAtom, removeTeamMemberAtom } from '../../atoms.js';
-import { sessionAtom } from '../../../../session/client/atoms.js';
+import { teamMembersAtom, removeTeamMemberAtom } from '@auth/features/team/client/atoms.js';
+import { sessionAtom } from '@auth/features/session/client/atoms.js';
 import { AddTeamMemberDialog } from './add-team-member-dialog.js';
-import { useTeamPermissions } from '../../hooks.js';
-import type { Team } from '../../../domain/schema.js';
+import { useTeamPermissions } from '@auth/features/team/client/hooks.js';
+import type { Team } from '@auth/features/team/domain/schema.js';
 
 export interface TeamMembersCardProps {
   team: Team;

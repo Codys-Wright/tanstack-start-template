@@ -2,8 +2,8 @@ import { useState } from 'react';
 import { Dialog, Button } from '@shadcn';
 import { useAtom } from '@effect-atom/atom-react';
 import { toast } from 'sonner';
-import { removeTeamAtom } from '../../atoms.js';
-import type { Team } from '../../../domain/schema.js';
+import { removeTeamAtom } from '@auth/features/team/client/atoms.js';
+import type { Team } from '@auth/features/team/domain/schema.js';
 
 export interface DeleteTeamDialogProps {
   team: Team;

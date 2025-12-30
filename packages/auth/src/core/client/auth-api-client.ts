@@ -1,14 +1,12 @@
-import * as FetchHttpClient from "@effect/platform/FetchHttpClient";
-import * as HttpApiClient from "@effect/platform/HttpApiClient";
-import * as HttpClient from "@effect/platform/HttpClient";
-import * as Effect from "effect/Effect";
-import * as Schedule from "effect/Schedule";
-import { AuthApi } from "../../core/auth-api";
+import * as FetchHttpClient from '@effect/platform/FetchHttpClient';
+import * as HttpApiClient from '@effect/platform/HttpApiClient';
+import * as HttpClient from '@effect/platform/HttpClient';
+import * as Effect from 'effect/Effect';
+import * as Schedule from 'effect/Schedule';
+import { AuthApi } from '@auth/core/auth-api';
 
 const getBaseUrl = (): string =>
-  typeof window !== "undefined"
-    ? window.location.origin
-    : "http://localhost:3000";
+  typeof window !== 'undefined' ? window.location.origin : 'http://localhost:3000';
 
 /**
  * AuthApiClient - Effect HTTP API client for the Auth feature.
@@ -40,27 +38,24 @@ const getBaseUrl = (): string =>
  * program.pipe(Effect.provide(AuthApiClient.Default));
  * ```
  */
-export class AuthApiClient extends Effect.Service<AuthApiClient>()(
-  "@auth/ApiClient",
-  {
-    dependencies: [FetchHttpClient.layer],
-    scoped: Effect.gen(function* () {
-      const client = yield* HttpApiClient.make(AuthApi, {
-        baseUrl: getBaseUrl(),
-        transformClient: (httpClient) =>
-          httpClient.pipe(
-            HttpClient.filterStatusOk,
-            HttpClient.retryTransient({
-              times: 3,
-              schedule: Schedule.exponential("1 second"),
-            }),
-          ),
-      });
+export class AuthApiClient extends Effect.Service<AuthApiClient>()('@auth/ApiClient', {
+  dependencies: [FetchHttpClient.layer],
+  scoped: Effect.gen(function* () {
+    const client = yield* HttpApiClient.make(AuthApi, {
+      baseUrl: getBaseUrl(),
+      transformClient: (httpClient) =>
+        httpClient.pipe(
+          HttpClient.filterStatusOk,
+          HttpClient.retryTransient({
+            times: 3,
+            schedule: Schedule.exponential('1 second'),
+          }),
+        ),
+    });
 
-      return client;
-    }),
-  },
-) {}
+    return client;
+  }),
+}) {}
 
 /**
  * Layer that provides AuthApiClient

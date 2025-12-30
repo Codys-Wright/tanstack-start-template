@@ -5,9 +5,9 @@ import * as Layer from 'effect/Layer';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { getMigrations } from 'better-auth/db';
-import { makeBetterAuthOptions } from '../core/server/service.js';
-import { AuthDatabase } from '../core/database.js';
-import { AuthConfig } from '../core/config.js';
+import { makeBetterAuthOptions } from '@auth/core/server/service.js';
+import { AuthDatabase } from '@auth/core/database.js';
+import { AuthConfig } from '@auth/core/config.js';
 import * as Redacted from 'effect/Redacted';
 import * as Option from 'effect/Option';
 

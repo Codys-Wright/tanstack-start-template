@@ -3,7 +3,7 @@ import { UsersIcon, MoreVerticalIcon, UserPlusIcon } from 'lucide-react';
 import { UpdateTeamDialog } from './update-team-dialog.js';
 import { DeleteTeamDialog } from './delete-team-dialog.js';
 import { TeamMembersDialog } from './team-members-dialog.js';
-import type { Team } from '../../../domain/schema.js';
+import type { Team } from '@auth/features/team/domain/schema.js';
 
 export interface TeamCellProps {
   team: Team;

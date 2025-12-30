@@ -1,7 +1,7 @@
 import { Dialog } from '@shadcn';
 import { useState } from 'react';
 import { TeamMembersCard } from './team-members-card.js';
-import type { Team } from '../../../domain/schema.js';
+import type { Team } from '@auth/features/team/domain/schema.js';
 
 export interface TeamMembersDialogProps {
   team: Team;
