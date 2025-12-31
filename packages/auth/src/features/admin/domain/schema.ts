@@ -1,73 +1,22 @@
 import * as Schema from 'effect/Schema';
 import { User } from '@auth/features/user/domain/schema';
-import { OrganizationRole } from '@auth/features/member/domain/schema';
+import { Session } from '@auth/features/session/domain/schema';
 
 /**
- * Admin RPC Response Schemas
- * These schemas define the response types for admin data fetching operations
+ * Admin Domain Schemas
+ * Matches Better Auth Admin Plugin OpenAPI spec
  */
+
+// Re-export User for convenience
+export { User };
+
+// ============================================================================
+// Input Schemas
+// ============================================================================
 
 /**
- * Organization with member count for admin list view
+ * Input for POST /admin/create-user
  */
-export const OrganizationWithMemberCount = Schema.Struct({
-  id: Schema.String,
-  name: Schema.String,
-  slug: Schema.String,
-  logo: Schema.NullOr(Schema.String),
-  metadata: Schema.optional(Schema.Unknown),
-  createdAt: Schema.DateTimeUtc,
-  memberCount: Schema.Number,
-});
-export type OrganizationWithMemberCount = typeof OrganizationWithMemberCount.Type;
-
-/**
- * Session with user details for admin list view
- */
-export const SessionWithUser = Schema.Struct({
-  id: Schema.String,
-  expiresAt: Schema.DateTimeUtc,
-  token: Schema.String,
-  createdAt: Schema.DateTimeUtc,
-  updatedAt: Schema.DateTimeUtc,
-  ipAddress: Schema.optional(Schema.String),
-  userAgent: Schema.optional(Schema.String),
-  userId: Schema.String,
-  activeOrganizationId: Schema.optional(Schema.NullOr(Schema.String)),
-  activeTeamId: Schema.optional(Schema.NullOr(Schema.String)),
-  impersonatedBy: Schema.optional(Schema.NullOr(Schema.String)),
-  userName: Schema.String,
-  userEmail: Schema.String,
-});
-export type SessionWithUser = typeof SessionWithUser.Type;
-
-/**
- * Invitation with organization and inviter details for admin list view
- * Note: Re-exported from invitation domain for admin convenience
- */
-export { InvitationWithDetails } from '@auth/features/invitation/domain/schema';
-
-/**
- * Member with user and organization details for admin list view
- */
-export const MemberWithDetails = Schema.Struct({
-  id: Schema.String,
-  organizationId: Schema.String,
-  userId: Schema.String,
-  role: OrganizationRole,
-  createdAt: Schema.DateTimeUtc,
-  userName: Schema.String,
-  userEmail: Schema.String,
-  userImage: Schema.NullOr(Schema.String),
-  organizationName: Schema.String,
-  organizationSlug: Schema.String,
-});
-export type MemberWithDetails = typeof MemberWithDetails.Type;
-
-/**
- * Input schemas for admin operations
- */
-
 export const CreateUserInput = Schema.Struct({
   email: Schema.String,
   password: Schema.String,
@@ -77,18 +26,42 @@ export const CreateUserInput = Schema.Struct({
 });
 export type CreateUserInput = typeof CreateUserInput.Type;
 
+/**
+ * Input for GET /admin/get-user (query params)
+ */
+export const GetUserInput = Schema.Struct({
+  userId: Schema.String,
+});
+export type GetUserInput = typeof GetUserInput.Type;
+
+/**
+ * Input for POST /admin/update-user
+ */
 export const AdminUpdateUserInput = Schema.Struct({
   userId: Schema.String,
-  data: Schema.Record({ key: Schema.String, value: Schema.Unknown }),
+  name: Schema.optional(Schema.String),
+  email: Schema.optional(Schema.String),
+  image: Schema.optional(Schema.NullOr(Schema.String)),
+  role: Schema.optional(Schema.Union(Schema.String, Schema.Array(Schema.String))),
+  banned: Schema.optional(Schema.Boolean),
+  banReason: Schema.optional(Schema.NullOr(Schema.String)),
+  banExpires: Schema.optional(Schema.NullOr(Schema.Number)),
+  data: Schema.optional(Schema.Record({ key: Schema.String, value: Schema.Unknown })),
 });
 export type AdminUpdateUserInput = typeof AdminUpdateUserInput.Type;
 
+/**
+ * Input for POST /admin/set-role
+ */
 export const SetRoleInput = Schema.Struct({
-  userId: Schema.optional(Schema.String),
+  userId: Schema.String,
   role: Schema.Union(Schema.String, Schema.Array(Schema.String)),
 });
 export type SetRoleInput = typeof SetRoleInput.Type;
 
+/**
+ * Input for POST /admin/ban-user
+ */
 export const BanUserInput = Schema.Struct({
   userId: Schema.String,
   banReason: Schema.optional(Schema.String),
@@ -96,12 +69,34 @@ export const BanUserInput = Schema.Struct({
 });
 export type BanUserInput = typeof BanUserInput.Type;
 
+/**
+ * Input for POST /admin/unban-user
+ */
+export const UnbanUserInput = Schema.Struct({
+  userId: Schema.String,
+});
+export type UnbanUserInput = typeof UnbanUserInput.Type;
+
+/**
+ * Input for POST /admin/remove-user
+ */
+export const RemoveUserInput = Schema.Struct({
+  userId: Schema.String,
+});
+export type RemoveUserInput = typeof RemoveUserInput.Type;
+
+/**
+ * Input for POST /admin/set-user-password
+ */
 export const SetUserPasswordInput = Schema.Struct({
   userId: Schema.String,
   newPassword: Schema.String,
 });
 export type SetUserPasswordInput = typeof SetUserPasswordInput.Type;
 
+/**
+ * Input for POST /admin/has-permission
+ */
 export const HasPermissionInput = Schema.Struct({
   userId: Schema.optional(Schema.String),
   role: Schema.optional(Schema.String),
@@ -111,5 +106,104 @@ export const HasPermissionInput = Schema.Struct({
 });
 export type HasPermissionInput = typeof HasPermissionInput.Type;
 
-// Re-export User for convenience
-export { User };
+/**
+ * Input for POST /admin/impersonate-user
+ */
+export const ImpersonateUserInput = Schema.Struct({
+  userId: Schema.String,
+});
+export type ImpersonateUserInput = typeof ImpersonateUserInput.Type;
+
+/**
+ * Input for GET /admin/list-users (query params)
+ * Note: Uses NumberFromString for URL params since they come as strings
+ */
+export const ListUsersInput = Schema.Struct({
+  limit: Schema.optional(Schema.NumberFromString),
+  offset: Schema.optional(Schema.NumberFromString),
+  searchValue: Schema.optional(Schema.String),
+  searchField: Schema.optional(Schema.String),
+  filterField: Schema.optional(Schema.String),
+  filterValue: Schema.optional(Schema.String),
+  sortBy: Schema.optional(Schema.String),
+  sortDirection: Schema.optional(Schema.Literal('asc', 'desc')),
+});
+export type ListUsersInput = typeof ListUsersInput.Type;
+
+/**
+ * Input for GET /admin/list-user-sessions (query params)
+ */
+export const ListUserSessionsInput = Schema.Struct({
+  userId: Schema.String,
+});
+export type ListUserSessionsInput = typeof ListUserSessionsInput.Type;
+
+/**
+ * Input for POST /admin/revoke-user-session
+ */
+export const RevokeUserSessionInput = Schema.Struct({
+  sessionToken: Schema.String,
+});
+export type RevokeUserSessionInput = typeof RevokeUserSessionInput.Type;
+
+/**
+ * Input for POST /admin/revoke-user-sessions
+ */
+export const RevokeUserSessionsInput = Schema.Struct({
+  userId: Schema.String,
+});
+export type RevokeUserSessionsInput = typeof RevokeUserSessionsInput.Type;
+
+// ============================================================================
+// Response Schemas
+// ============================================================================
+
+/**
+ * Response from POST /admin/create-user
+ */
+export const CreateUserResponse = Schema.Struct({
+  user: User,
+});
+export type CreateUserResponse = typeof CreateUserResponse.Type;
+
+/**
+ * Response from GET /admin/list-users
+ */
+export const ListUsersResponse = Schema.Struct({
+  users: Schema.Array(User),
+  total: Schema.optional(Schema.Number),
+});
+export type ListUsersResponse = typeof ListUsersResponse.Type;
+
+/**
+ * Response from GET /admin/list-user-sessions
+ */
+export const ListUserSessionsResponse = Schema.Struct({
+  sessions: Schema.Array(Session),
+});
+export type ListUserSessionsResponse = typeof ListUserSessionsResponse.Type;
+
+/**
+ * Response from POST /admin/impersonate-user
+ */
+export const ImpersonateUserResponse = Schema.Struct({
+  session: Session,
+  user: User,
+});
+export type ImpersonateUserResponse = typeof ImpersonateUserResponse.Type;
+
+/**
+ * Standard success response
+ */
+export const AdminSuccessResponse = Schema.Struct({
+  success: Schema.Boolean,
+});
+export type AdminSuccessResponse = typeof AdminSuccessResponse.Type;
+
+/**
+ * Response from POST /admin/has-permission
+ */
+export const HasPermissionResponse = Schema.Struct({
+  hasPermission: Schema.Boolean,
+});
+export type HasPermissionResponse = typeof HasPermissionResponse.Type;

@@ -6,6 +6,7 @@ import { Atom, Result } from '@effect-atom/atom-react';
 import * as RpcClientError from '@effect/rpc/RpcClientError';
 import * as Arr from 'effect/Array';
 import * as Data from 'effect/Data';
+import * as DateTime from 'effect/DateTime';
 import * as Effect from 'effect/Effect';
 import * as Option from 'effect/Option';
 import * as Schema from 'effect/Schema';
@@ -14,6 +15,14 @@ import type { Quiz } from '@/features/quiz/domain/schema.js';
 import type { InteractionLog, SessionMetadata } from '@/features/responses/domain/schema.js';
 import { ActiveQuiz, UpsertActiveQuizPayload } from '../domain/index.js';
 import { ActiveQuizClient } from './client.js';
+import { ResponsesClient } from '@/features/responses/client/client.js';
+import {
+  UpsertResponsePayload,
+  UpsertSessionMetadataPayload,
+  UpsertQuestionResponsePayload,
+  UpsertInteractionLogPayload,
+  type ResponseId,
+} from '@/features/responses/domain/schema.js';
 
 const ActiveQuizzesSchema = Schema.Array(ActiveQuiz);
 
@@ -376,4 +385,121 @@ export const devPanelVisibleAtom = Atom.writable(
   (ctx, visible: boolean) => {
     ctx.setSelf(visible);
   },
+);
+
+// ============================================================================
+// Quiz Submission Atoms (RPC-based)
+// ============================================================================
+
+/**
+ * Result of a quiz submission containing the response ID.
+ * The server triggers analysis automatically - poll for it separately.
+ */
+export type QuizSubmissionResult = {
+  responseId: ResponseId;
+};
+
+/**
+ * Submit quiz and save response to database.
+ * The server automatically triggers analysis on save.
+ * Returns the response ID - the caller should poll for analysis completion.
+ */
+export const submitQuizAndAnalyzeAtom = ResponsesClient.runtime.fn<{
+  session: QuizSessionState;
+}>()(
+  Effect.fnUntraced(function* ({ session }, get) {
+    if (session.currentQuiz === undefined) {
+      return yield* Effect.fail(new Error('No quiz loaded'));
+    }
+
+    // Get the current timestamp
+    const now = yield* DateTime.now;
+    const nowDate = DateTime.toDate(now);
+
+    // Convert startedAt to DateTime.Utc - it may be a Date or already a DateTimeUtc
+    const startedAtRaw = session.sessionMetadata.startedAt;
+    const startDate =
+      typeof startedAtRaw === 'string'
+        ? new Date(startedAtRaw)
+        : startedAtRaw instanceof Date
+          ? startedAtRaw
+          : DateTime.toDate(startedAtRaw as DateTime.Utc);
+    const startedAtUtc = DateTime.unsafeFromDate(startDate);
+    const totalDurationMs = nowDate.getTime() - startDate.getTime();
+
+    // Convert session responses to proper schema instances
+    const answers = Object.entries(session.responses).map(
+      ([questionId, value]) =>
+        new UpsertQuestionResponsePayload({
+          questionId,
+          value,
+          answeredAt: now,
+        }),
+    );
+
+    // Build the session metadata with proper schema instance
+    const sessionMetadata = new UpsertSessionMetadataPayload({
+      startedAt: startedAtUtc,
+      completedAt: now,
+      totalDurationMs,
+      userAgent:
+        typeof navigator !== 'undefined' ? navigator.userAgent : session.sessionMetadata.userAgent,
+      referrer:
+        typeof document !== 'undefined' ? document.referrer : session.sessionMetadata.referrer,
+    });
+
+    // Convert interaction logs to proper schema instances
+    const interactionLogs = [
+      ...session.logs.map((log) => {
+        const timestampRaw = log.timestamp;
+        const timestampDate =
+          typeof timestampRaw === 'string'
+            ? new Date(timestampRaw)
+            : timestampRaw instanceof Date
+              ? timestampRaw
+              : DateTime.toDate(timestampRaw as DateTime.Utc);
+        return new UpsertInteractionLogPayload({
+          type: log.type,
+          questionId: log.questionId,
+          rating: log.rating,
+          action: log.action,
+          timestamp: DateTime.unsafeFromDate(timestampDate),
+        });
+      }),
+      new UpsertInteractionLogPayload({
+        type: 'submission',
+        action: 'quiz_submitted',
+        timestamp: now,
+      }),
+    ];
+
+    // Create the payload using the proper schema class
+    const payload = new UpsertResponsePayload({
+      quizId: session.currentQuiz.id,
+      answers,
+      sessionMetadata,
+      interactionLogs,
+    });
+
+    // Save response to database (server will auto-trigger analysis)
+    const responsesClient = yield* ResponsesClient;
+    const savedResponse = yield* responsesClient('response_upsert', {
+      input: payload,
+    });
+
+    // Update local session state to mark as completed
+    get.set(quizSessionAtom, {
+      ...session,
+      sessionMetadata: {
+        ...session.sessionMetadata,
+        completedAt: nowDate as unknown as SessionMetadata['completedAt'],
+        totalDurationMs,
+      },
+      logs: interactionLogs as unknown as Array<InteractionLog>,
+    });
+
+    return {
+      responseId: savedResponse.id,
+    } as QuizSubmissionResult;
+  }),
 );

@@ -16,6 +16,15 @@ export type UserId = typeof UserId.Type;
  * - banned: Whether user is banned
  * - banReason: Reason for ban
  * - banExpires: When ban expires
+ *
+ * Includes two-factor plugin fields:
+ * - twoFactorEnabled: Whether 2FA is enabled
+ *
+ * Includes anonymous plugin fields:
+ * - isAnonymous: Whether this is an anonymous user
+ *
+ * Custom fields:
+ * - fake: Whether this is a fake/test user (readOnly)
  */
 export class User extends Schema.Class<User>('User')({
   id: UserId,
@@ -29,6 +38,15 @@ export class User extends Schema.Class<User>('User')({
   // Admin plugin fields
   role: Schema.optional(Schema.String),
   banned: Schema.optional(Schema.Boolean),
-  banReason: Schema.optional(Schema.String),
+  banReason: Schema.optional(Schema.NullOr(Schema.String)),
   banExpires: Schema.optional(Schema.NullOr(Schema.DateTimeUtc)),
+
+  // Two-factor plugin field
+  twoFactorEnabled: Schema.optional(Schema.Boolean),
+
+  // Anonymous plugin field
+  isAnonymous: Schema.optional(Schema.Boolean),
+
+  // Custom fields (readOnly)
+  fake: Schema.optional(Schema.Boolean),
 }) {}

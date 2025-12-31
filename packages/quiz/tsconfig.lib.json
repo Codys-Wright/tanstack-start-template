@@ -17,6 +17,8 @@
       "@/*": ["./src/*"],
       "@quiz/core": ["./src/core/index.ts"],
       "@quiz/core/*": ["./src/core/*"],
+      "@auth": ["../auth/src/index.ts"],
+      "@auth/*": ["../auth/src/*"],
       "@core": ["../core/src/index.ts"],
       "@core/*": ["../core/src/*"],
       "@shadcn": ["../ui/shadcn/src/index.ts"],
@@ -25,6 +27,7 @@
   },
   "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.json"],
   "references": [
+    { "path": "../auth/tsconfig.lib.json" },
     { "path": "../ui/shadcn/tsconfig.lib.json" },
     { "path": "../core/tsconfig.lib.json" }
   ]

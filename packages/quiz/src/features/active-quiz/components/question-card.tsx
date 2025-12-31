@@ -42,6 +42,10 @@ type QuestionCardProps = {
 
   // Auto-advance setting
   autoAdvanceEnabled?: boolean;
+
+  // Submission state
+  isSubmitting?: boolean;
+  submissionStatus?: string | null;
 };
 
 export const QuestionCard: React.FC<QuestionCardProps> = ({
@@ -51,6 +55,8 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
   content,
   idealAnswers,
   isLastQuestion = false,
+  isSubmitting = false,
+  submissionStatus = null,
   max = 10,
   maxLabel = 'Max',
   min = 0,
@@ -293,11 +299,12 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
               </Button>
             ) : (
               <Button
-                className="bg-green-600 hover:bg-green-700 text-white"
+                className="bg-green-600 hover:bg-green-700 text-white min-w-[140px]"
                 type="button"
                 onClick={onSubmit}
+                disabled={isSubmitting}
               >
-                Submit
+                {isSubmitting ? (submissionStatus ?? 'Submitting...') : 'Submit'}
               </Button>
             )}
           </div>

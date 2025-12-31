@@ -1,5 +1,6 @@
 import { Result, useAtomRefresh, useAtomSet, useAtomValue } from '@effect-atom/atom-react';
 import { HydrationBoundary } from '@effect-atom/atom-react/ReactHydration';
+import { sessionAtom, signInAnonymouslyAtom } from '@auth';
 import { activeQuizzesAtom } from '../client/atoms.js';
 import type { Question } from '@/features/quiz/questions/schema.js';
 import type { Quiz } from '@/features/quiz/domain/schema.js';
@@ -10,6 +11,7 @@ import { ArtistTypeGraphCard } from '../components/artist-type/artist-type-graph
 import { QuestionCard } from '../components/question-card.js';
 import { QuizProgressBar } from '../components/quiz-progress-bar.js';
 import { enginesAtom } from '@/features/analysis-engine/client/atoms.js';
+
 import { quizzesAtom } from '@/features/quiz/client/atoms.js';
 import {
   activeQuizAtom,
@@ -20,12 +22,13 @@ import {
   quizSessionAtom,
   savedResponseAtom,
   selectAnswerAtom,
-  submitQuizAtom,
+  submitQuizAndAnalyzeAtom,
   type AnalysisConfigOverrides,
 } from '../client/atoms.js';
 import { DevPanel } from './dev-panel.js';
 import { performLocalAnalysis } from './local-analysis.js';
 import type { QuizTakerLoaderData } from './load-quiz-taker.js';
+import { QuizTakerPageSkeleton } from './quiz-taker-skeleton.js';
 
 // PageContainer component with padding and layout (no background)
 type PageContainerProps = {
@@ -33,7 +36,7 @@ type PageContainerProps = {
 };
 
 const PageContainer: React.FC<PageContainerProps> = ({ children }) => (
-  <div className="relative w-full px-4 py-8">{children}</div>
+  <div className="relative w-full px-4 pt-24 pb-8">{children}</div>
 );
 
 // Quiz Taker State Atoms are now imported from quiz-taker-atoms.js
@@ -47,11 +50,28 @@ const SuccessView: React.FC<{ quizzes: ReadonlyArray<Quiz> }> = ({ quizzes }) =>
   const enginesResult = useAtomValue(enginesAtom);
   const activeQuizResult = useAtomValue(activeQuizAtom);
 
+  // Auth session - to check if user is signed in
+  const authSessionResult = useAtomValue(sessionAtom);
+  const signInAnonymously = useAtomSet(signInAnonymouslyAtom, {
+    mode: 'promise',
+  });
+
   // Function setters
   const selectAnswer = useAtomSet(selectAnswerAtom);
   const navigateToQuestion = useAtomSet(navigateToQuestionAtom);
-  const submitQuiz = useAtomSet(submitQuizAtom);
+  const submitQuizAndAnalyze = useAtomSet(submitQuizAndAnalyzeAtom, {
+    mode: 'promise',
+  });
   const initializeQuiz = useAtomSet(initializeQuizAtom);
+
+  // Submission state
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
+  const [submissionStatus, setSubmissionStatus] = React.useState<string | null>(null);
+  const [submissionError, setSubmissionError] = React.useState<string | null>(null);
+
+  // Anonymous auth state
+  const [isSigningInAnonymously, setIsSigningInAnonymously] = React.useState(false);
+  const hasAttemptedAnonymousSignIn = React.useRef(false);
 
   // Dev panel state management using React useState
   const [devConfig, setDevConfig] = React.useState<Partial<AnalysisConfigOverrides>>({});
@@ -150,6 +170,44 @@ const SuccessView: React.FC<{ quizzes: ReadonlyArray<Quiz> }> = ({ quizzes }) =>
     }
   }, [targetQuiz, currentQuiz, initializeQuiz]);
 
+  // Auto sign-in anonymously if user is not authenticated
+  // This ensures we can track quiz responses even for users who haven't signed up
+  React.useEffect(() => {
+    // Skip if we've already attempted sign-in or currently signing in
+    if (hasAttemptedAnonymousSignIn.current || isSigningInAnonymously) {
+      return;
+    }
+
+    // Skip if session is still loading
+    if (Result.isWaiting(authSessionResult) || Result.isInitial(authSessionResult)) {
+      return;
+    }
+
+    // Check if user is already signed in
+    const isSignedIn = Result.isSuccess(authSessionResult) && authSessionResult.value?.user;
+    if (isSignedIn) {
+      console.log('[QuizTaker] User already signed in:', authSessionResult.value?.user?.id);
+      return;
+    }
+
+    // User is not signed in - sign in anonymously
+    hasAttemptedAnonymousSignIn.current = true;
+    setIsSigningInAnonymously(true);
+    console.log('[QuizTaker] No session found, signing in anonymously...');
+
+    signInAnonymously({})
+      .then(() => {
+        console.log('[QuizTaker] Anonymous sign-in successful');
+        setIsSigningInAnonymously(false);
+      })
+      .catch((error) => {
+        console.error('[QuizTaker] Anonymous sign-in failed:', error);
+        setIsSigningInAnonymously(false);
+        // Don't block quiz taking if anonymous sign-in fails
+        // User can still take quiz, but responses won't be tracked
+      });
+  }, [authSessionResult, isSigningInAnonymously, signInAnonymously]);
+
   // Debug logging for SuccessView
   React.useEffect(() => {
     console.log('[SuccessView] enginesResult state:', {
@@ -168,21 +226,10 @@ const SuccessView: React.FC<{ quizzes: ReadonlyArray<Quiz> }> = ({ quizzes }) =>
     });
   }, [enginesResult, activeQuizResult]);
 
-  // Show loading state if engines are not loaded yet
+  // Show skeleton if engines are not loaded yet
   if (!Result.isSuccess(enginesResult)) {
-    console.log('[SuccessView] Showing Loading Analysis Engine - enginesResult not success');
-    return (
-      <div className="flex items-center justify-center min-h-[50vh]">
-        <div className="text-center">
-          <h2 className="text-xl font-semibold mb-2">Loading Analysis Engine...</h2>
-          <p className="text-muted-foreground">Setting up analysis capabilities</p>
-          <p className="text-xs text-muted-foreground mt-2">
-            Debug: isWaiting={String(Result.isWaiting(enginesResult))}, isInitial=
-            {String(Result.isInitial(enginesResult))}
-          </p>
-        </div>
-      </div>
-    );
+    console.log('[SuccessView] Showing skeleton - enginesResult not success');
+    return <QuizTakerPageSkeleton />;
   }
 
   // Show error if no active engine is found
@@ -197,37 +244,25 @@ const SuccessView: React.FC<{ quizzes: ReadonlyArray<Quiz> }> = ({ quizzes }) =>
     );
   }
 
-  // Handle loading states
+  // Handle loading states - show skeleton while waiting
   if (!Result.isSuccess(activeQuizResult)) {
-    if (Result.isWaiting(activeQuizResult)) {
+    if (Result.isFailure(activeQuizResult)) {
       return (
         <div className="flex items-center justify-center min-h-[50vh]">
           <div className="text-center">
-            <h2 className="text-xl font-semibold mb-2">Loading Quiz...</h2>
-            <p className="text-muted-foreground">Finding the active My Artist Type quiz</p>
+            <h2 className="text-xl font-semibold mb-2">Quiz Configuration Error</h2>
+            <p className="text-muted-foreground">Could not find active quiz configuration</p>
           </div>
         </div>
       );
     }
-    return (
-      <div className="flex items-center justify-center min-h-[50vh]">
-        <div className="text-center">
-          <h2 className="text-xl font-semibold mb-2">Quiz Configuration Error</h2>
-          <p className="text-muted-foreground">Could not find active quiz configuration</p>
-        </div>
-      </div>
-    );
+    // Waiting or initial state - show skeleton
+    return <QuizTakerPageSkeleton />;
   }
 
   if (targetQuiz === undefined) {
-    return (
-      <div className="flex items-center justify-center min-h-[50vh]">
-        <div className="text-center">
-          <h2 className="text-xl font-semibold mb-2">Quiz Not Found</h2>
-          <p className="text-muted-foreground">Could not find the active My Artist Type quiz</p>
-        </div>
-      </div>
-    );
+    // This can happen during initialization - show skeleton instead of error
+    return <QuizTakerPageSkeleton />;
   }
 
   // Get questions from the real quiz data
@@ -245,16 +280,8 @@ const SuccessView: React.FC<{ quizzes: ReadonlyArray<Quiz> }> = ({ quizzes }) =>
   }
 
   if (currentQuestion === undefined) {
-    return (
-      <div className="flex items-center justify-center min-h-[50vh]">
-        <div className="text-center">
-          <h2 className="text-xl font-semibold mb-2">Question Not Found</h2>
-          <p className="text-muted-foreground">
-            Could not find question at index {currentQuestionIndex}
-          </p>
-        </div>
-      </div>
-    );
+    // This can happen during initialization - show skeleton instead of error
+    return <QuizTakerPageSkeleton />;
   }
 
   // Handler functions using the new atoms
@@ -276,16 +303,34 @@ const SuccessView: React.FC<{ quizzes: ReadonlyArray<Quiz> }> = ({ quizzes }) =>
     }
   };
 
-  const handleSubmit = () => {
-    submitQuiz(true);
+  const handleSubmit = async () => {
+    if (isSubmitting) return;
+    if (!Result.isSuccess(quizSessionResult)) return;
 
-    // Handle quiz submission - this will eventually send data to server
-    // Submission data is available in quizSession atom for backend integration
-    alert(
-      `Quiz submitted! You answered ${
-        Object.keys(quizSession.responses).length
-      } out of ${questions.length} questions.`,
-    );
+    setIsSubmitting(true);
+    setSubmissionError(null);
+    setSubmissionStatus('Saving and analyzing your responses...');
+
+    try {
+      const result = await submitQuizAndAnalyze({
+        session: quizSessionResult.value,
+      });
+
+      if (!result?.responseId) {
+        setSubmissionError('Failed to submit quiz. Please try again.');
+        setIsSubmitting(false);
+        setSubmissionStatus(null);
+        return;
+      }
+
+      // Analysis is now run synchronously on the server, so we can navigate immediately
+      window.location.href = `/my-response/${result.responseId}`;
+    } catch (error) {
+      console.error('Failed to submit quiz:', error);
+      setSubmissionError('Failed to submit quiz. Please try again.');
+      setIsSubmitting(false);
+      setSubmissionStatus(null);
+    }
   };
 
   // Get color class using CSS variables for artist types based on question order
@@ -373,6 +418,21 @@ const SuccessView: React.FC<{ quizzes: ReadonlyArray<Quiz> }> = ({ quizzes }) =>
 
   return (
     <PageContainer>
+      {/* Submission Error Banner */}
+      {submissionError && (
+        <div className="w-full max-w-7xl mx-auto mb-4">
+          <div className="bg-destructive/10 border border-destructive/20 text-destructive px-4 py-3 rounded-lg flex items-center justify-between">
+            <span>{submissionError}</span>
+            <button
+              onClick={() => setSubmissionError(null)}
+              className="text-destructive hover:text-destructive/80"
+            >
+              Dismiss
+            </button>
+          </div>
+        </div>
+      )}
+
       <div className="w-full max-w-7xl mx-auto grid grid-cols-3 gap-8">
         {/* Left 2/3 - Progress and Question Card */}
         <div className="col-span-2 flex flex-col gap-8">
@@ -427,13 +487,15 @@ const SuccessView: React.FC<{ quizzes: ReadonlyArray<Quiz> }> = ({ quizzes }) =>
               canGoNext={navigationState.canGoNext}
               isLastQuestion={navigationState.isLast}
               autoAdvanceEnabled={autoAdvanceEnabled}
+              isSubmitting={isSubmitting}
+              submissionStatus={submissionStatus}
             />
           </div>
         </div>
 
         {/* Right 1/3 - Real-time Analysis Preview */}
         <div className="col-span-1 flex items-center justify-center">
-          <div className="sticky top-4 w-full">
+          <div className="sticky top-24 w-full">
             {localAnalysisData.length > 0 ? (
               <div className="relative w-full h-full min-w-96 rounded-[32px] border border-neutral-200/50 bg-neutral-100 pt-4 px-2 pb-2 backdrop-blur-lg md:pt-6 md:px-4 md:pb-4 dark:border-neutral-700 dark:bg-neutral-800/50 overflow-visible">
                 <ArtistTypeGraphCard
@@ -562,15 +624,16 @@ const QuizTakerPageContent: React.FC = () => {
     }
   }, [quizzesResult, enginesResult, activeQuizzesResult]);
 
-  return (
-    <>
-      {Result.builder(quizzesResult)
-        .onFailure(() => <ErrorView />)
-        .onSuccess((quizzes) => <SuccessView quizzes={quizzes} />)
-        .onWaiting((result) => Result.isInitial(result) && result.waiting && <p>Loading...</p>)
-        .orNull()}
-    </>
-  );
+  // Show skeleton for any non-success state (initial, waiting, or null)
+  if (!Result.isSuccess(quizzesResult)) {
+    if (Result.isFailure(quizzesResult)) {
+      return <ErrorView />;
+    }
+    // Initial or waiting state - show skeleton
+    return <QuizTakerPageSkeleton />;
+  }
+
+  return <SuccessView quizzes={quizzesResult.value} />;
 };
 
 // ============================================================================

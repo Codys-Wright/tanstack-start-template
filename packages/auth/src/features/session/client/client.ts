@@ -1,13 +1,20 @@
 import { createAuthClient } from 'better-auth/react';
-import { adminClient, organizationClient, twoFactorClient } from 'better-auth/client/plugins';
+import {
+  adminClient,
+  anonymousClient,
+  organizationClient,
+  twoFactorClient,
+} from 'better-auth/client/plugins';
 import { passkeyClient } from '@better-auth/passkey/client';
 
 /**
- * Better Auth client for React components with admin, organization, passkey, and 2FA support.
+ * Better Auth client for React components with admin, organization, passkey, 2FA, and anonymous auth support.
  *
  * Features:
  * - Email/password authentication
  * - Google OAuth
+ * - Anonymous authentication (no signup required)
+ * - Account linking (connect multiple auth methods)
  * - Admin operations (create users, ban, impersonate, etc.)
  * - Organizations with members and invitations
  * - Teams within organizations
@@ -16,7 +23,10 @@ import { passkeyClient } from '@better-auth/passkey/client';
  *
  * @example
  * ```tsx
- * // Sign in
+ * // Sign in anonymously (no email/password required)
+ * await authClient.signIn.anonymous();
+ *
+ * // Sign in with email/password
  * await authClient.signIn.email({
  *   email: "user@example.com",
  *   password: "password123",
@@ -45,6 +55,7 @@ export const authClient = createAuthClient({
   baseURL: typeof window !== 'undefined' ? window.location.origin : '',
   plugins: [
     adminClient(),
+    anonymousClient(),
     organizationClient({
       teams: {
         enabled: true,

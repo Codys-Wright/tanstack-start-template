@@ -1,4 +1,5 @@
 import * as Schema from 'effect/Schema';
+import * as HttpApiSchema from '@effect/platform/HttpApiSchema';
 import { OrganizationId } from '@auth/features/organization/domain/schema';
 import { UserId } from '@auth/features/user/domain/schema';
 
@@ -67,58 +68,95 @@ export interface TeamPermissions {
   canManageMembers: boolean;
 }
 
+// ============================================================================
+// Input Schemas (matching Better Auth OpenAPI spec)
+// ============================================================================
+
 /**
- * Input for creating a team
+ * Input for POST /organization/create-team
  */
 export const CreateTeamInput = Schema.Struct({
-  organizationId: OrganizationId,
   name: Schema.String,
+  organizationId: Schema.optional(Schema.NullOr(Schema.String)),
 });
 export type CreateTeamInput = typeof CreateTeamInput.Type;
 
 /**
- * Input for updating a team
+ * Input for POST /organization/update-team
  */
 export const UpdateTeamInput = Schema.Struct({
-  teamId: TeamId,
+  teamId: Schema.String,
   data: Schema.Struct({
-    name: Schema.String,
+    name: Schema.optional(Schema.NullOr(Schema.String)),
   }),
 });
 export type UpdateTeamInput = typeof UpdateTeamInput.Type;
 
 /**
- * Input for deleting a team
+ * Input for POST /organization/remove-team
  */
-export const DeleteTeamInput = Schema.Struct({
-  teamId: TeamId,
-  organizationId: Schema.optional(OrganizationId),
+export const RemoveTeamInput = Schema.Struct({
+  teamId: Schema.String,
+  organizationId: Schema.optional(Schema.NullOr(Schema.String)),
 });
-export type DeleteTeamInput = typeof DeleteTeamInput.Type;
+export type RemoveTeamInput = typeof RemoveTeamInput.Type;
 
 /**
- * Input for adding a team member
+ * Input for POST /organization/add-team-member
  */
 export const AddTeamMemberInput = Schema.Struct({
-  teamId: TeamId,
-  userId: UserId,
+  teamId: Schema.String,
+  userId: Schema.String,
   role: Schema.optional(Schema.String),
 });
 export type AddTeamMemberInput = typeof AddTeamMemberInput.Type;
 
 /**
- * Input for removing a team member
+ * Input for POST /organization/remove-team-member
  */
 export const RemoveTeamMemberInput = Schema.Struct({
-  teamId: TeamId,
-  userId: UserId,
+  teamId: Schema.String,
+  userId: Schema.String,
 });
 export type RemoveTeamMemberInput = typeof RemoveTeamMemberInput.Type;
 
 /**
- * Input for setting active team
+ * Input for POST /organization/set-active-team
  */
 export const SetActiveTeamInput = Schema.Struct({
-  teamId: Schema.NullOr(TeamId),
+  teamId: Schema.NullOr(Schema.String),
 });
 export type SetActiveTeamInput = typeof SetActiveTeamInput.Type;
+
+/**
+ * Input for GET /organization/list-team-members (query params)
+ */
+export const ListTeamMembersInput = Schema.Struct({
+  teamId: Schema.String,
+});
+export type ListTeamMembersInput = typeof ListTeamMembersInput.Type;
+
+// ============================================================================
+// Response Schemas
+// ============================================================================
+
+/**
+ * Standard success response
+ */
+export const TeamSuccessResponse = Schema.Struct({
+  success: Schema.Boolean,
+});
+export type TeamSuccessResponse = typeof TeamSuccessResponse.Type;
+
+// ============================================================================
+// Errors
+// ============================================================================
+
+/**
+ * Team error - generic team operation error
+ */
+export class TeamError extends Schema.TaggedError<TeamError>()(
+  'TeamError',
+  { message: Schema.String },
+  HttpApiSchema.annotations({ status: 400 }),
+) {}

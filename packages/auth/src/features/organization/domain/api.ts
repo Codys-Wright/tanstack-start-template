@@ -5,48 +5,108 @@ import {
   CreateOrganizationInput,
   DeleteOrganizationInput,
   Organization,
-  OrganizationId,
   SetActiveOrganizationInput,
   UpdateOrganizationInput,
-} from './schema';
+  LeaveOrganizationInput,
+  CheckSlugInput,
+  CheckSlugResponse,
+  OrgHasPermissionInput,
+  OrgHasPermissionResponse,
+  OrganizationMember,
+  OrganizationError,
+} from './schema.js';
 
 /**
- * OrganizationApiGroup - HTTP API group for organization management operations.
+ * OrganizationApiGroup - HTTP API group for organization management.
+ * Matches Better Auth Organization Plugin OpenAPI spec.
+ *
  * This is composed into AuthApi.
  *
- * Endpoints:
- * - GET /organizations - List all organizations
- * - GET /organizations/:id - Get organization by ID
- * - POST /organizations/create - Create new organization
- * - PATCH /organizations/update - Update organization
- * - DELETE /organizations/delete - Delete organization
- * - POST /organizations/set-active - Set active organization
+ * Endpoints (matching Better Auth):
+ * - POST /organization/create - Create an organization
+ * - GET /organization/list - List all organizations for current user
+ * - GET /organization/get-full-organization - Get current organization details
+ * - POST /organization/update - Update an organization
+ * - POST /organization/delete - Delete an organization
+ * - POST /organization/set-active - Set active organization
+ * - POST /organization/leave - Leave an organization
+ * - POST /organization/check-slug - Check if slug is available
+ * - POST /organization/has-permission - Check if user has permission
+ * - GET /organization/get-active-member - Get active member details
+ * - GET /organization/get-active-member-role - Get active member role
  */
-export class OrganizationApiGroup extends HttpApiGroup.make('organizations')
-  .add(HttpApiEndpoint.get('list', '/organizations').addSuccess(Schema.Array(Organization)))
+export class OrganizationApiGroup extends HttpApiGroup.make('organization')
+  // Create organization
   .add(
-    HttpApiEndpoint.get('getById', '/organizations/:id')
-      .setPath(Schema.Struct({ id: OrganizationId }))
-      .addSuccess(Organization),
-  )
-  .add(
-    HttpApiEndpoint.post('create', '/organizations/create')
+    HttpApiEndpoint.post('create', '/create')
       .setPayload(CreateOrganizationInput)
-      .addSuccess(Organization),
+      .addSuccess(Organization)
+      .addError(OrganizationError),
   )
+  // List organizations
   .add(
-    HttpApiEndpoint.patch('update', '/organizations/update')
+    HttpApiEndpoint.get('list', '/list')
+      .addSuccess(Schema.Array(Organization))
+      .addError(OrganizationError),
+  )
+  // Get full organization (current active)
+  .add(
+    HttpApiEndpoint.get('getFullOrganization', '/get-full-organization')
+      .addSuccess(Schema.NullOr(Organization))
+      .addError(OrganizationError),
+  )
+  // Update organization
+  .add(
+    HttpApiEndpoint.post('update', '/update')
       .setPayload(UpdateOrganizationInput)
-      .addSuccess(Organization),
+      .addSuccess(Organization)
+      .addError(OrganizationError),
   )
+  // Delete organization
   .add(
-    HttpApiEndpoint.del('delete', '/organizations/delete')
+    HttpApiEndpoint.post('delete', '/delete')
       .setPayload(DeleteOrganizationInput)
-      .addSuccess(Schema.Struct({ success: Schema.Boolean })),
+      .addSuccess(Schema.String) // Returns the deleted organization ID
+      .addError(OrganizationError),
   )
+  // Set active organization
   .add(
-    HttpApiEndpoint.post('setActive', '/organizations/set-active')
+    HttpApiEndpoint.post('setActive', '/set-active')
       .setPayload(SetActiveOrganizationInput)
-      .addSuccess(Organization),
+      .addSuccess(Schema.NullOr(Organization))
+      .addError(OrganizationError),
   )
-  .prefix('/organizations') {}
+  // Leave organization
+  .add(
+    HttpApiEndpoint.post('leave', '/leave')
+      .setPayload(LeaveOrganizationInput)
+      .addSuccess(Schema.Struct({ success: Schema.Boolean }))
+      .addError(OrganizationError),
+  )
+  // Check if slug is available
+  .add(
+    HttpApiEndpoint.post('checkSlug', '/check-slug')
+      .setPayload(CheckSlugInput)
+      .addSuccess(CheckSlugResponse)
+      .addError(OrganizationError),
+  )
+  // Check permissions
+  .add(
+    HttpApiEndpoint.post('hasPermission', '/has-permission')
+      .setPayload(OrgHasPermissionInput)
+      .addSuccess(OrgHasPermissionResponse)
+      .addError(OrganizationError),
+  )
+  // Get active member
+  .add(
+    HttpApiEndpoint.get('getActiveMember', '/get-active-member')
+      .addSuccess(Schema.NullOr(OrganizationMember))
+      .addError(OrganizationError),
+  )
+  // Get active member role
+  .add(
+    HttpApiEndpoint.get('getActiveMemberRole', '/get-active-member-role')
+      .addSuccess(Schema.NullOr(Schema.String))
+      .addError(OrganizationError),
+  )
+  .prefix('/organization') {}

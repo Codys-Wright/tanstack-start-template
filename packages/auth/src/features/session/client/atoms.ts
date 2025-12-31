@@ -73,6 +73,21 @@ class AuthApi extends Effect.Service<AuthApi>()('@features/auth/AuthApi', {
         catch: (error) => new Error(`Passkey sign in failed: ${error}`),
       }),
 
+    signInAnonymously: () =>
+      Effect.tryPromise({
+        try: async () => {
+          const result = await authClient.signIn.anonymous();
+          if (result.error) {
+            throw new Error(result.error.message || 'Anonymous sign in failed');
+          }
+          return result.data;
+        },
+        catch: (error) =>
+          new Error(
+            `Anonymous sign in failed: ${error instanceof Error ? error.message : String(error)}`,
+          ),
+      }),
+
     signOut: () =>
       Effect.tryPromise({
         try: async () => {
@@ -553,3 +568,64 @@ export const deleteAccountAtom = authRuntime.fn<{ password: string }>()(
     return yield* api.deleteAccount(input.password);
   }),
 );
+
+/**
+ * signInAnonymouslyAtom - Atom effect for signing in anonymously
+ *
+ * Creates a temporary user account without requiring email/password.
+ * The user can later upgrade their account by linking a social provider or email/password.
+ *
+ * On success:
+ * 1. Creates anonymous user
+ * 2. Updates sessionAtom with the new session
+ *
+ * @example
+ * ```tsx
+ * const signInAnonymously = useAtomSet(signInAnonymouslyAtom, { mode: 'promise' });
+ *
+ * const handleStartQuiz = async () => {
+ *   await signInAnonymously({});
+ *   // User is now signed in anonymously, can take quiz
+ * };
+ * ```
+ */
+export const signInAnonymouslyAtom = authRuntime.fn<void>()(
+  Effect.fnUntraced(function* (_input, get) {
+    const api = yield* AuthApi;
+    const result = yield* api.signInAnonymously();
+
+    // After successful anonymous sign-in, fetch fresh session
+    const freshSession = yield* api.getSession();
+    get.set(sessionAtom, freshSession);
+
+    return result;
+  }),
+);
+
+/**
+ * isAnonymousAtom - Derived atom that checks if current user is anonymous
+ *
+ * @example
+ * ```tsx
+ * const isAnonymous = useAtomValue(isAnonymousAtom);
+ *
+ * if (isAnonymous) {
+ *   // Show "Create Account" prompt
+ * }
+ * ```
+ */
+export const isAnonymousAtom = Atom.readable((get) => {
+  const sessionResult = get(sessionAtom);
+
+  if (!Result.isSuccess(sessionResult)) {
+    return false;
+  }
+
+  const session = sessionResult.value;
+  if (!session?.user) {
+    return false;
+  }
+
+  // Check if user has isAnonymous flag set
+  return (session.user as { isAnonymous?: boolean }).isAnonymous === true;
+});

@@ -1,47 +1,54 @@
 import * as HttpApiEndpoint from '@effect/platform/HttpApiEndpoint';
 import * as HttpApiGroup from '@effect/platform/HttpApiGroup';
 import * as Schema from 'effect/Schema';
-import { AuthError } from '@auth/features/session/domain/schema';
 import {
-  OrganizationRole,
   InviteMemberInput,
-  InvalidRoleError,
   Member,
-  MemberNotFound,
-  MemberWithFullDetails,
   MemberWithUser,
-  MemberId,
-  RemoveMemberInput,
   UpdateMemberRoleInput,
-} from './schema';
+  RemoveMemberInput,
+  MemberSuccessResponse,
+  MemberError,
+} from './schema.js';
 
-export class MemberApiGroup extends HttpApiGroup.make('members')
+/**
+ * MemberApiGroup - HTTP API group for organization member management.
+ * Matches Better Auth Organization Plugin member endpoints.
+ *
+ * This is composed into AuthApi.
+ *
+ * Endpoints (matching Better Auth):
+ * - GET /member/list - List members in organization
+ * - POST /member/invite - Invite a member to organization
+ * - POST /member/update-role - Update member's role
+ * - POST /member/remove - Remove a member from organization
+ */
+export class MemberApiGroup extends HttpApiGroup.make('member')
+  // List members
   .add(
-    HttpApiEndpoint.get('listMembers', '/')
-      .addSuccess(Schema.Struct({ members: Schema.Array(MemberWithUser) }))
-      .addError(AuthError),
+    HttpApiEndpoint.get('list', '/list')
+      .addSuccess(Schema.Array(MemberWithUser))
+      .addError(MemberError),
   )
+  // Invite member
   .add(
-    HttpApiEndpoint.get('getMember', '/:memberId')
-      .addSuccess(MemberWithFullDetails)
-      .addError(MemberNotFound),
-  )
-  .add(
-    HttpApiEndpoint.post('inviteMember', '/invite')
+    HttpApiEndpoint.post('invite', '/invite')
       .setPayload(InviteMemberInput)
-      .addSuccess(Schema.Struct({ member: Member }))
-      .addError(InvalidRoleError),
+      .addSuccess(Member)
+      .addError(MemberError),
   )
+  // Update member role
   .add(
-    HttpApiEndpoint.patch('updateMemberRole', '/:memberId/role')
+    HttpApiEndpoint.post('updateRole', '/update-role')
       .setPayload(UpdateMemberRoleInput)
-      .addSuccess(Schema.Struct({ success: Schema.Boolean }))
-      .addError(InvalidRoleError),
+      .addSuccess(Member)
+      .addError(MemberError),
   )
+  // Remove member
   .add(
-    HttpApiEndpoint.del('removeMember', '/:memberId')
-      .setPayload(Schema.Struct({ memberIdOrEmail: Schema.String }))
-      .addSuccess(Schema.Struct({ success: Schema.Boolean }))
-      .addError(MemberNotFound),
+    HttpApiEndpoint.post('remove', '/remove')
+      .setPayload(RemoveMemberInput)
+      .addSuccess(MemberSuccessResponse)
+      .addError(MemberError),
   )
-  .prefix('/members') {}
+  .prefix('/member') {}

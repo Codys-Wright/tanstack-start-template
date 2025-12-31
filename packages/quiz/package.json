@@ -24,6 +24,7 @@
     "test": "vitest --run"
   },
   "dependencies": {
+    "@auth": "*",
     "@core": "*",
     "@dnd-kit/core": "*",
     "@dnd-kit/modifiers": "*",

@@ -1,8 +1,24 @@
 import * as HttpApiEndpoint from '@effect/platform/HttpApiEndpoint';
 import * as HttpApiGroup from '@effect/platform/HttpApiGroup';
 import * as Schema from 'effect/Schema';
-import { AuthError, Unauthenticated } from '@auth/features/session/domain/schema';
+import { AuthError } from '@auth/features/session/domain/schema';
 
+// Import schemas from canonical sources
+import {
+  TwoFactorStatus,
+  EnableTwoFactorResult,
+  VerifyTwoFactorInput,
+  VerifyBackupCodeInput,
+} from './two-factor.js';
+import { AddPasskeyInput, DeletePasskeyInput } from './passkey.js';
+
+// Re-export for convenience
+export { TwoFactorStatus, EnableTwoFactorResult, VerifyTwoFactorInput, VerifyBackupCodeInput };
+export { AddPasskeyInput, DeletePasskeyInput };
+
+/**
+ * Password and account management schemas
+ */
 export const ChangePasswordInput = Schema.Struct({
   currentPassword: Schema.String.pipe(
     Schema.minLength(1, { message: () => 'Current password is required' }),
@@ -14,52 +30,25 @@ export const ChangePasswordInput = Schema.Struct({
   ),
   revokeOtherSessions: Schema.optional(Schema.Boolean),
 });
+export type ChangePasswordInput = typeof ChangePasswordInput.Type;
 
 export const DeleteAccountInput = Schema.Struct({
   password: Schema.String.pipe(Schema.minLength(1, { message: () => 'Password is required' })),
 });
+export type DeleteAccountInput = typeof DeleteAccountInput.Type;
 
 export const EnableTwoFactorInput = Schema.Struct({});
-
-export const VerifyTwoFactorInput = Schema.Struct({
-  code: Schema.String,
-  trustDevice: Schema.optional(Schema.Boolean),
-});
-
-export const VerifyBackupCodeInput = Schema.Struct({
-  code: Schema.String,
-});
-
-export const AddPasskeyInput = Schema.Struct({
-  name: Schema.String.pipe(
-    Schema.minLength(1, { message: () => 'Passkey name is required' }),
-    Schema.maxLength(50, {
-      message: () => 'Passkey name must be less than 50 characters',
-    }),
-  ),
-});
-
-export const DeletePasskeyInput = Schema.Struct({
-  id: Schema.String,
-});
+export type EnableTwoFactorInput = typeof EnableTwoFactorInput.Type;
 
 export const RevokeSessionInput = Schema.Struct({
   token: Schema.String,
 });
+export type RevokeSessionInput = typeof RevokeSessionInput.Type;
 
 export const UnlinkAccountInput = Schema.Struct({
   accountId: Schema.String,
 });
-
-export const TwoFactorStatus = Schema.Struct({
-  enabled: Schema.Boolean,
-  backupCodesCount: Schema.Number,
-});
-
-export const EnableTwoFactorResult = Schema.Struct({
-  totpURI: Schema.String,
-  backupCodes: Schema.Array(Schema.String),
-});
+export type UnlinkAccountInput = typeof UnlinkAccountInput.Type;
 
 export const ListPasskeysResult = Schema.Struct({
   passkeys: Schema.Array(
@@ -76,6 +65,7 @@ export const ListPasskeysResult = Schema.Struct({
     }),
   ),
 });
+export type ListPasskeysResult = typeof ListPasskeysResult.Type;
 
 export const ListSessionsResult = Schema.Struct({
   sessions: Schema.Array(
@@ -90,6 +80,7 @@ export const ListSessionsResult = Schema.Struct({
     }),
   ),
 });
+export type ListSessionsResult = typeof ListSessionsResult.Type;
 
 export const ListAccountsResult = Schema.Struct({
   accounts: Schema.Array(
@@ -101,6 +92,7 @@ export const ListAccountsResult = Schema.Struct({
     }),
   ),
 });
+export type ListAccountsResult = typeof ListAccountsResult.Type;
 
 /**
  * SecurityApiGroup - HTTP API group for security operations.
@@ -166,7 +158,6 @@ export class SecurityApiGroup extends HttpApiGroup.make('security')
   .add(
     HttpApiEndpoint.post('registerPasskey', '/passkey/register')
       .setPayload(AddPasskeyInput)
-      .addSuccess(ListPasskeysResult)
       .addSuccess(Schema.Struct({ success: Schema.Boolean }))
       .addError(AuthError),
   )

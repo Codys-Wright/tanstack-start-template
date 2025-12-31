@@ -2,79 +2,62 @@ import * as Effect from 'effect/Effect';
 import { AuthService } from '@auth/core/server/service';
 
 /**
- * Member Service - Wraps organization member operations in Effect
+ * Member Service - Wraps Better Auth member operations in Effect
  *
- * Uses organization client methods for:
- * - List members
- * - Invite members
- * - Update member roles
- * - Remove members
+ * Uses auth.api.* methods for member operations.
+ * The organization plugin exposes member methods like:
+ * - listMembers, inviteMember, updateMemberRole, removeMember
+ *
+ * Note: We use type assertion (as any) because Better Auth's TypeScript types
+ * don't fully expose plugin-added methods, but they exist at runtime.
  */
 export class MemberService extends Effect.Service<MemberService>()('MemberService', {
   dependencies: [AuthService.Default],
   effect: Effect.gen(function* () {
     const auth = yield* AuthService;
-    const organizationClient = auth.api.organization;
+    // Type assertion needed because Better Auth types don't fully expose plugin methods
+    const api = auth.api as any;
 
     return {
       /**
-       * List members of an organization
+       * List members of the active organization
        */
-      listMembers: (organizationId?: string) =>
+      list: () =>
         Effect.tryPromise({
-          try: () =>
-            organizationClient.listMembers({
-              query: organizationId ? { organizationId } : {},
-            }),
+          try: () => api.listMembers({}),
           catch: (error) => new Error(`Failed to list members: ${error}`),
-        }),
-
-      /**
-       * Get a specific member
-       */
-      getMember: (memberId: string) =>
-        Effect.tryPromise({
-          try: () => organizationClient.getMember({ query: { memberId } }),
-          catch: (error) => new Error(`Failed to get member: ${error}`),
         }),
 
       /**
        * Invite a member to organization
        */
-      inviteMember: (input: { email: string; role: string; organizationId?: string }) =>
+      invite: (input: {
+        email: string;
+        role: string;
+        organizationId?: string | null;
+        resend?: boolean | null;
+        teamId?: string;
+      }) =>
         Effect.tryPromise({
-          try: () => organizationClient.invite({ body: input }),
+          try: () => api.inviteMember({ body: input }),
           catch: (error) => new Error(`Failed to invite member: ${error}`),
         }),
 
       /**
        * Update member role
        */
-      updateMemberRole: (input: { memberId: string; role: string; organizationId?: string }) =>
+      updateRole: (input: { memberId: string; role: string; organizationId?: string | null }) =>
         Effect.tryPromise({
-          try: () =>
-            organizationClient.updateMemberRole({
-              params: { memberId: input.memberId },
-              body: {
-                role: input.role,
-                organizationId: input.organizationId,
-              },
-            }),
+          try: () => api.updateMemberRole({ body: input }),
           catch: (error) => new Error(`Failed to update member role: ${error}`),
         }),
 
       /**
        * Remove a member from organization
        */
-      removeMember: (input: { memberIdOrEmail: string; organizationId?: string }) =>
+      remove: (input: { memberIdOrEmail: string; organizationId?: string | null }) =>
         Effect.tryPromise({
-          try: () =>
-            organizationClient.removeMember({
-              body: {
-                memberIdOrEmail: input.memberIdOrEmail,
-                organizationId: input.organizationId,
-              },
-            }),
+          try: () => api.removeMember({ body: input }),
           catch: (error) => new Error(`Failed to remove member: ${error}`),
         }),
     };

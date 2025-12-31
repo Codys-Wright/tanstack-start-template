@@ -1,7 +1,7 @@
 import * as Schema from 'effect/Schema';
+import * as HttpApiSchema from '@effect/platform/HttpApiSchema';
 import { UserId } from '@auth/features/user/domain/schema';
 import { OrganizationId } from '@auth/features/organization/domain/schema';
-import { AuthError } from '@auth/features/session/domain/schema';
 
 /**
  * Branded MemberId type for type safety
@@ -74,34 +74,56 @@ export const MemberWithFullDetails = Schema.Struct({
 });
 export type MemberWithFullDetails = typeof MemberWithFullDetails.Type;
 
+// ============================================================================
+// Input Schemas (matching Better Auth OpenAPI spec)
+// ============================================================================
+
 /**
- * Input for inviting a member
+ * Input for POST /member/invite (maps to /organization/invite-member)
  */
 export const InviteMemberInput = Schema.Struct({
   email: Schema.String,
-  role: OrganizationRole,
-  organizationId: Schema.optional(OrganizationId),
+  role: Schema.String,
+  organizationId: Schema.optional(Schema.NullOr(Schema.String)),
+  resend: Schema.optional(Schema.NullOr(Schema.Boolean)),
+  teamId: Schema.optional(Schema.String),
 });
 export type InviteMemberInput = typeof InviteMemberInput.Type;
 
 /**
- * Input for updating member role
+ * Input for POST /member/update-role (maps to /organization/update-member-role)
  */
 export const UpdateMemberRoleInput = Schema.Struct({
-  memberId: MemberId,
-  role: OrganizationRole,
-  organizationId: Schema.optional(OrganizationId),
+  memberId: Schema.String,
+  role: Schema.String,
+  organizationId: Schema.optional(Schema.NullOr(Schema.String)),
 });
 export type UpdateMemberRoleInput = typeof UpdateMemberRoleInput.Type;
 
 /**
- * Input for removing a member
+ * Input for POST /member/remove (maps to /organization/remove-member)
  */
 export const RemoveMemberInput = Schema.Struct({
   memberIdOrEmail: Schema.String,
-  organizationId: Schema.optional(OrganizationId),
+  organizationId: Schema.optional(Schema.NullOr(Schema.String)),
 });
 export type RemoveMemberInput = typeof RemoveMemberInput.Type;
+
+// ============================================================================
+// Response Schemas
+// ============================================================================
+
+/**
+ * Standard success response
+ */
+export const MemberSuccessResponse = Schema.Struct({
+  success: Schema.Boolean,
+});
+export type MemberSuccessResponse = typeof MemberSuccessResponse.Type;
+
+// ============================================================================
+// Errors
+// ============================================================================
 
 /**
  * Member-related errors
@@ -109,8 +131,17 @@ export type RemoveMemberInput = typeof RemoveMemberInput.Type;
 export class MemberNotFoundError extends Schema.TaggedError<MemberNotFoundError>()(
   'MemberNotFoundError',
   { message: Schema.String },
+  HttpApiSchema.annotations({ status: 404 }),
 ) {}
 
-export class InvalidRoleError extends Schema.TaggedError<InvalidRoleError>()('InvalidRoleError', {
-  message: Schema.String,
-}) {}
+export class InvalidRoleError extends Schema.TaggedError<InvalidRoleError>()(
+  'InvalidRoleError',
+  { message: Schema.String },
+  HttpApiSchema.annotations({ status: 400 }),
+) {}
+
+export class MemberError extends Schema.TaggedError<MemberError>()(
+  'MemberError',
+  { message: Schema.String },
+  HttpApiSchema.annotations({ status: 400 }),
+) {}

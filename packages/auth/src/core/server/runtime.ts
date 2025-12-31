@@ -17,7 +17,7 @@ import * as ManagedRuntime from 'effect/ManagedRuntime';
 
 import { TracerLive } from '@core/server';
 
-import { AuthService } from '@auth/features/session/server';
+import { AuthService } from '@auth/core/server/service';
 
 // Use globalValue to persist the memoMap across hot reloads
 const memoMap = globalValue(Symbol.for('@auth/server-memoMap'), () =>

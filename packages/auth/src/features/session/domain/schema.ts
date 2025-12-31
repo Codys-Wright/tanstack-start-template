@@ -217,5 +217,147 @@ export class ResetPasswordInput extends Schema.Class<ResetPasswordInput>('ResetP
     arbitrary: () => (fc: any) =>
       fc.constant(null).map(() => faker.internet.password({ length: 12 })),
   }),
+  token: Schema.optional(Schema.NullOr(Schema.String)),
+}) {}
+
+// ============================================================================
+// Standard Response Types (Better Auth uses { status: boolean } pattern)
+// ============================================================================
+
+/**
+ * Standard status response - used by Better Auth for most operations
+ * Note: Better Auth uses `status` not `success` for most responses
+ */
+export const StatusResponse = Schema.Struct({
+  status: Schema.Boolean,
+});
+export type StatusResponse = typeof StatusResponse.Type;
+
+/**
+ * Standard status response with optional message
+ */
+export const StatusResponseWithMessage = Schema.Struct({
+  status: Schema.Boolean,
+  message: Schema.optional(Schema.String),
+});
+export type StatusResponseWithMessage = typeof StatusResponseWithMessage.Type;
+
+// ============================================================================
+// Email Verification
+// ============================================================================
+
+/**
+ * Input for POST /api/auth/send-verification-email
+ */
+export const SendVerificationEmailInput = Schema.Struct({
+  email: Schema.String,
+  callbackURL: Schema.optional(Schema.String),
+});
+export type SendVerificationEmailInput = typeof SendVerificationEmailInput.Type;
+
+/**
+ * Response from email verification
+ */
+export const VerifyEmailResponse = Schema.Struct({
+  user: User,
+  status: Schema.Boolean,
+});
+export type VerifyEmailResponse = typeof VerifyEmailResponse.Type;
+
+// ============================================================================
+// Social Sign In
+// ============================================================================
+
+/**
+ * Input for POST /api/auth/sign-in/social
+ */
+export const SocialSignInInput = Schema.Struct({
+  provider: Schema.String,
+  callbackURL: Schema.optional(Schema.String),
+  errorCallbackURL: Schema.optional(Schema.String),
+  newUserCallbackURL: Schema.optional(Schema.String),
+  disableRedirect: Schema.optional(Schema.Boolean),
+  scopes: Schema.optional(Schema.mutable(Schema.Array(Schema.String))),
+  requestSignUp: Schema.optional(Schema.Boolean),
+  loginHint: Schema.optional(Schema.String),
+  idToken: Schema.optional(
+    Schema.Struct({
+      token: Schema.String,
+      nonce: Schema.optional(Schema.String),
+      accessToken: Schema.optional(Schema.String),
+      refreshToken: Schema.optional(Schema.String),
+      expiresAt: Schema.optional(Schema.Number),
+    }),
+  ),
+});
+export type SocialSignInInput = typeof SocialSignInInput.Type;
+
+/**
+ * Response from social sign in - can be redirect URL or session data
+ */
+export const SocialSignInResponse = Schema.Struct({
+  redirect: Schema.Boolean,
+  url: Schema.optional(Schema.String),
+  token: Schema.optional(Schema.String),
+  user: Schema.optional(User),
+});
+export type SocialSignInResponse = typeof SocialSignInResponse.Type;
+
+// ============================================================================
+// Link Social Account
+// ============================================================================
+
+/**
+ * Input for POST /api/auth/link-social
+ */
+export const LinkSocialInput = Schema.Struct({
+  provider: Schema.String,
+  callbackURL: Schema.optional(Schema.String),
+  errorCallbackURL: Schema.optional(Schema.String),
+  disableRedirect: Schema.optional(Schema.Boolean),
+  scopes: Schema.optional(Schema.mutable(Schema.Array(Schema.String))),
+  idToken: Schema.optional(
+    Schema.Struct({
+      token: Schema.String,
+      nonce: Schema.optional(Schema.String),
+      accessToken: Schema.optional(Schema.String),
+      refreshToken: Schema.optional(Schema.String),
+    }),
+  ),
+});
+export type LinkSocialInput = typeof LinkSocialInput.Type;
+
+/**
+ * Response from link social account
+ */
+export const LinkSocialResponse = Schema.Struct({
+  redirect: Schema.Boolean,
+  url: Schema.optional(Schema.String),
+  status: Schema.optional(Schema.Boolean),
+});
+export type LinkSocialResponse = typeof LinkSocialResponse.Type;
+
+// ============================================================================
+// Anonymous Sign In
+// ============================================================================
+
+/**
+ * Response from POST /api/auth/sign-in/anonymous
+ */
+export const AnonymousSignInResponse = Schema.Struct({
   token: Schema.String,
+  user: User,
+});
+export type AnonymousSignInResponse = typeof AnonymousSignInResponse.Type;
+
+// ============================================================================
+// Verify Email Query Params (GET endpoint)
+// ============================================================================
+
+/**
+ * Query params for GET /api/auth/verify-email
+ */
+export class VerifyEmailParams extends Schema.Class<VerifyEmailParams>('VerifyEmailParams')({
+  token: Schema.String,
+  callbackURL: Schema.optional(Schema.String),
 }) {}

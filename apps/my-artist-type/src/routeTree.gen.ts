@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TodosRouteImport } from './routes/todos'
+import { Route as ResultsRouteImport } from './routes/results'
 import { Route as ResponsesRouteImport } from './routes/responses'
 import { Route as QuizTakerRouteImport } from './routes/quiz-taker'
 import { Route as QuizRouteImport } from './routes/quiz'
@@ -23,6 +24,7 @@ import { Route as ExampleIndexRouteImport } from './routes/example/index'
 import { Route as AccountIndexRouteImport } from './routes/account/index'
 import { Route as TestAdminRouteImport } from './routes/test/admin'
 import { Route as OrganizationOrganizationViewRouteImport } from './routes/organization/$organizationView'
+import { Route as MyResponseResponseIdRouteImport } from './routes/my-response.$responseId'
 import { Route as ExampleFeatureIdRouteImport } from './routes/example/$featureId'
 import { Route as AuthAuthViewRouteImport } from './routes/auth/$authView'
 import { Route as ApiSplatRouteImport } from './routes/api/$'
@@ -35,6 +37,11 @@ import { Route as AdminResponsesResponseIdAnalysisRouteImport } from './routes/a
 const TodosRoute = TodosRouteImport.update({
   id: '/todos',
   path: '/todos',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResultsRoute = ResultsRouteImport.update({
+  id: '/results',
+  path: '/results',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ResponsesRoute = ResponsesRouteImport.update({
@@ -103,6 +110,11 @@ const OrganizationOrganizationViewRoute =
     path: '/organization/$organizationView',
     getParentRoute: () => rootRouteImport,
   } as any)
+const MyResponseResponseIdRoute = MyResponseResponseIdRouteImport.update({
+  id: '/my-response/$responseId',
+  path: '/my-response/$responseId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ExampleFeatureIdRoute = ExampleFeatureIdRouteImport.update({
   id: '/example/$featureId',
   path: '/example/$featureId',
@@ -156,12 +168,14 @@ export interface FileRoutesByFullPath {
   '/quiz': typeof QuizRoute
   '/quiz-taker': typeof QuizTakerRoute
   '/responses': typeof ResponsesRoute
+  '/results': typeof ResultsRoute
   '/todos': typeof TodosRoute
   '/account/$accountView': typeof AccountAccountViewRoute
   '/admin/quiz-editor': typeof AdminQuizEditorRoute
   '/api/$': typeof ApiSplatRoute
   '/auth/$authView': typeof AuthAuthViewRoute
   '/example/$featureId': typeof ExampleFeatureIdRoute
+  '/my-response/$responseId': typeof MyResponseResponseIdRoute
   '/organization/$organizationView': typeof OrganizationOrganizationViewRoute
   '/test/admin': typeof TestAdminRoute
   '/account': typeof AccountIndexRoute
@@ -180,12 +194,14 @@ export interface FileRoutesByTo {
   '/quiz': typeof QuizRoute
   '/quiz-taker': typeof QuizTakerRoute
   '/responses': typeof ResponsesRoute
+  '/results': typeof ResultsRoute
   '/todos': typeof TodosRoute
   '/account/$accountView': typeof AccountAccountViewRoute
   '/admin/quiz-editor': typeof AdminQuizEditorRoute
   '/api/$': typeof ApiSplatRoute
   '/auth/$authView': typeof AuthAuthViewRoute
   '/example/$featureId': typeof ExampleFeatureIdRoute
+  '/my-response/$responseId': typeof MyResponseResponseIdRoute
   '/organization/$organizationView': typeof OrganizationOrganizationViewRoute
   '/test/admin': typeof TestAdminRoute
   '/account': typeof AccountIndexRoute
@@ -205,12 +221,14 @@ export interface FileRoutesById {
   '/quiz': typeof QuizRoute
   '/quiz-taker': typeof QuizTakerRoute
   '/responses': typeof ResponsesRoute
+  '/results': typeof ResultsRoute
   '/todos': typeof TodosRoute
   '/account/$accountView': typeof AccountAccountViewRoute
   '/admin/quiz-editor': typeof AdminQuizEditorRoute
   '/api/$': typeof ApiSplatRoute
   '/auth/$authView': typeof AuthAuthViewRoute
   '/example/$featureId': typeof ExampleFeatureIdRoute
+  '/my-response/$responseId': typeof MyResponseResponseIdRoute
   '/organization/$organizationView': typeof OrganizationOrganizationViewRoute
   '/test/admin': typeof TestAdminRoute
   '/account/': typeof AccountIndexRoute
@@ -231,12 +249,14 @@ export interface FileRouteTypes {
     | '/quiz'
     | '/quiz-taker'
     | '/responses'
+    | '/results'
     | '/todos'
     | '/account/$accountView'
     | '/admin/quiz-editor'
     | '/api/$'
     | '/auth/$authView'
     | '/example/$featureId'
+    | '/my-response/$responseId'
     | '/organization/$organizationView'
     | '/test/admin'
     | '/account'
@@ -255,12 +275,14 @@ export interface FileRouteTypes {
     | '/quiz'
     | '/quiz-taker'
     | '/responses'
+    | '/results'
     | '/todos'
     | '/account/$accountView'
     | '/admin/quiz-editor'
     | '/api/$'
     | '/auth/$authView'
     | '/example/$featureId'
+    | '/my-response/$responseId'
     | '/organization/$organizationView'
     | '/test/admin'
     | '/account'
@@ -279,12 +301,14 @@ export interface FileRouteTypes {
     | '/quiz'
     | '/quiz-taker'
     | '/responses'
+    | '/results'
     | '/todos'
     | '/account/$accountView'
     | '/admin/quiz-editor'
     | '/api/$'
     | '/auth/$authView'
     | '/example/$featureId'
+    | '/my-response/$responseId'
     | '/organization/$organizationView'
     | '/test/admin'
     | '/account/'
@@ -304,11 +328,13 @@ export interface RootRouteChildren {
   QuizRoute: typeof QuizRoute
   QuizTakerRoute: typeof QuizTakerRoute
   ResponsesRoute: typeof ResponsesRoute
+  ResultsRoute: typeof ResultsRoute
   TodosRoute: typeof TodosRoute
   AccountAccountViewRoute: typeof AccountAccountViewRoute
   ApiSplatRoute: typeof ApiSplatRoute
   AuthAuthViewRoute: typeof AuthAuthViewRoute
   ExampleFeatureIdRoute: typeof ExampleFeatureIdRoute
+  MyResponseResponseIdRoute: typeof MyResponseResponseIdRoute
   OrganizationOrganizationViewRoute: typeof OrganizationOrganizationViewRoute
   TestAdminRoute: typeof TestAdminRoute
   AccountIndexRoute: typeof AccountIndexRoute
@@ -323,6 +349,13 @@ declare module '@tanstack/react-router' {
       path: '/todos'
       fullPath: '/todos'
       preLoaderRoute: typeof TodosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/results': {
+      id: '/results'
+      path: '/results'
+      fullPath: '/results'
+      preLoaderRoute: typeof ResultsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/responses': {
@@ -414,6 +447,13 @@ declare module '@tanstack/react-router' {
       path: '/organization/$organizationView'
       fullPath: '/organization/$organizationView'
       preLoaderRoute: typeof OrganizationOrganizationViewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/my-response/$responseId': {
+      id: '/my-response/$responseId'
+      path: '/my-response/$responseId'
+      fullPath: '/my-response/$responseId'
+      preLoaderRoute: typeof MyResponseResponseIdRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/example/$featureId': {
@@ -513,11 +553,13 @@ const rootRouteChildren: RootRouteChildren = {
   QuizRoute: QuizRoute,
   QuizTakerRoute: QuizTakerRoute,
   ResponsesRoute: ResponsesRoute,
+  ResultsRoute: ResultsRoute,
   TodosRoute: TodosRoute,
   AccountAccountViewRoute: AccountAccountViewRoute,
   ApiSplatRoute: ApiSplatRoute,
   AuthAuthViewRoute: AuthAuthViewRoute,
   ExampleFeatureIdRoute: ExampleFeatureIdRoute,
+  MyResponseResponseIdRoute: MyResponseResponseIdRoute,
   OrganizationOrganizationViewRoute: OrganizationOrganizationViewRoute,
   TestAdminRoute: TestAdminRoute,
   AccountIndexRoute: AccountIndexRoute,

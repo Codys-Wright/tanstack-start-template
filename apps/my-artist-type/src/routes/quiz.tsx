@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router';
-import { QuizTakerPage, loadQuizTaker } from '@quiz';
+import { QuizTakerPage, QuizTakerPageSkeleton, loadQuizTaker } from '@quiz';
 
 /**
  * Main quiz route - the primary quiz-taking experience with styled background
@@ -8,6 +8,7 @@ import { QuizTakerPage, loadQuizTaker } from '@quiz';
 export const Route = createFileRoute('/quiz')({
   loader: () => loadQuizTaker(),
   component: QuizPageWrapper,
+  pendingComponent: QuizPagePending,
 });
 
 function QuizPageWrapper() {
@@ -15,6 +16,14 @@ function QuizPageWrapper() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-muted">
       <QuizTakerPage loaderData={loaderData} />
+    </div>
+  );
+}
+
+function QuizPagePending() {
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-background to-muted">
+      <QuizTakerPageSkeleton />
     </div>
   );
 }

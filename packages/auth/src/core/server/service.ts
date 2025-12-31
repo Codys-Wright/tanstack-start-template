@@ -2,7 +2,7 @@ import { passkey } from '@better-auth/passkey';
 import { betterAuth } from 'better-auth';
 import type { BetterAuthOptions } from 'better-auth';
 import { getMigrations } from 'better-auth/db';
-import { admin, openAPI } from 'better-auth/plugins';
+import { admin, anonymous, openAPI } from 'better-auth/plugins';
 import { organization } from 'better-auth/plugins/organization';
 import { twoFactor } from 'better-auth/plugins/two-factor';
 import { getRequestHeaders } from '@tanstack/react-start/server';
@@ -16,20 +16,63 @@ import { Unauthenticated, type SessionData } from '@auth/features/session/index'
 import type { UserId } from '@auth/features/user/domain/index';
 import { AuthConfig } from '@auth/core/config';
 import { AuthDatabase } from '@auth/core/database';
+import type { BetterAuthInstance, BetterAuthApi } from '@auth/core/auth-types';
 
 // Re-export for backwards compatibility with existing server code
 export { Unauthenticated };
+
+// Re-export types for consumers
+export type { BetterAuthInstance, BetterAuthApi };
 
 // ============================================================================
 // Auth Service
 // ============================================================================
 
-export type BetterAuthInstance = ReturnType<typeof betterAuth>;
-
 /**
  * Creates Better Auth options.
  * Exported so it can be reused in auth.ts for CLI tools.
  */
+
+/**
+ * Anonymous user data passed to the onLinkAccount callback
+ */
+export interface AnonymousUserData {
+  user: {
+    id: string;
+    email: string;
+    name: string;
+    isAnonymous?: boolean;
+    [key: string]: unknown;
+  };
+  session: {
+    id: string;
+    userId: string;
+    [key: string]: unknown;
+  };
+}
+
+/**
+ * Callback type for when an anonymous user links their account to a new authentication method.
+ * Use this to migrate data (e.g., quiz responses) from the anonymous user to the new user.
+ *
+ * @param anonymousUser - The anonymous user that is being linked (will be deleted after linking)
+ * @param newUser - The new user account that the anonymous user is being linked to
+ *
+ * @example
+ * ```ts
+ * const onLinkAccount: OnLinkAccountCallback = async ({ anonymousUser, newUser }) => {
+ *   // Migrate quiz responses from anonymous user to new user
+ *   await db.update(responses)
+ *     .set({ userId: newUser.user.id })
+ *     .where(eq(responses.userId, anonymousUser.user.id));
+ * };
+ * ```
+ */
+export type OnLinkAccountCallback = (params: {
+  anonymousUser: AnonymousUserData;
+  newUser: AnonymousUserData;
+}) => Promise<void>;
+
 export const makeBetterAuthOptions = (params: {
   baseURL: string;
   secret: string;
@@ -39,6 +82,11 @@ export const makeBetterAuthOptions = (params: {
   googleClientSecret?: string;
   appName: string;
   sendEmail: (to: string, subject: string, html: string) => Promise<void>;
+  /**
+   * Callback for when an anonymous user links their account.
+   * Use this to migrate data from the anonymous user to the new user.
+   */
+  onLinkAccount?: OnLinkAccountCallback;
 }): BetterAuthOptions => ({
   baseURL: params.baseURL,
   secret: params.secret,
@@ -60,6 +108,17 @@ export const makeBetterAuthOptions = (params: {
     db: params.db,
     type: 'postgres' as const,
     casing: 'camel' as const,
+  },
+
+  // Enable account linking so users can connect multiple auth methods
+  account: {
+    accountLinking: {
+      enabled: true,
+      // Trust Google as a verified provider for automatic linking
+      trustedProviders: ['google'],
+      // Allow linking accounts with different emails (useful for OAuth providers)
+      allowDifferentEmails: true,
+    },
   },
 
   user: {
@@ -85,6 +144,16 @@ export const makeBetterAuthOptions = (params: {
 
   plugins: [
     openAPI(),
+
+    // Anonymous authentication - allows users to use the app without signing up
+    // When they later sign up/sign in, their data can be migrated via onLinkAccount
+    anonymous({
+      emailDomainName: 'anonymous.local',
+      // Keep the anonymous user record for audit trail and data migration
+      // The onLinkAccount callback handles data migration
+      disableDeleteAnonymousUser: false,
+      onLinkAccount: params.onLinkAccount,
+    }),
 
     admin({
       defaultRole: 'user',
@@ -171,7 +240,9 @@ const makeAuthService = Effect.gen(function* () {
   const { runMigrations } = yield* Effect.promise(() => getMigrations(options));
   yield* Effect.promise(runMigrations);
 
-  const auth = betterAuth(options);
+  // Create the auth instance and cast to our typed version
+  // The runtime behavior is identical, but now TypeScript knows about all plugin methods
+  const auth = betterAuth(options) as unknown as BetterAuthInstance;
 
   return {
     ...auth,

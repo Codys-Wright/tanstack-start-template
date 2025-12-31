@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router';
-import { QuizTakerPage } from '@quiz';
+import { QuizTakerPage, QuizTakerPageSkeleton } from '@quiz';
 
 /**
  * Standalone quiz taker route - plain quiz experience without background
@@ -7,4 +7,5 @@ import { QuizTakerPage } from '@quiz';
  */
 export const Route = createFileRoute('/quiz-taker')({
   component: QuizTakerPage,
+  pendingComponent: QuizTakerPageSkeleton,
 });

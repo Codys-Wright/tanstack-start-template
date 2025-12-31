@@ -64,7 +64,16 @@ export * from './features/account/ui/api-keys-card.js';
 // ============================================================================
 // Security - Domain, Client & Atoms
 // ============================================================================
-export * from './features/security/domain/api.js';
+export {
+  SecurityApiGroup,
+  EnableTwoFactorInput,
+  RevokeSessionInput,
+  UnlinkAccountInput,
+  ListPasskeysResult,
+  ListSessionsResult,
+  ListAccountsResult,
+  // Re-export only unique schemas - ChangePasswordInput and DeleteAccountInput are already exported from account
+} from './features/security/domain/api.js';
 export * from './features/security/client/atoms.js';
 
 // ============================================================================

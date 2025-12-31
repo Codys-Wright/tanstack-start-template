@@ -1,38 +1,71 @@
 import * as HttpApiEndpoint from '@effect/platform/HttpApiEndpoint';
 import * as HttpApiGroup from '@effect/platform/HttpApiGroup';
 import * as Schema from 'effect/Schema';
-import { Invitation, InvitationStatus, InvitationWithDetails, InvitationId } from './schema';
-import { AuthError } from '@auth/features/session/domain/schema';
+import {
+  Invitation,
+  InvitationWithDetails,
+  AcceptInvitationInput,
+  RejectInvitationInput,
+  CancelInvitationInput,
+  GetInvitationInput,
+  AcceptInvitationResponse,
+  InvitationSuccessResponse,
+  InvitationError,
+} from './schema.js';
 
-export class InvitationApiGroup extends HttpApiGroup.make('invitations')
+/**
+ * InvitationApiGroup - HTTP API group for invitation management.
+ * Matches Better Auth Organization Plugin invitation endpoints.
+ *
+ * This is composed into AuthApi.
+ *
+ * Endpoints (matching Better Auth):
+ * - GET /invitation/list - List invitations for organization
+ * - GET /invitation/list-user - List invitations for current user
+ * - GET /invitation/get - Get a specific invitation
+ * - POST /invitation/accept - Accept an invitation
+ * - POST /invitation/reject - Reject an invitation
+ * - POST /invitation/cancel - Cancel an invitation
+ */
+export class InvitationApiGroup extends HttpApiGroup.make('invitation')
+  // List invitations for organization
   .add(
-    HttpApiEndpoint.get('listInvitations', '/')
-      .addSuccess(Schema.Struct({ invitations: Schema.Array(InvitationWithDetails) }))
-      .addError(AuthError),
+    HttpApiEndpoint.get('list', '/list')
+      .addSuccess(Schema.Array(InvitationWithDetails))
+      .addError(InvitationError),
   )
+  // List invitations for current user
   .add(
-    HttpApiEndpoint.post('sendInvitation', '/send')
-      .setPayload(
-        Schema.Struct({
-          email: Schema.String,
-          role: Schema.Literal('owner', 'admin', 'member'),
-          organizationId: Schema.optional(Schema.String),
-          teamId: Schema.optional(Schema.String),
-        }),
-      )
-      .addSuccess(Schema.Struct({ invitation: Invitation }))
-      .addError(AuthError),
+    HttpApiEndpoint.get('listUser', '/list-user')
+      .addSuccess(Schema.Array(InvitationWithDetails))
+      .addError(InvitationError),
   )
+  // Get a specific invitation
   .add(
-    HttpApiEndpoint.post('acceptInvitation', '/accept')
-      .setPayload(Schema.Struct({ invitationId: InvitationId }))
-      .addSuccess(Schema.Struct({ success: Schema.Boolean }))
-      .addError(AuthError),
+    HttpApiEndpoint.get('get', '/get')
+      .setUrlParams(GetInvitationInput)
+      .addSuccess(Schema.NullOr(Invitation))
+      .addError(InvitationError),
   )
+  // Accept invitation
   .add(
-    HttpApiEndpoint.post('cancelInvitation', '/cancel')
-      .setPayload(Schema.Struct({ invitationId: InvitationId }))
-      .addSuccess(Schema.Struct({ success: Schema.Boolean }))
-      .addError(AuthError),
+    HttpApiEndpoint.post('accept', '/accept')
+      .setPayload(AcceptInvitationInput)
+      .addSuccess(AcceptInvitationResponse)
+      .addError(InvitationError),
   )
-  .prefix('/invitations') {}
+  // Reject invitation
+  .add(
+    HttpApiEndpoint.post('reject', '/reject')
+      .setPayload(RejectInvitationInput)
+      .addSuccess(InvitationSuccessResponse)
+      .addError(InvitationError),
+  )
+  // Cancel invitation
+  .add(
+    HttpApiEndpoint.post('cancel', '/cancel')
+      .setPayload(CancelInvitationInput)
+      .addSuccess(InvitationSuccessResponse)
+      .addError(InvitationError),
+  )
+  .prefix('/invitation') {}

@@ -2,40 +2,75 @@ import * as HttpApiBuilder from '@effect/platform/HttpApiBuilder';
 import * as Effect from 'effect/Effect';
 import * as Layer from 'effect/Layer';
 import { AuthApi } from '@auth/core/auth-api';
-import { InvitationService } from './service';
-import { AuthError } from '@auth/features/session/domain/api';
+import { InvitationService } from '@auth/features/invitation/server/service';
+import {
+  InvitationError,
+  type Invitation,
+  type InvitationWithDetails,
+  type AcceptInvitationResponse,
+} from '@auth/features/invitation/domain/schema';
 
 /**
  * InvitationApiLive - HTTP API handlers for invitation group.
+ *
+ * Implements Better Auth organization plugin invitation endpoints:
+ * - list, listUser, get, accept, reject, cancel
+ *
+ * Note: We use type assertions because Better Auth's runtime response types
+ * are not fully typed, but the data matches our schemas at runtime.
  */
-export const InvitationApiLive = HttpApiBuilder.group(AuthApi, 'invitations', (handlers) =>
+export const InvitationApiLive = HttpApiBuilder.group(AuthApi, 'invitation', (handlers) =>
   handlers
-    .handle('listInvitations', () =>
+    .handle('list', () =>
       Effect.gen(function* () {
         yield* Effect.log('[Invitation API] Listing invitations');
         const invitation = yield* InvitationService;
-        return yield* invitation.listInvitations();
-      }),
+        const result = yield* invitation.list();
+        return result as readonly InvitationWithDetails[];
+      }).pipe(Effect.mapError((e) => new InvitationError({ message: String(e) }))),
     )
-    .handle('sendInvitation', ({ payload }) =>
+    .handle('listUser', () =>
       Effect.gen(function* () {
-        yield* Effect.log('[Invitation API] Sending invitation', payload.email);
+        yield* Effect.log('[Invitation API] Listing user invitations');
         const invitation = yield* InvitationService;
-        const result = yield* invitation.sendInvitation(payload);
-        return { invitation: result };
-      }),
+        const result = yield* invitation.listUser();
+        return result as readonly InvitationWithDetails[];
+      }).pipe(Effect.mapError((e) => new InvitationError({ message: String(e) }))),
     )
-    .handle('acceptInvitation', ({ payload }) =>
+    .handle('get', ({ urlParams }) =>
+      Effect.gen(function* () {
+        yield* Effect.log('[Invitation API] Getting invitation', urlParams.invitationId);
+        const invitation = yield* InvitationService;
+        const result = yield* invitation.get({
+          invitationId: urlParams.invitationId,
+        });
+        return result as Invitation | null;
+      }).pipe(Effect.mapError((e) => new InvitationError({ message: String(e) }))),
+    )
+    .handle('accept', ({ payload }) =>
       Effect.gen(function* () {
         yield* Effect.log('[Invitation API] Accepting invitation', payload.invitationId);
         const invitation = yield* InvitationService;
-        return yield* invitation.acceptInvitation(payload.invitationId);
-      }),
+        const result = yield* invitation.accept({
+          invitationId: payload.invitationId,
+        });
+        return result as AcceptInvitationResponse;
+      }).pipe(Effect.mapError((e) => new InvitationError({ message: String(e) }))),
     )
-    .handle('cancelInvitation', ({ payload }) =>
+    .handle('reject', ({ payload }) =>
+      Effect.gen(function* () {
+        yield* Effect.log('[Invitation API] Rejecting invitation', payload.invitationId);
+        const invitation = yield* InvitationService;
+        yield* invitation.reject({ invitationId: payload.invitationId });
+        return { success: true as const };
+      }).pipe(Effect.mapError((e) => new InvitationError({ message: String(e) }))),
+    )
+    .handle('cancel', ({ payload }) =>
       Effect.gen(function* () {
         yield* Effect.log('[Invitation API] Canceling invitation', payload.invitationId);
         const invitation = yield* InvitationService;
-        return yield* invitation.cancelInvitation(payload.invitationId);
-      }),
-    ).pipe(Layer.provide(InvitationService.Default));
+        yield* invitation.cancel({ invitationId: payload.invitationId });
+        return { success: true as const };
+      }).pipe(Effect.mapError((e) => new InvitationError({ message: String(e) }))),
+    ),
+).pipe(Layer.provide(InvitationService.Default));

@@ -10,36 +10,26 @@ export const securityRuntime = Atom.runtime(SecurityApi.Default);
 // ===== TWO-FACTOR ATOMS =====
 
 /**
- * twoFactorStatusAtom - Check if 2FA is enabled for current user
- */
-export const twoFactorStatusAtom = securityRuntime.atom(
-  Effect.gen(function* () {
-    const api = yield* SecurityApi;
-    return yield* api.getTwoFactorStatus();
-  }),
-);
-
-/**
  * enableTwoFactorAtom - Enable two-factor authentication for current user
  *
  * On success:
  * 1. Generates TOTP URI for authenticator app
  * 2. Generates backup codes
  */
-export const enableTwoFactorAtom = securityRuntime.fn<void>()(
-  Effect.fnUntraced(function* () {
+export const enableTwoFactorAtom = securityRuntime.fn<{ password: string }>()(
+  Effect.fnUntraced(function* (input) {
     const api = yield* SecurityApi;
-    return yield* api.enableTwoFactor();
+    return yield* api.enableTwoFactor(input.password);
   }),
 );
 
 /**
  * disableTwoFactorAtom - Disable two-factor authentication for current user
  */
-export const disableTwoFactorAtom = securityRuntime.fn<void>()(
-  Effect.fnUntraced(function* () {
+export const disableTwoFactorAtom = securityRuntime.fn<{ password: string }>()(
+  Effect.fnUntraced(function* (input) {
     const api = yield* SecurityApi;
-    return yield* api.disableTwoFactor();
+    return yield* api.disableTwoFactor(input.password);
   }),
 );
 
@@ -59,10 +49,12 @@ export const verifyTotpAtom = securityRuntime.fn<{
 /**
  * generateBackupCodesAtom - Generate new backup codes for 2FA
  */
-export const generateBackupCodesAtom = securityRuntime.fn<void>()(
-  Effect.fnUntraced(function* () {
+export const generateBackupCodesAtom = securityRuntime.fn<{
+  password: string;
+}>()(
+  Effect.fnUntraced(function* (input) {
     const api = yield* SecurityApi;
-    return yield* api.generateBackupCodes();
+    return yield* api.generateBackupCodes(input.password);
   }),
 );
 
@@ -165,9 +157,12 @@ export const accountsAtom = securityRuntime.atom(
 /**
  * unlinkAccountAtom - Unlink a linked OAuth provider account
  */
-export const unlinkAccountAtom = securityRuntime.fn<{ accountId: string }>()(
+export const unlinkAccountAtom = securityRuntime.fn<{
+  providerId: string;
+  accountId: string;
+}>()(
   Effect.fnUntraced(function* (input) {
     const api = yield* SecurityApi;
-    return yield* api.unlinkAccount(input.accountId);
+    return yield* api.unlinkAccount(input.providerId, input.accountId);
   }),
 );

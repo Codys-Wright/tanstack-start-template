@@ -4,7 +4,7 @@ import * as Effect from 'effect/Effect';
 import * as Layer from 'effect/Layer';
 import * as Schema from 'effect/Schema';
 import { AuthApi } from '@auth/core/server/api';
-import { AuthService } from '@auth/features/session/server/service';
+import { AuthService } from '@auth/core/server/service';
 import { AuthError, toAuthError, Unauthenticated } from '@auth/features/session/domain/schema';
 import { User } from '@auth/features/user/domain/schema';
 import {
