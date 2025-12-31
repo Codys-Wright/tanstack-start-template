@@ -169,9 +169,9 @@ export function HeroSectionWithBeamsAndGrid() {
 
   return (
     <BackgroundWrapper showBeams={isClient}>
-      <div className="relative z-10 mx-auto grid w-full max-w-7xl grid-cols-1 items-center gap-8 px-4 md:px-8 lg:grid-cols-3">
+      <div className="relative z-10 mx-auto grid w-full max-w-7xl grid-cols-1 items-center gap-6 px-4 py-20 sm:gap-8 md:px-8 lg:grid-cols-3 lg:py-0">
         <div className="lg:col-span-2 flex flex-col items-center lg:items-start text-center lg:text-left">
-          <h2 className="relative z-50 mb-4 mt-4 max-w-4xl text-balance text-center text-3xl font-semibold tracking-tight text-gray-700 md:text-7xl lg:text-left dark:text-neutral-300">
+          <h2 className="relative z-50 mb-4 mt-4 max-w-4xl text-balance text-center text-4xl font-semibold tracking-tight text-gray-700 sm:text-5xl md:text-7xl lg:text-left dark:text-neutral-300">
             Discover your{' '}
             <div className="relative mx-auto inline-block w-max lg:mx-0 [filter:drop-shadow(0px_1px_3px_rgba(27,_37,_80,_0.14))]">
               <div className="text-black [text-shadow:0_0_rgba(0,0,0,0.1)] dark:text-white">
@@ -179,10 +179,10 @@ export function HeroSectionWithBeamsAndGrid() {
               </div>
             </div>
           </h2>
-          <p className="relative z-50 mt-4 max-w-xl text-center text-base/6 text-gray-600 lg:text-left dark:text-gray-200 italic">
+          <p className="relative z-50 mt-4 max-w-xl text-center text-sm/6 text-gray-600 sm:text-base/6 lg:text-left dark:text-gray-200 italic">
             "Knowing yourself is the beginning of all wisdom." - Aristotle
           </p>
-          <div className="mb-10 mt-8 flex w-full flex-col items-center justify-center gap-4 sm:flex-row md:mb-20 lg:justify-start">
+          <div className="mb-6 mt-6 flex w-full flex-col items-center justify-center gap-3 sm:mt-8 sm:flex-row sm:gap-4 md:mb-20 lg:justify-start">
             <a
               href="/quiz"
               className="group relative z-20 flex h-10 w-full cursor-pointer items-center justify-center space-x-2 rounded-lg bg-black p-px px-4 py-2 text-center text-sm font-semibold leading-6 text-white no-underline transition duration-200 sm:w-52 dark:bg-white dark:text-black"
@@ -198,23 +198,38 @@ export function HeroSectionWithBeamsAndGrid() {
             </a>
           </div>
         </div>
-        <div className="lg:col-span-1 w-full h-full">
+        <div className="lg:col-span-1 w-full h-full flex justify-center">
           <div
             ref={containerRef}
-            className="relative w-full h-full min-w-96 rounded-[32px] border border-neutral-200/50 bg-neutral-100 p-2 backdrop-blur-lg md:p-4 dark:border-neutral-700 dark:bg-neutral-800/50"
+            className="relative w-full h-full min-w-0 max-w-sm md:max-w-md lg:max-w-none rounded-[32px] border border-neutral-200/50 bg-neutral-100 p-2 backdrop-blur-lg md:p-4 dark:border-neutral-700 dark:bg-neutral-800/50"
           >
             <div>
               {/* Only render chart on client to avoid hydration mismatch */}
+              {/* Show bar chart on lg+ screens, hide on mobile/medium */}
               {isClient && (
-                <ArtistTypeGraphCard
-                  data={fakeData ?? []}
-                  showBarChart
-                  barChartHeight="h-40"
-                  className="h-full w-full"
-                  contentClassName="h-full w-full"
-                  transparent
-                  fill
-                />
+                <>
+                  <div className="hidden lg:block">
+                    <ArtistTypeGraphCard
+                      data={fakeData ?? []}
+                      showBarChart
+                      barChartHeight="h-40"
+                      className="h-full w-full"
+                      contentClassName="h-full w-full"
+                      transparent
+                      fill
+                    />
+                  </div>
+                  <div className="block lg:hidden">
+                    <ArtistTypeGraphCard
+                      data={fakeData ?? []}
+                      showBarChart={false}
+                      className="h-full w-full"
+                      contentClassName="h-full w-full"
+                      transparent
+                      fill
+                    />
+                  </div>
+                </>
               )}
             </div>
           </div>

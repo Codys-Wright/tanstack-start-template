@@ -75,11 +75,6 @@ function ActiveSessionsCard() {
     .onFailure((e) => e)
     .orNull();
 
-  // Debug logging
-  console.log('[ActiveSessionsCard] sessionsResult:', sessionsResult);
-  console.log('[ActiveSessionsCard] sessions:', sessions);
-  console.log('[ActiveSessionsCard] error:', error);
-
   // Show loading when initial or when waiting for refresh
   const isLoading = Result.isInitial(sessionsResult) || sessionsResult.waiting;
   const isRevoking = Result.isInitial(revokeResult) && revokeResult.waiting;

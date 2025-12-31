@@ -78,10 +78,11 @@ export interface MyResponseLoaderData {
  * 2. Loads analysis results for that response
  * 3. Returns dehydrated atoms for HydrationBoundary
  */
-export const loadMyResponse = createServerFn({ method: 'GET' }).handler(
-  async (ctx): Promise<MyResponseLoaderData> => {
+export const loadMyResponse = createServerFn({ method: 'GET' })
+  .inputValidator((data: { responseId: string }) => data)
+  .handler(async (ctx): Promise<MyResponseLoaderData> => {
     // Extract responseId from the context - it comes from the route params
-    const responseId = (ctx as any)?.data?.responseId as string;
+    const responseId = ctx.data.responseId;
     if (!responseId) {
       throw new Error('Response ID is required');
     }
@@ -129,5 +130,4 @@ export const loadMyResponse = createServerFn({ method: 'GET' }).handler(
       response: dehydrate(responsesAtom.remote, errorResult as any),
       analyses: dehydrate(analysesAtom.remote, errorResult as any),
     };
-  },
-);
+  });

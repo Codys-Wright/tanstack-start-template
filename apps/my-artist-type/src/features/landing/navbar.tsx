@@ -1,4 +1,4 @@
-"use client";
+'use client';
 import {
   MobileNav,
   MobileNavHeader,
@@ -8,28 +8,38 @@ import {
   NavbarButton,
   NavbarLogo,
   NavBody,
-} from "@components";
-import { SignedIn, SignedOut, UserButton } from "@auth";
-import { ModeToggle } from "@theme";
-import { motion } from "motion/react";
-import { useState, type ReactNode } from "react";
+} from '@components';
+import { SignedIn, SignedOut, UserButton, isAdminAtom } from '@auth';
+import { ModeToggle } from '@theme';
+import { motion } from 'motion/react';
+import { useState, type ReactNode, useMemo } from 'react';
+import { useAtomValue } from '@effect-atom/atom-react';
 
 export function NavbarHome({ children }: { children?: ReactNode }) {
-  const navItems = [
-    {
-      name: "Artist Types",
-      link: "/artist-types",
-      disabled: true,
-    },
-    {
-      name: "Quiz",
-      link: "/quiz",
-    },
-    {
-      name: "Admin",
-      link: "/admin",
-    },
-  ];
+  const isAdmin = useAtomValue(isAdminAtom);
+
+  const navItems = useMemo(
+    () => [
+      {
+        name: 'Artist Types',
+        link: '/artist-types',
+        disabled: true,
+      },
+      {
+        name: 'Quiz',
+        link: '/quiz',
+      },
+      ...(isAdmin
+        ? [
+            {
+              name: 'Admin',
+              link: '/admin',
+            },
+          ]
+        : []),
+    ],
+    [isAdmin],
+  );
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [hovered, setHovered] = useState<number | null>(null);
@@ -46,7 +56,7 @@ export function NavbarHome({ children }: { children?: ReactNode }) {
             {navItems.map((item, idx) => (
               <a
                 key={`desktop-link-${idx}`}
-                href={item.disabled ? "#" : item.link}
+                href={item.disabled ? '#' : item.link}
                 onMouseEnter={() => !item.disabled && setHovered(idx)}
                 onClick={(e) => {
                   if (item.disabled) {
@@ -55,8 +65,8 @@ export function NavbarHome({ children }: { children?: ReactNode }) {
                 }}
                 className={`relative px-4 py-2 ${
                   item.disabled
-                    ? "text-neutral-400 dark:text-neutral-600 cursor-not-allowed opacity-50"
-                    : "text-neutral-600 dark:text-neutral-300"
+                    ? 'text-neutral-400 dark:text-neutral-600 cursor-not-allowed opacity-50'
+                    : 'text-neutral-600 dark:text-neutral-300'
                 }`}
               >
                 {hovered === idx && !item.disabled && (
@@ -107,7 +117,7 @@ export function NavbarHome({ children }: { children?: ReactNode }) {
             {navItems.map((item, idx) => (
               <a
                 key={`mobile-link-${idx}`}
-                href={item.disabled ? "#" : item.link}
+                href={item.disabled ? '#' : item.link}
                 onClick={(e) => {
                   if (item.disabled) {
                     e.preventDefault();
@@ -117,8 +127,8 @@ export function NavbarHome({ children }: { children?: ReactNode }) {
                 }}
                 className={`relative ${
                   item.disabled
-                    ? "text-neutral-400 dark:text-neutral-600 cursor-not-allowed opacity-50"
-                    : "text-neutral-600 dark:text-neutral-300"
+                    ? 'text-neutral-400 dark:text-neutral-600 cursor-not-allowed opacity-50'
+                    : 'text-neutral-600 dark:text-neutral-300'
                 }`}
               >
                 <span className="block">{item.name}</span>

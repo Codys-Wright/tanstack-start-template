@@ -195,7 +195,7 @@ const SuccessView: React.FC<{ quizzes: ReadonlyArray<Quiz> }> = ({ quizzes }) =>
     setIsSigningInAnonymously(true);
     console.log('[QuizTaker] No session found, signing in anonymously...');
 
-    signInAnonymously({})
+    signInAnonymously()
       .then(() => {
         console.log('[QuizTaker] Anonymous sign-in successful');
         setIsSigningInAnonymously(false);

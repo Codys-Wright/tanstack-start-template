@@ -2,6 +2,9 @@ import { createFileRoute, redirect } from '@tanstack/react-router';
 
 export const Route = createFileRoute('/account/')({
   beforeLoad: () => {
-    throw redirect({ to: '/account/settings' });
+    throw redirect({
+      to: '/account/$accountView',
+      params: { accountView: 'settings' },
+    });
   },
 });

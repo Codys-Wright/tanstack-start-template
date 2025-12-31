@@ -26,6 +26,11 @@ export interface AccountViewProps {
    */
   showOrganizations?: boolean;
   /**
+   * Whether to show the security section
+   * @default true
+   */
+  showSecurity?: boolean;
+  /**
    * Base path for account routes
    * @default "/account"
    */
@@ -67,6 +72,7 @@ export function AccountView({
   hideNav = false,
   showTeams = false,
   showOrganizations = true,
+  showSecurity = true,
   basePath = '/account',
 }: AccountViewProps) {
   // Determine current view from pathname or prop
@@ -76,7 +82,7 @@ export function AccountView({
   // Build nav items based on feature flags
   const navItems: { view: AccountViewPath; label: string }[] = [
     { view: 'SETTINGS', label: 'Account' },
-    { view: 'SECURITY', label: 'Security' },
+    ...(showSecurity ? [{ view: 'SECURITY' as const, label: 'Security' }] : []),
     // TODO: Conditionally show based on feature flags
     // { view: 'TEAMS', label: 'Teams' },
     ...(showOrganizations ? [{ view: 'ORGANIZATIONS' as const, label: 'Organizations' }] : []),
@@ -127,7 +133,7 @@ export function AccountView({
       {/* Content Area */}
       <div className={cn('flex-1', classNames?.cards)}>
         {view === 'SETTINGS' && <AccountSettingsCards />}
-        {view === 'SECURITY' && <SecuritySettingsCards />}
+        {view === 'SECURITY' && showSecurity && <SecuritySettingsCards />}
         {view === 'TEAMS' && showTeams && <TeamsPlaceholder />}
         {view === 'ORGANIZATIONS' && showOrganizations && (
           <div className="space-y-4 md:space-y-6">

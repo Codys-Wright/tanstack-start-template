@@ -24,17 +24,21 @@ import { createServerFn } from '@tanstack/react-start';
 import * as Cause from 'effect/Cause';
 import * as Effect from 'effect/Effect';
 import * as Exit from 'effect/Exit';
+import * as Schema from 'effect/Schema';
 
 import { ExampleServerRuntime } from '../../../../../core/server/runtime.js';
-import type { Feature } from '../../../domain/index.js';
+import { Feature } from '../../../domain/index.js';
 import { FeatureService } from '../../../server/index.js';
 
 // ============================================================================
 // Types
 // ============================================================================
 
+/** Encoded (JSON-serializable) version of Feature - DateTimeUtc becomes ISO string */
+export type EncodedFeature = typeof Feature.Encoded;
+
 export interface FeatureDetailLoaderData {
-  feature: Feature | null;
+  feature: EncodedFeature | null;
   error: string | null;
 }
 
@@ -47,8 +51,9 @@ export interface FeatureDetailLoaderData {
  *
  * Returns the feature data or an error message.
  */
-export const loadFeatureById = createServerFn({ method: 'GET' }).handler(
-  async (ctx: { data: string }): Promise<FeatureDetailLoaderData> => {
+export const loadFeatureById = createServerFn({ method: 'GET' })
+  .inputValidator((data: string) => data)
+  .handler(async (ctx) => {
     const featureId = ctx.data;
 
     const exit = await ExampleServerRuntime.runPromiseExit(
@@ -70,7 +75,9 @@ export const loadFeatureById = createServerFn({ method: 'GET' }).handler(
     );
 
     if (Exit.isSuccess(exit)) {
-      return { feature: exit.value, error: null };
+      // Encode the Feature to JSON-serializable format (DateTimeUtc -> ISO string)
+      const encodedFeature = Schema.encodeSync(Feature)(exit.value);
+      return { feature: encodedFeature, error: null };
     }
 
     // Handle error case - check if it's a FeatureNotFound error
@@ -86,5 +93,4 @@ export const loadFeatureById = createServerFn({ method: 'GET' }).handler(
       feature: null,
       error: 'An error occurred while loading the feature',
     };
-  },
-);
+  });

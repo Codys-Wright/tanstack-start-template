@@ -84,13 +84,13 @@ export function FeatureDetailPage({ loaderData }: FeatureDetailPageProps) {
             <div>
               <span className="font-medium">Created:</span>
               <span className="ml-2 text-muted-foreground">
-                {new Date(feature.createdAt.epochMillis).toLocaleDateString()}
+                {new Date(feature.createdAt).toLocaleDateString()}
               </span>
             </div>
             <div>
               <span className="font-medium">Updated:</span>
               <span className="ml-2 text-muted-foreground">
-                {new Date(feature.updatedAt.epochMillis).toLocaleDateString()}
+                {new Date(feature.updatedAt).toLocaleDateString()}
               </span>
             </div>
           </div>

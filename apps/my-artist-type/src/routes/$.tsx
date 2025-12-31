@@ -62,14 +62,14 @@ function NotFoundPage() {
                     Home
                   </Button>
                 </Link>
-                <Link to="/about">
+                <Link to="/quiz-taker">
                   <Button variant="ghost" size="sm">
-                    About
+                    Take Quiz
                   </Button>
                 </Link>
-                <Link to="/settings">
+                <Link to="/account/$accountView" params={{ accountView: 'settings' }}>
                   <Button variant="ghost" size="sm">
-                    Settings
+                    Account
                   </Button>
                 </Link>
               </div>

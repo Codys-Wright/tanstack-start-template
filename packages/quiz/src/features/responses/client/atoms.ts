@@ -7,23 +7,17 @@ import * as Effect from 'effect/Effect';
 import * as Option from 'effect/Option';
 import * as Schema from 'effect/Schema';
 import type { QuizId } from '../../quiz/domain/schema.js';
-import {
-  QuizResponse,
-  QuizResponseSummary,
-  ResponseId,
-  UpsertResponsePayload,
-} from '../domain/index.js';
+import { QuizResponse, ResponseId, UpsertResponsePayload } from '../domain/index.js';
 import { ResponsesClient } from './client.js';
 
-// List endpoint returns lightweight summaries (excludes large metadata)
-const ResponsesSchema = Schema.Array(QuizResponseSummary);
+// List endpoint returns responses (metadata/interactionLogs may be undefined for performance)
+const ResponsesSchema = Schema.Array(QuizResponse);
 
 // ============================================================================
 // Query Atoms
 // ============================================================================
 
 type ResponsesCacheUpdate = Data.TaggedEnum<{
-  // Upsert accepts full QuizResponse (from server) and extracts summary fields for cache
   Upsert: { readonly response: QuizResponse };
   Delete: { readonly id: ResponseId };
 }>;
@@ -61,19 +55,13 @@ export const responsesAtom = (() => {
         const nextValue = (() => {
           switch (update._tag) {
             case 'Upsert': {
-              // Convert full response to summary for cache
-              const summary: QuizResponseSummary = {
-                id: update.response.id,
-                quizId: update.response.quizId,
-                answers: update.response.answers,
-                sessionMetadata: update.response.sessionMetadata,
-                createdAt: update.response.createdAt,
-                updatedAt: update.response.updatedAt,
-              };
-              const existingIndex = Arr.findFirstIndex(current.value, (r) => r.id === summary.id);
+              const existingIndex = Arr.findFirstIndex(
+                current.value,
+                (r) => r.id === update.response.id,
+              );
               return Option.match(existingIndex, {
-                onNone: () => Arr.prepend(current.value, summary),
-                onSome: (index) => Arr.replace(current.value, index, summary),
+                onNone: () => Arr.prepend(current.value, update.response),
+                onSome: (index) => Arr.replace(current.value, index, update.response),
               });
             }
             case 'Delete': {

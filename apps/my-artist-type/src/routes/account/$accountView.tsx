@@ -16,7 +16,12 @@ function AccountPage() {
     <div className="container mx-auto py-8 px-4">
       <div className="max-w-4xl mx-auto">
         <h1 className="text-2xl font-bold mb-8">Account Settings</h1>
-        <AccountView pathname={accountView} basePath="/account" showOrganizations={false} />
+        <AccountView
+          pathname={accountView}
+          basePath="/account"
+          showOrganizations={false}
+          showSecurity={false}
+        />
       </div>
     </div>
   );

@@ -46,15 +46,6 @@ export class QuestionResponse extends S.Class<QuestionResponse>('QuestionRespons
   questionContent: S.optional(S.String), // Include question content for content-based matching
 }) {}
 
-// Condensed answer for list views - only questionId and value (no questionContent)
-// Used by QuizResponseSummary to reduce data transfer
-export class QuestionResponseCondensed extends S.Class<QuestionResponseCondensed>(
-  'QuestionResponseCondensed',
-)({
-  questionId: S.String,
-  value: S.Union(S.Number, S.String),
-}) {}
-
 // User interaction log entry
 export class InteractionLog extends S.Class<InteractionLog>('InteractionLog')({
   type: S.Union(S.Literal('navigation'), S.Literal('selection'), S.Literal('submission')),
@@ -92,34 +83,16 @@ export class QuizResponse extends S.Class<QuizResponse>('QuizResponse')({
   // Session tracking
   sessionMetadata: S.parseJson(SessionMetadata),
 
-  // Interaction logging for UX analysis
+  // Interaction logging for UX analysis (optional for list views)
   interactionLogs: S.optional(S.parseJson(S.Array(InteractionLog))),
 
-  //optional metadata - stored as JSON in database
+  // Optional metadata - stored as JSON in database (optional for list views)
   metadata: S.optional(S.NullOr(S.parseJson(ResponseMetadata))),
 
   //Always include a createdAt and UpdatedAt time, but deletedAt is optional for things you want to be able to soft delete
   createdAt: S.DateTimeUtc,
   updatedAt: S.DateTimeUtc,
-  deletedAt: S.NullOr(S.DateTimeUtc),
-}) {}
-
-/**
- * Lightweight response summary for list views and charts.
- * - Excludes the large metadata column (~50KB per row)
- * - Uses condensed answers (questionId + value only, no questionContent)
- * - Reduces data transfer from ~7KB to ~3KB per row
- * Use QuizResponse.findById when you need the full response data including metadata.
- */
-export class QuizResponseSummary extends S.Class<QuizResponseSummary>('QuizResponseSummary')({
-  id: ResponseId,
-  quizId: QuizId,
-  // Condensed answers - only questionId and value (no questionContent)
-  answers: S.optional(S.parseJson(S.Array(QuestionResponseCondensed))),
-  // Include session metadata - small, useful for filtering
-  sessionMetadata: S.parseJson(SessionMetadata),
-  createdAt: S.DateTimeUtc,
-  updatedAt: S.DateTimeUtc,
+  deletedAt: S.optional(S.NullOr(S.DateTimeUtc)),
 }) {}
 
 // Client-side session state that will be converted to QuizResponse

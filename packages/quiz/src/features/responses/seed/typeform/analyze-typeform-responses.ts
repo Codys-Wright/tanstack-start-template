@@ -8,6 +8,7 @@ import { ResponsesRepo } from '../../database/index.js';
 import { PgLive } from '@core/database';
 import * as DateTime from 'effect/DateTime';
 import * as Effect from 'effect/Effect';
+import * as Layer from 'effect/Layer';
 
 // Analysis comparison result
 type AnalysisComparison = {
@@ -210,14 +211,14 @@ const analyzeTypeformResponses = Effect.gen(function* () {
 });
 
 // Run the analysis
-BunRuntime.runMain(
-  analyzeTypeformResponses.pipe(
-    Effect.provide(ResponsesRepo.Default),
-    Effect.provide(AnalysisRepo.Default),
-    Effect.provide(AnalysisEngineRepo.Default),
-    Effect.provide(AnalysisService.Default),
-    Effect.provide(QuizzesRepo.Default),
-    Effect.provide(BunContext.layer),
-    Effect.provide(PgLive),
-  ),
+const AnalysisLive = Layer.mergeAll(
+  ResponsesRepo.Default,
+  AnalysisRepo.Default,
+  AnalysisEngineRepo.Default,
+  AnalysisService.Default,
+  QuizzesRepo.Default,
+  BunContext.layer,
+  PgLive,
 );
+
+BunRuntime.runMain(analyzeTypeformResponses.pipe(Effect.provide(AnalysisLive)));

@@ -6,7 +6,7 @@ import {
 } from '@auth/server';
 import { TodoApiRoutes, TodoRpcLive } from '@todo/server';
 import { ExampleApiLive, ExampleRpcLive } from '@example/server';
-import { QuizApiLive, QuizRpcLive } from '@quiz/server';
+import { QuizRpcLive } from '@quiz/server';
 import * as HttpLayerRouter from '@effect/platform/HttpLayerRouter';
 import * as HttpServerResponse from '@effect/platform/HttpServerResponse';
 import * as RpcSerialization from '@effect/rpc/RpcSerialization';
@@ -43,13 +43,12 @@ const HealthRoute = HttpLayerRouter.use((router) =>
 // Each package provides its own complete route layer with docs:
 // - TodosApiRoutes: /api/todos/* routes + docs at its path
 // - ExampleApiLive: /api/features/* routes + docs at /api/example/docs
-// - QuizApiLive: /api/quiz/* routes + docs at /api/quiz/docs
 // - AuthApiRoutes: /api/auth/* routes
+// Note: Quiz uses RPC only (no HTTP API layer yet)
 const AllRoutes = Layer.mergeAll(
   RpcRouter,
   TodoApiRoutes,
   ExampleApiLive,
-  QuizApiLive,
   HealthRoute,
   BetterAuthRouter,
 ).pipe(

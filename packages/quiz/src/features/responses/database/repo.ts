@@ -4,12 +4,7 @@ import { PgLive } from '@core/database';
 import * as Effect from 'effect/Effect';
 import { flow } from 'effect/Function';
 import * as Schema from 'effect/Schema';
-import {
-  QuizResponse,
-  QuizResponseSummary,
-  ResponseId,
-  ResponseNotFoundError,
-} from '../domain/schema.js';
+import { QuizResponse, ResponseId, ResponseNotFoundError } from '../domain/schema.js';
 import { QuizId } from '../../quiz/domain/schema.js';
 
 //1) Define the Inputs that the repository is expecting, we map these to UpsertPayload because it decouples them like a DTO and lets us
@@ -47,18 +42,16 @@ export class ResponsesRepo extends Effect.Service<ResponsesRepo>()('ResponsesRep
       `,
     });
 
-    // Lightweight list query - excludes large metadata column and strips questionContent from answers
-    // Reduces data transfer from ~7KB to ~3KB per row
-    // Use this for list views and charts where full metadata isn't needed
+    // Lightweight list query - excludes large metadata and interactionLogs columns
+    // Use this for list views and charts where full data isn't needed
     const findAllSummary = SqlSchema.findAll({
-      Result: QuizResponseSummary,
+      Result: QuizResponse,
       Request: Schema.Void,
       execute: () => sql`
         SELECT
           id,
           quiz_id,
-          (SELECT jsonb_agg(jsonb_build_object('questionId', elem->>'questionId', 'value', elem->'value'))
-           FROM jsonb_array_elements(answers) elem) as answers,
+          answers,
           session_metadata,
           created_at,
           updated_at

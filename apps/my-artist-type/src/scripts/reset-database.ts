@@ -29,10 +29,11 @@ const resetDatabase = Effect.gen(function* () {
   yield* Effect.log('[ResetDatabase] Run `bun run db:migrate` to recreate tables.');
 });
 
+const ResetLive = Layer.mergeAll(PgLive, BunContext.layer, Logger.pretty);
+
 await Effect.runPromise(
   resetDatabase.pipe(
-    Effect.provide(Layer.merge(PgLive, BunContext.layer)),
-    Effect.provide(Logger.pretty),
+    Effect.provide(ResetLive),
     Effect.tapError((error) => Effect.logError(`[ResetDatabase] Failed: ${error}`)),
     Effect.orDie,
   ),

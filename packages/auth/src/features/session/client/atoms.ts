@@ -629,3 +629,31 @@ export const isAnonymousAtom = Atom.readable((get) => {
   // Check if user has isAnonymous flag set
   return (session.user as { isAnonymous?: boolean }).isAnonymous === true;
 });
+
+/**
+ * isAdminAtom - Derived atom that checks if current user has admin role
+ *
+ * @example
+ * ```tsx
+ * const isAdmin = useAtomValue(isAdminAtom);
+ *
+ * if (isAdmin) {
+ *   // Show admin-only UI
+ * }
+ * ```
+ */
+export const isAdminAtom = Atom.readable((get) => {
+  const sessionResult = get(sessionAtom);
+
+  if (!Result.isSuccess(sessionResult)) {
+    return false;
+  }
+
+  const session = sessionResult.value;
+  if (!session?.user) {
+    return false;
+  }
+
+  const role = session.user.role;
+  return role === 'admin';
+});

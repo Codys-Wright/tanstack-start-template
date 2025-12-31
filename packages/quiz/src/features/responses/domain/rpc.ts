@@ -4,7 +4,6 @@ import * as Schema from 'effect/Schema';
 import { QuizId } from '../../quiz/domain/schema.js';
 import {
   QuizResponse,
-  QuizResponseSummary,
   ResponseId,
   UpsertResponsePayload,
   ResponseNotFoundError,
@@ -12,9 +11,9 @@ import {
 } from './schema.js';
 
 export class ResponsesRpc extends RpcGroup.make(
-  // List returns lightweight summary (excludes large metadata column)
+  // List returns responses (excludes large metadata/interactionLogs columns for performance)
   Rpc.make('list', {
-    success: Schema.Array(QuizResponseSummary),
+    success: Schema.Array(QuizResponse),
   }),
 
   Rpc.make('getById', {

@@ -4,6 +4,7 @@ import { QuizzesRepo } from '../../../quiz/database/index.js';
 import { ResponsesRepo } from '../../database/index.js';
 import { PgLive } from '@core/database';
 import * as Effect from 'effect/Effect';
+import * as Layer from 'effect/Layer';
 import { getTypeformResponseSeedData } from './seed-typeform-responses.js';
 
 /**
@@ -72,12 +73,16 @@ const seedTypeformResponses = Effect.gen(function* () {
 });
 
 // Run the seeding script
+const SeedLive = Layer.mergeAll(
+  ResponsesRepo.Default,
+  QuizzesRepo.Default,
+  BunContext.layer,
+  PgLive,
+);
+
 BunRuntime.runMain(
   seedTypeformResponses.pipe(
-    Effect.provide(ResponsesRepo.Default),
-    Effect.provide(QuizzesRepo.Default),
-    Effect.provide(BunContext.layer),
-    Effect.provide(PgLive),
+    Effect.provide(SeedLive),
     Effect.catchAll((error) =>
       Effect.gen(function* () {
         yield* Effect.logError(`Seeding failed: ${error}`);
