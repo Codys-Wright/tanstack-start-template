@@ -36,7 +36,7 @@ type PageContainerProps = {
 };
 
 const PageContainer: React.FC<PageContainerProps> = ({ children }) => (
-  <div className="relative w-full px-4 pt-24 pb-8">{children}</div>
+  <div className="relative w-full px-4 pb-8">{children}</div>
 );
 
 // Quiz Taker State Atoms are now imported from quiz-taker-atoms.js

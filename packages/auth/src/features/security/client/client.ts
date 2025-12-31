@@ -160,7 +160,9 @@ export class SecurityApi extends Effect.Service<SecurityApi>()('@features/auth/S
     listSessions: () =>
       Effect.tryPromise({
         try: async () => {
+          console.log('[SecurityApi] listSessions - calling authClient.listSessions()');
           const result = await authClient.listSessions();
+          console.log('[SecurityApi] listSessions - result:', result);
           if (result.error) {
             throw new Error(result.error.message || 'Failed to list sessions');
           }
@@ -220,6 +222,21 @@ export class SecurityApi extends Effect.Service<SecurityApi>()('@features/auth/S
           return result.data;
         },
         catch: (error) => new Error(`Failed to unlink account: ${error}`),
+      }),
+
+    linkSocial: (provider: 'google', callbackURL?: string) =>
+      Effect.tryPromise({
+        try: async () => {
+          const result = await authClient.linkSocial({
+            provider,
+            callbackURL: callbackURL || window.location.href,
+          });
+          if (result.error) {
+            throw new Error(result.error.message || 'Failed to link account');
+          }
+          return result.data;
+        },
+        catch: (error) => new Error(`Failed to link account: ${error}`),
       }),
   })),
 }) {}

@@ -18,10 +18,7 @@ export {
 } from './core/server/service.js';
 
 // ============================================================================
-// Effect HttpApi - Typed authentication API (server implementations)
+// Feature Services - Effect services for server-side auth operations
 // ============================================================================
-export * from './core/auth-api.js';
-export * from './core/server/auth-api-live.js';
-export * from './core/server/auth-api-routes.js';
-export * from './features/session/session-api-live.js';
-export * from './features/account/account-api-live.js';
+export { UserService } from './features/user/server/service.js';
+export { SessionService } from './features/session/server/session-service.js';

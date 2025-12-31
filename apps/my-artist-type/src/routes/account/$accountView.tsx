@@ -1,7 +1,5 @@
 import { AccountView } from '@auth';
-import { createFileRoute, redirect } from '@tanstack/react-router';
-import { Result } from '@effect-atom/atom-react';
-import { sessionAtom } from '@auth/features/session/client/atoms';
+import { createFileRoute } from '@tanstack/react-router';
 
 export const Route = createFileRoute('/account/$accountView')({
   beforeLoad: async ({ context }) => {
@@ -18,7 +16,7 @@ function AccountPage() {
     <div className="container mx-auto py-8 px-4">
       <div className="max-w-4xl mx-auto">
         <h1 className="text-2xl font-bold mb-8">Account Settings</h1>
-        <AccountView pathname={accountView} basePath="/account" />
+        <AccountView pathname={accountView} basePath="/account" showOrganizations={false} />
       </div>
     </div>
   );

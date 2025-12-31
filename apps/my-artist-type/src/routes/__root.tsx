@@ -1,7 +1,5 @@
 import { RegistryProvider } from '@effect-atom/atom-react';
 import { HeadContent, Outlet, Scripts, createRootRoute, useLocation } from '@tanstack/react-router';
-import { TanStackDevtools } from '@tanstack/react-devtools';
-import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools';
 import { getThemeScriptContent, ThemeProvider, ThemeSystemProviderWithContext } from '@theme';
 import { NavbarHome } from '../features/landing/navbar';
 import appCss from '../styles.css?url';
@@ -54,6 +52,8 @@ function RootComponent() {
 
   // Check if we're on an admin route (no navbar needed)
   const isAdminRoute = location.pathname.startsWith('/admin');
+  // Home page doesn't need top spacing (hero section handles it)
+  const isHomePage = location.pathname === '/';
 
   return (
     <>
@@ -61,7 +61,10 @@ function RootComponent() {
         <Outlet />
       ) : (
         <NavbarHome>
-          <Outlet />
+          {/* Add top spacing for all pages except home (navbar is fixed) */}
+          <div className={isHomePage ? '' : 'pt-24'}>
+            <Outlet />
+          </div>
         </NavbarHome>
       )}
     </>

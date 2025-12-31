@@ -166,3 +166,16 @@ export const unlinkAccountAtom = securityRuntime.fn<{
     return yield* api.unlinkAccount(input.providerId, input.accountId);
   }),
 );
+
+/**
+ * linkSocialAtom - Link a social OAuth provider account
+ */
+export const linkSocialAtom = securityRuntime.fn<{
+  provider: 'google';
+  callbackURL?: string;
+}>()(
+  Effect.fnUntraced(function* (input) {
+    const api = yield* SecurityApi;
+    return yield* api.linkSocial(input.provider, input.callbackURL);
+  }),
+);

@@ -11,10 +11,6 @@
 // Core - Client
 // ============================================================================
 export { authClient } from './core/client/client.js';
-export {
-  AuthApiClient,
-  AuthApiClientLive,
-} from './core/client/auth-api-client.js';
 
 // ============================================================================
 // Components - Conditional Wrappers
@@ -36,8 +32,6 @@ export * from './features/user/client/presentation/components/user-view.js';
 // ============================================================================
 export * from './features/session/domain/schema.js';
 export * from './features/session/client/atoms.js';
-export { SessionApiGroup } from './features/session/domain/api.js';
-export { AuthApi } from './core/auth-api.js';
 export * from './features/session/ui/auth-view.js';
 export * from './features/session/ui/sign-in-form.js';
 export * from './features/session/ui/sign-up-form.js';
@@ -48,32 +42,17 @@ export * from './features/session/ui/two-factor-form.js';
 // Account - Domain & UI
 // ============================================================================
 export * from './features/account/domain/schema.js';
-export { AccountApiGroup } from './features/account/domain/api.js';
 export * from './features/account/ui/forgot-password-form.js';
 export * from './features/account/ui/reset-password-form.js';
 export * from './features/account/ui/recover-account-form.js';
 export * from './features/account/ui/account-view.js';
 export * from './features/account/ui/account-settings-cards.js';
-export * from './features/account/ui/change-email-card.js';
-export * from './features/account/ui/update-avatar-card.js';
-export * from './features/account/ui/update-name-card.js';
 export * from './features/account/ui/security-settings-cards.js';
-export * from './features/account/ui/settings-card.js';
-export * from './features/account/ui/api-keys-card.js';
 
 // ============================================================================
 // Security - Domain, Client & Atoms
 // ============================================================================
-export {
-  SecurityApiGroup,
-  EnableTwoFactorInput,
-  RevokeSessionInput,
-  UnlinkAccountInput,
-  ListPasskeysResult,
-  ListSessionsResult,
-  ListAccountsResult,
-  // Re-export only unique schemas - ChangePasswordInput and DeleteAccountInput are already exported from account
-} from './features/security/domain/api.js';
+export * from './features/security/domain/schema.js';
 export * from './features/security/client/atoms.js';
 
 // ============================================================================

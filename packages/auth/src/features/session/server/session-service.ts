@@ -205,8 +205,9 @@ export class SessionService extends Effect.Service<SessionService>()('SessionSer
        */
       signInAnonymous: (headers: Headers): Effect.Effect<AnonymousSignInResponse, AuthError> =>
         Effect.gen(function* () {
+          // Anonymous plugin method
           const response = yield* Effect.tryPromise({
-            try: () => auth.api.signInAnonymous({ headers }),
+            try: () => (auth.api as any).signInAnonymous({ headers }),
             catch: toAuthError,
           });
 

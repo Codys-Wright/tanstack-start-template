@@ -16,13 +16,12 @@ import { Unauthenticated, type SessionData } from '@auth/features/session/index'
 import type { UserId } from '@auth/features/user/domain/index';
 import { AuthConfig } from '@auth/core/config';
 import { AuthDatabase } from '@auth/core/database';
-import type { BetterAuthInstance, BetterAuthApi } from '@auth/core/auth-types';
 
 // Re-export for backwards compatibility with existing server code
 export { Unauthenticated };
 
-// Re-export types for consumers
-export type { BetterAuthInstance, BetterAuthApi };
+// Type for the Better Auth instance
+export type BetterAuthInstance = ReturnType<typeof betterAuth>;
 
 // ============================================================================
 // Auth Service
@@ -240,9 +239,8 @@ const makeAuthService = Effect.gen(function* () {
   const { runMigrations } = yield* Effect.promise(() => getMigrations(options));
   yield* Effect.promise(runMigrations);
 
-  // Create the auth instance and cast to our typed version
-  // The runtime behavior is identical, but now TypeScript knows about all plugin methods
-  const auth = betterAuth(options) as unknown as BetterAuthInstance;
+  // Create the auth instance
+  const auth = betterAuth(options);
 
   return {
     ...auth,

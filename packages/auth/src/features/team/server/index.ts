@@ -1,2 +1,1 @@
-export { TeamService } from './service';
-export { TeamApiLive } from './api-live';
+export * from "./service";

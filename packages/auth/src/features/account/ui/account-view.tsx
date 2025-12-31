@@ -2,7 +2,6 @@ import { cn, Button } from '@shadcn';
 import { Link } from '@tanstack/react-router';
 import { AccountSettingsCards } from './account-settings-cards.js';
 import { SecuritySettingsCards } from './security-settings-cards.js';
-import { ApiKeysCard } from './api-keys-card.js';
 import { OrganizationsCard } from '@auth/features/organization/ui/organizations-card.js';
 import { UserInvitationsCard } from '@auth/features/invitation/ui/user-invitations-card.js';
 
@@ -21,6 +20,11 @@ export interface AccountViewProps {
   view?: AccountViewPath;
   hideNav?: boolean;
   showTeams?: boolean;
+  /**
+   * Whether to show the organizations section
+   * @default true
+   */
+  showOrganizations?: boolean;
   /**
    * Base path for account routes
    * @default "/account"
@@ -62,20 +66,20 @@ export function AccountView({
   view: viewProp,
   hideNav = false,
   showTeams = false,
+  showOrganizations = true,
   basePath = '/account',
 }: AccountViewProps) {
   // Determine current view from pathname or prop
   const path = pathname?.split('/').pop();
   const view = viewProp || getViewByPath(path) || 'SETTINGS';
 
-  // TODO: Add configuration for which nav items to show
+  // Build nav items based on feature flags
   const navItems: { view: AccountViewPath; label: string }[] = [
     { view: 'SETTINGS', label: 'Account' },
     { view: 'SECURITY', label: 'Security' },
     // TODO: Conditionally show based on feature flags
     // { view: 'TEAMS', label: 'Teams' },
-    // { view: 'API_KEYS', label: 'API Keys' },
-    { view: 'ORGANIZATIONS', label: 'Organizations' },
+    ...(showOrganizations ? [{ view: 'ORGANIZATIONS' as const, label: 'Organizations' }] : []),
   ];
 
   return (
@@ -125,8 +129,7 @@ export function AccountView({
         {view === 'SETTINGS' && <AccountSettingsCards />}
         {view === 'SECURITY' && <SecuritySettingsCards />}
         {view === 'TEAMS' && showTeams && <TeamsPlaceholder />}
-        {view === 'API_KEYS' && <ApiKeysCard />}
-        {view === 'ORGANIZATIONS' && (
+        {view === 'ORGANIZATIONS' && showOrganizations && (
           <div className="space-y-4 md:space-y-6">
             <OrganizationsCard />
             <UserInvitationsCard />

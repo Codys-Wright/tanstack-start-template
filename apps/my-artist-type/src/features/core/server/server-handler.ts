@@ -3,7 +3,6 @@ import {
   BetterAuthRouter,
   RpcAuthenticationMiddlewareLive,
   AuthService,
-  AuthApiRoutes,
 } from '@auth/server';
 import { TodoApiRoutes, TodoRpcLive } from '@todo/server';
 import { ExampleApiLive, ExampleRpcLive } from '@example/server';
