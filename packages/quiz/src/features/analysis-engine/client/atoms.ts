@@ -168,20 +168,24 @@ export const autoSaveTempEngineAtom = AnalysisEngineClient.runtime.fn<{
 
     if (!engine.isTemp) return engine;
 
+    // UpsertAnalysisEnginePayload expects scoringConfig and endings as JSON strings
+    const rawEngineInput = {
+      id: engine.id,
+      name: engine.name,
+      quizId: engine.quizId,
+      version: engine.version,
+      description: engine.description ?? undefined,
+      scoringConfig: JSON.stringify(engine.scoringConfig),
+      endings: JSON.stringify(engine.endings),
+      metadata: engine.metadata ? JSON.stringify(engine.metadata) : undefined,
+      isActive: engine.isActive,
+      isPublished: false,
+      isTemp: true,
+    };
+    const engineInput = Schema.decodeUnknownSync(UpsertAnalysisEnginePayload)(rawEngineInput);
+
     const updatedEngine = yield* client('engine_upsert', {
-      input: {
-        id: engine.id,
-        name: engine.name,
-        quizId: engine.quizId,
-        version: engine.version,
-        description: engine.description ?? undefined,
-        scoringConfig: engine.scoringConfig,
-        endings: engine.endings,
-        metadata: engine.metadata ?? undefined,
-        isActive: engine.isActive,
-        isPublished: false,
-        isTemp: true,
-      },
+      input: engineInput,
     });
 
     get.set(enginesAtom, { _tag: 'Upsert', engine: updatedEngine });
