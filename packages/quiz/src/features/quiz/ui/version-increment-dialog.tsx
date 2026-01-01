@@ -1,43 +1,60 @@
-import { Button, Dialog, Label, Textarea } from "@shadcn";
-import { ArrowUpIcon, GitBranchIcon } from "lucide-react";
-import React from "react";
+import { Button, Dialog, Label, Textarea } from '@shadcn';
+import { ArrowUpIcon, GitBranchIcon } from 'lucide-react';
+import React from 'react';
 
 // Semver increment utilities
-export const incrementSemver = (version: string, type: "major" | "minor" | "patch"): string => {
-  const [major, minor, patch] = version.split(".").map(Number);
+export const incrementSemver = (version: string, type: 'major' | 'minor' | 'patch'): string => {
+  const [major, minor, patch] = version.split('.').map(Number);
 
   switch (type) {
-    case "major":
+    case 'major':
       return `${(major ?? 0) + 1}.0.0`;
-    case "minor":
+    case 'minor':
       return `${major ?? 0}.${(minor ?? 0) + 1}.0`;
-    case "patch":
+    case 'patch':
       return `${major ?? 0}.${minor ?? 0}.${(patch ?? 0) + 1}`;
     default:
       return version;
   }
 };
 
-export const getVersionDescription = (type: "major" | "minor" | "patch"): string => {
+// Find the next available version that doesn't conflict with existing versions
+export const findNextAvailableVersion = (
+  currentVersion: string,
+  type: 'major' | 'minor' | 'patch',
+  existingVersions: string[],
+): string => {
+  let candidate = incrementSemver(currentVersion, type);
+
+  // Keep incrementing until we find a version that doesn't exist
+  while (existingVersions.includes(candidate)) {
+    candidate = incrementSemver(candidate, type);
+  }
+
+  return candidate;
+};
+
+export const getVersionDescription = (type: 'major' | 'minor' | 'patch'): string => {
   switch (type) {
-    case "major":
-      return "Breaking changes, incompatible API changes";
-    case "minor":
-      return "New features, backwards compatible";
-    case "patch":
-      return "Bug fixes, backwards compatible";
+    case 'major':
+      return 'Breaking changes, incompatible API changes';
+    case 'minor':
+      return 'New features, backwards compatible';
+    case 'patch':
+      return 'Bug fixes, backwards compatible';
     default:
-      return "";
+      return '';
   }
 };
 
 type VersionIncrementDialogProps = {
   currentVersion: string;
+  existingVersions?: string[];
   isOpen: boolean;
   onClose: () => void;
   onConfirm: (
     newVersion: string,
-    incrementType: "major" | "minor" | "patch",
+    incrementType: 'major' | 'minor' | 'patch',
     comment?: string,
   ) => void;
   title?: string;
@@ -45,15 +62,16 @@ type VersionIncrementDialogProps = {
 
 export const VersionIncrementDialog: React.FC<VersionIncrementDialogProps> = ({
   currentVersion,
+  existingVersions = [],
   isOpen,
   onClose,
   onConfirm,
-  title = "Create New Version",
+  title = 'Create New Version',
 }) => {
-  const [selectedType, setSelectedType] = React.useState<"major" | "minor" | "patch">("patch");
-  const [comment, setComment] = React.useState("");
+  const [selectedType, setSelectedType] = React.useState<'major' | 'minor' | 'patch'>('patch');
+  const [comment, setComment] = React.useState('');
 
-  const newVersion = incrementSemver(currentVersion, selectedType);
+  const newVersion = findNextAvailableVersion(currentVersion, selectedType, existingVersions);
 
   const handleConfirm = () => {
     onConfirm(newVersion, selectedType, comment.trim().length > 0 ? comment.trim() : undefined);
@@ -61,7 +79,7 @@ export const VersionIncrementDialog: React.FC<VersionIncrementDialogProps> = ({
   };
 
   const handleClose = () => {
-    setComment(""); // Reset comment when closing
+    setComment(''); // Reset comment when closing
     onClose();
   };
 
@@ -108,18 +126,18 @@ export const VersionIncrementDialog: React.FC<VersionIncrementDialogProps> = ({
                     id="patch"
                     name="versionType"
                     value="patch"
-                    checked={selectedType === "patch"}
+                    checked={selectedType === 'patch'}
                     onChange={(e) => {
-                      setSelectedType(e.target.value as "major" | "minor" | "patch");
+                      setSelectedType(e.target.value as 'major' | 'minor' | 'patch');
                     }}
                     className="mt-1 h-4 w-4 text-primary focus:ring-2 focus:ring-primary"
                   />
                   <div className="grid gap-1.5 leading-none">
                     <Label htmlFor="patch" className="font-medium cursor-pointer">
-                      Patch ({incrementSemver(currentVersion, "patch")})
+                      Patch ({findNextAvailableVersion(currentVersion, 'patch', existingVersions)})
                     </Label>
                     <p className="text-xs text-muted-foreground">
-                      {getVersionDescription("patch")}
+                      {getVersionDescription('patch')}
                     </p>
                   </div>
                 </div>
@@ -130,18 +148,18 @@ export const VersionIncrementDialog: React.FC<VersionIncrementDialogProps> = ({
                     id="minor"
                     name="versionType"
                     value="minor"
-                    checked={selectedType === "minor"}
+                    checked={selectedType === 'minor'}
                     onChange={(e) => {
-                      setSelectedType(e.target.value as "major" | "minor" | "patch");
+                      setSelectedType(e.target.value as 'major' | 'minor' | 'patch');
                     }}
                     className="mt-1 h-4 w-4 text-primary focus:ring-2 focus:ring-primary"
                   />
                   <div className="grid gap-1.5 leading-none">
                     <Label htmlFor="minor" className="font-medium cursor-pointer">
-                      Minor ({incrementSemver(currentVersion, "minor")})
+                      Minor ({findNextAvailableVersion(currentVersion, 'minor', existingVersions)})
                     </Label>
                     <p className="text-xs text-muted-foreground">
-                      {getVersionDescription("minor")}
+                      {getVersionDescription('minor')}
                     </p>
                   </div>
                 </div>
@@ -152,18 +170,18 @@ export const VersionIncrementDialog: React.FC<VersionIncrementDialogProps> = ({
                     id="major"
                     name="versionType"
                     value="major"
-                    checked={selectedType === "major"}
+                    checked={selectedType === 'major'}
                     onChange={(e) => {
-                      setSelectedType(e.target.value as "major" | "minor" | "patch");
+                      setSelectedType(e.target.value as 'major' | 'minor' | 'patch');
                     }}
                     className="mt-1 h-4 w-4 text-primary focus:ring-2 focus:ring-primary"
                   />
                   <div className="grid gap-1.5 leading-none">
                     <Label htmlFor="major" className="font-medium cursor-pointer">
-                      Major ({incrementSemver(currentVersion, "major")})
+                      Major ({findNextAvailableVersion(currentVersion, 'major', existingVersions)})
                     </Label>
                     <p className="text-xs text-muted-foreground">
-                      {getVersionDescription("major")}
+                      {getVersionDescription('major')}
                     </p>
                   </div>
                 </div>
