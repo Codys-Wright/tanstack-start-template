@@ -1,6 +1,9 @@
-import { RpcProtocol } from '@core/client/rpc-config';
+import { makeRpcConfigLayer } from '@core/client/rpc-config';
 import { AtomRpc } from '@effect-atom/atom-react';
 import { AnalysisEngineRpc } from '../domain/index.js';
+
+// Create a fresh protocol layer for this client to avoid sharing issues
+const EngineRpcProtocol = makeRpcConfigLayer('/api/rpc');
 
 /**
  * AnalysisEngineClient - RPC client for the Analysis Engine feature.
@@ -16,6 +19,6 @@ export class AnalysisEngineClient extends AtomRpc.Tag<AnalysisEngineClient>()(
   '@quiz/AnalysisEngineClient',
   {
     group: AnalysisEngineRpc,
-    protocol: RpcProtocol,
+    protocol: EngineRpcProtocol,
   },
 ) {}

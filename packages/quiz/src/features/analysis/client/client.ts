@@ -1,6 +1,9 @@
-import { RpcProtocol } from '@core/client/rpc-config';
+import { makeRpcConfigLayer } from '@core/client/rpc-config';
 import { AtomRpc } from '@effect-atom/atom-react';
 import { AnalysisRpc } from '../domain/index.js';
+
+// Create a fresh protocol layer for this client to avoid sharing issues
+const AnalysisRpcProtocol = makeRpcConfigLayer('/api/rpc');
 
 /**
  * AnalysisClient - RPC client for the Analysis feature.
@@ -14,5 +17,5 @@ import { AnalysisRpc } from '../domain/index.js';
  */
 export class AnalysisClient extends AtomRpc.Tag<AnalysisClient>()('@quiz/AnalysisClient', {
   group: AnalysisRpc,
-  protocol: RpcProtocol,
+  protocol: AnalysisRpcProtocol,
 }) {}
