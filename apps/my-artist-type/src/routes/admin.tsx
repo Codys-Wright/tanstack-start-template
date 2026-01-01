@@ -27,8 +27,8 @@ import React from 'react';
 const AdminLayoutContent: React.FC = () => {
   const location = useLocation();
 
-  // Check if we're on the quiz-editor route
-  const isQuizEditorRoute = location.pathname === '/admin/quiz-editor';
+  // Check if we're on a child route (not the main /admin dashboard)
+  const isChildRoute = location.pathname !== '/admin';
 
   // Control sidebar state with atom - prevent hydration mismatch
   const [isHydrated, setIsHydrated] = React.useState(false);
@@ -66,10 +66,10 @@ const AdminLayoutContent: React.FC = () => {
           <div className="@container/main flex flex-1 flex-col gap-2">
             <div
               className={`flex flex-col gap-4 ${
-                !isQuizEditorRoute ? 'py-4 md:py-6' : ''
+                !isChildRoute ? 'py-4 md:py-6' : ''
               } md:gap-6 relative`}
             >
-              {!isQuizEditorRoute && (
+              {!isChildRoute && (
                 <>
                   {/* Sidebar Toggle Button */}
                   <Button
