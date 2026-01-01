@@ -1,19 +1,22 @@
 'use client';
 
-import { Atom } from '@effect-atom/atom-react';
+import { Atom, Result, useAtomValue } from '@effect-atom/atom-react';
 import * as BrowserKeyValueStore from '@effect/platform-browser/BrowserKeyValueStore';
 import {
   IconBuilding,
   IconChartBar,
   IconDashboard,
+  IconEdit,
   IconFileText,
+  IconPlayerPlay,
   IconSettings,
   IconUsers,
 } from '@tabler/icons-react';
 import * as Schema from 'effect/Schema';
 import * as React from 'react';
 
-import { NavMain, NavSecondary, NavUser, Sidebar } from '@shadcn';
+import { sessionAtom } from '@auth';
+import { NavMain, NavSecondary, NavUser, Sidebar, Skeleton } from '@shadcn';
 
 // Create a runtime for localStorage atoms
 const localStorageRuntime = Atom.runtime(BrowserKeyValueStore.layerLocalStorage);
@@ -26,17 +29,22 @@ export const adminSidebarVisibleAtom = Atom.kvs({
   defaultValue: () => true,
 });
 
-const adminData = {
-  user: {
-    name: 'Admin User',
-    email: 'admin@example.com',
-    avatar: '/placeholder-avatar.png',
-  },
+const adminNavData = {
   navMain: [
     {
       title: 'Dashboard',
       url: '/admin',
       icon: IconDashboard,
+    },
+    {
+      title: 'Current Quiz',
+      url: '/admin/current-quiz',
+      icon: IconPlayerPlay,
+    },
+    {
+      title: 'Quiz Editor',
+      url: '/admin/quiz-editor',
+      icon: IconEdit,
     },
     {
       title: 'Quiz Responses',
@@ -78,6 +86,51 @@ const adminData = {
   ],
 };
 
+/**
+ * Skeleton loading state for the NavUser component
+ */
+function NavUserSkeleton() {
+  return (
+    <Sidebar.Menu>
+      <Sidebar.MenuItem>
+        <div className="flex items-center gap-2 px-2 py-1.5">
+          <Skeleton className="h-8 w-8 rounded-lg" />
+          <div className="grid flex-1 gap-1">
+            <Skeleton className="h-4 w-24" />
+            <Skeleton className="h-3 w-32" />
+          </div>
+        </div>
+      </Sidebar.MenuItem>
+    </Sidebar.Menu>
+  );
+}
+
+/**
+ * NavUser component that displays the current authenticated user's info
+ */
+function NavUserWithSession() {
+  const sessionResult = useAtomValue(sessionAtom);
+
+  // Show skeleton while loading
+  if (!Result.isSuccess(sessionResult)) {
+    return <NavUserSkeleton />;
+  }
+
+  // Show skeleton if no user data yet
+  if (!sessionResult.value?.user) {
+    return <NavUserSkeleton />;
+  }
+
+  const authUser = sessionResult.value.user;
+  const user = {
+    name: authUser.name || 'Unknown User',
+    email: authUser.email || '',
+    avatar: authUser.image || '/placeholder-avatar.png',
+  };
+
+  return <NavUser user={user} />;
+}
+
 export function AdminSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="offcanvas" {...props}>
@@ -100,11 +153,11 @@ export function AdminSidebar({ ...props }: React.ComponentProps<typeof Sidebar>)
         </Sidebar.Menu>
       </Sidebar.Header>
       <Sidebar.Content>
-        <NavMain items={adminData.navMain} />
-        <NavSecondary items={adminData.navSecondary} className="mt-auto" />
+        <NavMain items={adminNavData.navMain} />
+        <NavSecondary items={adminNavData.navSecondary} className="mt-auto" />
       </Sidebar.Content>
       <Sidebar.Footer>
-        <NavUser user={adminData.user} />
+        <NavUserWithSession />
       </Sidebar.Footer>
     </Sidebar>
   );

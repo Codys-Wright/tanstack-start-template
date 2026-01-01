@@ -1,6 +1,7 @@
 // Admin Components Exports
 export { AdminSidebar, adminSidebarVisibleAtom } from './AdminSidebar.js';
 export { AnalysisChart } from './AnalysisChart.js';
+export { CurrentQuizPage } from './CurrentQuizPage.js';
 export { ResponsesOverTimeChart } from './ResponsesOverTimeChart.js';
 export {
   ResponsesTable,
