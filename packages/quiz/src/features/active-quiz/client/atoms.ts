@@ -3,6 +3,7 @@
 
 import { serializable } from '@core/client/atom-utils';
 import { Atom, Result } from '@effect-atom/atom-react';
+import * as BrowserKeyValueStore from '@effect/platform-browser/BrowserKeyValueStore';
 import * as RpcClientError from '@effect/rpc/RpcClientError';
 import * as Arr from 'effect/Array';
 import * as Data from 'effect/Data';
@@ -388,6 +389,24 @@ export const devPanelVisibleAtom = Atom.writable(
 );
 
 // ============================================================================
+// Last Response ID (localStorage-persisted)
+// ============================================================================
+
+// Create a runtime for localStorage atoms
+const localStorageRuntime = Atom.runtime(BrowserKeyValueStore.layerLocalStorage);
+
+/**
+ * localStorage-persisted atom for the user's last quiz response ID.
+ * Used to show "Your Results" instead of "Take the Quiz" in the navbar.
+ */
+export const lastResponseIdAtom = Atom.kvs({
+  runtime: localStorageRuntime,
+  key: 'my-artist-type:last-response-id',
+  schema: Schema.NullOr(Schema.String),
+  defaultValue: () => null,
+});
+
+// ============================================================================
 // Quiz Submission Atoms (RPC-based)
 // ============================================================================
 
@@ -497,6 +516,9 @@ export const submitQuizAndAnalyzeAtom = ResponsesClient.runtime.fn<{
       },
       logs: interactionLogs as unknown as Array<InteractionLog>,
     });
+
+    // Save response ID to localStorage for "Your Results" navbar link
+    get.set(lastResponseIdAtom, savedResponse.id);
 
     return {
       responseId: savedResponse.id,

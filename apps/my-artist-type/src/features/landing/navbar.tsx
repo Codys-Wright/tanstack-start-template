@@ -10,6 +10,7 @@ import {
   NavBody,
 } from '@components';
 import { SignedIn, SignedOut, UserButton, isAdminAtom } from '@auth';
+import { lastResponseIdAtom } from '@quiz';
 import { ModeToggle } from '@theme';
 import { motion } from 'motion/react';
 import { useState, type ReactNode, useMemo } from 'react';
@@ -17,6 +18,12 @@ import { useAtomValue } from '@effect-atom/atom-react';
 
 export function NavbarHome({ children }: { children?: ReactNode }) {
   const isAdmin = useAtomValue(isAdminAtom);
+  const lastResponseId = useAtomValue(lastResponseIdAtom);
+
+  // Determine if user has taken the quiz before
+  const hasResults = lastResponseId !== null;
+  const quizButtonText = hasResults ? 'Your Results' : 'Take the Quiz!';
+  const quizButtonLink = hasResults ? `/my-response/${lastResponseId}` : '/quiz';
 
   const navItems = useMemo(
     () => [
@@ -88,8 +95,8 @@ export function NavbarHome({ children }: { children?: ReactNode }) {
             <SignedIn>
               <UserButton size="icon" />
             </SignedIn>
-            <NavbarButton href="/quiz" variant="primary">
-              Take the Quiz!
+            <NavbarButton href={quizButtonLink} variant="primary">
+              {quizButtonText}
             </NavbarButton>
             <div className="relative z-[70]">
               <ModeToggle />
@@ -153,14 +160,14 @@ export function NavbarHome({ children }: { children?: ReactNode }) {
                 </div>
               </SignedIn>
               <NavbarButton
-                href="/quiz"
+                href={quizButtonLink}
                 onClick={() => {
                   setIsMobileMenuOpen(false);
                 }}
                 variant="primary"
                 className="w-full"
               >
-                Take the Quiz!
+                {quizButtonText}
               </NavbarButton>
             </div>
           </MobileNavMenu>
