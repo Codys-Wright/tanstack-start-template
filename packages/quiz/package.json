@@ -64,7 +64,7 @@
     "culori": "*",
     "effect": "*",
     "lucide-react": "*",
-    "motion": "*",
+    "motion": "^12.23.26",
     "pg": "*",
     "react": "*",
     "react-day-picker": "*",

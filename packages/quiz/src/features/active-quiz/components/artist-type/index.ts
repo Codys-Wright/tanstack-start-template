@@ -1,6 +1,7 @@
 // Main components
 export { ArtistBarChart } from './artist-bar-chart.js';
 export { ArtistRadarChart } from './artist-radar-chart.js';
+export { ArtistTypeAmbientBackground } from './artist-type-ambient-background.js';
 export { ArtistTypeGraphCard } from './artist-type-graph-card.js';
 
 // Utilities and hooks

@@ -408,6 +408,7 @@
       "name": "@quiz",
       "version": "0.0.1",
       "dependencies": {
+        "@auth": "*",
         "@core": "*",
         "@dnd-kit/core": "*",
         "@dnd-kit/modifiers": "*",
@@ -447,7 +448,7 @@
         "culori": "*",
         "effect": "*",
         "lucide-react": "*",
-        "motion": "*",
+        "motion": "^12.23.26",
         "pg": "*",
         "react": "*",
         "react-day-picker": "*",

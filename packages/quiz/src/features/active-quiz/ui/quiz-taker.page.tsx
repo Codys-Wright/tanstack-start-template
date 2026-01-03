@@ -1,13 +1,16 @@
 import { Result, useAtomRefresh, useAtomSet, useAtomValue } from '@effect-atom/atom-react';
 import { HydrationBoundary } from '@effect-atom/atom-react/ReactHydration';
-import { sessionAtom, signInAnonymouslyAtom } from '@auth';
+import { isAdminAtom, sessionAtom, signInAnonymouslyAtom } from '@auth';
 import { activeQuizzesAtom } from '../client/atoms.js';
 import type { Question } from '@/features/quiz/questions/schema.js';
 import type { Quiz } from '@/features/quiz/domain/schema.js';
-import { Button, Card, DropdownMenu } from '@shadcn';
+import { Button, Card, cn, DropdownMenu } from '@shadcn';
 import { SettingsIcon } from 'lucide-react';
 import React from 'react';
-import { ArtistTypeGraphCard } from '../components/artist-type/artist-type-graph-card.js';
+import {
+  ArtistTypeAmbientBackground,
+  ArtistTypeGraphCard,
+} from '../components/artist-type/index.js';
 import { QuestionCard } from '../components/question-card.js';
 import { QuizProgressBar } from '../components/quiz-progress-bar.js';
 import { enginesAtom } from '@/features/analysis-engine/client/atoms.js';
@@ -79,6 +82,13 @@ const SuccessView: React.FC<{ quizzes: ReadonlyArray<Quiz> }> = ({ quizzes }) =>
 
   // Auto-advance setting state
   const [autoAdvanceEnabled, setAutoAdvanceEnabled] = React.useState(true);
+
+  // Admin state - admins see user view by default, can toggle admin view on
+  const isAdmin = useAtomValue(isAdminAtom);
+  const [showAdminView, setShowAdminView] = React.useState(false);
+
+  // Compute effective admin state (admin AND has toggled admin view on)
+  const showAdminFeatures = isAdmin && showAdminView;
 
   // Add keyboard shortcut to toggle dev panel (Ctrl/Cmd + D)
   React.useEffect(() => {
@@ -404,20 +414,32 @@ const SuccessView: React.FC<{ quizzes: ReadonlyArray<Quiz> }> = ({ quizzes }) =>
         >
           Auto-advance to next question
         </DropdownMenu.CheckboxItem>
-        <DropdownMenu.Separator />
-        <DropdownMenu.Item
-          onClick={() => {
-            setDevPanelVisible(!devPanelVisible);
-          }}
-        >
-          Toggle Dev Panel
-        </DropdownMenu.Item>
+        {isAdmin && (
+          <>
+            <DropdownMenu.Separator />
+            <DropdownMenu.CheckboxItem checked={showAdminView} onCheckedChange={setShowAdminView}>
+              Show Admin View
+            </DropdownMenu.CheckboxItem>
+            {showAdminView && (
+              <DropdownMenu.Item
+                onClick={() => {
+                  setDevPanelVisible(!devPanelVisible);
+                }}
+              >
+                Toggle Dev Panel
+              </DropdownMenu.Item>
+            )}
+          </>
+        )}
       </DropdownMenu.Content>
     </DropdownMenu>
   );
 
   return (
     <PageContainer>
+      {/* Ambient Background - decorative blurred radar visualization */}
+      <ArtistTypeAmbientBackground data={localAnalysisData} />
+
       {/* Submission Error Banner */}
       {submissionError && (
         <div className="w-full max-w-7xl mx-auto mb-4">
@@ -433,9 +455,19 @@ const SuccessView: React.FC<{ quizzes: ReadonlyArray<Quiz> }> = ({ quizzes }) =>
         </div>
       )}
 
-      <div className="w-full max-w-7xl mx-auto grid grid-cols-3 gap-8">
-        {/* Left 2/3 - Progress and Question Card */}
-        <div className="col-span-2 flex flex-col gap-8">
+      <div
+        className={cn(
+          'w-full max-w-7xl mx-auto',
+          showAdminFeatures ? 'grid grid-cols-3 gap-8' : 'flex justify-center',
+        )}
+      >
+        {/* Left 2/3 (admin) or centered full-width (user) - Progress and Question Card */}
+        <div
+          className={cn(
+            'flex flex-col gap-8',
+            showAdminFeatures ? 'col-span-2' : 'w-full max-w-3xl',
+          )}
+        >
           {/* Progress Bar Card */}
           <Card className="p-4">
             <div className="flex items-center justify-between gap-4">
@@ -478,7 +510,7 @@ const SuccessView: React.FC<{ quizzes: ReadonlyArray<Quiz> }> = ({ quizzes }) =>
               max={currentQuestion.data.type === 'rating' ? currentQuestion.data.maxRating : 10}
               selectedValues={savedResponse !== undefined ? [savedResponse] : []}
               idealAnswers={currentQuestionIdealAnswers}
-              showIdealAnswers={devConfig.idealAnswerOverlay ?? true}
+              showIdealAnswers={showAdminFeatures && (devConfig.idealAnswerOverlay ?? true)}
               onRatingSelect={handleRatingSelect}
               onBack={handleBack}
               onNext={handleNext}
@@ -493,51 +525,55 @@ const SuccessView: React.FC<{ quizzes: ReadonlyArray<Quiz> }> = ({ quizzes }) =>
           </div>
         </div>
 
-        {/* Right 1/3 - Real-time Analysis Preview */}
-        <div className="col-span-1 flex items-center justify-center">
-          <div className="sticky top-24 w-full">
-            {localAnalysisData.length > 0 ? (
-              <div className="relative w-full h-full min-w-96 rounded-[32px] border border-neutral-200/50 bg-neutral-100 pt-4 px-2 pb-2 backdrop-blur-lg md:pt-6 md:px-4 md:pb-4 dark:border-neutral-700 dark:bg-neutral-800/50 overflow-visible">
-                <ArtistTypeGraphCard
-                  data={localAnalysisData}
-                  showBarChart={true}
-                  barChartHeight="h-48"
-                  barChartMaxItems={10}
-                  className="h-full w-full"
-                  contentClassName="h-full w-full"
-                  transparent
-                  fill
-                  {...(devConfig.beta !== undefined && {
-                    beta: devConfig.beta,
-                  })}
-                />
-              </div>
-            ) : (
-              <div className="relative w-full h-full min-w-96 rounded-[32px] border border-neutral-200/50 bg-neutral-100 pt-4 px-2 pb-2 backdrop-blur-lg md:pt-6 md:px-4 md:pb-4 dark:border-neutral-700 dark:bg-neutral-800/50 overflow-visible">
-                <div className="flex items-center justify-center h-64 border-2 border-dashed border-muted-foreground/25 rounded-lg">
-                  <div className="text-center text-muted-foreground">
-                    <p className="text-sm">Analysis will appear here</p>
-                    <p className="text-xs mt-1">Answer questions to see your artist type</p>
+        {/* Right 1/3 - Real-time Analysis Preview (Admin only) */}
+        {showAdminFeatures && (
+          <div className="col-span-1 flex items-center justify-center">
+            <div className="sticky top-24 w-full">
+              {localAnalysisData.length > 0 ? (
+                <div className="relative w-full h-full min-w-96 rounded-[32px] border border-neutral-200/50 bg-neutral-100 pt-4 px-2 pb-2 backdrop-blur-lg md:pt-6 md:px-4 md:pb-4 dark:border-neutral-700 dark:bg-neutral-800/50 overflow-visible">
+                  <ArtistTypeGraphCard
+                    data={localAnalysisData}
+                    showBarChart={true}
+                    barChartHeight="h-48"
+                    barChartMaxItems={10}
+                    className="h-full w-full"
+                    contentClassName="h-full w-full"
+                    transparent
+                    fill
+                    {...(devConfig.beta !== undefined && {
+                      beta: devConfig.beta,
+                    })}
+                  />
+                </div>
+              ) : (
+                <div className="relative w-full h-full min-w-96 rounded-[32px] border border-neutral-200/50 bg-neutral-100 pt-4 px-2 pb-2 backdrop-blur-lg md:pt-6 md:px-4 md:pb-4 dark:border-neutral-700 dark:bg-neutral-800/50 overflow-visible">
+                  <div className="flex items-center justify-center h-64 border-2 border-dashed border-muted-foreground/25 rounded-lg">
+                    <div className="text-center text-muted-foreground">
+                      <p className="text-sm">Analysis will appear here</p>
+                      <p className="text-xs mt-1">Answer questions to see your artist type</p>
+                    </div>
                   </div>
                 </div>
-              </div>
-            )}
+              )}
+            </div>
           </div>
-        </div>
+        )}
       </div>
 
-      {/* Dev Panel */}
-      <DevPanel
-        config={devConfig}
-        {...(defaultEngine !== undefined && { engine: defaultEngine })}
-        isVisible={devPanelVisible}
-        onConfigChange={(newConfig) => {
-          setDevConfig(newConfig);
-        }}
-        onToggleVisibility={() => {
-          setDevPanelVisible(!devPanelVisible);
-        }}
-      />
+      {/* Dev Panel (Admin only, when admin view is enabled) */}
+      {isAdmin && showAdminView && (
+        <DevPanel
+          config={devConfig}
+          {...(defaultEngine !== undefined && { engine: defaultEngine })}
+          isVisible={devPanelVisible}
+          onConfigChange={(newConfig) => {
+            setDevConfig(newConfig);
+          }}
+          onToggleVisibility={() => {
+            setDevPanelVisible(!devPanelVisible);
+          }}
+        />
+      )}
     </PageContainer>
   );
 };
