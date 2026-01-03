@@ -25,6 +25,7 @@ const config = defineConfig({
       // Package subpath aliases for Vite/Nitro SSR resolution
       '@auth/server': path.resolve(import.meta.dirname, '../../packages/auth/src/server.ts'),
       '@auth/database': path.resolve(import.meta.dirname, '../../packages/auth/src/database.ts'),
+      '@components': path.resolve(import.meta.dirname, '../../packages/ui/components/src/index.ts'),
       '@core/database': path.resolve(import.meta.dirname, '../../packages/core/src/database.ts'),
       '@core/server': path.resolve(import.meta.dirname, '../../packages/core/src/server.ts'),
       '@example/server': path.resolve(import.meta.dirname, '../../packages/example/src/server.ts'),

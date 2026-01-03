@@ -1,5 +1,6 @@
 'use client';
 
+import { BackgroundRippleEffect } from '@components';
 import { Chart, cn, type ChartConfig } from '@shadcn';
 import { motion } from 'motion/react';
 import React from 'react';
@@ -249,6 +250,18 @@ export const ArtistTypeAmbientBackground: React.FC<ArtistTypeAmbientBackgroundPr
       )}
       style={{ zIndex: -1 }}
     >
+      {/* Background ripple effect - rendered via portal to cover entire viewport */}
+      {/* vignetteFadeCenter fades out the center so user focuses on the chart */}
+      <BackgroundRippleEffect
+        cellSize={80}
+        ambient
+        ambientInterval={4000}
+        portal
+        vignettePosition="center"
+        vignetteFadeCenter
+        className="opacity-30"
+      />
+
       {/* Edge fade overlay */}
       {fadeEdges && (
         <div
@@ -272,6 +285,7 @@ export const ArtistTypeAmbientBackground: React.FC<ArtistTypeAmbientBackgroundPr
         initial={{ opacity: 0, scale: 0.8, x: 150 }}
         animate={{ opacity: 1, scale: 1, x: 150 }}
         transition={{ duration: 1.5, ease: 'easeOut' }}
+        className="relative"
         style={{
           width: BASE_SIZE,
           height: BASE_SIZE,
@@ -312,10 +326,21 @@ export const ArtistTypeAmbientBackground: React.FC<ArtistTypeAmbientBackgroundPr
             >
               <PolarAngleAxis dataKey="artistType" tick={EmptyTick} />
               <PolarGrid stroke={blendedColor} strokeOpacity={0.2} />
+              {/* Base layer: opaque background color to block ripple effect */}
+              <Radar
+                dataKey="percentage"
+                fill="hsl(var(--background))"
+                fillOpacity={1}
+                stroke="none"
+                isAnimationActive={true}
+                animationDuration={2000}
+                animationEasing="ease-in-out"
+              />
+              {/* Top layer: the actual colored fill */}
               <Radar
                 dataKey="percentage"
                 fill={blendedColor}
-                fillOpacity={0.5}
+                fillOpacity={0.6}
                 stroke={blendedColor}
                 strokeWidth={4}
                 isAnimationActive={true}

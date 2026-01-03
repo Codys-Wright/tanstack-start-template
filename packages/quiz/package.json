@@ -25,6 +25,7 @@
   },
   "dependencies": {
     "@auth": "*",
+    "@components": "*",
     "@core": "*",
     "@dnd-kit/core": "*",
     "@dnd-kit/modifiers": "*",

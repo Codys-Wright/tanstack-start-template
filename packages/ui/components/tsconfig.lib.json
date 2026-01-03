@@ -8,12 +8,13 @@
     "emitDeclarationOnly": true,
     "forceConsistentCasingInFileNames": true,
     "jsx": "react-jsx",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
     "types": ["node"],
     "paths": {
       "@/*": ["./src/*"],
       "@core": ["../../core/src/index.ts"],
       "@core/*": ["../../core/src/*"],
-      "@shadcn": ["../shadcn/"],
+      "@shadcn": ["../shadcn/src/index.ts"],
       "@shadcn/*": ["../shadcn/src/*"]
     }
   },
