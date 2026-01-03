@@ -298,6 +298,16 @@ export const useNormalizedArtistData = (
     const totalPoints = complete.reduce((sum, d) => sum + d.points, 0);
     const totalPercent = complete.reduce((sum, d) => sum + d.percentage, 0);
 
+    // If there's no data (all points and percentages are 0), return with 0 percentages
+    // This prevents the chart from showing a full polygon when there's no actual data
+    if (totalPoints === 0 && totalPercent === 0) {
+      return complete.map((d) => ({
+        ...d,
+        percentage: 0,
+        originalPercentage: 0,
+      }));
+    }
+
     let scaled = complete;
 
     // Calculate original percentage before beta transformation

@@ -7,26 +7,20 @@ import { Card, cn, Skeleton } from '@shadcn';
 /**
  * Skeleton component for the quiz taker page.
  * Matches the exact layout of QuizTakerPage for seamless SSR hydration.
+ * Uses the user view layout (centered, single column) by default.
  */
 export function QuizTakerPageSkeleton({ className }: { className?: string }) {
   return (
-    <div className={cn('relative w-full px-4 pt-24 pb-8', className)}>
-      <div className="w-full max-w-7xl mx-auto grid grid-cols-3 gap-8">
-        {/* Left 2/3 - Progress and Question Card */}
-        <div className="col-span-2 flex flex-col gap-8">
+    <div className={cn('relative w-full px-4 pb-8', className)}>
+      {/* User view: centered layout with max-width constraint */}
+      <div className="w-full max-w-7xl mx-auto flex justify-center">
+        <div className="flex flex-col gap-8 w-full max-w-3xl">
           {/* Progress Bar Card Skeleton */}
           <ProgressBarCardSkeleton />
 
           {/* Question Card Skeleton */}
           <div className="flex items-center justify-center min-h-[70vh]">
             <QuestionCardSkeleton />
-          </div>
-        </div>
-
-        {/* Right 1/3 - Analysis Chart Skeleton */}
-        <div className="col-span-1 flex items-center justify-center">
-          <div className="sticky top-24 w-full">
-            <AnalysisChartSkeleton />
           </div>
         </div>
       </div>
@@ -104,10 +98,10 @@ function QuestionCardSkeleton() {
 }
 
 // =============================================================================
-// ANALYSIS CHART SKELETON
+// ANALYSIS CHART SKELETON (kept for potential admin view use)
 // =============================================================================
 
-function AnalysisChartSkeleton() {
+export function AnalysisChartSkeleton() {
   return (
     <div className="relative w-full h-full min-w-96 rounded-[32px] border border-neutral-200/50 bg-neutral-100 pt-4 px-2 pb-2 backdrop-blur-lg md:pt-6 md:px-4 md:pb-4 dark:border-neutral-700 dark:bg-neutral-800/50 overflow-visible">
       {/* Radar chart area */}
