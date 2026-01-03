@@ -95,6 +95,8 @@ export const getTypeformResponseSeedData = (): Array<TypeformResponseSeedData> =
       userAgent: 'Typeform Import',
       referrer: 'typeform.com',
       customFields: {
+        source: 'typeform',
+        typeform: true,
         typeformId: typeformResponse.id,
         artistType: typeformResponse.artistType,
         email: typeformResponse.metadata.email,
