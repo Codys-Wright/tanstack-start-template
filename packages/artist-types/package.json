@@ -1,0 +1,45 @@
+{
+  "name": "@artist-types",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "import": "./src/index.ts",
+      "default": "./src/index.ts"
+    },
+    "./server": {
+      "types": "./src/server.ts",
+      "import": "./src/server.ts",
+      "default": "./src/server.ts"
+    },
+    "./database": {
+      "types": "./src/database.ts",
+      "import": "./src/database.ts",
+      "default": "./src/database.ts"
+    },
+    "./*": {
+      "types": "./src/*.ts",
+      "import": "./src/*.ts",
+      "default": "./src/*.ts"
+    },
+    "./package.json": "./package.json"
+  },
+  "dependencies": {
+    "@core": "*",
+    "@effect-atom/atom": "*",
+    "@effect-atom/atom-react": "*",
+    "@effect/platform": "*",
+    "@effect/rpc": "*",
+    "@effect/sql": "*",
+    "@shadcn": "*",
+    "effect": "*",
+    "react": "*"
+  },
+  "devDependencies": {
+    "@types/react": "*"
+  }
+}

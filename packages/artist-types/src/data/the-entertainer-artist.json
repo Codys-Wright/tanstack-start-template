@@ -1,0 +1,48 @@
+{
+  "id": "the-entertainer-artist",
+  "name": "The Entertainer Artist",
+  "shortName": "Entertainer",
+  "abbreviation": "ENT",
+  "coinIcon": null,
+  "icon": "/svgs/artist-type-logos/5_ENTERTAINER_LOGO.svg",
+  "order": 5,
+  "subtitle": "The Magnetic Performer",
+  "elevatorPitch": "Entertainer Artists create magnetic experiences that captivate audiences and generate infectious energy through their natural charisma and performance instincts.",
+  "shortDescription": "Lives to perform and connect with audiences in real-time. Entertainer Artists possess natural charisma and an intuitive understanding of crowd dynamics. They create energy that's infectious and unique—whether performing on stage, creating viral content, or leading workshops, they have an unmistakable ability to captivate and energize others.",
+  "longDescription": "\n## Overview\n\nThe Entertainer Artist thrives on creating work that engages, delights, and moves audiences. They have a natural ability to connect with people through their art and performance.\n\n### Key Characteristics\n\n- Strong audience awareness\n- Dynamic presence\n- Engaging personality\n- Performance-oriented creativity\n\n## Strengths\n\nKey strengths include:\n- Connecting with audiences\n- Creating engaging experiences\n- Adapting to audience response\n- Bringing energy to performances\n\n## Growth Areas\n\nAreas for development:\n- Balancing entertainment with depth\n- Developing technical skills\n- Creating in solitude\n- Handling criticism constructively\n\n## Creative Process\n\nTheir process often involves:\n- Audience consideration\n- Performance preparation\n- Energy management\n- Interactive elements\n\n### Collaboration Style\n\nEntertainer Artists excel at:\n- Energizing teams\n- Public presentation\n- Audience interaction\n- Dynamic performance\n\n## Career Paths\n\nCommon paths include:\n- Performing artist\n- Live entertainer\n- Interactive artist\n- Public speaker\n- Entertainment director\n\n### Growth Recommendations\n\n1. Develop deeper artistic aspects\n2. Practice private creation\n3. Build technical foundations\n4. Balance entertainment with meaning\n    ",
+  "metadata": {
+    "strengths": [
+      "Natural charisma and stage presence",
+      "Audience engagement and connection",
+      "Energy creation and management",
+      "Adaptability and responsiveness",
+      "Collaborative spirit and teamwork"
+    ],
+    "challenges": [
+      "May prioritize entertainment over depth",
+      "Can be dependent on external validation",
+      "May struggle with solitary creative work",
+      "Risk of burnout from high energy demands"
+    ],
+    "idealCollaborators": [
+      "The Dreamer Artist (for imaginative content)",
+      "The Tech Artist (for production support)",
+      "The Consummate Artist (for professional polish)"
+    ],
+    "recommendedPractices": [
+      "Regular performance opportunities and practice",
+      "Audience feedback collection and analysis",
+      "Energy management and self-care routines",
+      "Collaboration with diverse creative partners",
+      "Balance of performance and private creation"
+    ],
+    "careerPaths": [
+      "Live Performer",
+      "Entertainment Director",
+      "Content Creator",
+      "Workshop Leader",
+      "Interactive Artist"
+    ]
+  },
+  "notes": null
+}

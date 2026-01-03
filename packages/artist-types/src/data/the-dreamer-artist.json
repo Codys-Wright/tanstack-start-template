@@ -1,0 +1,48 @@
+{
+  "id": "the-dreamer-artist",
+  "name": "The Dreamer Artist",
+  "shortName": "Dreamer",
+  "abbreviation": "DRE",
+  "coinIcon": null,
+  "icon": "/svgs/artist-type-logos/7_DREAMER_LOGO.svg",
+  "order": 7,
+  "subtitle": "The Imagination Explorer",
+  "elevatorPitch": "Dreamer Artists transform vivid imagination into extraordinary creative work, accessing realms of possibility that others cannot reach.",
+  "shortDescription": "Possesses a vivid imagination and an irrepressible urge to explore their rich internal world. Dreamer Artists often have their \"head in the clouds,\" but this isn't a weakness—it's their superpower. They access creative realms others can't reach, bringing back ideas, images, and concepts that feel fresh and otherworldly.",
+  "longDescription": "\n## Overview\n\nThe Dreamer Artist possesses a rich inner world from which they draw endless inspiration. They excel at translating imagination and emotion into meaningful artistic expression.\n\n### Key Characteristics\n\n- Rich imagination\n- Emotional depth\n- Intuitive creativity\n- Inner world focus\n\n## Strengths\n\nKey strengths include:\n- Creating from imagination\n- Emotional expression\n- Unique perspectives\n- Symbolic thinking\n\n## Growth Areas\n\nAreas for development:\n- Practical implementation\n- Project completion\n- Time management\n- Reality grounding\n\n## Creative Process\n\nTheir process often involves:\n- Imagination exploration\n- Emotional connection\n- Intuitive creation\n- Symbolic expression\n\n### Collaboration Style\n\nDreamer Artists contribute:\n- Unique ideas\n- Emotional depth\n- Imaginative solutions\n- Inspiring visions\n\n## Career Paths\n\nCommon paths include:\n- Fantasy artist\n- Children's illustrator\n- Concept artist\n- Storyteller\n- Visual developer\n\n### Growth Recommendations\n\n1. Develop practical skills\n2. Practice project completion\n3. Balance dreams with reality\n4. Structure creative time\n    ",
+  "metadata": {
+    "strengths": [
+      "Vivid imagination and creativity",
+      "Unique perspective and vision",
+      "Emotional depth and sensitivity",
+      "Ability to inspire and enchant others",
+      "Access to subconscious creative realms"
+    ],
+    "challenges": [
+      "May struggle with practical implementation",
+      "Can have difficulty completing projects",
+      "May appear disconnected from reality",
+      "Risk of becoming overwhelmed by possibilities"
+    ],
+    "idealCollaborators": [
+      "The Consummate Artist (for practical execution)",
+      "The Analyzer Artist (for structured approach)",
+      "The Tech Artist (for implementation tools)"
+    ],
+    "recommendedPractices": [
+      "Regular imagination exercises and daydreaming",
+      "Dream journaling and idea capture",
+      "Collaboration with practical partners",
+      "Structured creative time and deadlines",
+      "Balance between imagination and reality"
+    ],
+    "careerPaths": [
+      "Fantasy Artist",
+      "Concept Designer",
+      "Children's Illustrator",
+      "Creative Writer",
+      "World Builder"
+    ]
+  },
+  "notes": null
+}
