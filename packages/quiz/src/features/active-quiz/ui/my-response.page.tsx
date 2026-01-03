@@ -3,9 +3,10 @@
 import { Result, useAtomValue, useAtomSet, useAtomRefresh } from '@effect-atom/atom-react';
 import { HydrationBoundary } from '@effect-atom/atom-react/ReactHydration';
 import { Badge, Button, Card, cn, Spinner } from '@shadcn';
-import { CheckIcon, CopyIcon, LinkIcon } from 'lucide-react';
+import { CheckIcon, LinkIcon } from 'lucide-react';
 import React from 'react';
 import { Link } from '@tanstack/react-router';
+import { BackgroundRippleEffect } from '@components';
 import { ArtistTypeGraphCard } from '../components/artist-type/artist-type-graph-card.js';
 import type { ArtistData } from '../components/artist-type/artist-data-utils.js';
 import { getArtistTypeInfo } from '../components/artist-type/artist-type-descriptions.js';
@@ -50,20 +51,48 @@ export interface MyResponsePageProps {
 // ============================================================================
 
 const PageContainer: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-  <div className="relative w-full px-4 pt-24 pb-8">{children}</div>
+  <div className="relative w-full px-4 pt-4 pb-8">
+    {/* Background ripple effect */}
+    <BackgroundRippleEffect
+      cellSize={80}
+      ambient
+      ambientInterval={4000}
+      portal
+      vignettePosition="center"
+      vignetteFadeCenter
+      className="opacity-30"
+    />
+    {children}
+  </div>
 );
 
 // ============================================================================
-// Winner Hero Section
+// Winner Hero Section (Compact version for grid layout)
 // ============================================================================
 
 interface WinnerHeroProps {
   winnerId: string;
   percentage: number;
+  artistData: ArtistData[];
 }
 
-const WinnerHeroSection: React.FC<WinnerHeroProps> = ({ winnerId, percentage }) => {
+const WinnerHeroSection: React.FC<WinnerHeroProps> = ({ winnerId, percentage, artistData }) => {
   const artistInfo = getArtistTypeInfo(winnerId);
+  const [copied, setCopied] = React.useState(false);
+  const [shareUrl, setShareUrl] = React.useState('');
+
+  React.useEffect(() => {
+    setShareUrl(generateShareableUrl(artistData, winnerId));
+  }, [artistData, winnerId]);
+
+  const handleShare = async () => {
+    if (!shareUrl) return;
+    const success = await copyToClipboard(shareUrl);
+    if (success) {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
+  };
 
   if (!artistInfo) {
     return (
@@ -76,211 +105,151 @@ const WinnerHeroSection: React.FC<WinnerHeroProps> = ({ winnerId, percentage }) 
   }
 
   return (
-    <Card className="text-center py-8 md:py-12 overflow-hidden">
-      <Card.Content className="space-y-6">
-        {/* "You are" label */}
-        <div className="text-sm text-muted-foreground uppercase tracking-widest font-medium">
-          You are
+    <div className="space-y-6">
+      {/* Header with icon, title, and share button */}
+      <div className="flex items-start gap-6">
+        <div className="shrink-0">
+          <img
+            src={artistInfo.iconPath}
+            alt={artistInfo.title}
+            className="w-20 h-20 md:w-28 md:h-28 dark:brightness-0 dark:invert"
+          />
         </div>
-
-        {/* Artist Type Icon */}
-        <div className="flex justify-center">
-          <div className="relative">
-            <img
-              src={artistInfo.iconPath}
-              alt={artistInfo.title}
-              className="w-24 h-24 md:w-32 md:h-32 dark:brightness-0 dark:invert"
-            />
+        <div className="flex-1 space-y-2">
+          <div className="flex items-start justify-between gap-4">
+            <div className="space-y-1">
+              <div className="text-xs text-muted-foreground uppercase tracking-widest font-medium">
+                You are
+              </div>
+              <h1 className="text-2xl md:text-4xl font-bold tracking-tight">{artistInfo.title}</h1>
+            </div>
+            {/* Share button */}
+            <Button variant="outline" size="sm" onClick={handleShare} className="shrink-0">
+              {copied ? (
+                <>
+                  <CheckIcon className="h-4 w-4 mr-1.5" />
+                  Copied!
+                </>
+              ) : (
+                <>
+                  <LinkIcon className="h-4 w-4 mr-1.5" />
+                  Share
+                </>
+              )}
+            </Button>
           </div>
-        </div>
-
-        {/* Artist Type Name */}
-        <h1 className="text-3xl md:text-5xl font-bold tracking-tight">{artistInfo.title}</h1>
-
-        {/* Percentage Badge */}
-        <div className="flex justify-center">
-          <Badge variant="secondary" className="text-lg px-4 py-1.5 font-semibold">
+          <Badge variant="secondary" className="text-sm px-3 py-1 font-semibold">
             {percentage.toFixed(1)}% Match
           </Badge>
         </div>
+      </div>
 
-        {/* Description */}
-        <p className="text-muted-foreground max-w-2xl mx-auto text-base md:text-lg leading-relaxed">
-          {artistInfo.description}
-        </p>
+      {/* Description */}
+      <p className="text-muted-foreground text-sm md:text-base leading-relaxed">
+        {artistInfo.description}
+      </p>
 
-        {/* Traits */}
-        <div className="flex flex-wrap justify-center gap-2 pt-2">
-          {artistInfo.traits.map((trait) => (
-            <Badge key={trait} variant="outline" className="text-sm">
-              {trait}
-            </Badge>
-          ))}
-        </div>
-      </Card.Content>
-    </Card>
+      {/* Traits */}
+      <div className="flex flex-wrap gap-2">
+        {artistInfo.traits.map((trait) => (
+          <Badge key={trait} variant="outline" className="text-xs">
+            {trait}
+          </Badge>
+        ))}
+      </div>
+    </div>
   );
 };
 
 // ============================================================================
-// Share Section
+// Chart Section (Radar chart only, more compact)
 // ============================================================================
 
-interface ShareSectionProps {
+interface ChartSectionProps {
   artistData: ArtistData[];
-  winnerId: string;
 }
 
-const ShareSection: React.FC<ShareSectionProps> = ({ artistData, winnerId }) => {
-  const [copied, setCopied] = React.useState(false);
-  const [shareUrl, setShareUrl] = React.useState('');
-
-  React.useEffect(() => {
-    // Generate URL on client side
-    setShareUrl(generateShareableUrl(artistData, winnerId));
-  }, [artistData, winnerId]);
-
-  const handleCopyLink = async () => {
-    if (!shareUrl) return;
-
-    const success = await copyToClipboard(shareUrl);
-    if (success) {
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    }
-  };
-
+const ChartSection: React.FC<ChartSectionProps> = ({ artistData }) => {
   return (
-    <Card>
-      <Card.Header>
-        <Card.Title className="flex items-center gap-2">
-          <LinkIcon className="h-5 w-5" />
-          Share Your Results
-        </Card.Title>
-        <Card.Description>
-          Share your artist type with friends! The link contains your results encoded in the URL.
-        </Card.Description>
-      </Card.Header>
-      <Card.Content>
-        <div className="flex gap-2">
-          <input
-            type="text"
-            readOnly
-            value={shareUrl}
-            className="flex-1 px-3 py-2 bg-muted rounded-md text-sm font-mono truncate"
-          />
-          <Button onClick={handleCopyLink} variant="secondary" className="shrink-0">
-            {copied ? (
-              <>
-                <CheckIcon className="h-4 w-4 mr-2" />
-                Copied!
-              </>
-            ) : (
-              <>
-                <CopyIcon className="h-4 w-4 mr-2" />
-                Copy Link
-              </>
-            )}
-          </Button>
-        </div>
-      </Card.Content>
-    </Card>
+    <div className="relative w-full rounded-2xl border border-border/50 bg-card/50 backdrop-blur-sm p-4">
+      <ArtistTypeGraphCard
+        data={artistData}
+        showBarChart={false}
+        className="bg-transparent border-none shadow-none"
+        contentClassName="p-0"
+        transparent
+        fill
+      />
+    </div>
   );
 };
 
 // ============================================================================
-// Full Analysis Section
+// Rankings Section (Compact list of all artist types)
 // ============================================================================
 
-interface FullAnalysisSectionProps {
+interface RankingsSectionProps {
   artistData: ArtistData[];
 }
 
-const FullAnalysisSection: React.FC<FullAnalysisSectionProps> = ({ artistData }) => {
-  return (
-    <Card>
-      <Card.Header>
-        <Card.Title>Your Full Analysis</Card.Title>
-        <Card.Description>See how you scored across all 10 artist types</Card.Description>
-      </Card.Header>
-      <Card.Content className="p-4 md:p-6">
-        <div className="max-w-3xl mx-auto">
-          <ArtistTypeGraphCard
-            data={artistData}
-            showBarChart
-            barChartHeight="h-72"
-            barChartMaxItems={10}
-            className="bg-transparent border-none shadow-none"
-            contentClassName="p-0"
-            transparent
-          />
-        </div>
-      </Card.Content>
-    </Card>
-  );
-};
-
-// ============================================================================
-// All Artist Types Section
-// ============================================================================
-
-interface AllArtistTypesSectionProps {
-  artistData: ArtistData[];
-}
-
-const AllArtistTypesSection: React.FC<AllArtistTypesSectionProps> = ({ artistData }) => {
-  // Sort by percentage descending
+const RankingsSection: React.FC<RankingsSectionProps> = ({ artistData }) => {
+  // Sort by percentage descending, skip the first (winner is shown separately)
   const sortedData = [...artistData].sort((a, b) => b.percentage - a.percentage);
 
   return (
-    <Card>
-      <Card.Header>
-        <Card.Title>All Artist Types</Card.Title>
-        <Card.Description>Your compatibility with each artist type</Card.Description>
-      </Card.Header>
-      <Card.Content>
-        <div className="grid gap-3">
-          {sortedData.map((data, index) => {
-            const info = getArtistTypeInfo(data.databaseId);
-            const isWinner = index === 0;
+    <div className="space-y-2">
+      <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wide">
+        Your Rankings
+      </h3>
+      <div className="space-y-1">
+        {sortedData.map((data, index) => {
+          const info = getArtistTypeInfo(data.databaseId);
+          const isWinner = index === 0;
 
-            return (
-              <div
-                key={data.databaseId}
-                className={cn(
-                  'flex items-center gap-4 p-3 rounded-lg transition-colors',
-                  isWinner ? 'bg-primary/5 border border-primary/20' : 'hover:bg-muted/50',
-                )}
-              >
-                {/* Rank */}
-                <div className="text-lg font-bold text-muted-foreground w-6">{index + 1}</div>
+          return (
+            <div
+              key={data.databaseId}
+              className={cn(
+                'flex items-center gap-3 p-2 rounded-lg transition-colors',
+                isWinner ? 'bg-primary/10 border border-primary/20' : 'hover:bg-muted/50',
+              )}
+            >
+              {/* Rank */}
+              <div className="text-sm font-bold text-muted-foreground w-5 text-center">
+                {index + 1}
+              </div>
 
-                {/* Icon */}
-                <img
-                  src={info?.iconPath ?? `/svgs/artist-type-logos/${index + 1}_LOGO.svg`}
-                  alt={data.fullName}
-                  className="w-10 h-10 dark:brightness-0 dark:invert"
-                />
+              {/* Icon */}
+              <img
+                src={info?.iconPath ?? `/svgs/artist-type-logos/${index + 1}_LOGO.svg`}
+                alt={data.fullName}
+                className="w-7 h-7 dark:brightness-0 dark:invert"
+              />
 
-                {/* Name and percentage */}
-                <div className="flex-1 min-w-0">
-                  <div className="font-medium truncate">{data.fullName}</div>
-                  <div className="text-sm text-muted-foreground">
-                    {info?.traits.slice(0, 2).join(', ')}
-                  </div>
-                </div>
-
-                {/* Percentage */}
-                <div className="text-right">
-                  <div className="font-bold">{data.percentage.toFixed(1)}%</div>
-                  <div className="text-xs text-muted-foreground">{data.points.toFixed(0)} pts</div>
+              {/* Name */}
+              <div className="flex-1 min-w-0">
+                <div className="text-sm font-medium truncate">
+                  {info?.shortName ?? data.artistType}
                 </div>
               </div>
-            );
-          })}
-        </div>
-      </Card.Content>
-    </Card>
+
+              {/* Percentage bar */}
+              <div className="w-24 flex items-center gap-2">
+                <div className="flex-1 h-1.5 bg-muted rounded-full overflow-hidden">
+                  <div
+                    className="h-full bg-primary/60 rounded-full transition-all duration-500"
+                    style={{ width: `${data.percentage}%` }}
+                  />
+                </div>
+                <span className="text-xs font-medium text-muted-foreground w-8 text-right">
+                  {data.percentage.toFixed(0)}%
+                </span>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
   );
 };
 
@@ -320,21 +289,36 @@ const MyResponseContent: React.FC<MyResponseContentProps> = ({ artistData, winne
 
   return (
     <PageContainer>
-      <div className="max-w-4xl mx-auto space-y-8">
-        {/* Hero - Winner Display */}
-        <WinnerHeroSection winnerId={effectiveWinnerId} percentage={winnerPercentage} />
+      <div className="max-w-6xl mx-auto space-y-8">
+        {/* Main content grid - Chart on left, Details on right */}
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
+          {/* Left side - Radar Chart (2/5 on large screens) */}
+          <div className="lg:col-span-2">
+            <div className="lg:sticky lg:top-28">
+              <ChartSection artistData={artistData} />
+            </div>
+          </div>
 
-        {/* Full Analysis Chart */}
-        <FullAnalysisSection artistData={artistData} />
+          {/* Right side - Winner info and rankings (3/5 on large screens) */}
+          <div className="lg:col-span-3 space-y-6">
+            {/* Winner Hero with integrated share button */}
+            <Card className="p-6">
+              <WinnerHeroSection
+                winnerId={effectiveWinnerId}
+                percentage={winnerPercentage}
+                artistData={artistData}
+              />
+            </Card>
 
-        {/* All Artist Types List */}
-        <AllArtistTypesSection artistData={artistData} />
+            {/* Rankings */}
+            <Card className="p-4">
+              <RankingsSection artistData={artistData} />
+            </Card>
 
-        {/* Share Section */}
-        <ShareSection artistData={artistData} winnerId={effectiveWinnerId} />
-
-        {/* Action Buttons */}
-        <ActionsSection />
+            {/* Action Buttons */}
+            <ActionsSection />
+          </div>
+        </div>
       </div>
     </PageContainer>
   );

@@ -15,7 +15,7 @@ function MyResponsePageWrapper() {
   const { responseId } = Route.useParams();
   const loaderData = Route.useLoaderData();
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background to-muted">
+    <div className="min-h-screen">
       <MyResponsePage responseId={responseId} loaderData={loaderData} />
     </div>
   );
@@ -23,7 +23,7 @@ function MyResponsePageWrapper() {
 
 function MyResponsePagePending() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background to-muted">
+    <div className="min-h-screen">
       <MyResponsePageSkeleton />
     </div>
   );

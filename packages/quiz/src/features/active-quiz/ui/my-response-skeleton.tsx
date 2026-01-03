@@ -6,154 +6,121 @@ import { Card, cn, Skeleton } from '@shadcn';
 
 /**
  * Skeleton component for the My Response page.
- * Matches the exact layout of MyResponsePage for seamless SSR hydration.
+ * Matches the new grid layout of MyResponsePage for seamless SSR hydration.
  */
 export function MyResponsePageSkeleton({ className }: { className?: string }) {
   return (
-    <div className={cn('relative w-full px-4 pt-24 pb-8', className)}>
-      <div className="max-w-4xl mx-auto space-y-8">
-        {/* Hero Section Skeleton */}
-        <WinnerHeroSkeleton />
+    <div className={cn('relative w-full px-4 pt-4 pb-8', className)}>
+      <div className="max-w-6xl mx-auto space-y-8">
+        {/* Main content grid - Chart on left, Details on right */}
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
+          {/* Left side - Radar Chart (2/5 on large screens) */}
+          <div className="lg:col-span-2">
+            <ChartSkeleton />
+          </div>
 
-        {/* Full Analysis Section Skeleton */}
-        <FullAnalysisSkeleton />
+          {/* Right side - Winner info and rankings (3/5 on large screens) */}
+          <div className="lg:col-span-3 space-y-6">
+            {/* Winner Hero */}
+            <Card className="p-6">
+              <WinnerHeroSkeleton />
+            </Card>
 
-        {/* All Artist Types Section Skeleton */}
-        <AllArtistTypesSkeleton />
+            {/* Rankings */}
+            <Card className="p-4">
+              <RankingsSkeleton />
+            </Card>
 
-        {/* Share Section Skeleton */}
-        <ShareSkeleton />
-
-        {/* Actions Skeleton */}
-        <ActionsSkeleton />
+            {/* Actions Skeleton */}
+            <ActionsSkeleton />
+          </div>
+        </div>
       </div>
     </div>
   );
 }
 
 // ============================================================================
-// WINNER HERO SKELETON
+// CHART SKELETON (Radar chart)
+// ============================================================================
+
+function ChartSkeleton() {
+  return (
+    <div className="relative w-full rounded-2xl border border-border/50 bg-card/50 p-4">
+      <div className="w-full" style={{ aspectRatio: '1 / 1' }}>
+        <Skeleton className="h-full w-full rounded-lg" />
+      </div>
+    </div>
+  );
+}
+
+// ============================================================================
+// WINNER HERO SKELETON (Compact horizontal layout)
 // ============================================================================
 
 function WinnerHeroSkeleton() {
   return (
-    <Card className="text-center py-8 md:py-12">
-      <Card.Content className="space-y-6">
-        {/* "You are" label */}
-        <Skeleton className="h-4 w-16 mx-auto" />
-
-        {/* Artist Type Icon */}
-        <div className="flex justify-center">
-          <Skeleton className="w-24 h-24 md:w-32 md:h-32 rounded-full" />
-        </div>
-
-        {/* Artist Type Name */}
-        <Skeleton className="h-12 w-72 mx-auto" />
-
-        {/* Percentage Badge */}
-        <Skeleton className="h-8 w-32 mx-auto rounded-full" />
-
-        {/* Description */}
-        <div className="space-y-2 max-w-2xl mx-auto">
-          <Skeleton className="h-5 w-full" />
-          <Skeleton className="h-5 w-5/6 mx-auto" />
-          <Skeleton className="h-5 w-4/6 mx-auto" />
-        </div>
-
-        {/* Traits */}
-        <div className="flex flex-wrap justify-center gap-2 pt-2">
-          <Skeleton className="h-6 w-20 rounded-full" />
-          <Skeleton className="h-6 w-24 rounded-full" />
-          <Skeleton className="h-6 w-16 rounded-full" />
-          <Skeleton className="h-6 w-20 rounded-full" />
-        </div>
-      </Card.Content>
-    </Card>
-  );
-}
-
-// ============================================================================
-// FULL ANALYSIS SKELETON
-// ============================================================================
-
-function FullAnalysisSkeleton() {
-  return (
-    <Card>
-      <Card.Header>
-        <Skeleton className="h-6 w-40" />
-        <Skeleton className="h-4 w-64 mt-1" />
-      </Card.Header>
-      <Card.Content className="p-4 md:p-6">
-        <div className="max-w-3xl mx-auto">
-          {/* Radar chart skeleton */}
-          <div className="w-full" style={{ aspectRatio: '1 / 1.1' }}>
-            <Skeleton className="h-full w-full rounded-lg" />
-          </div>
-          {/* Bar chart skeleton */}
-          <div className="mt-4">
-            <Skeleton className="w-full rounded-lg" style={{ height: '288px' }} />
-          </div>
-        </div>
-      </Card.Content>
-    </Card>
-  );
-}
-
-// ============================================================================
-// ALL ARTIST TYPES SKELETON
-// ============================================================================
-
-function AllArtistTypesSkeleton() {
-  return (
-    <Card>
-      <Card.Header>
-        <Skeleton className="h-6 w-36" />
-        <Skeleton className="h-4 w-56 mt-1" />
-      </Card.Header>
-      <Card.Content>
-        <div className="grid gap-3">
-          {Array.from({ length: 10 }).map((_, index) => (
-            <div key={index} className="flex items-center gap-4 p-3 rounded-lg">
-              {/* Rank */}
-              <Skeleton className="h-6 w-6" />
-              {/* Icon */}
-              <Skeleton className="w-10 h-10 rounded-full" />
-              {/* Name and traits */}
-              <div className="flex-1 min-w-0 space-y-1">
-                <Skeleton className="h-5 w-40" />
-                <Skeleton className="h-4 w-32" />
-              </div>
-              {/* Percentage */}
-              <div className="text-right space-y-1">
-                <Skeleton className="h-5 w-12" />
-                <Skeleton className="h-3 w-10" />
-              </div>
+    <div className="space-y-6">
+      {/* Header with icon, title, and share button */}
+      <div className="flex items-start gap-6">
+        <Skeleton className="w-20 h-20 md:w-28 md:h-28 rounded-lg shrink-0" />
+        <div className="flex-1 space-y-2">
+          <div className="flex items-start justify-between gap-4">
+            <div className="space-y-1">
+              <Skeleton className="h-3 w-12" />
+              <Skeleton className="h-8 md:h-10 w-48 md:w-64" />
             </div>
-          ))}
+            {/* Share button skeleton */}
+            <Skeleton className="h-8 w-20 rounded-md shrink-0" />
+          </div>
+          <Skeleton className="h-6 w-24 rounded-full" />
         </div>
-      </Card.Content>
-    </Card>
+      </div>
+
+      {/* Description */}
+      <div className="space-y-2">
+        <Skeleton className="h-4 w-full" />
+        <Skeleton className="h-4 w-5/6" />
+        <Skeleton className="h-4 w-4/6" />
+      </div>
+
+      {/* Traits */}
+      <div className="flex flex-wrap gap-2">
+        <Skeleton className="h-5 w-16 rounded-full" />
+        <Skeleton className="h-5 w-20 rounded-full" />
+        <Skeleton className="h-5 w-14 rounded-full" />
+        <Skeleton className="h-5 w-18 rounded-full" />
+      </div>
+    </div>
   );
 }
 
 // ============================================================================
-// SHARE SKELETON
+// RANKINGS SKELETON
 // ============================================================================
 
-function ShareSkeleton() {
+function RankingsSkeleton() {
   return (
-    <Card>
-      <Card.Header>
-        <Skeleton className="h-6 w-40" />
-        <Skeleton className="h-4 w-80 mt-1" />
-      </Card.Header>
-      <Card.Content>
-        <div className="flex gap-2">
-          <Skeleton className="flex-1 h-10 rounded-md" />
-          <Skeleton className="h-10 w-28 rounded-md" />
-        </div>
-      </Card.Content>
-    </Card>
+    <div className="space-y-2">
+      <Skeleton className="h-4 w-24" />
+      <div className="space-y-1">
+        {Array.from({ length: 10 }).map((_, index) => (
+          <div key={index} className="flex items-center gap-3 p-2 rounded-lg">
+            {/* Rank */}
+            <Skeleton className="h-4 w-5" />
+            {/* Icon */}
+            <Skeleton className="w-7 h-7 rounded-full" />
+            {/* Name */}
+            <Skeleton className="h-4 w-24 flex-1" />
+            {/* Progress bar and percentage */}
+            <div className="w-24 flex items-center gap-2">
+              <Skeleton className="flex-1 h-1.5 rounded-full" />
+              <Skeleton className="h-3 w-8" />
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
   );
 }
 
