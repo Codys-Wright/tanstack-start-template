@@ -3,7 +3,7 @@ import { Menu, X } from 'lucide-react';
 import { cn } from '@shadcn';
 import { AnimatePresence, motion, useMotionValueEvent, useScroll } from 'motion/react';
 
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 
 interface NavbarProps {
   children: React.ReactNode;
@@ -44,11 +44,8 @@ interface MobileNavMenuProps {
 }
 
 export const Navbar = ({ children, className }: NavbarProps) => {
-  const ref = useRef<HTMLDivElement>(null);
-  const { scrollY } = useScroll({
-    target: ref,
-    offset: ['start start', 'end start'],
-  });
+  // Track window scroll position (no target needed for window scroll)
+  const { scrollY } = useScroll();
   const [visible, setVisible] = useState<boolean>(false);
 
   useMotionValueEvent(scrollY, 'change', (latest) => {
@@ -61,7 +58,6 @@ export const Navbar = ({ children, className }: NavbarProps) => {
 
   return (
     <motion.div
-      ref={ref}
       // IMPORTANT: Change this to class of `fixed` if you want the navbar to be fixed
       className={cn('sticky inset-x-0 top-4 z-40 w-full', className)}
     >

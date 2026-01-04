@@ -10,7 +10,13 @@ import { nitro } from 'nitro/vite';
 const config = defineConfig({
   root: import.meta.dirname,
   plugins: [
-    devtools(),
+    devtools({
+      // Disable data-tsd-source attributes to prevent hydration warnings
+      // These attributes embed source file locations but cause SSR/client mismatches during development
+      injectSource: {
+        enabled: false,
+      },
+    }),
     nitro(),
     // this is the plugin that enables path aliases
     viteTsConfigPaths({

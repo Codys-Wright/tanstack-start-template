@@ -90,12 +90,12 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 
   return (
     <html lang="en" suppressHydrationWarning>
-      <head>
+      <head suppressHydrationWarning>
         {/* Blocking theme script - runs synchronously before any rendering */}
         <script dangerouslySetInnerHTML={{ __html: themeScript }} suppressHydrationWarning />
         <HeadContent />
       </head>
-      <body>
+      <body suppressHydrationWarning>
         <ThemeProvider>
           <ThemeSystemProviderWithContext>
             <RegistryProvider defaultIdleTTL={60_000}>{children}</RegistryProvider>

@@ -1,6 +1,19 @@
 import { ArtistTypeGraphCard, type ArtistData } from '@quiz';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState, useSyncExternalStore } from 'react';
 import { BackgroundWrapper } from './background-wrapper.js';
+
+// Media query hook to conditionally render charts (avoids Recharts 0-dimension warnings from hidden elements)
+const useLargeScreen = () => {
+  const subscribe = (callback: () => void) => {
+    const mediaQuery = window.matchMedia('(min-width: 1024px)');
+    mediaQuery.addEventListener('change', callback);
+    return () => mediaQuery.removeEventListener('change', callback);
+  };
+  const getSnapshot = () => window.matchMedia('(min-width: 1024px)').matches;
+  const getServerSnapshot = () => false; // Default to mobile on SSR
+
+  return useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
+};
 
 // Static initial data for SSR - deterministic values that render on the server
 const INITIAL_ARTIST_DATA: Array<ArtistData> = [
@@ -149,11 +162,10 @@ const generateFakeData = (): Array<ArtistData> => {
 };
 
 export function HeroSectionWithBeamsAndGrid() {
-  const containerRef = useRef<HTMLDivElement>(null);
-
   // Start with deterministic data for SSR, then switch to random data on client
   const [fakeData, setFakeData] = useState<Array<ArtistData>>(INITIAL_ARTIST_DATA);
   const [isClient, setIsClient] = useState(false);
+  const isLargeScreen = useLargeScreen();
 
   useEffect(() => {
     setIsClient(true);
@@ -198,39 +210,20 @@ export function HeroSectionWithBeamsAndGrid() {
           </div>
         </div>
         <div className="lg:col-span-1 w-full h-full flex justify-center">
-          <div
-            ref={containerRef}
-            className="relative w-full h-full min-w-0 max-w-sm md:max-w-md lg:max-w-none rounded-[32px] border border-neutral-200/50 bg-neutral-100 p-2 backdrop-blur-lg md:p-4 dark:border-neutral-700 dark:bg-neutral-800/50"
-          >
-            <div>
-              {/* Only render chart on client to avoid hydration mismatch */}
-              {/* Show bar chart on lg+ screens, hide on mobile/medium */}
-              {isClient && (
-                <>
-                  <div className="hidden lg:block">
-                    <ArtistTypeGraphCard
-                      data={fakeData ?? []}
-                      showBarChart
-                      barChartHeight="h-40"
-                      className="h-full w-full"
-                      contentClassName="h-full w-full"
-                      transparent
-                      fill
-                    />
-                  </div>
-                  <div className="block lg:hidden">
-                    <ArtistTypeGraphCard
-                      data={fakeData ?? []}
-                      showBarChart={false}
-                      className="h-full w-full"
-                      contentClassName="h-full w-full"
-                      transparent
-                      fill
-                    />
-                  </div>
-                </>
-              )}
-            </div>
+          <div className="relative w-full h-full min-w-0 max-w-sm md:max-w-md lg:max-w-none rounded-[32px] border border-neutral-200/50 bg-neutral-100 p-2 backdrop-blur-lg md:p-4 dark:border-neutral-700 dark:bg-neutral-800/50">
+            {/* Only render ONE chart config based on screen size to avoid Recharts 0-dimension warnings */}
+            {/* Recharts ResponsiveContainer warns when rendered in display:none containers */}
+            {isClient ? (
+              <ArtistTypeGraphCard
+                data={fakeData ?? []}
+                showBarChart={isLargeScreen}
+                barChartHeight="h-40"
+                transparent
+              />
+            ) : (
+              // Placeholder during SSR to prevent layout shift
+              <div className="aspect-square w-full" />
+            )}
           </div>
         </div>
       </div>
