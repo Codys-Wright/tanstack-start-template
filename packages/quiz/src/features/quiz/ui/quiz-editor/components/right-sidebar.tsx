@@ -1,22 +1,22 @@
 'use client';
 
 import { Result, useAtomSet, useAtomValue } from '@effect-atom/atom-react';
-import type { AnalysisEngine } from '@/features/analysis-engine/domain/schema.js';
-import type { Quiz } from '@/features/quiz/domain/schema.js';
+import type { AnalysisEngine } from '@quiz/features/analysis-engine/domain/schema.js';
+import type { Quiz } from '@quiz/features/quiz/domain/schema.js';
 import * as Config from 'effect/Config';
 import * as Effect from 'effect/Effect';
 import { Card, Chart, ScrollArea, Skeleton, type ChartConfig } from '@shadcn';
 import { BarChart3Icon } from 'lucide-react';
 import React from 'react';
 import { LabelList, Pie, PieChart } from 'recharts';
-import { AnalysisService } from '@/features/analysis/domain/service.js';
+import { AnalysisService } from '@quiz/features/analysis/domain/service.js';
 import {
   artistColors,
   endingNameToArtistType,
-} from '@/features/analysis/ui/artist-type/artist-data-utils.js';
-import { analysesAtom } from '@/features/analysis/client/atoms.js';
-import { responsesAtom } from '@/features/responses/client/atoms.js';
-import { quizzesAtom } from '@/features/quiz/client/atoms.js';
+} from '@quiz/features/analysis/ui/artist-type/artist-data-utils.js';
+import { analysesAtom } from '@quiz/features/analysis/client/atoms.js';
+import { responsesAtom } from '@quiz/features/responses/client/atoms.js';
+import { quizzesAtom } from '@quiz/features/quiz/client/atoms.js';
 import { analysisConfigAtom, reanalysisDataAtom, selectedQuizIdAtom } from '../atoms.js';
 import { ArtistIcon } from './artist-icon.js';
 

@@ -1,7 +1,7 @@
 import { Button, Card, cn } from '@shadcn';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import React from 'react';
-import { getColorByEndingName } from '@/features/active-quiz/components/artist-type/artist-data-utils.js';
+import { getColorByEndingName } from '@quiz/features/active-quiz/components/artist-type/artist-data-utils.js';
 
 // 1) QuestionCard Component - Displays a single question with rating input and navigation
 //    Receives all data and callbacks as props to remain dumb and testable

@@ -1,7 +1,7 @@
 'use client';
 
 import { useAtomSet, useAtomValue } from '@effect-atom/atom-react';
-import type { Question } from '@/features/quiz/questions/schema.js';
+import type { Question } from '@quiz/features/quiz/questions/schema.js';
 import { Button } from '@shadcn';
 import { HelpCircleIcon, SlidersIcon } from 'lucide-react';
 import React from 'react';

@@ -1,5 +1,5 @@
-import type { AnalysisEngine } from '@/features/analysis-engine/domain/schema.js';
-import { AnalysisConfig } from '@/features/analysis/domain/service.js';
+import type { AnalysisEngine } from '@quiz/features/analysis-engine/domain/schema.js';
+import { AnalysisConfig } from '@quiz/features/analysis/domain/service.js';
 import { Badge, Button, Card, Input, Label, Tabs } from '@shadcn';
 import { formatHex, parse } from 'culori';
 import * as ConfigProvider from 'effect/ConfigProvider';

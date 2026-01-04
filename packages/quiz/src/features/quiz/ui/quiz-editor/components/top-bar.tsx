@@ -4,8 +4,8 @@ import { Badge, Button, cn, DropdownMenu, Select, Sidebar } from '@shadcn';
 import { GitBranchIcon, SaveIcon, SettingsIcon } from 'lucide-react';
 import React from 'react';
 
-import type { AnalysisEngine } from '@/features/analysis-engine/domain/schema.js';
-import type { Quiz } from '@/features/quiz/domain/schema.js';
+import type { AnalysisEngine } from '@quiz/features/analysis-engine/domain/schema.js';
+import type { Quiz } from '@quiz/features/quiz/domain/schema.js';
 import { VersionIncrementDialog } from '../../version-increment-dialog.js';
 import { ArtistIcon } from './artist-icon.js';
 import {

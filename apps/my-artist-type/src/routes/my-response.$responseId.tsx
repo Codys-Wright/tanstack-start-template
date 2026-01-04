@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router';
-import { MyResponsePage, MyResponsePageSkeleton, loadMyResponse } from '@quiz';
+import { MyResponsePage, MyResponsePageLoading, loadMyResponse } from '@quiz';
 
 /**
  * My Response route - displays quiz results for a specific response.
@@ -23,8 +23,8 @@ function MyResponsePageWrapper() {
 
 function MyResponsePagePending() {
   return (
-    <div className="min-h-screen">
-      <MyResponsePageSkeleton />
+    <div className="min-h-screen pt-24">
+      <MyResponsePageLoading />
     </div>
   );
 }

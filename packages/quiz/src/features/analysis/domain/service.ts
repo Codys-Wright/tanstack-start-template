@@ -4,16 +4,16 @@
 import * as Config from 'effect/Config';
 import * as DateTime from 'effect/DateTime';
 import * as Effect from 'effect/Effect';
-import { type Question } from '@/features/quiz/questions/schema.js';
-import { type Quiz } from '@/features/quiz/domain/schema.js';
-import { type QuestionResponse, type QuizResponse } from '@/features/responses/domain/schema.js';
+import { type Question } from '@quiz/features/quiz/questions/schema.js';
+import { type Quiz } from '@quiz/features/quiz/domain/schema.js';
+import { type QuestionResponse, type QuizResponse } from '@quiz/features/responses/domain/schema.js';
 import {
   type AnalysisEngine,
   type AnalysisResultId,
   type EndingDefinition,
   type ScoringConfig,
   defaultScoringConfig,
-} from '@/features/analysis-engine/domain/schema.js';
+} from '@quiz/features/analysis-engine/domain/schema.js';
 import {
   type AnalysisResult,
   type EndingResult,

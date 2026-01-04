@@ -1,7 +1,6 @@
 {
   "extends": "../../../tsconfig.base.json",
   "compilerOptions": {
-    "baseUrl": ".",
     "outDir": "dist",
     "lib": ["es2022", "dom"],
     "types": [
@@ -14,10 +13,7 @@
     "jsx": "react-jsx",
     "module": "esnext",
     "moduleResolution": "bundler",
-    "tsBuildInfoFile": "dist/tsconfig.lib.tsbuildinfo",
-    "paths": {
-      "@/*": ["./src/*"]
-    }
+    "tsBuildInfoFile": "dist/tsconfig.lib.tsbuildinfo"
   },
   "exclude": [
     "out-tsc",

@@ -368,17 +368,17 @@ export const ArtistRadarChart: React.FC<ArtistRadarChartProps> = ({
     <div
       ref={containerRef}
       className={cn('relative h-full w-full', className)}
-      style={{ aspectRatio: '1 / 1.1' }}
+      style={{ aspectRatio: '1 / 1' }}
     >
       <div className="relative h-full w-full">
         <Chart config={chartConfig} className="h-full w-full">
           <RadarChart
             data={finalChartData}
             margin={{
-              top: 20,
-              right: 20,
-              bottom: 20,
-              left: 20,
+              top: 10,
+              right: 10,
+              bottom: 10,
+              left: 10,
             }}
             innerRadius={30}
           >

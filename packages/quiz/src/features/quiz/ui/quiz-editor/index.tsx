@@ -2,9 +2,9 @@
 
 import { Version } from '@core/domain';
 import { Result, useAtomSet, useAtomValue } from '@effect-atom/atom-react';
-import type { AnalysisEngine } from '@/features/analysis-engine/domain/schema.js';
-import type { Question } from '@/features/quiz/questions/schema.js';
-import type { Quiz } from '@/features/quiz/domain/schema.js';
+import type { AnalysisEngine } from '@quiz/features/analysis-engine/domain/schema.js';
+import type { Question } from '@quiz/features/quiz/questions/schema.js';
+import type { Quiz } from '@quiz/features/quiz/domain/schema.js';
 import * as Cause from 'effect/Cause';
 import * as Exit from 'effect/Exit';
 import { AlertDialog, Button, Input, Label, ResizablePanelGroup } from '@shadcn';
@@ -16,7 +16,7 @@ import {
   clearTempEnginesAtom,
   EngineAction,
   enginesAtom,
-} from '@/features/analysis-engine/client/atoms.js';
+} from '@quiz/features/analysis-engine/client/atoms.js';
 import {
   clearTempQuizzesAtom,
   createNewQuizVersionAtom,
@@ -24,7 +24,7 @@ import {
   deleteQuizAtom,
   quizzesAtom,
   saveTempQuizAtom,
-} from '@/features/quiz/client/atoms.js';
+} from '@quiz/features/quiz/client/atoms.js';
 
 import { QuestionCard } from '../question-card.js';
 import { QuizProgressBar } from '../quiz-progress-bar.js';

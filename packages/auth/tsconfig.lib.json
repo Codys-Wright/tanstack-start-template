@@ -1,7 +1,6 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "baseUrl": ".",
     "outDir": "dist",
     "lib": ["dom", "es2022"],
     "types": [
@@ -14,18 +13,7 @@
     "jsx": "react-jsx",
     "module": "esnext",
     "moduleResolution": "bundler",
-    "tsBuildInfoFile": "dist/tsconfig.lib.tsbuildinfo",
-    "paths": {
-      "@auth": ["../auth/src/index.ts"],
-      "@auth/*": ["../auth/src/*"],
-      "@/*": ["./src/*"],
-      "@core": ["../core/src/index.ts"],
-      "@core/*": ["../core/src/*"],
-      "@shadcn": ["../ui/shadcn/src/index.ts"],
-      "@shadcn/*": ["../ui/shadcn/src/*"],
-      "@email": ["../email/src/index.ts"],
-      "@email/*": ["../email/src/*"]
-    }
+    "tsBuildInfoFile": "dist/tsconfig.lib.tsbuildinfo"
   },
   "exclude": [
     "out-tsc",

@@ -24,7 +24,10 @@ export {
   MyResponsePage,
   type MyResponsePageProps,
 } from './ui/my-response.page.js';
-export { MyResponsePageSkeleton } from './ui/my-response-skeleton.js';
+export {
+  MyResponsePageLoading,
+  MyResponsePageSkeleton,
+} from './ui/my-response-skeleton.js';
 export {
   loadMyResponse,
   type MyResponseLoaderData,

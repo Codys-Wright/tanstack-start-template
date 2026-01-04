@@ -1,8 +1,8 @@
-import type { AnalysisEngine } from '@/features/analysis-engine/domain/schema.js';
-import { AnalysisConfig, AnalysisService } from '@/features/analysis/domain/service.js';
-import type { Question } from '@/features/quiz/questions/schema.js';
-import type { Quiz } from '@/features/quiz/domain/schema.js';
-import type { QuizResponse } from '@/features/responses/domain/schema.js';
+import type { AnalysisEngine } from '@quiz/features/analysis-engine/domain/schema.js';
+import { AnalysisConfig, AnalysisService } from '@quiz/features/analysis/domain/service.js';
+import type { Question } from '@quiz/features/quiz/questions/schema.js';
+import type { Quiz } from '@quiz/features/quiz/domain/schema.js';
+import type { QuizResponse } from '@quiz/features/responses/domain/schema.js';
 import * as Config from 'effect/Config';
 import * as DateTime from 'effect/DateTime';
 import * as Effect from 'effect/Effect';

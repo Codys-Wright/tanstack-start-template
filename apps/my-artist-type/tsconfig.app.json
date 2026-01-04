@@ -1,11 +1,10 @@
 {
-  "extends": "../../tsconfig.base.json",
+  "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "dist",
     "tsBuildInfoFile": "dist/tsconfig.app.tsbuildinfo",
     "jsx": "react-jsx",
     "lib": ["dom"],
-    "baseUrl": ".",
     "types": [
       "node",
       "@nx/react/typings/cssmodule.d.ts",
@@ -13,30 +12,7 @@
       "vite/client"
     ],
     "module": "esnext",
-    "moduleResolution": "bundler",
-    "paths": {
-      "@/*": ["./src/*"],
-      "@artist-types": ["../../packages/artist-types/src/index.ts"],
-      "@artist-types/server": ["../../packages/artist-types/src/server.ts"],
-      "@artist-types/database": ["../../packages/artist-types/src/database.ts"],
-      "@artist-types/*": ["../../packages/artist-types/src/*"],
-      "@todo": ["../../packages/todo/src/index.ts"],
-      "@todo/*": ["../../packages/todo/src/*"],
-      "@core": ["../../packages/core/src/index.ts"],
-      "@core/*": ["../../packages/core/src/*"],
-      "@auth": ["../../packages/auth/src/index.ts"],
-      "@auth/*": ["../../packages/auth/src/*"],
-      "@quiz": ["../../packages/quiz/src/index.ts"],
-      "@quiz/*": ["../../packages/quiz/src/*"],
-      "@shadcn": ["../../packages/ui/shadcn/src/index.ts"],
-      "@shadcn/*": ["../../packages/ui/shadcn/src/*"],
-      "@components": ["../../packages/ui/components/src/index.ts"],
-      "@components/*": ["../../packages/ui/components/src/*"],
-      "@example": ["../../packages/example/src/index.ts"],
-      "@example/*": ["../../packages/example/src/*"],
-      "@theme": ["../../packages/ui/theme/src/index.ts"],
-      "@theme/*": ["../../packages/ui/theme/src/*"]
-    }
+    "moduleResolution": "bundler"
   },
   "exclude": [
     "out-tsc",

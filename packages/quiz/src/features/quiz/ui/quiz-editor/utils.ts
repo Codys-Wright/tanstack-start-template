@@ -3,11 +3,11 @@ import type {
   AnalysisEngine,
   EndingDefinition,
   QuestionRule,
-} from '@/features/analysis-engine/domain/schema.js';
-import type { Question } from '@/features/quiz/questions/schema.js';
-import type { Quiz } from '@/features/quiz/domain/schema.js';
-import { enginesAtom } from '@/features/analysis-engine/client/atoms.js';
-import { quizzesAtom } from '@/features/quiz/client/atoms.js';
+} from '@quiz/features/analysis-engine/domain/schema.js';
+import type { Question } from '@quiz/features/quiz/questions/schema.js';
+import type { Quiz } from '@quiz/features/quiz/domain/schema.js';
+import { enginesAtom } from '@quiz/features/analysis-engine/client/atoms.js';
+import { quizzesAtom } from '@quiz/features/quiz/client/atoms.js';
 
 // Generate consistent random colors for temp/edit badges based on quiz ID
 export const getTempBadgeColor = (quizId: string): string => {

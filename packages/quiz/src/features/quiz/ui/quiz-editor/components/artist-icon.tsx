@@ -2,7 +2,7 @@
 
 import { cn } from '@shadcn';
 import React from 'react';
-import { getArtistIconPath } from '@/features/analysis/ui/artist-type/artist-data-utils.js';
+import { getArtistIconPath } from '@quiz/features/analysis/ui/artist-type/artist-data-utils.js';
 
 export interface ArtistIconProps {
   artistType: string;

@@ -1,5 +1,5 @@
 import { createFileRoute, useSearch } from '@tanstack/react-router';
-import { MyResponsePage, MyResponsePageSkeleton, decodeResultsFromShare } from '@quiz';
+import { MyResponsePage, MyResponsePageLoading, decodeResultsFromShare } from '@quiz';
 import React from 'react';
 
 /**
@@ -58,8 +58,8 @@ function ResultsPageWrapper() {
 
   if (!decodedResults) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-background to-muted">
-        <MyResponsePageSkeleton />
+      <div className="min-h-screen bg-gradient-to-b from-background to-muted pt-24">
+        <MyResponsePageLoading />
       </div>
     );
   }
@@ -73,8 +73,8 @@ function ResultsPageWrapper() {
 
 function ResultsPagePending() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background to-muted">
-      <MyResponsePageSkeleton />
+    <div className="min-h-screen bg-gradient-to-b from-background to-muted pt-24">
+      <MyResponsePageLoading />
     </div>
   );
 }

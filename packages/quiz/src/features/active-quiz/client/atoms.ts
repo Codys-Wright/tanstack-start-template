@@ -11,19 +11,19 @@ import * as DateTime from 'effect/DateTime';
 import * as Effect from 'effect/Effect';
 import * as Option from 'effect/Option';
 import * as Schema from 'effect/Schema';
-import type { Question } from '@/features/quiz/questions/schema.js';
-import type { Quiz } from '@/features/quiz/domain/schema.js';
-import type { InteractionLog, SessionMetadata } from '@/features/responses/domain/schema.js';
+import type { Question } from '@quiz/features/quiz/questions/schema.js';
+import type { Quiz } from '@quiz/features/quiz/domain/schema.js';
+import type { InteractionLog, SessionMetadata } from '@quiz/features/responses/domain/schema.js';
 import { ActiveQuiz, UpsertActiveQuizPayload } from '../domain/index.js';
 import { ActiveQuizClient } from './client.js';
-import { ResponsesClient } from '@/features/responses/client/client.js';
+import { ResponsesClient } from '@quiz/features/responses/client/client.js';
 import {
   UpsertResponsePayload,
   UpsertSessionMetadataPayload,
   UpsertQuestionResponsePayload,
   UpsertInteractionLogPayload,
   type ResponseId,
-} from '@/features/responses/domain/schema.js';
+} from '@quiz/features/responses/domain/schema.js';
 
 const ActiveQuizzesSchema = Schema.Array(ActiveQuiz);
 

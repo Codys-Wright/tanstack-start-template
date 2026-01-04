@@ -5,8 +5,8 @@ import { IconCheck, IconPlayerPlay } from '@tabler/icons-react';
 import * as React from 'react';
 
 import { AlertDialog, Badge, Button, Card, Select, Skeleton } from '@shadcn';
-import { enginesAtom } from '@/features/analysis-engine/client/atoms.js';
-import { quizzesAtom, toggleQuizPublishAtom } from '@/features/quiz/client/atoms.js';
+import { enginesAtom } from '@quiz/features/analysis-engine/client/atoms.js';
+import { quizzesAtom, toggleQuizPublishAtom } from '@quiz/features/quiz/client/atoms.js';
 
 /**
  * CurrentQuizPage - Manage which quiz and engine are live on the website

@@ -2,8 +2,8 @@ import { Result, useAtomRefresh, useAtomSet, useAtomValue } from '@effect-atom/a
 import { HydrationBoundary } from '@effect-atom/atom-react/ReactHydration';
 import { isAdminAtom, sessionAtom, signInAnonymouslyAtom } from '@auth';
 import { activeQuizzesAtom } from '../client/atoms.js';
-import type { Question } from '@/features/quiz/questions/schema.js';
-import type { Quiz } from '@/features/quiz/domain/schema.js';
+import type { Question } from '@quiz/features/quiz/questions/schema.js';
+import type { Quiz } from '@quiz/features/quiz/domain/schema.js';
 import { Button, Card, cn, DropdownMenu } from '@shadcn';
 import { SettingsIcon } from 'lucide-react';
 import React from 'react';
@@ -13,9 +13,9 @@ import {
 } from '../components/artist-type/index.js';
 import { QuestionCard } from '../components/question-card.js';
 import { QuizProgressBar } from '../components/quiz-progress-bar.js';
-import { enginesAtom } from '@/features/analysis-engine/client/atoms.js';
+import { enginesAtom } from '@quiz/features/analysis-engine/client/atoms.js';
 
-import { quizzesAtom } from '@/features/quiz/client/atoms.js';
+import { quizzesAtom } from '@quiz/features/quiz/client/atoms.js';
 import {
   activeQuizAtom,
   currentQuestionAtom,

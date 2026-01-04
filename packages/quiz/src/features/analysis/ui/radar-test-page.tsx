@@ -1,6 +1,6 @@
 import React from 'react';
-import type { ArtistData } from '@/features/active-quiz/components/artist-type/artist-type-graph-card.js';
-import { ArtistTypeGraphCard } from '@/features/active-quiz/components/artist-type/artist-type-graph-card.js';
+import type { ArtistData } from '@quiz/features/active-quiz/components/artist-type/artist-type-graph-card.js';
+import { ArtistTypeGraphCard } from '@quiz/features/active-quiz/components/artist-type/artist-type-graph-card.js';
 
 // Test data for each artist type with extreme percentages
 const createExtremeTestData = (

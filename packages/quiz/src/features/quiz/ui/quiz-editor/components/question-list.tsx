@@ -2,7 +2,7 @@
 
 import { cn, ScrollArea } from '@shadcn';
 
-import type { Question } from '@/features/quiz/questions/schema.js';
+import type { Question } from '@quiz/features/quiz/questions/schema.js';
 
 export interface QuestionListProps {
   onAddQuestion: () => void;

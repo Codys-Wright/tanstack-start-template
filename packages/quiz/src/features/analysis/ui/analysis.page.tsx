@@ -1,12 +1,12 @@
 import { Result, useAtomSet, useAtomValue } from '@effect-atom/atom-react';
-import type { AnalysisEngineId } from '@/features/analysis-engine/domain/schema.js';
-import type { ResponseId } from '@/features/responses/domain/schema.js';
+import type { AnalysisEngineId } from '@quiz/features/analysis-engine/domain/schema.js';
+import type { ResponseId } from '@quiz/features/responses/domain/schema.js';
 import { Badge, Button, Card, DropdownMenu } from '@shadcn';
 import { CheckIcon, ChevronDownIcon } from 'lucide-react';
 import React, { useState } from 'react';
-import { ArtistTypeGraphCard } from '@/features/active-quiz/components/artist-type/artist-type-graph-card.js';
-import { enginesAtom } from '@/features/analysis-engine/client/atoms.js';
-import { responsesAtom } from '@/features/responses/client/atoms.js';
+import { ArtistTypeGraphCard } from '@quiz/features/active-quiz/components/artist-type/artist-type-graph-card.js';
+import { enginesAtom } from '@quiz/features/analysis-engine/client/atoms.js';
+import { responsesAtom } from '@quiz/features/responses/client/atoms.js';
 import {
   analysesAtom,
   analysisSummaryAtom,
