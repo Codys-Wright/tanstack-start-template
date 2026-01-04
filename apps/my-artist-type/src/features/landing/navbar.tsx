@@ -30,7 +30,6 @@ export function NavbarHome({ children }: { children?: ReactNode }) {
       {
         name: 'Artist Types',
         link: '/artist-types',
-        disabled: true,
       },
       {
         name: 'Quiz',
@@ -63,20 +62,11 @@ export function NavbarHome({ children }: { children?: ReactNode }) {
             {navItems.map((item, idx) => (
               <a
                 key={`desktop-link-${idx}`}
-                href={item.disabled ? '#' : item.link}
-                onMouseEnter={() => !item.disabled && setHovered(idx)}
-                onClick={(e) => {
-                  if (item.disabled) {
-                    e.preventDefault();
-                  }
-                }}
-                className={`relative px-4 py-2 ${
-                  item.disabled
-                    ? 'text-neutral-400 dark:text-neutral-600 cursor-not-allowed opacity-50'
-                    : 'text-neutral-600 dark:text-neutral-300'
-                }`}
+                href={item.link}
+                onMouseEnter={() => setHovered(idx)}
+                className="relative px-4 py-2 text-neutral-600 dark:text-neutral-300"
               >
-                {hovered === idx && !item.disabled && (
+                {hovered === idx && (
                   <motion.div
                     layoutId="hovered"
                     className="absolute inset-0 h-full w-full rounded-full bg-gray-100 dark:bg-neutral-800"
@@ -124,19 +114,9 @@ export function NavbarHome({ children }: { children?: ReactNode }) {
             {navItems.map((item, idx) => (
               <a
                 key={`mobile-link-${idx}`}
-                href={item.disabled ? '#' : item.link}
-                onClick={(e) => {
-                  if (item.disabled) {
-                    e.preventDefault();
-                  } else {
-                    setIsMobileMenuOpen(false);
-                  }
-                }}
-                className={`relative ${
-                  item.disabled
-                    ? 'text-neutral-400 dark:text-neutral-600 cursor-not-allowed opacity-50'
-                    : 'text-neutral-600 dark:text-neutral-300'
-                }`}
+                href={item.link}
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="relative text-neutral-600 dark:text-neutral-300"
               >
                 <span className="block">{item.name}</span>
               </a>

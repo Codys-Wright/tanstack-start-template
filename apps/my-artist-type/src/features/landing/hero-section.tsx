@@ -190,9 +190,8 @@ export function HeroSectionWithBeamsAndGrid() {
               Take the quiz
             </a>
             <a
-              href="#"
-              onClick={(e) => e.preventDefault()}
-              className="shadow-input group relative z-20 flex h-10 w-full cursor-not-allowed items-center justify-center space-x-2 rounded-lg bg-white p-px px-4 py-2 text-sm font-semibold leading-6 text-black no-underline transition duration-200 opacity-50 sm:w-52 dark:bg-neutral-800 dark:text-white"
+              href="/artist-types"
+              className="shadow-input group relative z-20 flex h-10 w-full cursor-pointer items-center justify-center space-x-2 rounded-lg bg-white p-px px-4 py-2 text-sm font-semibold leading-6 text-black no-underline transition duration-200 hover:bg-gray-50 sm:w-52 dark:bg-neutral-800 dark:text-white dark:hover:bg-neutral-700"
             >
               Explore More
             </a>
