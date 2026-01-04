@@ -37,8 +37,17 @@ export const artistTypesAtom = (() => {
   const remoteAtom = ArtistTypeClient.runtime
     .atom(
       Effect.gen(function* () {
+        yield* Effect.log('[artistTypesAtom] Fetching artist types from RPC...');
         const client = yield* ArtistTypeClient;
-        return yield* client('artistType_list', undefined);
+        const result = yield* client('artistType_list', undefined).pipe(
+          Effect.tap((data) =>
+            Effect.log(`[artistTypesAtom] Successfully fetched ${data.length} artist types`),
+          ),
+          Effect.tapError((error) =>
+            Effect.log(`[artistTypesAtom] Error fetching artist types: ${JSON.stringify(error)}`),
+          ),
+        );
+        return result;
       }),
     )
     .pipe(
@@ -49,6 +58,7 @@ export const artistTypesAtom = (() => {
           error: RpcClientError.RpcClientError,
         }) as any,
       }),
+      Atom.keepAlive,
     );
 
   return Object.assign(
@@ -58,7 +68,7 @@ export const artistTypesAtom = (() => {
       (refresh) => {
         refresh(remoteAtom);
       },
-    ),
+    ).pipe(Atom.keepAlive),
     { remote: remoteAtom },
   );
 })();
