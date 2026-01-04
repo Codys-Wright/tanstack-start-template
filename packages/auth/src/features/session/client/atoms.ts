@@ -291,14 +291,49 @@ export const authRuntime = Atom.runtime(AuthApi.Default);
  * - Sends HTTP-only cookies with requests
  * - Refreshes session on window focus
  * - Syncs across browser tabs
+ *
+ * The atom is kept alive to prevent re-fetching on every component mount.
+ * During SSR, returns null to avoid multiple server-side fetches - the session
+ * will be fetched once on the client after hydration.
+ *
+ * Uses a deduplication promise to ensure only one fetch happens even if
+ * multiple components subscribe simultaneously.
  */
 export const sessionAtom = (() => {
-  const remoteAtom = authRuntime.atom(
-    Effect.gen(function* () {
-      const api = yield* AuthApi;
-      return yield* api.getSession();
-    }),
-  );
+  // Deduplication: track in-flight request to prevent multiple simultaneous fetches
+  let inFlightPromise: Promise<SessionData> | null = null;
+
+  const remoteAtom = authRuntime
+    .atom(
+      Effect.gen(function* () {
+        // Skip fetching during SSR - session will be fetched on client
+        if (typeof window === 'undefined') {
+          return null as SessionData;
+        }
+
+        // If there's already a request in flight, wait for it
+        if (inFlightPromise) {
+          return yield* Effect.tryPromise({
+            try: () => inFlightPromise!,
+            catch: (error) => new Error(`Failed to get session: ${error}`),
+          });
+        }
+
+        const api = yield* AuthApi;
+
+        // Create the promise and store it for deduplication
+        const sessionEffect = api.getSession();
+        inFlightPromise = Effect.runPromise(sessionEffect).finally(() => {
+          inFlightPromise = null;
+        });
+
+        return yield* Effect.tryPromise({
+          try: () => inFlightPromise!,
+          catch: (error) => new Error(`Failed to get session: ${error}`),
+        });
+      }),
+    )
+    .pipe(Atom.keepAlive);
 
   return Object.assign(
     Atom.writable(
@@ -311,7 +346,7 @@ export const sessionAtom = (() => {
       (refresh) => {
         refresh(remoteAtom);
       },
-    ),
+    ).pipe(Atom.keepAlive),
     { remote: remoteAtom },
   );
 })();
