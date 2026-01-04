@@ -29,6 +29,8 @@
     "./package.json": "./package.json"
   },
   "dependencies": {
+    "@auth": "*",
+    "@components": "*",
     "@core": "*",
     "@effect-atom/atom": "*",
     "@effect-atom/atom-react": "*",
@@ -36,6 +38,7 @@
     "@effect/rpc": "*",
     "@effect/sql": "*",
     "@shadcn": "*",
+    "@tanstack/react-start": "*",
     "effect": "*",
     "react": "*"
   },

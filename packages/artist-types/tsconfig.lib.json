@@ -12,14 +12,27 @@
     "module": "esnext",
     "moduleResolution": "bundler",
     "types": ["node"],
+    "resolveJsonModule": true,
     "paths": {
       "@/*": ["./src/*"],
+      "@auth": ["../auth/src/index.ts"],
+      "@auth/*": ["../auth/src/*"],
+      "@components": ["../ui/components/src/index.ts"],
+      "@components/*": ["../ui/components/src/*"],
       "@core": ["../core/src/index.ts"],
-      "@core/*": ["../core/src/*"]
+      "@core/*": ["../core/src/*"],
+      "@shadcn": ["../ui/shadcn/src/index.ts"],
+      "@shadcn/*": ["../ui/shadcn/src/*"]
     }
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx"],
+  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.json"],
   "references": [
+    {
+      "path": "../auth/tsconfig.lib.json"
+    },
+    {
+      "path": "../ui/components/tsconfig.lib.json"
+    },
     {
       "path": "../ui/shadcn/tsconfig.lib.json"
     },
