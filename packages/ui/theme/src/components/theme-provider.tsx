@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect } from 'react';
+import { createContext, useContext, useLayoutEffect } from 'react';
 import { useAtomValue, useAtomSet } from '@effect-atom/atom-react';
 import { colorModeAtom } from '../atoms/theme-atoms';
 
@@ -26,25 +26,27 @@ export function ThemeProvider({ children, ...props }: ThemeProviderProps) {
   const theme = useAtomValue(colorModeAtom);
   const setThemeAtom = useAtomSet(colorModeAtom);
 
-  useEffect(() => {
+  // Use useLayoutEffect for synchronous DOM updates to prevent flash
+  useLayoutEffect(() => {
     if (typeof window === 'undefined') {
       return;
     }
 
     const root = window.document.documentElement;
 
-    root.classList.remove('light', 'dark');
+    // Determine the actual theme to apply
+    const actualTheme =
+      theme === 'system'
+        ? window.matchMedia('(prefers-color-scheme: dark)').matches
+          ? 'dark'
+          : 'light'
+        : theme;
 
-    if (theme === 'system') {
-      const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches
-        ? 'dark'
-        : 'light';
-
-      root.classList.add(systemTheme);
-      return;
+    // Only update if the class isn't already correct (prevents flash during hydration)
+    if (!root.classList.contains(actualTheme)) {
+      root.classList.remove('light', 'dark');
+      root.classList.add(actualTheme);
     }
-
-    root.classList.add(theme);
   }, [theme]);
 
   const value = {
