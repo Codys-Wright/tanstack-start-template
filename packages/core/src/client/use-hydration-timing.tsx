@@ -16,6 +16,8 @@
  */
 
 import { useEffect, useRef, useState } from 'react';
+import * as Effect from 'effect/Effect';
+import * as Logger from 'effect/Logger';
 
 export interface HydrationMetrics {
   /** Time from navigation start to this component's first render */
@@ -40,6 +42,21 @@ declare global {
     __HYDRATION_START__?: number;
   }
 }
+
+/**
+ * Effect program to log hydration metrics using Effect's pretty logger
+ */
+const logHydrationMetrics = (label: string, metrics: HydrationMetrics) =>
+  Effect.gen(function* () {
+    yield* Effect.logInfo(`Hydration complete: ${label}`).pipe(
+      Effect.annotateLogs({
+        component: label,
+        'ssr.ms': metrics.ssrDeliveryMs,
+        'hydration.ms': metrics.hydrationMs,
+        'total.ms': metrics.totalMs,
+      }),
+    );
+  }).pipe(Effect.provide(Logger.pretty), Effect.runSync);
 
 /**
  * Hook to measure and log hydration timing for a component/page
@@ -105,17 +122,8 @@ export function useHydrationTiming(
     window.__HYDRATION_METRICS__[label] = metrics;
 
     if (log) {
-      // Use a styled console log for visibility
-      console.log(
-        `%c[Hydration] ${label}%c SSR=%c${metrics.ssrDeliveryMs}ms%c Hydration=%c${metrics.hydrationMs}ms%c Total=%c${metrics.totalMs}ms`,
-        'color: #8b5cf6; font-weight: bold',
-        'color: inherit',
-        'color: #22c55e; font-weight: bold',
-        'color: inherit',
-        'color: #3b82f6; font-weight: bold',
-        'color: inherit',
-        'color: #f59e0b; font-weight: bold',
-      );
+      // Use Effect's pretty logger
+      logHydrationMetrics(label, metrics);
     }
 
     onMetrics?.(metrics);
