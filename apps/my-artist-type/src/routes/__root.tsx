@@ -52,8 +52,9 @@ function RootComponent() {
 
   // Check if we're on an admin route (no navbar needed)
   const isAdminRoute = location.pathname.startsWith('/admin');
-  // Home page doesn't need top spacing (hero section handles it)
-  const isHomePage = location.pathname === '/';
+  // Pages with full-bleed backgrounds handle their own navbar spacing
+  // Only the index pages, not detail pages
+  const isFullBleedPage = location.pathname === '/' || location.pathname === '/artist-types';
 
   return (
     <>
@@ -61,8 +62,8 @@ function RootComponent() {
         <Outlet />
       ) : (
         <NavbarHome>
-          {/* Add top spacing for all pages except home (navbar is fixed) */}
-          <div className={isHomePage ? '' : 'pt-24'}>
+          {/* Add top spacing for pages that don't handle their own navbar clearance */}
+          <div className={isFullBleedPage ? '' : 'pt-24'}>
             <Outlet />
           </div>
         </NavbarHome>
