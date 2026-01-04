@@ -1,0 +1,45 @@
+{
+  "name": "@course",
+  "version": "0.0.1",
+  "type": "module",
+  "private": true,
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./src/index.ts"
+    },
+    "./server": {
+      "types": "./src/server.ts",
+      "default": "./src/server.ts"
+    },
+    "./database": {
+      "types": "./src/database.ts",
+      "default": "./src/database.ts"
+    },
+    "./features/*": {
+      "types": "./src/features/*/index.ts",
+      "default": "./src/features/*/index.ts"
+    }
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@auth": "workspace:*",
+    "@core": "workspace:*",
+    "@effect-atom/atom": "*",
+    "@effect-atom/atom-react": "*",
+    "@effect/platform": "*",
+    "@effect/rpc": "*",
+    "@effect/sql": "*",
+    "@faker-js/faker": "*",
+    "effect": "*"
+  },
+  "devDependencies": {
+    "@types/react": "*",
+    "typescript": "*"
+  },
+  "peerDependencies": {
+    "react": "*"
+  }
+}

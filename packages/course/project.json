@@ -1,0 +1,22 @@
+{
+  "name": "course",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/course/src",
+  "projectType": "library",
+  "tags": ["scope:course", "type:feature"],
+  "targets": {
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsc --noEmit",
+        "cwd": "packages/course"
+      }
+    },
+    "test": {
+      "executor": "@nx/vite:test",
+      "options": {
+        "config": "../../vitest.config.ts"
+      }
+    }
+  }
+}
