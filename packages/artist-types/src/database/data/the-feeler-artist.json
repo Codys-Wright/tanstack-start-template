@@ -1,0 +1,21 @@
+{
+  "id": "the-feeler-artist",
+  "name": "The Feeler Artist",
+  "shortName": "Feeler",
+  "abbreviation": "Fee",
+  "coinIcon": "/svgs/artist-type-coins/8_FEELER_COIN.svg",
+  "icon": "/svgs/artist-type-logos/8_FEELER_LOGO.svg",
+  "order": 8,
+  "subtitle": "The Heart-Centered Creator",
+  "elevatorPitch": "You create from the heart and connect deeply with emotions and human experiences, touching souls through authentic expression.",
+  "shortDescription": "The Feeler Artist is highly expressive and filters life & artistry through their emotions. More so than most other artists, they seek out and are fueled by inspiration and know how to ride it like a wave. This enables them to create work that can be very powerful and filled with a sense of vitality. Their sensitivity is a primary component of their artistry and personality.",
+  "longDescription": "\n## Overview\n\nThe Feeling Artist creates from a place of deep emotional connection and sensitivity. They excel at expressing and evoking powerful emotions through their work.\n\n### Key Characteristics\n\n- Emotional sensitivity\n- Empathetic nature\n- Intuitive understanding\n- Deep expression\n\n## Strengths\n\nThey excel at:\n- Emotional expression\n- Creating meaningful connections\n- Understanding audiences\n- Authentic creation\n\n## Growth Areas\n\nAreas for development:\n- Emotional boundaries\n- Technical structure\n- Objective criticism\n- Work-life balance\n\n## Creative Process\n\nTheir process involves:\n- Emotional exploration\n- Intuitive creation\n- Personal connection\n- Authentic expression\n\n### Collaboration Style\n\nIn collaborations, they:\n- Build emotional connections\n- Create safe spaces\n- Foster understanding\n- Support team harmony\n\n## Career Paths\n\nCommon paths include:\n- Expressive artist\n- Art therapist\n- Emotional designer\n- Performance artist\n- Teaching artist\n\n### Growth Recommendations\n\n1. Develop technical skills\n2. Set emotional boundaries\n3. Balance feeling with structure\n4. Practice self-care\n    ",
+  "metadata": {
+    "colorPalette": ["#FF69B4", "#FFC0CB", "#FFB6C1"],
+    "relatedTypes": ["the-dreamer-artist", "the-tortured-artist"],
+    "strengths": ["Empathy", "Authenticity", "Emotional Intelligence", "Connection"],
+    "challenges": ["Overwhelm", "Boundaries", "Criticism Sensitivity"],
+    "idealCollaborators": ["The Consummate Artist", "The Entertainer Artist"]
+  },
+  "notes": "Represents emotion-driven creativity and authentic expression"
+}

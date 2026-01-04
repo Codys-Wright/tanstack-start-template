@@ -1,7 +1,7 @@
 import { makeCleanup, makeSeeder, type CleanupEntry, type SeederEntry } from '@core/database';
 import * as SqlClient from '@effect/sql/SqlClient';
 import * as Effect from 'effect/Effect';
-import { getAllArtistTypeSeedData } from '../data/index.js';
+import { getAllArtistTypeSeedData } from './data/index.js';
 
 export const artistTypes = makeSeeder(
   { name: 'artist_types', defaultCount: 10, dependsOn: [] },

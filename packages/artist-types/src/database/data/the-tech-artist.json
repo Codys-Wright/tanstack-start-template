@@ -1,0 +1,48 @@
+{
+  "id": "the-tech-artist",
+  "name": "The Tech Artist",
+  "shortName": "Tech",
+  "abbreviation": "TEC",
+  "coinIcon": null,
+  "icon": "/svgs/artist-type-logos/4_TECH_LOGO.svg",
+  "order": 4,
+  "subtitle": "The Digital Pioneer",
+  "elevatorPitch": "Tech Artists seamlessly blend cutting-edge technology with creative vision, often creating entirely new possibilities for artistic expression.",
+  "shortDescription": "Possesses an instinctual understanding of technology that goes beyond mere technical skill—they intuitively grasp how digital tools can amplify creative expression. Tech Artists are naturally inventive and unusually productive, often creating their own workflows, tools, and systems. They see technology not as a constraint but as an infinite canvas for creative exploration.",
+  "longDescription": "\n## Overview\n\nThe Technical Artist bridges the gap between creative vision and technical execution. They excel at using technology and technical skills to bring artistic ideas to life.\n\n### Key Characteristics\n\n- Strong technical expertise\n- Problem-solving ability\n- Innovation in tools and methods\n- Practical creativity\n\n## Strengths\n\nTechnical Artists excel at:\n- Implementing complex artistic solutions\n- Optimizing creative workflows\n- Bridging art and technology\n- Creating efficient systems\n\n## Growth Areas\n\nAreas for growth include:\n- Balancing technical and artistic aspects\n- Developing pure creative expression\n- Communicating with non-technical team members\n- Embracing artistic spontaneity\n\n## Creative Process\n\nTheir process typically includes:\n- Technical planning and setup\n- Systematic implementation\n- Optimization and refinement\n- Documentation and sharing\n\n### Collaboration Style\n\nThey contribute through:\n- Technical problem-solving\n- Pipeline development\n- Tool creation and optimization\n- Knowledge sharing\n\n## Career Paths\n\nCommon roles include:\n- Technical director\n- Pipeline developer\n- Digital artist\n- Creative technologist\n- Tool developer\n\n### Growth Recommendations\n\n1. Explore pure artistic expression\n2. Balance technical and creative aspects\n3. Develop communication skills\n4. Share knowledge through teaching\n    ",
+  "metadata": {
+    "strengths": [
+      "Technological fluency and adaptation",
+      "System and workflow optimization",
+      "Tool creation and customization",
+      "Problem-solving and innovation",
+      "Bridge between art and technology"
+    ],
+    "challenges": [
+      "May become too focused on technical aspects",
+      "Risk of technology overshadowing artistry",
+      "Rapid technology changes require constant learning",
+      "May struggle with traditional artistic approaches"
+    ],
+    "idealCollaborators": [
+      "The Visionary Artist (for creative direction)",
+      "The Consummate Artist (for quality standards)",
+      "The Analyzer Artist (for systematic approaches)"
+    ],
+    "recommendedPractices": [
+      "Stay current with emerging technologies",
+      "Balance technical learning with artistic development",
+      "Create and share custom tools and workflows",
+      "Experiment with new digital mediums",
+      "Document and teach technical processes"
+    ],
+    "careerPaths": [
+      "Technical Director",
+      "Creative Technologist",
+      "Digital Artist",
+      "Tool Developer",
+      "VFX Artist"
+    ]
+  },
+  "notes": null
+}
