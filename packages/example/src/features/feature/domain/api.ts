@@ -1,6 +1,6 @@
 import * as HttpApiEndpoint from '@effect/platform/HttpApiEndpoint';
 import * as HttpApiGroup from '@effect/platform/HttpApiGroup';
-import * as Schema from 'effect/Schema';
+import * as S from 'effect/Schema';
 import {
   Feature,
   FeatureId,
@@ -21,10 +21,10 @@ import {
  * - DELETE /features/:id - Delete feature
  */
 export class FeatureApiGroup extends HttpApiGroup.make('features')
-  .add(HttpApiEndpoint.get('list', '/features').addSuccess(Schema.Array(Feature)))
+  .add(HttpApiEndpoint.get('list', '/features').addSuccess(S.Array(Feature)))
   .add(
     HttpApiEndpoint.get('getById', '/features/:id')
-      .setPath(Schema.Struct({ id: FeatureId }))
+      .setPath(S.Struct({ id: FeatureId }))
       .addSuccess(Feature)
       .addError(FeatureNotFound),
   )
@@ -33,14 +33,14 @@ export class FeatureApiGroup extends HttpApiGroup.make('features')
   )
   .add(
     HttpApiEndpoint.patch('update', '/features/:id')
-      .setPath(Schema.Struct({ id: FeatureId }))
+      .setPath(S.Struct({ id: FeatureId }))
       .setPayload(UpdateFeatureInput)
       .addSuccess(Feature)
       .addError(FeatureNotFound),
   )
   .add(
     HttpApiEndpoint.del('remove', '/features/:id')
-      .setPath(Schema.Struct({ id: FeatureId }))
-      .addSuccess(Schema.Void)
+      .setPath(S.Struct({ id: FeatureId }))
+      .addSuccess(S.Void)
       .addError(FeatureNotFound),
   ) {}

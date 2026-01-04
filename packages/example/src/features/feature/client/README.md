@@ -38,14 +38,17 @@ client/
 The RPC client provides typed access to server methods.
 
 ```ts
-import { RpcProtocol } from '@core/client/rpc-config';
-import { AtomRpc } from '@effect-atom/atom-react';
-import { FeatureRpc } from '../domain/index.js';
+import { RpcProtocol } from "@core/client/rpc-config";
+import { AtomRpc } from "@effect-atom/atom-react";
+import { FeatureRpc } from "../domain/index.js";
 
-export class FeatureClient extends AtomRpc.Tag<FeatureClient>()('@example/FeatureClient', {
-  group: FeatureRpc,          // RPC group from domain
-  protocol: RpcProtocol,       // Shared protocol config
-}) {}
+export class FeatureClient extends AtomRpc.Tag<FeatureClient>()(
+  "@example/FeatureClient",
+  {
+    group: FeatureRpc, // RPC group from domain
+    protocol: RpcProtocol, // Shared protocol config
+  }
+) {}
 ```
 
 ### What FeatureClient Provides
@@ -63,15 +66,15 @@ Atoms provide reactive state management with SSR hydration support.
 ### Query Atom with SSR Support
 
 ```ts
-import { serializable } from '@core/client/atom-utils';
-import { Atom, Result } from '@effect-atom/atom-react';
-import * as RpcClientError from '@effect/rpc/RpcClientError';
-import * as Effect from 'effect/Effect';
-import * as Schema from 'effect/Schema';
-import { Feature } from '../domain/index.js';
-import { FeatureClient } from './client.js';
+import { serializable } from "@core/client/atom-utils";
+import { Atom, Result } from "@effect-atom/atom-react";
+import * as RpcClientError from "@effect/rpc/RpcClientError";
+import * as Effect from "effect/Effect";
+import * as S from "effect/Schema";
+import { Feature } from "../domain/index.js";
+import { FeatureClient } from "./client.js";
 
-const FeaturesSchema = Schema.Array(Feature);
+const FeaturesSchema = S.Array(Feature);
 
 export const featuresAtom = (() => {
   // Remote atom that fetches from RPC
@@ -79,17 +82,17 @@ export const featuresAtom = (() => {
     .atom(
       Effect.gen(function* () {
         const client = yield* FeatureClient;
-        return yield* client('feature_list', undefined);
-      }),
+        return yield* client("feature_list", undefined);
+      })
     )
     .pipe(
       serializable({
-        key: '@example/features',  // Unique key for hydration
+        key: "@example/features", // Unique key for hydration
         schema: Result.Schema({
           success: FeaturesSchema,
           error: RpcClientError.RpcClientError,
         }),
-      }),
+      })
     );
 
   // Writable atom with local cache updates
@@ -100,15 +103,15 @@ export const featuresAtom = (() => {
         // Handle local cache updates (optimistic UI)
         const current = ctx.get(featuresAtom);
         if (!Result.isSuccess(current)) return;
-        
+
         // Apply update to cache
         ctx.setSelf(Result.success(updatedValue));
       },
       (refresh) => {
-        refresh(remoteAtom);  // Re-fetch on refresh
-      },
+        refresh(remoteAtom); // Re-fetch on refresh
+      }
     ),
-    { remote: remoteAtom },
+    { remote: remoteAtom }
   );
 })();
 ```
@@ -116,10 +119,12 @@ export const featuresAtom = (() => {
 ### Key Concepts
 
 1. **`serializable()`** - Makes atoms SSR-compatible
+
    - `key` - Unique identifier for hydration matching
    - `schema` - Effect Schema for serialization/deserialization
 
 2. **`Result` type** - Represents async state:
+
    - `Result.Initial` - Not yet loaded
    - `Result.Success<A>` - Successfully loaded with value
    - `Result.Failure<E>` - Failed with error
@@ -132,31 +137,31 @@ export const featuresAtom = (() => {
 export const createFeatureAtom = FeatureClient.runtime.fn<CreateFeatureInput>()(
   Effect.fnUntraced(function* (input, get) {
     const client = yield* FeatureClient;
-    const result = yield* client('feature_create', { input });
-    
+    const result = yield* client("feature_create", { input });
+
     // Update local cache after successful mutation
-    get.set(featuresAtom, { _tag: 'Upsert', feature: result });
-    
+    get.set(featuresAtom, { _tag: "Upsert", feature: result });
+
     return result;
-  }),
+  })
 );
 
 export const deleteFeatureAtom = FeatureClient.runtime.fn<FeatureId>()(
   Effect.fnUntraced(function* (id, get) {
     const client = yield* FeatureClient;
-    yield* client('feature_remove', { id });
-    
+    yield* client("feature_remove", { id });
+
     // Update local cache
-    get.set(featuresAtom, { _tag: 'Delete', id });
-  }),
+    get.set(featuresAtom, { _tag: "Delete", id });
+  })
 );
 ```
 
 ### Using Atoms in Components
 
 ```tsx
-import { useAtomValue, useAtomRefresh, Result } from '@effect-atom/atom-react';
-import { featuresAtom, createFeatureAtom } from '../atoms';
+import { useAtomValue, useAtomRefresh, Result } from "@effect-atom/atom-react";
+import { featuresAtom, createFeatureAtom } from "../atoms";
 
 function FeaturesList() {
   const result = useAtomValue(featuresAtom);
@@ -178,8 +183,8 @@ Components are pure UI elements that receive data via props.
 
 ```tsx
 // presentation/components/feature-card.tsx
-import { Card } from '@shadcn';
-import type { Feature } from '../../../domain/index.js';
+import { Card } from "@shadcn";
+import type { Feature } from "../../../domain/index.js";
 
 export interface FeatureCardProps {
   feature: Feature;
@@ -203,10 +208,10 @@ Views connect to atoms and compose components.
 
 ```tsx
 // presentation/views/features-list.tsx
-import { Alert, Button } from '@shadcn';
-import { Result, useAtomRefresh, useAtomValue } from '@effect-atom/atom-react';
-import { featuresAtom } from '../../atoms.js';
-import { FeatureCard } from '../components/index.js';
+import { Alert, Button } from "@shadcn";
+import { Result, useAtomRefresh, useAtomValue } from "@effect-atom/atom-react";
+import { featuresAtom } from "../../atoms.js";
+import { FeatureCard } from "../components/index.js";
 
 export function FeaturesListView() {
   const result = useAtomValue(featuresAtom);
@@ -243,9 +248,9 @@ Pages are the top-level components for routes. They handle SSR hydration.
 
 ```tsx
 // presentation/routes/features-page.tsx
-import type * as Hydration from '@effect-atom/atom/Hydration';
-import { HydrationBoundary } from '@effect-atom/atom-react/ReactHydration';
-import { FeaturesListView } from '../views/index.js';
+import type * as Hydration from "@effect-atom/atom/Hydration";
+import { HydrationBoundary } from "@effect-atom/atom-react/ReactHydration";
+import { FeaturesListView } from "../views/index.js";
 
 export interface FeaturesPageProps {
   loaderData: Hydration.DehydratedAtom;
@@ -273,39 +278,43 @@ Server functions run on the server and return data for SSR.
 
 ```ts
 // presentation/routes/load-features.ts
-import type * as Hydration from '@effect-atom/atom/Hydration';
-import { Atom, Result } from '@effect-atom/atom-react';
-import { createServerFn } from '@tanstack/react-start';
-import * as Effect from 'effect/Effect';
+import type * as Hydration from "@effect-atom/atom/Hydration";
+import { Atom, Result } from "@effect-atom/atom-react";
+import { createServerFn } from "@tanstack/react-start";
+import * as Effect from "effect/Effect";
 
-import { AuthService } from '@auth/server';
-import { ExampleServerRuntime } from '../../../../../core/server/runtime.js';
-import { FeatureService } from '../../../server/index.js';
-import { featuresAtom } from '../../atoms.js';
+import { AuthService } from "@auth/server";
+import { ExampleServerRuntime } from "../../../../../core/server/runtime.js";
+import { FeatureService } from "../../../server/index.js";
+import { featuresAtom } from "../../atoms.js";
 
 // Dehydrate helper for SSR
 const dehydrate = <A, I>(
-  atom: Atom.Atom<A> & { [Atom.SerializableTypeId]: { key: string; encode: (value: A) => I } },
-  value: A,
+  atom: Atom.Atom<A> & {
+    [Atom.SerializableTypeId]: { key: string; encode: (value: A) => I };
+  },
+  value: A
 ): Hydration.DehydratedAtom =>
   ({
-    '~@effect-atom/atom/DehydratedAtom': true,
+    "~@effect-atom/atom/DehydratedAtom": true,
     key: atom[Atom.SerializableTypeId].key,
     value: atom[Atom.SerializableTypeId].encode(value),
     dehydratedAt: Date.now(),
-  }) as Hydration.DehydratedAtom;
+  } as Hydration.DehydratedAtom);
 
-export const loadFeatures = createServerFn({ method: 'GET' }).handler(async () => {
-  const featuresExit = await ExampleServerRuntime.runPromiseExit(
-    Effect.gen(function* () {
-      const service = yield* FeatureService;
-      return yield* service.list();
-    }),
-  );
+export const loadFeatures = createServerFn({ method: "GET" }).handler(
+  async () => {
+    const featuresExit = await ExampleServerRuntime.runPromiseExit(
+      Effect.gen(function* () {
+        const service = yield* FeatureService;
+        return yield* service.list();
+      })
+    );
 
-  // Dehydrate for HydrationBoundary
-  return dehydrate(featuresAtom.remote, Result.fromExit(featuresExit));
-});
+    // Dehydrate for HydrationBoundary
+    return dehydrate(featuresAtom.remote, Result.fromExit(featuresExit));
+  }
+);
 ```
 
 ### Detail Loader (Simple Return)
@@ -314,20 +323,20 @@ For simpler cases without atom hydration:
 
 ```ts
 // presentation/routes/load-feature-by-id.ts
-import { createServerFn } from '@tanstack/react-start';
-import * as Effect from 'effect/Effect';
-import * as Exit from 'effect/Exit';
+import { createServerFn } from "@tanstack/react-start";
+import * as Effect from "effect/Effect";
+import * as Exit from "effect/Exit";
 
-import { ExampleServerRuntime } from '../../../../../core/server/runtime.js';
-import type { Feature } from '../../../domain/index.js';
-import { FeatureService } from '../../../server/index.js';
+import { ExampleServerRuntime } from "../../../../../core/server/runtime.js";
+import type { Feature } from "../../../domain/index.js";
+import { FeatureService } from "../../../server/index.js";
 
 export interface FeatureDetailLoaderData {
   feature: Feature | null;
   error: string | null;
 }
 
-export const loadFeatureById = createServerFn({ method: 'GET' }).handler(
+export const loadFeatureById = createServerFn({ method: "GET" }).handler(
   async (ctx: { data: string }): Promise<FeatureDetailLoaderData> => {
     const featureId = ctx.data;
 
@@ -335,15 +344,15 @@ export const loadFeatureById = createServerFn({ method: 'GET' }).handler(
       Effect.gen(function* () {
         const service = yield* FeatureService;
         return yield* service.getById(featureId as any);
-      }),
+      })
     );
 
     if (Exit.isSuccess(exit)) {
       return { feature: exit.value, error: null };
     }
 
-    return { feature: null, error: 'Feature not found' };
-  },
+    return { feature: null, error: "Feature not found" };
+  }
 );
 ```
 
@@ -353,10 +362,10 @@ Apps wire up the exported pages and loaders in their route files:
 
 ```tsx
 // apps/my-app/src/routes/example/index.tsx
-import { createFileRoute } from '@tanstack/react-router';
-import { FeaturesPage, loadFeatures } from '@example';
+import { createFileRoute } from "@tanstack/react-router";
+import { FeaturesPage, loadFeatures } from "@example";
 
-export const Route = createFileRoute('/example/')({
+export const Route = createFileRoute("/example/")({
   loader: () => loadFeatures(),
   component: FeaturesPageWrapper,
 });
@@ -369,10 +378,10 @@ function FeaturesPageWrapper() {
 
 ```tsx
 // apps/my-app/src/routes/example/$featureId.tsx
-import { createFileRoute } from '@tanstack/react-router';
-import { FeatureDetailPage, loadFeatureById } from '@example';
+import { createFileRoute } from "@tanstack/react-router";
+import { FeatureDetailPage, loadFeatureById } from "@example";
 
-export const Route = createFileRoute('/example/$featureId')({
+export const Route = createFileRoute("/example/$featureId")({
   loader: ({ params }) => loadFeatureById({ data: params.featureId }),
   component: FeatureDetailPageWrapper,
 });
@@ -387,15 +396,15 @@ function FeatureDetailPageWrapper() {
 
 ```ts
 // Re-export client
-export * from './client';
+export * from "./client";
 
 // Re-export atoms
-export * from './atoms';
+export * from "./atoms";
 
 // Re-export presentation
-export * from './presentation/components';
-export * from './presentation/views';
-export * from './presentation/routes';
+export * from "./presentation/components";
+export * from "./presentation/views";
+export * from "./presentation/routes";
 ```
 
 ## Key Principles

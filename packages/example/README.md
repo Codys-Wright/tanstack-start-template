@@ -49,6 +49,7 @@ packages/example/
 When creating a new feature, follow this order to ensure dependencies are satisfied:
 
 ### 1. Domain Layer (First)
+
 ```
 features/[name]/domain/
 ├── schema.ts      # 1. Define schemas, IDs, error types
@@ -58,6 +59,7 @@ features/[name]/domain/
 ```
 
 ### 2. Database Layer
+
 ```
 features/[name]/database/
 ├── repo.ts        # 5. Implement repository with SQL queries
@@ -71,6 +73,7 @@ database/
 ```
 
 ### 3. Server Layer
+
 ```
 features/[name]/server/
 ├── service.ts     # 10. Create service (wraps repository)
@@ -85,6 +88,7 @@ core/server/
 ```
 
 ### 4. Client Layer (Last)
+
 ```
 features/[name]/client/
 ├── client.ts      # 17. Create RPC client
@@ -116,23 +120,23 @@ resolve: {
 In your app's migration script, import and register the package migrations:
 
 ```ts
-import { ExampleMigrations } from '@example/database';
+import { ExampleMigrations } from "@example/database";
 
 const AllMigrations = Layer.mergeAll(
   CoreMigrations,
   AuthMigrations,
-  ExampleMigrations,  // Add package migrations
+  ExampleMigrations // Add package migrations
 );
 ```
 
 ### 3. Register Seeds (Optional)
 
 ```ts
-import { example } from '@example/database';
+import { example } from "@example/database";
 
 const seeders = [
   ...auth(),
-  ...example({ features: 20 }),  // Seed 20 features
+  ...example({ features: 20 }), // Seed 20 features
 ];
 ```
 
@@ -161,10 +165,10 @@ Create thin route files in your app that use the package's exports:
 
 ```tsx
 // apps/[app]/src/routes/example/index.tsx
-import { FeaturesPage, loadFeatures } from '@example';
-import { createFileRoute } from '@tanstack/react-router';
+import { FeaturesPage, loadFeatures } from "@example";
+import { createFileRoute } from "@tanstack/react-router";
 
-export const Route = createFileRoute('/example/')({
+export const Route = createFileRoute("/example/")({
   loader: () => loadFeatures(),
   component: FeaturesPageWrapper,
 });
@@ -182,15 +186,17 @@ function FeaturesPageWrapper() {
 Server functions use `createServerFn` from TanStack Start for SSR data loading:
 
 ```ts
-export const loadFeatures = createServerFn({ method: 'GET' }).handler(async () => {
-  const exit = await ExampleServerRuntime.runPromiseExit(
-    Effect.gen(function* () {
-      const service = yield* FeatureService;
-      return yield* service.list();
-    })
-  );
-  return dehydrate(featuresAtom.remote, Result.fromExit(exit));
-});
+export const loadFeatures = createServerFn({ method: "GET" }).handler(
+  async () => {
+    const exit = await ExampleServerRuntime.runPromiseExit(
+      Effect.gen(function* () {
+        const service = yield* FeatureService;
+        return yield* service.list();
+      })
+    );
+    return dehydrate(featuresAtom.remote, Result.fromExit(exit));
+  }
+);
 ```
 
 ### Hydration Pattern
@@ -207,18 +213,22 @@ The package uses Effect Atom for SSR hydration:
 All business logic uses Effect's service pattern:
 
 ```ts
-export class FeatureService extends Effect.Service<FeatureService>()('FeatureService', {
-  dependencies: [FeatureRepository.Default],
-  effect: Effect.gen(function* () {
-    const repo = yield* FeatureRepository;
-    return { list: () => repo.list(), /* ... */ };
-  }),
-}) {}
+export class FeatureService extends Effect.Service<FeatureService>()(
+  "FeatureService",
+  {
+    dependencies: [FeatureRepository.Default],
+    effect: Effect.gen(function* () {
+      const repo = yield* FeatureRepository;
+      return { list: () => repo.list() /* ... */ };
+    }),
+  }
+) {}
 ```
 
 ## Exports
 
 ### Client Entry (`@example` or `./src/index.ts`)
+
 - Schemas, types, error classes
 - RPC definitions
 - Atoms
@@ -226,12 +236,14 @@ export class FeatureService extends Effect.Service<FeatureService>()('FeatureSer
 - Server functions (for route loaders)
 
 ### Server Entry (`@example/server` or `./src/server.ts`)
+
 - Services
 - RPC handlers (Live layers)
 - HTTP API handlers (Live layers)
 - Server runtime
 
 ### Database Entry (`@example/database` or `./src/database.ts`)
+
 - Migrations
 - Seeders
 - Cleanup functions
@@ -242,7 +254,7 @@ export class FeatureService extends Effect.Service<FeatureService>()('FeatureSer
 2. **Barrel Exports**: Each directory has an `index.ts` that re-exports
 3. **Effect Services**: Use `Effect.Service` for dependency injection
 4. **Schema-First**: Define schemas before repositories/services
-5. **Typed Errors**: Use `Schema.TaggedError` for domain errors
+5. **Typed Errors**: Use `S.TaggedError` for domain errors
 6. **SSR-Ready**: All data loading goes through server functions
 
 ## See Also

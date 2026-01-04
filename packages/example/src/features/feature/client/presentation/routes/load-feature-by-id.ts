@@ -24,7 +24,7 @@ import { createServerFn } from '@tanstack/react-start';
 import * as Cause from 'effect/Cause';
 import * as Effect from 'effect/Effect';
 import * as Exit from 'effect/Exit';
-import * as Schema from 'effect/Schema';
+import * as S from 'effect/Schema';
 
 import { ExampleServerRuntime } from '../../../../../core/server/runtime.js';
 import { Feature } from '../../../domain/index.js';
@@ -76,7 +76,7 @@ export const loadFeatureById = createServerFn({ method: 'GET' })
 
     if (Exit.isSuccess(exit)) {
       // Encode the Feature to JSON-serializable format (DateTimeUtc -> ISO string)
-      const encodedFeature = Schema.encodeSync(Feature)(exit.value);
+      const encodedFeature = S.encodeSync(Feature)(exit.value);
       return { feature: encodedFeature, error: null };
     }
 

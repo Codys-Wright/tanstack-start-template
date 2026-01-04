@@ -5,11 +5,11 @@ import * as Arr from 'effect/Array';
 import * as Data from 'effect/Data';
 import * as Effect from 'effect/Effect';
 import * as Option from 'effect/Option';
-import * as Schema from 'effect/Schema';
+import * as S from 'effect/Schema';
 import { CreateFeatureInput, Feature, FeatureId, UpdateFeatureInput } from '../domain/index.js';
 import { FeatureClient } from './client.js';
 
-const FeaturesSchema = Schema.Array(Feature);
+const FeaturesSchema = S.Array(Feature);
 
 // ============================================================================
 // Query Atoms

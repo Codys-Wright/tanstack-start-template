@@ -1,6 +1,6 @@
 import * as Rpc from '@effect/rpc/Rpc';
 import * as RpcGroup from '@effect/rpc/RpcGroup';
-import * as Schema from 'effect/Schema';
+import * as S from 'effect/Schema';
 import {
   CreateFeatureInput,
   Feature,
@@ -11,7 +11,7 @@ import {
 
 export class FeatureRpc extends RpcGroup.make(
   Rpc.make('list', {
-    success: Schema.Array(Feature),
+    success: S.Array(Feature),
   }),
 
   Rpc.make('getById', {
@@ -32,7 +32,7 @@ export class FeatureRpc extends RpcGroup.make(
   }),
 
   Rpc.make('remove', {
-    success: Schema.Void,
+    success: S.Void,
     error: FeatureNotFound,
     payload: { id: FeatureId },
   }),

@@ -4,7 +4,7 @@ import * as SqlSchema from '@effect/sql/SqlSchema';
 import * as Effect from 'effect/Effect';
 import { flow } from 'effect/Function';
 import * as Option from 'effect/Option';
-import * as Schema from 'effect/Schema';
+import * as S from 'effect/Schema';
 import {
   CreateFeatureInput,
   Feature,
@@ -22,7 +22,7 @@ export class FeatureRepository extends Effect.Service<FeatureRepository>()(
 
       const list = flow(
         SqlSchema.findAll({
-          Request: Schema.Void,
+          Request: S.Void,
           Result: Feature,
           execute: () => sql`
             SELECT
@@ -99,10 +99,10 @@ export class FeatureRepository extends Effect.Service<FeatureRepository>()(
           const result = yield* Effect.gen(function* () {
             if (nameValue !== null && descriptionValue !== null) {
               return yield* SqlSchema.findOne({
-                Request: Schema.Struct({
+                Request: S.Struct({
                   id: FeatureId,
-                  name: Schema.String,
-                  description: Schema.String,
+                  name: S.String,
+                  description: S.String,
                 }),
                 Result: Feature,
                 execute: (req) => sql`
@@ -122,9 +122,9 @@ export class FeatureRepository extends Effect.Service<FeatureRepository>()(
               })({ id, name: nameValue, description: descriptionValue });
             } else if (nameValue !== null) {
               return yield* SqlSchema.findOne({
-                Request: Schema.Struct({
+                Request: S.Struct({
                   id: FeatureId,
-                  name: Schema.String,
+                  name: S.String,
                 }),
                 Result: Feature,
                 execute: (req) => sql`
@@ -143,9 +143,9 @@ export class FeatureRepository extends Effect.Service<FeatureRepository>()(
               })({ id, name: nameValue });
             } else {
               return yield* SqlSchema.findOne({
-                Request: Schema.Struct({
+                Request: S.Struct({
                   id: FeatureId,
-                  description: Schema.String,
+                  description: S.String,
                 }),
                 Result: Feature,
                 execute: (req) => sql`
