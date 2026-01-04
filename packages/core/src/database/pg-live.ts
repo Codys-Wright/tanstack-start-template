@@ -1,6 +1,8 @@
+import * as BunContext from '@effect/platform-bun/BunContext';
 import * as BunFileSystem from '@effect/platform-bun/BunFileSystem';
 import * as FileSystem from '@effect/platform/FileSystem';
 import * as PgClient from '@effect/sql-pg/PgClient';
+import * as PgMigrator from '@effect/sql-pg/PgMigrator';
 import * as SqlClient from '@effect/sql/SqlClient';
 import { PostgreSqlContainer } from '@testcontainers/postgresql';
 import * as Config from 'effect/Config';
@@ -83,6 +85,25 @@ const PgClientTest = Layer.unwrapEffect(
  */
 export const makePgTest = (schemaPath: string) =>
   makeApplySchemaDump(schemaPath).pipe(Layer.provideMerge(PgClientTest));
+
+/**
+ * Creates a PgClient test layer with migrations applied.
+ * Useful for testing against the actual migration code.
+ * @param loader - Migration loader (e.g., from discoverFromPath)
+ */
+export const makePgTestMigrations = (loader: PgMigrator.Loader) =>
+  Layer.unwrapEffect(
+    Effect.gen(function* () {
+      const container = yield* PgContainer;
+      const clientLayer = PgClient.layer({
+        url: Redacted.make(container.getConnectionUri()),
+        ...pgConfig,
+      });
+      const fsLayer = Layer.merge(BunFileSystem.layer, BunContext.layer);
+      yield* PgMigrator.run({ loader }).pipe(Effect.provide(clientLayer), Effect.provide(fsLayer));
+      return clientLayer;
+    }),
+  ).pipe(Layer.provide(PgContainer.Default), Layer.orDie);
 
 // ===============================
 // Test Utils

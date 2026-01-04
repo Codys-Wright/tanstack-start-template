@@ -11,6 +11,11 @@
       "import": "./src/index.ts",
       "default": "./src/index.ts"
     },
+    "./database": {
+      "types": "./src/database/index.ts",
+      "import": "./src/database/index.ts",
+      "default": "./src/database/index.ts"
+    },
     "./*": {
       "types": "./src/*.ts",
       "import": "./src/*.ts",
