@@ -132,7 +132,7 @@ export function MyResponsePageLoading({ className }: { className?: string }) {
           {/* Desktop: Chart on left side (2/5) */}
           <div className="lg:col-span-2 order-1 lg:order-1">
             <div className="lg:sticky lg:top-28">
-              <div className="relative w-full rounded-2xl border border-border/50 bg-card/50 backdrop-blur-sm p-4">
+              <div className="relative w-full rounded-2xl border border-border/50 bg-card/50 backdrop-blur-sm p-2">
                 <ArtistTypeGraphCard
                   data={currentData}
                   showBarChart={false}

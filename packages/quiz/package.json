@@ -61,6 +61,7 @@
     "@tanstack/react-store": "*",
     "@tanstack/react-table": "*",
     "@testcontainers/postgresql": "*",
+    "canvas-confetti": "^1.9.4",
     "csv-parse": "*",
     "culori": "*",
     "effect": "*",

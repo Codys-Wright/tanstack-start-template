@@ -31,7 +31,18 @@ import { AnalyzeResponseRequest } from '../../analysis/domain/schema.js';
 function fireSideCannons() {
   const duration = 1.5 * 1000; // 1.5 seconds
   const end = Date.now() + duration;
-  const colors = ['#a786ff', '#fd8bbc', '#eca184', '#f8deb1'];
+  const colors = [
+    '#a786ff', // purple
+    '#fd8bbc', // pink
+    '#eca184', // peach
+    '#f8deb1', // cream
+    '#87ceeb', // sky blue
+    '#98fb98', // pale green
+    '#ffd700', // gold
+    '#ff6b6b', // coral red
+    '#c9b1ff', // lavender
+    '#88d8b0', // mint
+  ];
 
   let frameCount = 0;
 
@@ -45,6 +56,10 @@ function fireSideCannons() {
       return;
     }
 
+    // Pick random colors for each particle
+    const leftColor = colors[Math.floor(Math.random() * colors.length)];
+    const rightColor = colors[Math.floor(Math.random() * colors.length)];
+
     // Left cannon - subtle
     confetti({
       particleCount: 1,
@@ -53,7 +68,7 @@ function fireSideCannons() {
       startVelocity: 30,
       gravity: 0.8,
       origin: { x: 0, y: 0.6 },
-      colors: colors,
+      colors: [leftColor!],
       ticks: 150,
       scalar: 0.8,
     });
@@ -66,7 +81,7 @@ function fireSideCannons() {
       startVelocity: 30,
       gravity: 0.8,
       origin: { x: 1, y: 0.6 },
-      colors: colors,
+      colors: [rightColor!],
       ticks: 150,
       scalar: 0.8,
     });
@@ -367,14 +382,16 @@ const RankingsSection: React.FC<RankingsSectionProps> = ({ artistData }) => {
 
 const ActionsSection: React.FC = () => {
   return (
-    <div className="flex flex-col sm:flex-row gap-4 justify-center">
-      <Link to="/artist-types">
-        <Button variant="outline" size="lg">
-          Explore All Artist Types
+    <div className="flex flex-col gap-3 pt-2">
+      <Link to="/quiz" className="w-full">
+        <Button size="lg" className="w-full">
+          Retake the Quiz
         </Button>
       </Link>
-      <Link to="/quiz">
-        <Button size="lg">Retake the Quiz</Button>
+      <Link to="/artist-types" className="w-full">
+        <Button variant="ghost" size="sm" className="w-full text-muted-foreground">
+          Explore All Artist Types
+        </Button>
       </Link>
     </div>
   );
