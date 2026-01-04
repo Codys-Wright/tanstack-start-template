@@ -4,12 +4,16 @@ import { Result } from '@effect-atom/atom-react';
 import { Card, Button, Skeleton } from '@shadcn';
 import { sessionAtom, isAdminAtom } from '@auth';
 import { artistTypesAtom } from '@artist-types';
+import { useHydrationTiming } from '@core/client';
 
 export const Route = createFileRoute('/test')({
   component: TestPage,
 });
 
 function TestPage() {
+  // Measure SSR to hydration timing
+  useHydrationTiming('TestPage');
+
   return (
     <div className="container mx-auto p-8 pt-28">
       <h1 className="text-2xl font-bold mb-8">Performance Test Page</h1>
