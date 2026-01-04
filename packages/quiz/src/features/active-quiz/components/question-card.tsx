@@ -1,4 +1,5 @@
 import { Button, Card, cn } from '@shadcn';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import React from 'react';
 import { getColorByEndingName } from './artist-type/artist-data-utils.js';
 
@@ -72,6 +73,10 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
   // Generate rating choices from min to max (inclusive)
   const choices = Array.from({ length: max - min + 1 }, (_, i) => i + min);
 
+  // Split choices into two rows for mobile: first 6 (0-5), then 5 (6-10)
+  const firstRowChoices = choices.slice(0, 6);
+  const secondRowChoices = choices.slice(6);
+
   const handleRatingClick = (rating: number) => {
     onRatingSelect(rating);
     // Auto-advance after a short delay (only if enabled)
@@ -81,6 +86,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
   };
 
   // Create ideal dots overlay for secondary answers positioned above rating buttons
+  // Note: This overlay is designed for desktop single-row layout
   const renderIdealDots = () => {
     if (!showIdealAnswers || idealAnswers === undefined || idealAnswers.length === 0) return null;
 
@@ -147,6 +153,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
   };
 
   // Create primary answer bars positioned below rating buttons
+  // Note: This overlay is designed for desktop single-row layout
   const renderPrimaryBars = () => {
     if (!showIdealAnswers || idealAnswers === undefined || idealAnswers.length === 0) return null;
 
@@ -242,74 +249,147 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
     );
   };
 
+  // Shared button styles for rating buttons
+  const getRatingButtonClasses = (isSelected: boolean) =>
+    cn(
+      // Base styles - large touch targets for mobile
+      'rounded-lg border-2 font-semibold transition-all active:scale-95',
+      // Mobile: compact but touchable buttons
+      'h-12 text-base',
+      // Desktop: same size
+      'md:h-12 md:text-base',
+      // Selected state
+      isSelected
+        ? 'bg-primary text-primary-foreground border-primary shadow-lg scale-[1.02]'
+        : 'bg-background hover:bg-accent hover:border-accent-foreground/20 border-border',
+    );
+
   return (
-    <Card className="gap-0 w-full max-w-3xl animate-in fade-in-0 zoom-in-95 duration-200 shadow-2xl border border-border/60 bg-card ring-1 ring-ring/10">
-      <Card.Header className="p-4 min-h-36 flex items-center justify-center text-center">
-        <Card.Title className="text-2xl md:text-3xl font-bold tracking-tight leading-tight text-center">
+    <div className="flex flex-col w-full max-w-3xl h-full md:min-h-0">
+      {/* Question Title - Takes up more vertical space, pushes card to bottom */}
+      <div className="flex-1 flex items-center justify-center py-2 md:py-12 min-h-0">
+        <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight leading-snug text-center px-4">
           {title ?? content}
-        </Card.Title>
-      </Card.Header>
-      <Card.Content className="flex flex-col gap-6">
-        <div className="flex flex-1 items-center relative">
-          {/* Ideal Answers Overlay positioned above rating buttons */}
-          {renderIdealDots()}
+        </h2>
+      </div>
 
-          {/* Primary Answer Bars positioned below rating buttons */}
-          {renderPrimaryBars()}
+      {/* Card and Navigation - pinned to bottom area */}
+      <div className="flex flex-col gap-2 md:gap-6">
+        <Card className="gap-0 w-full animate-in fade-in-0 zoom-in-95 duration-200 shadow-2xl border border-border/60 bg-card ring-1 ring-ring/10">
+          <Card.Content className="flex flex-col gap-2 md:gap-5 p-3 md:p-8">
+            {/* Min Label - Top left, smaller text */}
+            <div className="text-xs md:text-sm text-muted-foreground">
+              <span>{minLabel}</span>
+            </div>
 
-          <div className="grid w-full grid-cols-11 gap-2">
-            {choices.map((n) => {
-              // Check if this rating is selected from the selectedValues array
-              // This now comes directly from atom data, not local state
-              const isSelected = selectedValues.includes(n);
+            {/* Rating Buttons - Mobile: 2 rows (6+5 centered), Desktop: single row of 11 */}
+            <div className="flex flex-col gap-2">
+              {/* Mobile Layout: Two rows */}
+              <div className="flex flex-col gap-2 md:hidden">
+                {/* First row: 0-5 */}
+                <div className="grid grid-cols-6 gap-2">
+                  {firstRowChoices.map((n) => {
+                    const isSelected = selectedValues.includes(n);
+                    return (
+                      <button
+                        key={n}
+                        type="button"
+                        onClick={() => handleRatingClick(n)}
+                        className={getRatingButtonClasses(isSelected)}
+                      >
+                        {n}
+                      </button>
+                    );
+                  })}
+                </div>
+                {/* Second row: 6-10 (centered using flex) */}
+                <div className="flex justify-center gap-2">
+                  {secondRowChoices.map((n) => {
+                    const isSelected = selectedValues.includes(n);
+                    return (
+                      <button
+                        key={n}
+                        type="button"
+                        onClick={() => handleRatingClick(n)}
+                        className={cn(
+                          getRatingButtonClasses(isSelected),
+                          'w-[calc((100%-2rem)/6)]',
+                        )}
+                      >
+                        {n}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
 
-              return (
-                <button
-                  key={n}
-                  type="button"
-                  onClick={() => {
-                    handleRatingClick(n);
-                  }}
-                  className={cn(
-                    'rounded-md border p-3 text-center text-sm transition-all',
-                    isSelected
-                      ? 'bg-primary text-primary-foreground shadow-md scale-[1.02]'
-                      : 'hover:bg-accent hover:scale-[1.01]',
-                  )}
-                >
-                  {n}
-                </button>
-              );
-            })}
-          </div>
-        </div>
-        <div className="grid grid-cols-[auto_1fr_auto] items-center">
-          <Button type="button" variant="secondary" disabled={!canGoBack} onClick={onBack}>
+              {/* Desktop Layout: Single row with ideal answer overlays */}
+              <div className="hidden md:block">
+                <div className="flex flex-1 items-center relative">
+                  {/* Ideal Answers Overlay positioned above rating buttons */}
+                  {renderIdealDots()}
+
+                  {/* Primary Answer Bars positioned below rating buttons */}
+                  {renderPrimaryBars()}
+
+                  <div className="grid w-full grid-cols-11 gap-2">
+                    {choices.map((n) => {
+                      const isSelected = selectedValues.includes(n);
+                      return (
+                        <button
+                          key={n}
+                          type="button"
+                          onClick={() => handleRatingClick(n)}
+                          className={getRatingButtonClasses(isSelected)}
+                        >
+                          {n}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Max Label - Bottom right, smaller text */}
+            <div className="text-xs md:text-sm text-muted-foreground text-right">
+              <span>{maxLabel}</span>
+            </div>
+          </Card.Content>
+        </Card>
+
+        {/* Navigation Buttons - below card */}
+        <div className="grid grid-cols-2 gap-3 pt-4 md:pt-4 md:pb-8">
+          <Button
+            type="button"
+            variant="secondary"
+            size="lg"
+            disabled={!canGoBack}
+            onClick={onBack}
+            className="h-12 text-base font-medium"
+          >
+            <ChevronLeft className="w-5 h-5 mr-1" />
             Back
           </Button>
-          <div className="flex items-center justify-center gap-3 text-xs text-muted-foreground">
-            <span>{minLabel}</span>
-            <span className="text-muted-foreground/60">/</span>
-            <span>{maxLabel}</span>
-          </div>
-          <div className="flex items-center justify-end gap-2">
-            {canGoNext && !isLastQuestion ? (
-              <Button type="button" onClick={onNext}>
-                Next
-              </Button>
-            ) : (
-              <Button
-                className="bg-green-600 hover:bg-green-700 text-white min-w-[140px]"
-                type="button"
-                onClick={onSubmit}
-                disabled={isSubmitting}
-              >
-                {isSubmitting ? (submissionStatus ?? 'Submitting...') : 'Submit'}
-              </Button>
-            )}
-          </div>
+
+          {canGoNext && !isLastQuestion ? (
+            <Button type="button" size="lg" onClick={onNext} className="h-12 text-base font-medium">
+              Next
+              <ChevronRight className="w-5 h-5 ml-1" />
+            </Button>
+          ) : (
+            <Button
+              type="button"
+              size="lg"
+              onClick={onSubmit}
+              disabled={isSubmitting}
+              className="h-12 text-base font-medium bg-green-600 hover:bg-green-700 text-white"
+            >
+              {isSubmitting ? (submissionStatus ?? 'Submitting...') : 'Submit'}
+            </Button>
+          )}
         </div>
-      </Card.Content>
-    </Card>
+      </div>
+    </div>
   );
 };

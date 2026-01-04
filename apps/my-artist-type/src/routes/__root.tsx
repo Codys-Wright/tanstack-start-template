@@ -1,7 +1,7 @@
 import { RegistryProvider } from '@effect-atom/atom-react';
 import { HeadContent, Outlet, Scripts, createRootRoute, useLocation } from '@tanstack/react-router';
 import { getThemeScriptContent, ThemeProvider, ThemeSystemProviderWithContext } from '@theme';
-import { HydrationDebugPanel, useHydrationTiming } from '@core/client';
+import { useHydrationTiming } from '@core/client';
 import { NavbarHome } from '../features/landing/navbar';
 import appCss from '../styles.css?url';
 
@@ -58,7 +58,10 @@ function RootComponent() {
   const isAdminRoute = location.pathname.startsWith('/admin');
   // Pages with full-bleed backgrounds handle their own navbar spacing
   // Only the index pages, not detail pages
-  const isFullBleedPage = location.pathname === '/' || location.pathname === '/artist-types';
+  const isFullBleedPage =
+    location.pathname === '/' ||
+    location.pathname === '/artist-types' ||
+    location.pathname === '/quiz';
 
   return (
     <>
@@ -72,8 +75,6 @@ function RootComponent() {
           </div>
         </NavbarHome>
       )}
-      {/* Hydration debug panel - only shows in development */}
-      <HydrationDebugPanel />
     </>
   );
 }

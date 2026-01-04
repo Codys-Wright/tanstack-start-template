@@ -60,51 +60,61 @@ export function BlogCard({ blog, basePath = '', isIconImage = false }: BlogCardP
   return (
     <Link
       to={`${basePath}/${blog.slug}`}
-      className="shadow-derek w-full overflow-hidden rounded-3xl border border-border bg-card transition-transform duration-200 hover:scale-[1.02]"
+      className="shadow-derek w-full overflow-hidden rounded-2xl md:rounded-3xl border border-border bg-card transition-transform duration-200 hover:scale-[1.02] active:scale-[0.98]"
     >
-      {blog.image ? (
-        <div
-          className={cn('flex h-52 items-center justify-center', isSvgOrIcon ? 'bg-muted p-6' : '')}
-        >
-          <img
-            src={blog.image}
-            alt={blog.title}
+      {/* Mobile: horizontal layout, Desktop: vertical layout */}
+      <div className="flex flex-row md:flex-col">
+        {blog.image ? (
+          <div
             className={cn(
-              'h-full w-full',
-              isSvgOrIcon
-                ? 'object-contain dark:brightness-0 dark:invert'
-                : 'object-cover object-center',
+              'flex items-center justify-center shrink-0',
+              // Mobile: smaller square, Desktop: full width banner
+              'h-24 w-24 md:h-52 md:w-full',
+              isSvgOrIcon ? 'bg-muted p-3 md:p-6' : '',
             )}
-          />
-        </div>
-      ) : (
-        <div className="flex h-52 items-center justify-center bg-muted">
-          <span className="text-4xl font-bold text-muted-foreground">{blog.title.charAt(0)}</span>
-        </div>
-      )}
-      <div className="bg-card p-4 md:p-8">
-        {(blog.author || blog.authorAvatar) && (
-          <div className="mb-2 flex items-center space-x-2">
-            {blog.authorAvatar && (
-              <img
-                src={blog.authorAvatar}
-                alt={blog.author ?? 'Author'}
-                className="h-5 w-5 rounded-full"
-              />
-            )}
-            {blog.author && (
-              <p className="text-sm font-normal text-neutral-600 dark:text-neutral-400">
-                {blog.author}
-              </p>
-            )}
+          >
+            <img
+              src={blog.image}
+              alt={blog.title}
+              className={cn(
+                'h-full w-full',
+                isSvgOrIcon
+                  ? 'object-contain dark:brightness-0 dark:invert'
+                  : 'object-cover object-center',
+              )}
+            />
+          </div>
+        ) : (
+          <div className="flex h-24 w-24 md:h-52 md:w-full items-center justify-center bg-muted shrink-0">
+            <span className="text-2xl md:text-4xl font-bold text-muted-foreground">
+              {blog.title.charAt(0)}
+            </span>
           </div>
         )}
-        <p className="mb-4 text-lg font-bold text-neutral-800 dark:text-neutral-100">
-          {blog.title}
-        </p>
-        <p className="mt-2 text-left text-sm text-neutral-600 dark:text-neutral-400">
-          {truncate(blog.description, 100)}
-        </p>
+        <div className="bg-card p-3 md:p-8 flex flex-col justify-center min-w-0">
+          {(blog.author || blog.authorAvatar) && (
+            <div className="mb-1 md:mb-2 flex items-center space-x-2">
+              {blog.authorAvatar && (
+                <img
+                  src={blog.authorAvatar}
+                  alt={blog.author ?? 'Author'}
+                  className="h-4 w-4 md:h-5 md:w-5 rounded-full"
+                />
+              )}
+              {blog.author && (
+                <p className="text-xs md:text-sm font-normal text-neutral-600 dark:text-neutral-400">
+                  {blog.author}
+                </p>
+              )}
+            </div>
+          )}
+          <p className="mb-1 md:mb-4 text-base md:text-lg font-bold text-neutral-800 dark:text-neutral-100 truncate">
+            {blog.title}
+          </p>
+          <p className="text-left text-xs md:text-sm text-neutral-600 dark:text-neutral-400 line-clamp-2 md:line-clamp-none">
+            {truncate(blog.description, 100)}
+          </p>
+        </div>
       </div>
     </Link>
   );
@@ -145,15 +155,15 @@ export function SimpleBlogWithGrid({
         {/* When withNavbarSpacing is true, add pt-24 for fixed navbar clearance */}
         <div
           className={cn(
-            'relative z-20 mx-auto max-w-7xl px-4 py-16 md:px-8 md:py-20',
-            withNavbarSpacing && 'pt-28 md:pt-32',
+            'relative z-20 mx-auto max-w-7xl px-4 py-10 md:px-8 md:py-20',
+            withNavbarSpacing && 'pt-24 md:pt-32',
           )}
         >
-          <h1 className="mb-6 scroll-m-20 text-center text-4xl font-bold tracking-tight text-black md:text-left dark:text-white">
+          <h1 className="mb-3 md:mb-6 scroll-m-20 text-center text-2xl md:text-4xl font-bold tracking-tight text-black md:text-left dark:text-white">
             {title}
           </h1>
           {description && (
-            <p className="!mb-6 max-w-xl text-center text-lg text-neutral-600 md:text-left dark:text-neutral-400">
+            <p className="!mb-0 md:!mb-6 max-w-xl text-center text-sm md:text-lg text-neutral-600 md:text-left dark:text-neutral-400">
               {description}
             </p>
           )}
@@ -161,9 +171,12 @@ export function SimpleBlogWithGrid({
       </div>
 
       {/* Grid of cards */}
-      <div className="mx-auto flex max-w-7xl flex-col items-center justify-between px-4 pb-20 md:px-8">
+      <div className="mx-auto flex max-w-7xl flex-col items-center justify-between px-4 pb-10 md:pb-20 md:px-8">
         <div
-          className={cn('relative z-20 grid w-full grid-cols-1 gap-10', COLUMN_CLASSES[columns])}
+          className={cn(
+            'relative z-20 grid w-full grid-cols-1 gap-3 md:gap-10',
+            COLUMN_CLASSES[columns],
+          )}
         >
           {items.map((item, index) =>
             renderCard ? (

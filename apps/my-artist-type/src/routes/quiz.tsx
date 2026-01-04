@@ -13,17 +13,9 @@ export const Route = createFileRoute('/quiz')({
 
 function QuizPageWrapper() {
   const loaderData = Route.useLoaderData();
-  return (
-    <div className="min-h-screen">
-      <QuizTakerPage loaderData={loaderData} />
-    </div>
-  );
+  return <QuizTakerPage loaderData={loaderData} />;
 }
 
 function QuizPagePending() {
-  return (
-    <div className="min-h-screen bg-background">
-      <QuizTakerPageSkeleton />
-    </div>
-  );
+  return <QuizTakerPageSkeleton />;
 }

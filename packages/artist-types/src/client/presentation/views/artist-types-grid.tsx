@@ -32,20 +32,26 @@ function artistTypeToBlogItem(artistType: ArtistType): BlogGridItem {
 
 function ArtistTypesGridLoading() {
   return (
-    <div className="py-20">
+    <div className="py-10 md:py-20 pt-24 md:pt-32">
       <div className="mx-auto max-w-7xl px-4 md:px-8">
-        <div className="mb-10">
-          <Skeleton className="mb-4 h-10 w-48" />
-          <Skeleton className="h-6 w-96" />
+        <div className="mb-6 md:mb-10">
+          <Skeleton className="mb-3 md:mb-4 h-8 md:h-10 w-32 md:w-48 mx-auto md:mx-0" />
+          <Skeleton className="h-4 md:h-6 w-64 md:w-96 mx-auto md:mx-0" />
         </div>
-        <div className="grid grid-cols-1 gap-10 md:grid-cols-3">
+        <div className="grid grid-cols-1 gap-3 md:gap-10 md:grid-cols-3">
           {Array.from({ length: 9 }).map((_, i) => (
-            <div key={i} className="overflow-hidden rounded-3xl border dark:border-neutral-800">
-              <Skeleton className="h-52 w-full" />
-              <div className="p-4 md:p-8">
-                <Skeleton className="mb-4 h-6 w-3/4" />
-                <Skeleton className="h-4 w-full" />
-                <Skeleton className="mt-2 h-4 w-2/3" />
+            <div
+              key={i}
+              className="overflow-hidden rounded-2xl md:rounded-3xl border dark:border-neutral-800"
+            >
+              {/* Mobile: horizontal layout, Desktop: vertical */}
+              <div className="flex flex-row md:flex-col">
+                <Skeleton className="h-24 w-24 md:h-52 md:w-full shrink-0" />
+                <div className="p-3 md:p-8 flex-1">
+                  <Skeleton className="mb-1 md:mb-4 h-5 md:h-6 w-3/4" />
+                  <Skeleton className="h-3 md:h-4 w-full" />
+                  <Skeleton className="mt-1 md:mt-2 h-3 md:h-4 w-2/3" />
+                </div>
               </div>
             </div>
           ))}

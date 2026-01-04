@@ -39,7 +39,9 @@ type PageContainerProps = {
 };
 
 const PageContainer: React.FC<PageContainerProps> = ({ children }) => (
-  <div className="relative w-full px-4 pb-8">{children}</div>
+  <div className="relative w-full max-h-screen md:max-h-none h-[100dvh] md:h-auto px-4 pt-24 pb-16 md:pt-24 md:pb-8 flex flex-col overflow-hidden md:overflow-visible">
+    {children}
+  </div>
 );
 
 // Quiz Taker State Atoms are now imported from quiz-taker-atoms.js
@@ -457,23 +459,23 @@ const SuccessView: React.FC<{ quizzes: ReadonlyArray<Quiz> }> = ({ quizzes }) =>
 
       <div
         className={cn(
-          'w-full max-w-7xl mx-auto',
-          showAdminFeatures ? 'grid grid-cols-3 gap-8' : 'flex justify-center',
+          'w-full max-w-7xl mx-auto flex-1 flex flex-col',
+          showAdminFeatures ? 'md:grid md:grid-cols-3 md:gap-8' : 'justify-center',
         )}
       >
         {/* Left 2/3 (admin) or centered full-width (user) - Progress and Question Card */}
         <div
           className={cn(
-            'flex flex-col gap-8',
-            showAdminFeatures ? 'col-span-2' : 'w-full max-w-3xl',
+            'flex flex-col gap-2 md:gap-8 flex-1',
+            showAdminFeatures ? 'md:col-span-2' : 'w-full max-w-3xl mx-auto',
           )}
         >
           {/* Progress Bar Card */}
-          <Card className="p-4">
+          <Card className="p-3 md:p-4">
             <div className="flex items-center justify-between gap-4">
               {/* Question number and progress bar */}
-              <div className="flex items-center gap-4 flex-1">
-                <span className="text-sm font-medium text-muted-foreground whitespace-nowrap w-16 text-right">
+              <div className="flex items-center gap-2 md:gap-4 flex-1">
+                <span className="text-sm font-medium text-muted-foreground whitespace-nowrap w-14 md:w-16 text-right">
                   {currentQuestionIndex + 1} of {questions.length}
                 </span>
                 <QuizProgressBar
@@ -486,7 +488,7 @@ const SuccessView: React.FC<{ quizzes: ReadonlyArray<Quiz> }> = ({ quizzes }) =>
                     navigateToQuestion(index);
                   }}
                   categoryColorClass={artistTypeColorClass}
-                  colorOn={devConfig.progressBarColors ?? true}
+                  colorOn={showAdminFeatures && (devConfig.progressBarColors ?? true)}
                 />
               </div>
 
@@ -496,7 +498,7 @@ const SuccessView: React.FC<{ quizzes: ReadonlyArray<Quiz> }> = ({ quizzes }) =>
           </Card>
 
           {/* Question Card */}
-          <div className="flex items-center justify-center min-h-[70vh]">
+          <div className="flex items-center justify-center flex-1 md:min-h-[70vh]">
             <QuestionCard
               title={currentQuestion.title}
               content={currentQuestion.description ?? ''}

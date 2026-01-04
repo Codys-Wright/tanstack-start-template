@@ -11,15 +11,20 @@ import { Card, cn, Skeleton } from '@shadcn';
  */
 export function QuizTakerPageSkeleton({ className }: { className?: string }) {
   return (
-    <div className={cn('relative w-full px-4 pb-8', className)}>
+    <div
+      className={cn(
+        'relative w-full max-h-screen md:max-h-none h-[100dvh] md:h-auto px-4 pt-24 pb-16 md:pt-24 md:pb-8 flex flex-col overflow-hidden md:overflow-visible',
+        className,
+      )}
+    >
       {/* User view: centered layout with max-width constraint */}
-      <div className="w-full max-w-7xl mx-auto flex justify-center">
-        <div className="flex flex-col gap-8 w-full max-w-3xl">
+      <div className="w-full max-w-7xl mx-auto flex-1 flex flex-col justify-center">
+        <div className="flex flex-col gap-2 md:gap-8 flex-1 w-full max-w-3xl mx-auto">
           {/* Progress Bar Card Skeleton */}
           <ProgressBarCardSkeleton />
 
           {/* Question Card Skeleton */}
-          <div className="flex items-center justify-center min-h-[70vh]">
+          <div className="flex items-center justify-center flex-1 md:min-h-[70vh]">
             <QuestionCardSkeleton />
           </div>
         </div>
@@ -34,12 +39,12 @@ export function QuizTakerPageSkeleton({ className }: { className?: string }) {
 
 function ProgressBarCardSkeleton() {
   return (
-    <Card className="p-4">
+    <Card className="p-3 md:p-4">
       <div className="flex items-center justify-between gap-4">
         {/* Question number and progress bar */}
-        <div className="flex items-center gap-4 flex-1">
+        <div className="flex items-center gap-2 md:gap-4 flex-1">
           {/* "X of Y" text */}
-          <Skeleton className="h-4 w-16" />
+          <Skeleton className="h-4 w-14 md:w-16" />
           {/* Progress bar - multi-segment */}
           <div className="flex-1">
             <Skeleton className="h-3 w-full rounded-sm" />
@@ -58,42 +63,62 @@ function ProgressBarCardSkeleton() {
 
 function QuestionCardSkeleton() {
   return (
-    <Card className="gap-0 w-full max-w-3xl shadow-2xl border border-border/60 bg-card ring-1 ring-ring/10">
-      {/* Header with question title */}
-      <Card.Header className="p-4 min-h-36 flex items-center justify-center text-center">
-        <div className="flex flex-col items-center gap-2 w-full">
-          <Skeleton className="h-8 w-3/4" />
-          <Skeleton className="h-8 w-1/2" />
+    <div className="flex flex-col w-full max-w-3xl h-full md:min-h-0">
+      {/* Question Title Skeleton - Outside card */}
+      <div className="flex-1 flex items-center justify-center py-2 md:py-12 min-h-0">
+        <div className="flex flex-col items-center gap-2 w-full px-4">
+          <Skeleton className="h-9 md:h-12 w-3/4" />
+          <Skeleton className="h-9 md:h-12 w-1/2" />
         </div>
-      </Card.Header>
+      </div>
 
-      <Card.Content className="flex flex-col gap-6">
-        {/* Rating buttons grid (11 buttons for 0-10) */}
-        <div className="flex flex-1 items-center">
-          <div className="grid w-full grid-cols-11 gap-2">
-            {Array.from({ length: 11 }).map((_, i) => (
-              <Skeleton key={i} className="h-10 rounded-md" />
-            ))}
-          </div>
+      {/* Card and Navigation */}
+      <div className="flex flex-col gap-2 md:gap-6">
+        <Card className="gap-0 w-full shadow-2xl border border-border/60 bg-card ring-1 ring-ring/10">
+          <Card.Content className="flex flex-col gap-2 md:gap-5 p-3 md:p-8">
+            {/* Min Label Skeleton */}
+            <Skeleton className="h-3 w-16" />
+
+            {/* Rating buttons - Mobile: 2 rows, Desktop: single row */}
+            <div className="flex flex-col gap-2">
+              {/* Mobile Layout */}
+              <div className="flex flex-col gap-2 md:hidden">
+                {/* First row: 6 buttons */}
+                <div className="grid grid-cols-6 gap-2">
+                  {Array.from({ length: 6 }).map((_, i) => (
+                    <Skeleton key={i} className="h-12 rounded-lg" />
+                  ))}
+                </div>
+                {/* Second row: 5 buttons centered */}
+                <div className="flex justify-center gap-2">
+                  {Array.from({ length: 5 }).map((_, i) => (
+                    <Skeleton key={i} className="h-12 w-[calc((100%-2rem)/6)] rounded-lg" />
+                  ))}
+                </div>
+              </div>
+
+              {/* Desktop Layout */}
+              <div className="hidden md:grid w-full grid-cols-11 gap-2">
+                {Array.from({ length: 11 }).map((_, i) => (
+                  <Skeleton key={i} className="h-12 rounded-lg" />
+                ))}
+              </div>
+            </div>
+
+            {/* Max Label Skeleton */}
+            <div className="flex justify-end">
+              <Skeleton className="h-3 w-20" />
+            </div>
+          </Card.Content>
+        </Card>
+
+        {/* Navigation Buttons Skeleton */}
+        <div className="grid grid-cols-2 gap-3 pt-4 md:pt-4 md:pb-8">
+          <Skeleton className="h-12 rounded-md" />
+          <Skeleton className="h-12 rounded-md" />
         </div>
-
-        {/* Navigation row: Back button, labels, Next/Submit button */}
-        <div className="grid grid-cols-[auto_1fr_auto] items-center">
-          {/* Back button */}
-          <Skeleton className="h-9 w-16 rounded-md" />
-
-          {/* Min/Max labels */}
-          <div className="flex items-center justify-center gap-3">
-            <Skeleton className="h-3 w-12" />
-            <Skeleton className="h-3 w-1" />
-            <Skeleton className="h-3 w-12" />
-          </div>
-
-          {/* Next button */}
-          <Skeleton className="h-9 w-16 rounded-md" />
-        </div>
-      </Card.Content>
-    </Card>
+      </div>
+    </div>
   );
 }
 

@@ -21,8 +21,11 @@ export type ArtistTypeAmbientBackgroundProps = {
   /** Original data (used to derive subtle correlation) */
   data?: Array<ArtistData>;
 
-  /** Blur intensity for the radar chart (default: 20) */
+  /** Blur intensity for the entire container (default: 14) */
   blurAmount?: number;
+
+  /** Blur intensity for the radar chart specifically (default: 20) */
+  chartBlur?: number;
 
   /** Overall opacity (default: 0.4) */
   opacity?: number;
@@ -33,7 +36,7 @@ export type ArtistTypeAmbientBackgroundProps = {
   /** Show icons (default: true) */
   showIcons?: boolean;
 
-  /** Icon blur amount (default: 8) */
+  /** Icon blur amount (default: 4) */
   iconBlur?: number;
 
   /** Icon opacity (default: 0.6) */
@@ -50,7 +53,8 @@ export type ArtistTypeAmbientBackgroundProps = {
 // =============================================================================
 
 const ICON_RADIUS_MULTIPLIER = 0.92; // Icons positioned at 92% of radius (outside the chart)
-const BASE_SIZE = 1400; // Very large base size for the ambient visualization
+const BASE_SIZE_DESKTOP = 1400; // Very large base size for the ambient visualization on desktop
+const BASE_SIZE_MOBILE = 800; // Smaller size for mobile to fit icons on screen
 const ROTATION_DURATION = 120; // 120 seconds for full rotation (very slow)
 const CHART_MARGIN = 70; // Margin around the radar chart to keep it away from icons
 
@@ -187,6 +191,7 @@ const EmptyTick = () => <g />;
 export const ArtistTypeAmbientBackground: React.FC<ArtistTypeAmbientBackgroundProps> = ({
   data,
   blurAmount = 14,
+  chartBlur = 20,
   opacity = 0.4,
   randomization = 0.5,
   showIcons = true,
@@ -195,6 +200,19 @@ export const ArtistTypeAmbientBackground: React.FC<ArtistTypeAmbientBackgroundPr
   fadeEdges = true,
   className,
 }) => {
+  // Track if we're on mobile
+  const [isMobile, setIsMobile] = React.useState(false);
+
+  React.useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  // Use smaller size on mobile
+  const baseSize = isMobile ? BASE_SIZE_MOBILE : BASE_SIZE_DESKTOP;
+
   // Normalize the input data (just to get the artist type structure)
   const normalizedData = useNormalizedArtistData(data, {
     ensureComplete: true,
@@ -214,11 +232,11 @@ export const ArtistTypeAmbientBackground: React.FC<ArtistTypeAmbientBackgroundPr
     return calculateBlendedColor(ambientData);
   }, [ambientData]);
 
-  // Calculate icon positions based on the large base size
+  // Calculate icon positions based on the base size
   const iconPositions = React.useMemo(() => {
     if (ambientData.length === 0) return [];
     const count = ambientData.length;
-    const baseRadius = (BASE_SIZE / 2) * ICON_RADIUS_MULTIPLIER;
+    const baseRadius = (baseSize / 2) * ICON_RADIUS_MULTIPLIER;
 
     return ambientData.map((item, index) => {
       const angle = (index / count) * 2 * Math.PI - Math.PI / 2;
@@ -231,10 +249,10 @@ export const ArtistTypeAmbientBackground: React.FC<ArtistTypeAmbientBackgroundPr
         y,
       };
     });
-  }, [ambientData]);
+  }, [ambientData, baseSize]);
 
-  // Icon size proportional to the large visualization
-  const iconSize = BASE_SIZE * 0.12;
+  // Icon size proportional to the visualization
+  const iconSize = baseSize * 0.12;
 
   // Don't render if we have no data
   if (ambientData.length === 0) {
@@ -280,16 +298,29 @@ export const ArtistTypeAmbientBackground: React.FC<ArtistTypeAmbientBackgroundPr
         />
       )}
 
-      {/* Main ambient container - slightly offset to the right */}
+      {/* Main ambient container - offset on mobile, offset right on desktop */}
       <motion.div
-        initial={{ opacity: 0, scale: 0.8, x: 150 }}
-        animate={{ opacity: 1, scale: 1, x: 150 }}
+        initial={{
+          opacity: 0,
+          scale: 0.8,
+          x: isMobile ? 80 : 150,
+          y: isMobile ? 100 : 0,
+        }}
+        animate={{
+          opacity: isMobile ? 0.4 : 1,
+          scale: 1,
+          x: isMobile ? 80 : 150,
+          y: isMobile ? 100 : 0,
+        }}
         transition={{ duration: 1.5, ease: 'easeOut' }}
         className="relative"
         style={{
-          width: BASE_SIZE,
-          height: BASE_SIZE,
-          filter: `blur(${blurAmount}px)`,
+          width: baseSize,
+          height: baseSize,
+          filter:
+            blurAmount > 0
+              ? `blur(${isMobile ? Math.min(blurAmount, 4) : blurAmount}px)`
+              : undefined,
         }}
       >
         {/* Slow rotating container for the radar */}
@@ -303,52 +334,62 @@ export const ArtistTypeAmbientBackground: React.FC<ArtistTypeAmbientBackgroundPr
           }}
           style={{ opacity }}
         >
-          <Chart
-            config={
-              {
-                percentage: {
-                  label: 'Percentage',
-                  color: blendedColor,
-                },
-              } satisfies ChartConfig
-            }
+          <div
+            style={{
+              filter:
+                chartBlur > 0
+                  ? `blur(${isMobile ? Math.min(chartBlur, 10) : chartBlur}px)`
+                  : undefined,
+            }}
             className="h-full w-full"
           >
-            <RadarChart
-              data={ambientData}
-              margin={{
-                top: CHART_MARGIN,
-                right: CHART_MARGIN,
-                bottom: CHART_MARGIN,
-                left: CHART_MARGIN,
-              }}
-              innerRadius={80}
+            <Chart
+              config={
+                {
+                  percentage: {
+                    label: 'Percentage',
+                    color: blendedColor,
+                  },
+                } satisfies ChartConfig
+              }
+              className="h-full w-full"
             >
-              <PolarAngleAxis dataKey="artistType" tick={EmptyTick} />
-              <PolarGrid stroke={blendedColor} strokeOpacity={0.2} />
-              {/* Base layer: opaque background color to block ripple effect */}
-              <Radar
-                dataKey="percentage"
-                fill="hsl(var(--background))"
-                fillOpacity={1}
-                stroke="none"
-                isAnimationActive={true}
-                animationDuration={2000}
-                animationEasing="ease-in-out"
-              />
-              {/* Top layer: the actual colored fill */}
-              <Radar
-                dataKey="percentage"
-                fill={blendedColor}
-                fillOpacity={0.6}
-                stroke={blendedColor}
-                strokeWidth={4}
-                isAnimationActive={true}
-                animationDuration={2000}
-                animationEasing="ease-in-out"
-              />
-            </RadarChart>
-          </Chart>
+              <RadarChart
+                data={ambientData}
+                margin={{
+                  top: CHART_MARGIN,
+                  right: CHART_MARGIN,
+                  bottom: CHART_MARGIN,
+                  left: CHART_MARGIN,
+                }}
+                innerRadius={80}
+              >
+                <PolarAngleAxis dataKey="artistType" tick={EmptyTick} />
+                <PolarGrid stroke={blendedColor} strokeOpacity={0.2} />
+                {/* Base layer: opaque background color to block ripple effect */}
+                <Radar
+                  dataKey="percentage"
+                  fill="hsl(var(--background))"
+                  fillOpacity={1}
+                  stroke="none"
+                  isAnimationActive={true}
+                  animationDuration={2000}
+                  animationEasing="ease-in-out"
+                />
+                {/* Top layer: the actual colored fill */}
+                <Radar
+                  dataKey="percentage"
+                  fill={blendedColor}
+                  fillOpacity={0.6}
+                  stroke={blendedColor}
+                  strokeWidth={4}
+                  isAnimationActive={true}
+                  animationDuration={2000}
+                  animationEasing="ease-in-out"
+                />
+              </RadarChart>
+            </Chart>
+          </div>
 
           {/* Icons - inside rotating container, each icon counter-rotates to stay upright */}
           {showIcons && (
@@ -360,7 +401,7 @@ export const ArtistTypeAmbientBackground: React.FC<ArtistTypeAmbientBackgroundPr
                     key={pos.databaseId}
                     iconPath={iconPath}
                     size={iconSize}
-                    blur={iconBlur}
+                    blur={isMobile ? Math.min(iconBlur, 2) : iconBlur}
                     opacity={iconOpacity}
                     x={pos.x}
                     y={pos.y}
