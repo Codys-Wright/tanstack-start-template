@@ -32,6 +32,8 @@ import { Route as ArtistTypesSlugRouteImport } from './routes/artist-types/$slug
 import { Route as ApiSplatRouteImport } from './routes/api/$'
 import { Route as AdminQuizEditorRouteImport } from './routes/admin/quiz-editor'
 import { Route as AdminCurrentQuizRouteImport } from './routes/admin/current-quiz'
+import { Route as AccountLinkAccountRouteImport } from './routes/account/link-account'
+import { Route as AccountClaimAccountRouteImport } from './routes/account/claim-account'
 import { Route as AccountAccountViewRouteImport } from './routes/account/$accountView'
 import { Route as AdminResponsesResponseId_newRouteImport } from './routes/admin/responses/$responseId_new'
 import { Route as AdminResponsesResponseIdRouteImport } from './routes/admin/responses/$responseId'
@@ -153,6 +155,16 @@ const AdminCurrentQuizRoute = AdminCurrentQuizRouteImport.update({
   path: '/current-quiz',
   getParentRoute: () => AdminRoute,
 } as any)
+const AccountLinkAccountRoute = AccountLinkAccountRouteImport.update({
+  id: '/account/link-account',
+  path: '/account/link-account',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AccountClaimAccountRoute = AccountClaimAccountRouteImport.update({
+  id: '/account/claim-account',
+  path: '/account/claim-account',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AccountAccountViewRoute = AccountAccountViewRouteImport.update({
   id: '/account/$accountView',
   path: '/account/$accountView',
@@ -190,6 +202,8 @@ export interface FileRoutesByFullPath {
   '/test': typeof TestRoute
   '/todos': typeof TodosRoute
   '/account/$accountView': typeof AccountAccountViewRoute
+  '/account/claim-account': typeof AccountClaimAccountRoute
+  '/account/link-account': typeof AccountLinkAccountRoute
   '/admin/current-quiz': typeof AdminCurrentQuizRoute
   '/admin/quiz-editor': typeof AdminQuizEditorRoute
   '/api/$': typeof ApiSplatRoute
@@ -219,6 +233,8 @@ export interface FileRoutesByTo {
   '/test': typeof TestRoute
   '/todos': typeof TodosRoute
   '/account/$accountView': typeof AccountAccountViewRoute
+  '/account/claim-account': typeof AccountClaimAccountRoute
+  '/account/link-account': typeof AccountLinkAccountRoute
   '/admin/current-quiz': typeof AdminCurrentQuizRoute
   '/admin/quiz-editor': typeof AdminQuizEditorRoute
   '/api/$': typeof ApiSplatRoute
@@ -249,6 +265,8 @@ export interface FileRoutesById {
   '/test': typeof TestRoute
   '/todos': typeof TodosRoute
   '/account/$accountView': typeof AccountAccountViewRoute
+  '/account/claim-account': typeof AccountClaimAccountRoute
+  '/account/link-account': typeof AccountLinkAccountRoute
   '/admin/current-quiz': typeof AdminCurrentQuizRoute
   '/admin/quiz-editor': typeof AdminQuizEditorRoute
   '/api/$': typeof ApiSplatRoute
@@ -280,6 +298,8 @@ export interface FileRouteTypes {
     | '/test'
     | '/todos'
     | '/account/$accountView'
+    | '/account/claim-account'
+    | '/account/link-account'
     | '/admin/current-quiz'
     | '/admin/quiz-editor'
     | '/api/$'
@@ -309,6 +329,8 @@ export interface FileRouteTypes {
     | '/test'
     | '/todos'
     | '/account/$accountView'
+    | '/account/claim-account'
+    | '/account/link-account'
     | '/admin/current-quiz'
     | '/admin/quiz-editor'
     | '/api/$'
@@ -338,6 +360,8 @@ export interface FileRouteTypes {
     | '/test'
     | '/todos'
     | '/account/$accountView'
+    | '/account/claim-account'
+    | '/account/link-account'
     | '/admin/current-quiz'
     | '/admin/quiz-editor'
     | '/api/$'
@@ -368,6 +392,8 @@ export interface RootRouteChildren {
   TestRoute: typeof TestRoute
   TodosRoute: typeof TodosRoute
   AccountAccountViewRoute: typeof AccountAccountViewRoute
+  AccountClaimAccountRoute: typeof AccountClaimAccountRoute
+  AccountLinkAccountRoute: typeof AccountLinkAccountRoute
   ApiSplatRoute: typeof ApiSplatRoute
   ArtistTypesSlugRoute: typeof ArtistTypesSlugRoute
   AuthAuthViewRoute: typeof AuthAuthViewRoute
@@ -543,6 +569,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminCurrentQuizRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/account/link-account': {
+      id: '/account/link-account'
+      path: '/account/link-account'
+      fullPath: '/account/link-account'
+      preLoaderRoute: typeof AccountLinkAccountRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/account/claim-account': {
+      id: '/account/claim-account'
+      path: '/account/claim-account'
+      fullPath: '/account/claim-account'
+      preLoaderRoute: typeof AccountClaimAccountRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/account/$accountView': {
       id: '/account/$accountView'
       path: '/account/$accountView'
@@ -618,6 +658,8 @@ const rootRouteChildren: RootRouteChildren = {
   TestRoute: TestRoute,
   TodosRoute: TodosRoute,
   AccountAccountViewRoute: AccountAccountViewRoute,
+  AccountClaimAccountRoute: AccountClaimAccountRoute,
+  AccountLinkAccountRoute: AccountLinkAccountRoute,
   ApiSplatRoute: ApiSplatRoute,
   ArtistTypesSlugRoute: ArtistTypesSlugRoute,
   AuthAuthViewRoute: AuthAuthViewRoute,

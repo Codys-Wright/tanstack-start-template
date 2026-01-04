@@ -9,7 +9,7 @@ import {
   NavbarLogo,
   NavBody,
 } from '@components';
-import { SignedIn, SignedOut, UserButton, isAdminAtom } from '@auth';
+import { SignedIn, SignedOut, UserButton, isAdminAtom, isAnonymousAtom } from '@auth';
 import { lastResponseIdAtom } from '@quiz';
 import { ModeToggle } from '@theme';
 import { motion } from 'motion/react';
@@ -18,6 +18,7 @@ import { useAtomValue } from '@effect-atom/atom-react';
 
 export function NavbarHome({ children }: { children?: ReactNode }) {
   const isAdmin = useAtomValue(isAdminAtom);
+  const isAnonymous = useAtomValue(isAnonymousAtom);
   const lastResponseId = useAtomValue(lastResponseIdAtom);
 
   // Track if we're on the client to avoid hydration mismatch
@@ -90,7 +91,13 @@ export function NavbarHome({ children }: { children?: ReactNode }) {
               </NavbarButton>
             </SignedOut>
             <SignedIn>
-              <UserButton size="icon" />
+              {isClient && isAnonymous ? (
+                <NavbarButton href="/account/claim-account" variant="secondary">
+                  Claim Account
+                </NavbarButton>
+              ) : (
+                <UserButton size="icon" />
+              )}
             </SignedIn>
             <NavbarButton href={quizButtonLink} variant="primary">
               {quizButtonText}
@@ -142,9 +149,22 @@ export function NavbarHome({ children }: { children?: ReactNode }) {
                 </NavbarButton>
               </SignedOut>
               <SignedIn>
-                <div className="flex justify-center">
-                  <UserButton size="default" />
-                </div>
+                {isClient && isAnonymous ? (
+                  <NavbarButton
+                    href="/account/claim-account"
+                    onClick={() => {
+                      setIsMobileMenuOpen(false);
+                    }}
+                    variant="secondary"
+                    className="w-full"
+                  >
+                    Claim Your Account!
+                  </NavbarButton>
+                ) : (
+                  <div className="flex justify-center">
+                    <UserButton size="default" />
+                  </div>
+                )}
               </SignedIn>
               <NavbarButton
                 href={quizButtonLink}

@@ -48,6 +48,8 @@ export * from './features/account/ui/recover-account-form.js';
 export * from './features/account/ui/account-view.js';
 export * from './features/account/ui/account-settings-cards.js';
 export * from './features/account/ui/security-settings-cards.js';
+export * from './features/account/ui/claim-account-form.js';
+export * from './features/account/ui/link-account-card.js';
 
 // ============================================================================
 // Security - Domain, Client & Atoms
