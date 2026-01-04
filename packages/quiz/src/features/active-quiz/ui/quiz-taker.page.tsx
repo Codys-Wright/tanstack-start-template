@@ -440,7 +440,7 @@ const SuccessView: React.FC<{ quizzes: ReadonlyArray<Quiz> }> = ({ quizzes }) =>
   return (
     <PageContainer>
       {/* Ambient Background - decorative blurred radar visualization */}
-      <ArtistTypeAmbientBackground data={localAnalysisData} />
+      <ArtistTypeAmbientBackground data={localAnalysisData} chartOpacity={0.3} />
 
       {/* Submission Error Banner */}
       {submissionError && (

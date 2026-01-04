@@ -44,7 +44,7 @@ function ResultsPageWrapper() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-background to-muted flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center">
         <div className="text-center space-y-4 p-8">
           <h1 className="text-2xl font-bold">Invalid Results Link</h1>
           <p className="text-muted-foreground">{error}</p>
@@ -58,14 +58,14 @@ function ResultsPageWrapper() {
 
   if (!decodedResults) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-background to-muted pt-24">
+      <div className="min-h-screen pt-24">
         <MyResponsePageLoading />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background to-muted">
+    <div className="min-h-screen">
       <MyResponsePage artistData={decodedResults.artistData} winnerId={decodedResults.winnerId} />
     </div>
   );
@@ -73,7 +73,7 @@ function ResultsPageWrapper() {
 
 function ResultsPagePending() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background to-muted pt-24">
+    <div className="min-h-screen pt-24">
       <MyResponsePageLoading />
     </div>
   );

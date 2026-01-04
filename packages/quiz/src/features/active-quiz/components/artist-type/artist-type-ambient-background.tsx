@@ -30,6 +30,9 @@ export type ArtistTypeAmbientBackgroundProps = {
   /** Overall opacity (default: 0.4) */
   opacity?: number;
 
+  /** Opacity for the chart fill specifically (default: 0.6) */
+  chartOpacity?: number;
+
   /** How much jitter/randomization to apply (0-1, default: 0.5 for medium) */
   randomization?: number;
 
@@ -193,6 +196,7 @@ export const ArtistTypeAmbientBackground: React.FC<ArtistTypeAmbientBackgroundPr
   blurAmount = 14,
   chartBlur = 20,
   opacity = 0.4,
+  chartOpacity = 0.6,
   randomization = 0.5,
   showIcons = true,
   iconBlur = 4,
@@ -380,7 +384,7 @@ export const ArtistTypeAmbientBackground: React.FC<ArtistTypeAmbientBackgroundPr
                 <Radar
                   dataKey="percentage"
                   fill={blendedColor}
-                  fillOpacity={0.6}
+                  fillOpacity={chartOpacity}
                   stroke={blendedColor}
                   strokeWidth={4}
                   isAnimationActive={true}

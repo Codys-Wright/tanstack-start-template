@@ -166,6 +166,8 @@ interface WinnerHeroProps {
   artistData: ArtistData[];
   /** Compact mode hides description and traits (used on mobile) */
   compact?: boolean;
+  /** Callback to set the share URL for the actions section */
+  onShareUrlReady?: (url: string) => void;
 }
 
 const WinnerHeroSection: React.FC<WinnerHeroProps> = ({
@@ -173,23 +175,14 @@ const WinnerHeroSection: React.FC<WinnerHeroProps> = ({
   percentage,
   artistData,
   compact = false,
+  onShareUrlReady,
 }) => {
   const artistInfo = getArtistTypeInfo(winnerId);
-  const [copied, setCopied] = React.useState(false);
-  const [shareUrl, setShareUrl] = React.useState('');
 
   React.useEffect(() => {
-    setShareUrl(generateShareableUrl(artistData, winnerId));
-  }, [artistData, winnerId]);
-
-  const handleShare = async () => {
-    if (!shareUrl) return;
-    const success = await copyToClipboard(shareUrl);
-    if (success) {
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    }
-  };
+    const url = generateShareableUrl(artistData, winnerId);
+    onShareUrlReady?.(url);
+  }, [artistData, winnerId, onShareUrlReady]);
 
   if (!artistInfo) {
     return (
@@ -216,43 +209,22 @@ const WinnerHeroSection: React.FC<WinnerHeroProps> = ({
           />
         </div>
         <div className="flex-1 space-y-1 md:space-y-2">
-          <div className="flex items-start justify-between gap-2 md:gap-4">
-            <div className="space-y-0.5 md:space-y-1">
-              <div className="text-xs text-muted-foreground uppercase tracking-widest font-medium">
-                You are
-              </div>
-              <h1
-                className={cn(
-                  'font-bold tracking-tight',
-                  compact ? 'text-xl' : 'text-2xl md:text-4xl',
-                )}
-              >
-                {artistInfo.title}
-              </h1>
-              {/* First trait as subtitle in compact mode */}
-              {compact && artistInfo.traits[0] && (
-                <p className="text-xs text-muted-foreground">{artistInfo.traits[0]}</p>
-              )}
+          <div className="space-y-0.5 md:space-y-1">
+            <div className="text-xs text-muted-foreground uppercase tracking-widest font-medium">
+              You are
             </div>
-            {/* Share button */}
-            <Button
-              variant="outline"
-              size={compact ? 'sm' : 'sm'}
-              onClick={handleShare}
-              className="shrink-0"
-            >
-              {copied ? (
-                <>
-                  <CheckIcon className="h-4 w-4 mr-1.5" />
-                  Copied!
-                </>
-              ) : (
-                <>
-                  <LinkIcon className="h-4 w-4 mr-1.5" />
-                  Share
-                </>
+            <h1
+              className={cn(
+                'font-bold tracking-tight',
+                compact ? 'text-xl' : 'text-2xl md:text-4xl',
               )}
-            </Button>
+            >
+              {artistInfo.title}
+            </h1>
+            {/* First trait as subtitle in compact mode */}
+            {compact && artistInfo.traits[0] && (
+              <p className="text-xs text-muted-foreground">{artistInfo.traits[0]}</p>
+            )}
           </div>
           <Badge
             variant="secondary"
@@ -380,9 +352,39 @@ const RankingsSection: React.FC<RankingsSectionProps> = ({ artistData }) => {
 // Actions Section
 // ============================================================================
 
-const ActionsSection: React.FC = () => {
+interface ActionsSectionProps {
+  shareUrl?: string;
+}
+
+const ActionsSection: React.FC<ActionsSectionProps> = ({ shareUrl }) => {
+  const [copied, setCopied] = React.useState(false);
+
+  const handleShare = async () => {
+    if (!shareUrl) return;
+    const success = await copyToClipboard(shareUrl);
+    if (success) {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
+  };
+
   return (
     <div className="flex flex-col gap-3 pt-2">
+      {shareUrl && (
+        <Button variant="outline" size="lg" onClick={handleShare} className="w-full">
+          {copied ? (
+            <>
+              <CheckIcon className="h-4 w-4 mr-1.5" />
+              Copied!
+            </>
+          ) : (
+            <>
+              <LinkIcon className="h-4 w-4 mr-1.5" />
+              Share Your Results
+            </>
+          )}
+        </Button>
+      )}
       <Link to="/quiz" className="w-full">
         <Button size="lg" className="w-full">
           Retake the Quiz
@@ -410,6 +412,9 @@ const MyResponseContent: React.FC<MyResponseContentProps> = ({ artistData, winne
   // Fire confetti when results are shown
   useResultsConfetti();
 
+  // Share URL state
+  const [shareUrl, setShareUrl] = React.useState('');
+
   // Find the winner's percentage
   const winner = artistData.find((d) => d.databaseId === winnerId);
   const winnerPercentage = winner?.percentage ?? artistData[0]?.percentage ?? 0;
@@ -427,6 +432,7 @@ const MyResponseContent: React.FC<MyResponseContentProps> = ({ artistData, winne
               percentage={winnerPercentage}
               artistData={artistData}
               compact
+              onShareUrlReady={setShareUrl}
             />
           </Card>
         </div>
@@ -449,6 +455,7 @@ const MyResponseContent: React.FC<MyResponseContentProps> = ({ artistData, winne
                 winnerId={effectiveWinnerId}
                 percentage={winnerPercentage}
                 artistData={artistData}
+                onShareUrlReady={setShareUrl}
               />
             </Card>
 
@@ -476,7 +483,7 @@ const MyResponseContent: React.FC<MyResponseContentProps> = ({ artistData, winne
             </Card>
 
             {/* Action Buttons */}
-            <ActionsSection />
+            <ActionsSection shareUrl={shareUrl} />
           </div>
         </div>
       </div>
