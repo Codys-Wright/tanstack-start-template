@@ -118,6 +118,11 @@ const VIGNETTE_POSITION_MAP = {
   bottom: '50% 100%',
 } as const;
 
+// Default to a large size that covers most viewports during SSR
+// This prevents layout shift when client hydrates
+const DEFAULT_SSR_WIDTH = 2560; // Covers up to 2K monitors
+const DEFAULT_SSR_HEIGHT = 1440;
+
 export const BackgroundRippleEffect = ({
   rows: rowsProp,
   cols: colsProp,
@@ -137,8 +142,8 @@ export const BackgroundRippleEffect = ({
   const [rippleKey, setRippleKey] = useState(0);
   const [mounted, setMounted] = useState(false);
   const [containerSize, setContainerSize] = useState({
-    width: 1920,
-    height: 1080,
+    width: DEFAULT_SSR_WIDTH,
+    height: DEFAULT_SSR_HEIGHT,
   });
   const ref = useRef<HTMLDivElement>(null);
 
@@ -155,9 +160,11 @@ export const BackgroundRippleEffect = ({
         });
       } else if (ref.current?.parentElement) {
         // Use parent container size for non-portal mode
+        // Add extra buffer to ensure full coverage
+        const parent = ref.current.parentElement;
         setContainerSize({
-          width: ref.current.parentElement.offsetWidth,
-          height: ref.current.parentElement.offsetHeight,
+          width: Math.max(parent.offsetWidth, parent.scrollWidth, DEFAULT_SSR_WIDTH),
+          height: Math.max(parent.offsetHeight, parent.scrollHeight, DEFAULT_SSR_HEIGHT),
         });
       }
     };
@@ -166,9 +173,16 @@ export const BackgroundRippleEffect = ({
     return () => window.removeEventListener('resize', updateSize);
   }, [portal]);
 
-  // Calculate rows/cols to cover container
-  const rows = rowsProp ?? Math.ceil(containerSize.height / cellSize) + 2;
-  const cols = colsProp ?? Math.ceil(containerSize.width / cellSize) + 2;
+  // Calculate rows/cols to cover container - use larger of calculated or minimum
+  const calculatedRows = Math.ceil(containerSize.height / cellSize) + 2;
+  const calculatedCols = Math.ceil(containerSize.width / cellSize) + 2;
+
+  // Ensure minimum coverage for SSR
+  const minRows = Math.ceil(DEFAULT_SSR_HEIGHT / cellSize) + 2;
+  const minCols = Math.ceil(DEFAULT_SSR_WIDTH / cellSize) + 2;
+
+  const rows = rowsProp ?? Math.max(calculatedRows, minRows);
+  const cols = colsProp ?? Math.max(calculatedCols, minCols);
 
   // Ambient mode: auto-trigger ripples at random positions
   React.useEffect(() => {

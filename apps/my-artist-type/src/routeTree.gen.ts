@@ -15,6 +15,7 @@ import { Route as ResultsRouteImport } from './routes/results'
 import { Route as ResponsesRouteImport } from './routes/responses'
 import { Route as QuizTakerRouteImport } from './routes/quiz-taker'
 import { Route as QuizRouteImport } from './routes/quiz'
+import { Route as PerfRouteImport } from './routes/perf'
 import { Route as AnalysisRouteImport } from './routes/analysis'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as SplatRouteImport } from './routes/$'
@@ -64,6 +65,11 @@ const QuizTakerRoute = QuizTakerRouteImport.update({
 const QuizRoute = QuizRouteImport.update({
   id: '/quiz',
   path: '/quiz',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PerfRoute = PerfRouteImport.update({
+  id: '/perf',
+  path: '/perf',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AnalysisRoute = AnalysisRouteImport.update({
@@ -176,6 +182,7 @@ export interface FileRoutesByFullPath {
   '/$': typeof SplatRoute
   '/admin': typeof AdminRouteWithChildren
   '/analysis': typeof AnalysisRoute
+  '/perf': typeof PerfRoute
   '/quiz': typeof QuizRoute
   '/quiz-taker': typeof QuizTakerRoute
   '/responses': typeof ResponsesRoute
@@ -204,6 +211,7 @@ export interface FileRoutesByTo {
   '/$': typeof SplatRoute
   '/admin': typeof AdminRouteWithChildren
   '/analysis': typeof AnalysisRoute
+  '/perf': typeof PerfRoute
   '/quiz': typeof QuizRoute
   '/quiz-taker': typeof QuizTakerRoute
   '/responses': typeof ResponsesRoute
@@ -233,6 +241,7 @@ export interface FileRoutesById {
   '/$': typeof SplatRoute
   '/admin': typeof AdminRouteWithChildren
   '/analysis': typeof AnalysisRoute
+  '/perf': typeof PerfRoute
   '/quiz': typeof QuizRoute
   '/quiz-taker': typeof QuizTakerRoute
   '/responses': typeof ResponsesRoute
@@ -263,6 +272,7 @@ export interface FileRouteTypes {
     | '/$'
     | '/admin'
     | '/analysis'
+    | '/perf'
     | '/quiz'
     | '/quiz-taker'
     | '/responses'
@@ -291,6 +301,7 @@ export interface FileRouteTypes {
     | '/$'
     | '/admin'
     | '/analysis'
+    | '/perf'
     | '/quiz'
     | '/quiz-taker'
     | '/responses'
@@ -319,6 +330,7 @@ export interface FileRouteTypes {
     | '/$'
     | '/admin'
     | '/analysis'
+    | '/perf'
     | '/quiz'
     | '/quiz-taker'
     | '/responses'
@@ -348,6 +360,7 @@ export interface RootRouteChildren {
   SplatRoute: typeof SplatRoute
   AdminRoute: typeof AdminRouteWithChildren
   AnalysisRoute: typeof AnalysisRoute
+  PerfRoute: typeof PerfRoute
   QuizRoute: typeof QuizRoute
   QuizTakerRoute: typeof QuizTakerRoute
   ResponsesRoute: typeof ResponsesRoute
@@ -409,6 +422,13 @@ declare module '@tanstack/react-router' {
       path: '/quiz'
       fullPath: '/quiz'
       preLoaderRoute: typeof QuizRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/perf': {
+      id: '/perf'
+      path: '/perf'
+      fullPath: '/perf'
+      preLoaderRoute: typeof PerfRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/analysis': {
@@ -590,6 +610,7 @@ const rootRouteChildren: RootRouteChildren = {
   SplatRoute: SplatRoute,
   AdminRoute: AdminRouteWithChildren,
   AnalysisRoute: AnalysisRoute,
+  PerfRoute: PerfRoute,
   QuizRoute: QuizRoute,
   QuizTakerRoute: QuizTakerRoute,
   ResponsesRoute: ResponsesRoute,
