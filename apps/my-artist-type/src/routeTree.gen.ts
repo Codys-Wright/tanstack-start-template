@@ -10,22 +10,24 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TodosRouteImport } from './routes/todos'
+import { Route as TestRouteImport } from './routes/test'
 import { Route as ResultsRouteImport } from './routes/results'
 import { Route as ResponsesRouteImport } from './routes/responses'
 import { Route as QuizTakerRouteImport } from './routes/quiz-taker'
 import { Route as QuizRouteImport } from './routes/quiz'
-import { Route as ArtistTypesRouteImport } from './routes/artist-types'
 import { Route as AnalysisRouteImport } from './routes/analysis'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as SplatRouteImport } from './routes/$'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as OrganizationIndexRouteImport } from './routes/organization/index'
 import { Route as ExampleIndexRouteImport } from './routes/example/index'
+import { Route as ArtistTypesIndexRouteImport } from './routes/artist-types/index'
 import { Route as AccountIndexRouteImport } from './routes/account/index'
 import { Route as OrganizationOrganizationViewRouteImport } from './routes/organization/$organizationView'
 import { Route as MyResponseResponseIdRouteImport } from './routes/my-response.$responseId'
 import { Route as ExampleFeatureIdRouteImport } from './routes/example/$featureId'
 import { Route as AuthAuthViewRouteImport } from './routes/auth/$authView'
+import { Route as ArtistTypesSlugRouteImport } from './routes/artist-types/$slug'
 import { Route as ApiSplatRouteImport } from './routes/api/$'
 import { Route as AdminQuizEditorRouteImport } from './routes/admin/quiz-editor'
 import { Route as AdminCurrentQuizRouteImport } from './routes/admin/current-quiz'
@@ -37,6 +39,11 @@ import { Route as AdminResponsesResponseIdAnalysisRouteImport } from './routes/a
 const TodosRoute = TodosRouteImport.update({
   id: '/todos',
   path: '/todos',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TestRoute = TestRouteImport.update({
+  id: '/test',
+  path: '/test',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ResultsRoute = ResultsRouteImport.update({
@@ -57,11 +64,6 @@ const QuizTakerRoute = QuizTakerRouteImport.update({
 const QuizRoute = QuizRouteImport.update({
   id: '/quiz',
   path: '/quiz',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ArtistTypesRoute = ArtistTypesRouteImport.update({
-  id: '/artist-types',
-  path: '/artist-types',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AnalysisRoute = AnalysisRouteImport.update({
@@ -94,6 +96,11 @@ const ExampleIndexRoute = ExampleIndexRouteImport.update({
   path: '/example/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ArtistTypesIndexRoute = ArtistTypesIndexRouteImport.update({
+  id: '/artist-types/',
+  path: '/artist-types/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AccountIndexRoute = AccountIndexRouteImport.update({
   id: '/account/',
   path: '/account/',
@@ -118,6 +125,11 @@ const ExampleFeatureIdRoute = ExampleFeatureIdRouteImport.update({
 const AuthAuthViewRoute = AuthAuthViewRouteImport.update({
   id: '/auth/$authView',
   path: '/auth/$authView',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ArtistTypesSlugRoute = ArtistTypesSlugRouteImport.update({
+  id: '/artist-types/$slug',
+  path: '/artist-types/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiSplatRoute = ApiSplatRouteImport.update({
@@ -164,21 +176,23 @@ export interface FileRoutesByFullPath {
   '/$': typeof SplatRoute
   '/admin': typeof AdminRouteWithChildren
   '/analysis': typeof AnalysisRoute
-  '/artist-types': typeof ArtistTypesRoute
   '/quiz': typeof QuizRoute
   '/quiz-taker': typeof QuizTakerRoute
   '/responses': typeof ResponsesRoute
   '/results': typeof ResultsRoute
+  '/test': typeof TestRoute
   '/todos': typeof TodosRoute
   '/account/$accountView': typeof AccountAccountViewRoute
   '/admin/current-quiz': typeof AdminCurrentQuizRoute
   '/admin/quiz-editor': typeof AdminQuizEditorRoute
   '/api/$': typeof ApiSplatRoute
+  '/artist-types/$slug': typeof ArtistTypesSlugRoute
   '/auth/$authView': typeof AuthAuthViewRoute
   '/example/$featureId': typeof ExampleFeatureIdRoute
   '/my-response/$responseId': typeof MyResponseResponseIdRoute
   '/organization/$organizationView': typeof OrganizationOrganizationViewRoute
   '/account': typeof AccountIndexRoute
+  '/artist-types': typeof ArtistTypesIndexRoute
   '/example': typeof ExampleIndexRoute
   '/organization': typeof OrganizationIndexRoute
   '/admin/responses/$responseId': typeof AdminResponsesResponseIdRouteWithChildren
@@ -190,21 +204,23 @@ export interface FileRoutesByTo {
   '/$': typeof SplatRoute
   '/admin': typeof AdminRouteWithChildren
   '/analysis': typeof AnalysisRoute
-  '/artist-types': typeof ArtistTypesRoute
   '/quiz': typeof QuizRoute
   '/quiz-taker': typeof QuizTakerRoute
   '/responses': typeof ResponsesRoute
   '/results': typeof ResultsRoute
+  '/test': typeof TestRoute
   '/todos': typeof TodosRoute
   '/account/$accountView': typeof AccountAccountViewRoute
   '/admin/current-quiz': typeof AdminCurrentQuizRoute
   '/admin/quiz-editor': typeof AdminQuizEditorRoute
   '/api/$': typeof ApiSplatRoute
+  '/artist-types/$slug': typeof ArtistTypesSlugRoute
   '/auth/$authView': typeof AuthAuthViewRoute
   '/example/$featureId': typeof ExampleFeatureIdRoute
   '/my-response/$responseId': typeof MyResponseResponseIdRoute
   '/organization/$organizationView': typeof OrganizationOrganizationViewRoute
   '/account': typeof AccountIndexRoute
+  '/artist-types': typeof ArtistTypesIndexRoute
   '/example': typeof ExampleIndexRoute
   '/organization': typeof OrganizationIndexRoute
   '/admin/responses/$responseId': typeof AdminResponsesResponseIdRouteWithChildren
@@ -217,21 +233,23 @@ export interface FileRoutesById {
   '/$': typeof SplatRoute
   '/admin': typeof AdminRouteWithChildren
   '/analysis': typeof AnalysisRoute
-  '/artist-types': typeof ArtistTypesRoute
   '/quiz': typeof QuizRoute
   '/quiz-taker': typeof QuizTakerRoute
   '/responses': typeof ResponsesRoute
   '/results': typeof ResultsRoute
+  '/test': typeof TestRoute
   '/todos': typeof TodosRoute
   '/account/$accountView': typeof AccountAccountViewRoute
   '/admin/current-quiz': typeof AdminCurrentQuizRoute
   '/admin/quiz-editor': typeof AdminQuizEditorRoute
   '/api/$': typeof ApiSplatRoute
+  '/artist-types/$slug': typeof ArtistTypesSlugRoute
   '/auth/$authView': typeof AuthAuthViewRoute
   '/example/$featureId': typeof ExampleFeatureIdRoute
   '/my-response/$responseId': typeof MyResponseResponseIdRoute
   '/organization/$organizationView': typeof OrganizationOrganizationViewRoute
   '/account/': typeof AccountIndexRoute
+  '/artist-types/': typeof ArtistTypesIndexRoute
   '/example/': typeof ExampleIndexRoute
   '/organization/': typeof OrganizationIndexRoute
   '/admin/responses/$responseId': typeof AdminResponsesResponseIdRouteWithChildren
@@ -245,21 +263,23 @@ export interface FileRouteTypes {
     | '/$'
     | '/admin'
     | '/analysis'
-    | '/artist-types'
     | '/quiz'
     | '/quiz-taker'
     | '/responses'
     | '/results'
+    | '/test'
     | '/todos'
     | '/account/$accountView'
     | '/admin/current-quiz'
     | '/admin/quiz-editor'
     | '/api/$'
+    | '/artist-types/$slug'
     | '/auth/$authView'
     | '/example/$featureId'
     | '/my-response/$responseId'
     | '/organization/$organizationView'
     | '/account'
+    | '/artist-types'
     | '/example'
     | '/organization'
     | '/admin/responses/$responseId'
@@ -271,21 +291,23 @@ export interface FileRouteTypes {
     | '/$'
     | '/admin'
     | '/analysis'
-    | '/artist-types'
     | '/quiz'
     | '/quiz-taker'
     | '/responses'
     | '/results'
+    | '/test'
     | '/todos'
     | '/account/$accountView'
     | '/admin/current-quiz'
     | '/admin/quiz-editor'
     | '/api/$'
+    | '/artist-types/$slug'
     | '/auth/$authView'
     | '/example/$featureId'
     | '/my-response/$responseId'
     | '/organization/$organizationView'
     | '/account'
+    | '/artist-types'
     | '/example'
     | '/organization'
     | '/admin/responses/$responseId'
@@ -297,21 +319,23 @@ export interface FileRouteTypes {
     | '/$'
     | '/admin'
     | '/analysis'
-    | '/artist-types'
     | '/quiz'
     | '/quiz-taker'
     | '/responses'
     | '/results'
+    | '/test'
     | '/todos'
     | '/account/$accountView'
     | '/admin/current-quiz'
     | '/admin/quiz-editor'
     | '/api/$'
+    | '/artist-types/$slug'
     | '/auth/$authView'
     | '/example/$featureId'
     | '/my-response/$responseId'
     | '/organization/$organizationView'
     | '/account/'
+    | '/artist-types/'
     | '/example/'
     | '/organization/'
     | '/admin/responses/$responseId'
@@ -324,19 +348,21 @@ export interface RootRouteChildren {
   SplatRoute: typeof SplatRoute
   AdminRoute: typeof AdminRouteWithChildren
   AnalysisRoute: typeof AnalysisRoute
-  ArtistTypesRoute: typeof ArtistTypesRoute
   QuizRoute: typeof QuizRoute
   QuizTakerRoute: typeof QuizTakerRoute
   ResponsesRoute: typeof ResponsesRoute
   ResultsRoute: typeof ResultsRoute
+  TestRoute: typeof TestRoute
   TodosRoute: typeof TodosRoute
   AccountAccountViewRoute: typeof AccountAccountViewRoute
   ApiSplatRoute: typeof ApiSplatRoute
+  ArtistTypesSlugRoute: typeof ArtistTypesSlugRoute
   AuthAuthViewRoute: typeof AuthAuthViewRoute
   ExampleFeatureIdRoute: typeof ExampleFeatureIdRoute
   MyResponseResponseIdRoute: typeof MyResponseResponseIdRoute
   OrganizationOrganizationViewRoute: typeof OrganizationOrganizationViewRoute
   AccountIndexRoute: typeof AccountIndexRoute
+  ArtistTypesIndexRoute: typeof ArtistTypesIndexRoute
   ExampleIndexRoute: typeof ExampleIndexRoute
   OrganizationIndexRoute: typeof OrganizationIndexRoute
 }
@@ -348,6 +374,13 @@ declare module '@tanstack/react-router' {
       path: '/todos'
       fullPath: '/todos'
       preLoaderRoute: typeof TodosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/test': {
+      id: '/test'
+      path: '/test'
+      fullPath: '/test'
+      preLoaderRoute: typeof TestRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/results': {
@@ -376,13 +409,6 @@ declare module '@tanstack/react-router' {
       path: '/quiz'
       fullPath: '/quiz'
       preLoaderRoute: typeof QuizRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/artist-types': {
-      id: '/artist-types'
-      path: '/artist-types'
-      fullPath: '/artist-types'
-      preLoaderRoute: typeof ArtistTypesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/analysis': {
@@ -427,6 +453,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ExampleIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/artist-types/': {
+      id: '/artist-types/'
+      path: '/artist-types'
+      fullPath: '/artist-types'
+      preLoaderRoute: typeof ArtistTypesIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/account/': {
       id: '/account/'
       path: '/account'
@@ -460,6 +493,13 @@ declare module '@tanstack/react-router' {
       path: '/auth/$authView'
       fullPath: '/auth/$authView'
       preLoaderRoute: typeof AuthAuthViewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/artist-types/$slug': {
+      id: '/artist-types/$slug'
+      path: '/artist-types/$slug'
+      fullPath: '/artist-types/$slug'
+      preLoaderRoute: typeof ArtistTypesSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/$': {
@@ -550,19 +590,21 @@ const rootRouteChildren: RootRouteChildren = {
   SplatRoute: SplatRoute,
   AdminRoute: AdminRouteWithChildren,
   AnalysisRoute: AnalysisRoute,
-  ArtistTypesRoute: ArtistTypesRoute,
   QuizRoute: QuizRoute,
   QuizTakerRoute: QuizTakerRoute,
   ResponsesRoute: ResponsesRoute,
   ResultsRoute: ResultsRoute,
+  TestRoute: TestRoute,
   TodosRoute: TodosRoute,
   AccountAccountViewRoute: AccountAccountViewRoute,
   ApiSplatRoute: ApiSplatRoute,
+  ArtistTypesSlugRoute: ArtistTypesSlugRoute,
   AuthAuthViewRoute: AuthAuthViewRoute,
   ExampleFeatureIdRoute: ExampleFeatureIdRoute,
   MyResponseResponseIdRoute: MyResponseResponseIdRoute,
   OrganizationOrganizationViewRoute: OrganizationOrganizationViewRoute,
   AccountIndexRoute: AccountIndexRoute,
+  ArtistTypesIndexRoute: ArtistTypesIndexRoute,
   ExampleIndexRoute: ExampleIndexRoute,
   OrganizationIndexRoute: OrganizationIndexRoute,
 }
