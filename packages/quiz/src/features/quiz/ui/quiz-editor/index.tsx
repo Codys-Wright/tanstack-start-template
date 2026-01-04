@@ -829,6 +829,7 @@ export const QuizEditorLayout: React.FC = () => {
                 </div>
               ) : selectedQuestion !== undefined ? (
                 <QuestionCard
+                  variant="editor"
                   title={selectedQuestion.title}
                   content=""
                   minLabel={

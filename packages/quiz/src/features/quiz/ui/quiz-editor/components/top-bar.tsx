@@ -1,7 +1,7 @@
 'use client';
 
 import { Badge, Button, cn, DropdownMenu, Select, Sidebar } from '@shadcn';
-import { GitBranchIcon, SaveIcon, SettingsIcon } from 'lucide-react';
+import { CheckIcon, ChevronDownIcon, GitBranchIcon, SaveIcon, SettingsIcon } from 'lucide-react';
 import React from 'react';
 
 import type { AnalysisEngine } from '@quiz/features/analysis-engine/domain/schema.js';
@@ -131,7 +131,7 @@ export const TopBar: React.FC<TopBarProps> = ({
                     )}
                   </Select.Value>
                 </Select.Trigger>
-                <Select.Content>
+                <Select.Content position="popper" side="bottom" align="start">
                   {artistTypeQuizVersions.map((quiz) => (
                     <Select.Item key={quiz.id} value={quiz.id}>
                       <div className="flex items-center gap-1.5">
@@ -158,29 +158,40 @@ export const TopBar: React.FC<TopBarProps> = ({
           {/* Artist Type Selection */}
           <div className="flex items-center gap-2">
             <span className="text-sm font-medium text-muted-foreground">Artist Type:</span>
-            <Select value={selectedArtistType} onValueChange={onArtistTypeChange}>
-              <Select.Trigger
-                className="w-40 border-2"
-                style={getArtistTypeColorStyle(selectedArtistType)}
-              >
-                <Select.Value>
+            <DropdownMenu>
+              <DropdownMenu.Trigger asChild>
+                <Button
+                  variant="outline"
+                  className="w-48 justify-between border-2"
+                  style={getArtistTypeColorStyle(selectedArtistType)}
+                >
                   <div className="flex items-center gap-2">
                     <ArtistIcon artistType={selectedArtistType} size={16} />
                     <span className="capitalize font-medium">{selectedArtistType}</span>
                   </div>
-                </Select.Value>
-              </Select.Trigger>
-              <Select.Content>
+                  <ChevronDownIcon className="h-4 w-4 opacity-50" />
+                </Button>
+              </DropdownMenu.Trigger>
+              <DropdownMenu.Content align="start" className="w-48">
                 {artistTypes.map((type) => (
-                  <Select.Item key={type} value={type} style={getArtistTypeColorStyle(type)}>
-                    <div className="flex items-center gap-2">
+                  <DropdownMenu.Item
+                    key={type}
+                    className="pl-0 cursor-pointer"
+                    onClick={() => onArtistTypeChange(type)}
+                  >
+                    <div className="flex items-center gap-2 w-full">
+                      <div
+                        className="w-1 h-5 rounded-r-sm"
+                        style={{ backgroundColor: `var(--artist-${type})` }}
+                      />
                       <ArtistIcon artistType={type} size={16} />
-                      <span className="capitalize">{type}</span>
+                      <span className="capitalize flex-1">{type}</span>
+                      {type === selectedArtistType && <CheckIcon className="h-4 w-4" />}
                     </div>
-                  </Select.Item>
+                  </DropdownMenu.Item>
                 ))}
-              </Select.Content>
-            </Select>
+              </DropdownMenu.Content>
+            </DropdownMenu>
           </div>
         </div>
 

@@ -1,7 +1,9 @@
+import { useAtomValue } from '@effect-atom/atom-react';
 import { Button, Card, cn } from '@shadcn';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import React from 'react';
-import { getColorByEndingName } from '@quiz/features/active-quiz/components/artist-type/artist-data-utils.js';
+import { getColorByEndingName } from '@quiz/features/analysis/ui/artist-type/artist-data-utils.js';
+import { selectedArtistTypeAtom } from './quiz-editor/atoms.js';
 
 // 1) QuestionCard Component - Displays a single question with rating input and navigation
 //    Receives all data and callbacks as props to remain dumb and testable
@@ -43,6 +45,11 @@ type QuestionCardProps = {
 
   // Auto-advance setting
   autoAdvanceEnabled?: boolean;
+
+  // Layout variant
+  // 'quiz' (default): Title takes flex-1 space, card pinned to bottom (mobile-optimized quiz-taking)
+  // 'editor': Vertically centered layout with compact spacing (for quiz editor preview)
+  variant?: 'quiz' | 'editor';
 };
 
 export const QuestionCard: React.FC<QuestionCardProps> = ({
@@ -63,7 +70,10 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
   selectedValues = [],
   showIdealAnswers = true,
   title,
+  variant = 'quiz',
 }) => {
+  const isEditorVariant = variant === 'editor';
+
   // Generate rating choices from min to max (inclusive)
   const choices = Array.from({ length: max - min + 1 }, (_, i) => i + min);
 
@@ -243,32 +253,72 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
     );
   };
 
+  // Read the selected artist type from the shared atom (for editor variant)
+  const selectedArtistType = useAtomValue(selectedArtistTypeAtom);
+
+  // Get the CSS variable for the selected artist type
+  const getEditorArtistColorVar = (): string => {
+    return `var(--artist-${selectedArtistType.toLowerCase()})`;
+  };
+
   // Shared button styles for rating buttons
-  const getRatingButtonClasses = (isSelected: boolean) =>
-    cn(
+  const getRatingButtonClasses = (isSelected: boolean) => {
+    return cn(
       // Base styles - large touch targets for mobile
       'rounded-lg border-2 font-semibold transition-all active:scale-95',
       // Mobile: compact but touchable buttons
       'h-12 text-base',
       // Desktop: same size
       'md:h-12 md:text-base',
-      // Selected state
+      // Selected state - use artist color in editor mode, otherwise primary
       isSelected
-        ? 'bg-primary text-primary-foreground border-primary shadow-lg scale-[1.02]'
+        ? isEditorVariant
+          ? 'text-foreground shadow-lg scale-[1.02] border-transparent'
+          : 'bg-primary text-primary-foreground border-primary shadow-lg scale-[1.02]'
         : 'bg-background hover:bg-accent hover:border-accent-foreground/20 border-border',
     );
+  };
+
+  // Get inline style for artist color background (editor variant only)
+  const getButtonStyle = (isSelected: boolean): React.CSSProperties => {
+    if (!isEditorVariant || !isSelected) return {};
+    const artistColorVar = getEditorArtistColorVar();
+    return {
+      backgroundColor: artistColorVar,
+    };
+  };
 
   return (
-    <div className="flex flex-col w-full max-w-3xl h-full md:min-h-0">
-      {/* Question Title - Takes up more vertical space, pushes card to bottom */}
-      <div className="flex-1 flex items-center justify-center py-2 md:py-12 min-h-0">
-        <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight leading-snug text-center px-4">
+    <div
+      className={cn(
+        'flex flex-col w-full max-w-3xl',
+        // Quiz variant: fills height, pushes card to bottom
+        // Editor variant: centered content, no height fill
+        isEditorVariant ? 'justify-center' : 'h-full md:min-h-0',
+      )}
+    >
+      {/* Question Title */}
+      <div
+        className={cn(
+          'flex items-center justify-center min-h-0',
+          // Quiz variant: flex-1 to push card down, more padding
+          // Editor variant: compact spacing, no flex growth
+          isEditorVariant ? 'py-4' : 'flex-1 py-2 md:py-12',
+        )}
+      >
+        <h2
+          className={cn(
+            'font-bold tracking-tight leading-snug text-center px-4',
+            // Editor variant: smaller text
+            isEditorVariant ? 'text-xl md:text-2xl' : 'text-3xl sm:text-4xl md:text-5xl',
+          )}
+        >
           {title ?? content}
         </h2>
       </div>
 
-      {/* Card and Navigation - pinned to bottom area */}
-      <div className="flex flex-col gap-2 md:gap-6">
+      {/* Card and Navigation */}
+      <div className={cn('flex flex-col', isEditorVariant ? 'gap-2' : 'gap-2 md:gap-6')}>
         <Card className="gap-0 w-full animate-in fade-in-0 zoom-in-95 duration-200 shadow-2xl border border-border/60 bg-card ring-1 ring-ring/10">
           <Card.Content className="flex flex-col gap-2 md:gap-5 p-3 md:p-8">
             {/* Min Label - Top left, smaller text */}
@@ -290,6 +340,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
                         type="button"
                         onClick={() => handleRatingClick(n)}
                         className={getRatingButtonClasses(isSelected)}
+                        style={getButtonStyle(isSelected)}
                       >
                         {n}
                       </button>
@@ -309,6 +360,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
                           getRatingButtonClasses(isSelected),
                           'w-[calc((100%-2rem)/6)]',
                         )}
+                        style={getButtonStyle(isSelected)}
                       >
                         {n}
                       </button>
@@ -335,6 +387,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
                           type="button"
                           onClick={() => handleRatingClick(n)}
                           className={getRatingButtonClasses(isSelected)}
+                          style={getButtonStyle(isSelected)}
                         >
                           {n}
                         </button>
