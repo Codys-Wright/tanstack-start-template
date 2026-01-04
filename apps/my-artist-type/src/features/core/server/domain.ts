@@ -1,13 +1,14 @@
-import { RpcAuthenticationMiddleware } from "@auth/server";
-import { FeatureRpc } from "@example";
-import { TodoRpc, TodoApi } from "@todo";
-import { QuizRpc } from "@quiz";
-import * as RpcMiddleware from "@effect/rpc/RpcMiddleware";
-import * as Effect from "effect/Effect";
-import * as Exit from "effect/Exit";
-import * as Layer from "effect/Layer";
-import * as OpenApi from "@effect/platform/OpenApi";
-import * as HttpApi from "@effect/platform/HttpApi";
+import { RpcAuthenticationMiddleware } from '@auth/server';
+import { ArtistTypeRpc } from '@artist-types';
+import { FeatureRpc } from '@example';
+import { TodoRpc, TodoApi } from '@todo';
+import { QuizRpc } from '@quiz';
+import * as RpcMiddleware from '@effect/rpc/RpcMiddleware';
+import * as Effect from 'effect/Effect';
+import * as Exit from 'effect/Exit';
+import * as Layer from 'effect/Layer';
+import * as OpenApi from '@effect/platform/OpenApi';
+import * as HttpApi from '@effect/platform/HttpApi';
 
 // ============================================================================
 // RPC Middleware - Tracing
@@ -22,7 +23,7 @@ import * as HttpApi from "@effect/platform/HttpApi";
  * This middleware uses `wrap: true` to wrap the handler execution,
  * and `optional: true` so it doesn't block RPC execution if not provided.
  */
-export class RpcTracer extends RpcMiddleware.Tag<RpcTracer>()("RpcTracer", {
+export class RpcTracer extends RpcMiddleware.Tag<RpcTracer>()('RpcTracer', {
   wrap: true,
   optional: true,
 }) {}
@@ -41,8 +42,8 @@ export const RpcTracerLive = Layer.succeed(
   RpcTracer.of((opts) =>
     Effect.withSpan(opts.next, `rpc.${opts.rpc._tag}`, {
       attributes: {
-        "rpc.method": opts.rpc._tag,
-        "rpc.clientId": String(opts.clientId),
+        'rpc.method': opts.rpc._tag,
+        'rpc.clientId': String(opts.clientId),
       },
       captureStackTrace: false,
     }),
@@ -53,7 +54,7 @@ export const RpcTracerLive = Layer.succeed(
 // RPC Middleware - Logging
 // ============================================================================
 
-export class RpcLogger extends RpcMiddleware.Tag<RpcLogger>()("RpcLogger", {
+export class RpcLogger extends RpcMiddleware.Tag<RpcLogger>()('RpcLogger', {
   wrap: true,
   optional: true,
 }) {}
@@ -66,13 +67,10 @@ export const RpcLoggerLive = Layer.succeed(
         onSuccess: () => exit,
         onFailure: (cause) =>
           Effect.zipRight(
-            Effect.annotateLogs(
-              Effect.logError(`RPC request failed: ${opts.rpc._tag}`, cause),
-              {
-                "rpc.method": opts.rpc._tag,
-                "rpc.clientId": opts.clientId,
-              },
-            ),
+            Effect.annotateLogs(Effect.logError(`RPC request failed: ${opts.rpc._tag}`, cause), {
+              'rpc.method': opts.rpc._tag,
+              'rpc.clientId': opts.clientId,
+            }),
             exit,
           ),
       }),
@@ -98,6 +96,7 @@ export const RpcLoggerLive = Layer.succeed(
  */
 export const DomainRpc = TodoRpc.merge(FeatureRpc)
   .merge(QuizRpc)
+  .merge(ArtistTypeRpc)
   .middleware(RpcAuthenticationMiddleware)
   .middleware(RpcLogger)
   .middleware(RpcTracer);
@@ -108,13 +107,13 @@ export const DomainRpc = TodoRpc.merge(FeatureRpc)
  * Note: ExampleApi has its own route layer (ExampleApiLive) with separate docs
  * at /api/example/docs. It's not merged here to avoid handler type conflicts.
  */
-export class DomainApi extends HttpApi.make("api")
+export class DomainApi extends HttpApi.make('api')
   .addHttpApi(TodoApi)
-  .prefix("/api")
+  .prefix('/api')
   .annotateContext(
     OpenApi.annotations({
-      title: "TanStack Start API",
-      description: "API for the TanStack Start application",
-      version: "1.0.0",
+      title: 'TanStack Start API',
+      description: 'API for the TanStack Start application',
+      version: '1.0.0',
     }),
   ) {}

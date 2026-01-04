@@ -4,6 +4,7 @@ import {
   RpcAuthenticationMiddlewareLive,
   AuthService,
 } from '@auth/server';
+import { ArtistTypeRpcLive } from '@artist-types/server';
 import { TodoApiRoutes, TodoRpcLive } from '@todo/server';
 import { ExampleApiLive, ExampleRpcLive } from '@example/server';
 import { QuizRpcLive } from '@quiz/server';
@@ -29,6 +30,7 @@ const RpcRouter = RpcServer.layerHttpRouter({
   Layer.provide(TodoRpcLive),
   Layer.provide(ExampleRpcLive),
   Layer.provide(QuizRpcLive),
+  Layer.provide(ArtistTypeRpcLive),
   Layer.provide(RpcTracerLive),
   Layer.provide(RpcLoggerLive),
   Layer.provide(RpcAuthenticationMiddlewareLive),
