@@ -4,7 +4,7 @@ import * as SqlSchema from '@effect/sql/SqlSchema';
 import * as Effect from 'effect/Effect';
 import { flow } from 'effect/Function';
 import * as Option from 'effect/Option';
-import * as Schema from 'effect/Schema';
+import * as S from 'effect/Schema';
 import {
   CreateTodoInput,
   Todo,
@@ -46,7 +46,7 @@ export class TodoRepository extends Effect.Service<TodoRepository>()(
 
       const getById = flow(
         SqlSchema.findOne({
-          Request: Schema.Struct({ id: TodoId, userId: UserId }),
+          Request: S.Struct({ id: TodoId, userId: UserId }),
           Result: Todo,
           execute: (req) => sql`
             SELECT
@@ -74,7 +74,7 @@ export class TodoRepository extends Effect.Service<TodoRepository>()(
 
       const create = flow(
         SqlSchema.single({
-          Request: Schema.Struct({
+          Request: S.Struct({
             userId: UserId,
             input: CreateTodoInput,
           }),
@@ -108,11 +108,11 @@ export class TodoRepository extends Effect.Service<TodoRepository>()(
           const result = yield* Effect.gen(function* () {
             if (titleValue !== null && completedValue !== null) {
               return yield* SqlSchema.findOne({
-                Request: Schema.Struct({
+                Request: S.Struct({
                   userId: UserId,
                   id: TodoId,
-                  title: Schema.String,
-                  completed: Schema.Boolean,
+                  title: S.String,
+                  completed: S.Boolean,
                 }),
                 Result: Todo,
                 execute: (req) => sql`
@@ -131,10 +131,10 @@ export class TodoRepository extends Effect.Service<TodoRepository>()(
               })({ userId, id, title: titleValue, completed: completedValue });
             } else if (titleValue !== null) {
               return yield* SqlSchema.findOne({
-                Request: Schema.Struct({
+                Request: S.Struct({
                   userId: UserId,
                   id: TodoId,
-                  title: Schema.String,
+                  title: S.String,
                 }),
                 Result: Todo,
                 execute: (req) => sql`
@@ -151,10 +151,10 @@ export class TodoRepository extends Effect.Service<TodoRepository>()(
               })({ userId, id, title: titleValue });
             } else {
               return yield* SqlSchema.findOne({
-                Request: Schema.Struct({
+                Request: S.Struct({
                   userId: UserId,
                   id: TodoId,
-                  completed: Schema.Boolean,
+                  completed: S.Boolean,
                 }),
                 Result: Todo,
                 execute: (req) => sql`
@@ -180,7 +180,7 @@ export class TodoRepository extends Effect.Service<TodoRepository>()(
 
       const remove = flow(
         SqlSchema.void({
-          Request: Schema.Struct({ userId: UserId, id: TodoId }),
+          Request: S.Struct({ userId: UserId, id: TodoId }),
           execute: (req) => sql`
             DELETE FROM public.todos
             WHERE id = ${req.id} AND user_id = ${req.userId}

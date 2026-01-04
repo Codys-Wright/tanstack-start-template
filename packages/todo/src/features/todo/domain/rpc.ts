@@ -1,11 +1,11 @@
 import * as Rpc from '@effect/rpc/Rpc';
 import * as RpcGroup from '@effect/rpc/RpcGroup';
-import * as Schema from 'effect/Schema';
+import * as S from 'effect/Schema';
 import { CreateTodoInput, Todo, TodoId, TodoNotFound, UpdateTodoInput } from './schema.js';
 
 export class TodoRpc extends RpcGroup.make(
   Rpc.make('list', {
-    success: Schema.Array(Todo),
+    success: S.Array(Todo),
   }),
 
   Rpc.make('getById', {
@@ -26,7 +26,7 @@ export class TodoRpc extends RpcGroup.make(
   }),
 
   Rpc.make('remove', {
-    success: Schema.Void,
+    success: S.Void,
     error: TodoNotFound,
     payload: { id: TodoId },
   }),

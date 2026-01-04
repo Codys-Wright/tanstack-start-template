@@ -5,11 +5,11 @@ import * as Arr from 'effect/Array';
 import * as Data from 'effect/Data';
 import * as Effect from 'effect/Effect';
 import * as Option from 'effect/Option';
-import * as Schema from 'effect/Schema';
+import * as S from 'effect/Schema';
 import { CreateTodoInput, Todo, TodoId, UpdateTodoInput } from '../domain/index.js';
 import { TodoClient } from './client.js';
 
-const TodosSchema = Schema.Array(Todo);
+const TodosSchema = S.Array(Todo);
 
 // ============================================================================
 // Query Atoms
