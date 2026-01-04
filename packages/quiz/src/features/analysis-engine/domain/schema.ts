@@ -132,7 +132,8 @@ export class AnalysisEngine extends S.Class<AnalysisEngine>('AnalysisEngine')({
   name: S.String,
 
   // Description of what this engine analyzes
-  description: S.optional(S.String),
+  // Note: nullable in the database, so we use NullOr instead of optional
+  description: S.NullOr(S.String),
 
   // Global scoring configuration
   scoringConfig: S.parseJson(ScoringConfig),

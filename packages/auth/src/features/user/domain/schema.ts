@@ -36,7 +36,8 @@ export class User extends Schema.Class<User>('User')({
   updatedAt: Schema.DateTimeUtc,
 
   // Admin plugin fields
-  role: Schema.optional(Schema.String),
+  // Note: role is nullable in the database, so we use NullOr instead of optional
+  role: Schema.NullOr(Schema.String),
   banned: Schema.optional(Schema.Boolean),
   banReason: Schema.optional(Schema.NullOr(Schema.String)),
   banExpires: Schema.optional(Schema.NullOr(Schema.DateTimeUtc)),

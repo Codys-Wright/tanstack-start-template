@@ -83,7 +83,7 @@ export class AnalysisEngineServerService extends Effect.Service<AnalysisEngineSe
           return yield* repo.create({
             version: input.version ?? defaultVersion,
             name: input.name,
-            description: input.description ?? undefined,
+            description: input.description ?? null,
             scoringConfig: input.scoringConfig,
             endings: input.endings,
             metadata: input.metadata ?? undefined,
