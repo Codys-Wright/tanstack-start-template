@@ -16,9 +16,12 @@
   },
   "dependencies": {
     "@shadcn": "*",
+    "@tanstack/react-router": "*",
+    "date-fns": "*",
     "lucide-react": "*",
     "motion": "*",
-    "react": "*"
+    "react": "*",
+    "react-markdown": "*"
   },
   "devDependencies": {
     "@types/react": "*"

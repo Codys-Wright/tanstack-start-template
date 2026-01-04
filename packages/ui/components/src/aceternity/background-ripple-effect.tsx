@@ -22,6 +22,8 @@ export interface BackgroundRippleEffectProps {
   vignettePosition?: 'top' | 'center' | 'bottom';
   /** If true, fades out the center and keeps edges visible (default: false) */
   vignetteFadeCenter?: boolean;
+  /** Opacity of the grid (0-100, default: 60) */
+  opacity?: number;
 }
 
 interface DivGridProps {
@@ -126,6 +128,7 @@ export const BackgroundRippleEffect = ({
   portal = false,
   vignettePosition = 'center',
   vignetteFadeCenter = false,
+  opacity = 60,
 }: BackgroundRippleEffectProps) => {
   const [clickedCell, setClickedCell] = useState<{
     row: number;
@@ -133,31 +136,39 @@ export const BackgroundRippleEffect = ({
   } | null>(null);
   const [rippleKey, setRippleKey] = useState(0);
   const [mounted, setMounted] = useState(false);
-  const [viewportSize, setViewportSize] = useState({
+  const [containerSize, setContainerSize] = useState({
     width: 1920,
     height: 1080,
   });
   const ref = useRef<HTMLDivElement>(null);
 
-  // Track mount state for portal and get viewport size
+  // Track mount state and get container/viewport size
   React.useEffect(() => {
     setMounted(true);
     if (typeof window === 'undefined') return;
 
     const updateSize = () => {
-      setViewportSize({
-        width: window.innerWidth,
-        height: window.innerHeight,
-      });
+      if (portal) {
+        setContainerSize({
+          width: window.innerWidth,
+          height: window.innerHeight,
+        });
+      } else if (ref.current?.parentElement) {
+        // Use parent container size for non-portal mode
+        setContainerSize({
+          width: ref.current.parentElement.offsetWidth,
+          height: ref.current.parentElement.offsetHeight,
+        });
+      }
     };
     updateSize();
     window.addEventListener('resize', updateSize);
     return () => window.removeEventListener('resize', updateSize);
-  }, []);
+  }, [portal]);
 
-  // Calculate rows/cols to cover viewport when using portal, otherwise use props
-  const rows = rowsProp ?? (portal ? Math.ceil(viewportSize.height / cellSize) + 2 : 8);
-  const cols = colsProp ?? (portal ? Math.ceil(viewportSize.width / cellSize) + 2 : 27);
+  // Calculate rows/cols to cover container
+  const rows = rowsProp ?? Math.ceil(containerSize.height / cellSize) + 2;
+  const cols = colsProp ?? Math.ceil(containerSize.width / cellSize) + 2;
 
   // Ambient mode: auto-trigger ripples at random positions
   React.useEffect(() => {
@@ -189,14 +200,9 @@ export const BackgroundRippleEffect = ({
       )}
       style={portal ? { zIndex: -10 } : undefined}
     >
-      {/* Position grid at top-left to cover entire viewport */}
-      <div
-        className={cn(
-          'relative overflow-hidden',
-          portal ? 'absolute inset-0' : 'flex h-full w-full items-center justify-center',
-        )}
-      >
-        <div className={cn('opacity-60', portal && 'absolute top-0 left-0')}>
+      {/* Position grid at top-left to cover entire container */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute top-0 left-0" style={{ opacity: opacity / 100 }}>
           <DivGrid
             key={`base-${rippleKey}`}
             rows={rows}
