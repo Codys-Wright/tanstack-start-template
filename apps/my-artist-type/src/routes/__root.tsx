@@ -1,6 +1,7 @@
 import { RegistryProvider } from '@effect-atom/atom-react';
 import { HeadContent, Outlet, Scripts, createRootRoute, useLocation } from '@tanstack/react-router';
 import { getThemeScriptContent, ThemeProvider, ThemeSystemProviderWithContext } from '@theme';
+import { HydrationDebugPanel, useHydrationTiming } from '@core/client';
 import { NavbarHome } from '../features/landing/navbar';
 import appCss from '../styles.css?url';
 
@@ -50,6 +51,9 @@ export const Route = createRootRoute({
 function RootComponent() {
   const location = useLocation();
 
+  // Measure hydration timing for the root component
+  useHydrationTiming('Root');
+
   // Check if we're on an admin route (no navbar needed)
   const isAdminRoute = location.pathname.startsWith('/admin');
   // Pages with full-bleed backgrounds handle their own navbar spacing
@@ -68,6 +72,8 @@ function RootComponent() {
           </div>
         </NavbarHome>
       )}
+      {/* Hydration debug panel - only shows in development */}
+      <HydrationDebugPanel />
     </>
   );
 }
