@@ -1,5 +1,0 @@
-# Bun configuration for my-artist-type app
-
-# Enable TypeScript paths resolution
-[resolve]
-tsconfigPath = "./tsconfig.app.json"
