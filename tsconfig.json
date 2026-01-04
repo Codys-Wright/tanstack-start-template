@@ -31,13 +31,16 @@
       "path": "./packages/email"
     },
     {
-      "path": ".//packages/quiz"
+      "path": "./packages/quiz"
     },
     {
       "path": "./packages/ui/components"
     },
     {
       "path": "./packages/example"
+    },
+    {
+      "path": "./packages/artist-types"
     }
   ]
 }

@@ -16,6 +16,10 @@
     "moduleResolution": "bundler",
     "paths": {
       "@/*": ["./src/*"],
+      "@artist-types": ["../../packages/artist-types/src/index.ts"],
+      "@artist-types/server": ["../../packages/artist-types/src/server.ts"],
+      "@artist-types/database": ["../../packages/artist-types/src/database.ts"],
+      "@artist-types/*": ["../../packages/artist-types/src/*"],
       "@todo": ["../../packages/todo/src/index.ts"],
       "@todo/*": ["../../packages/todo/src/*"],
       "@core": ["../../packages/core/src/index.ts"],
@@ -48,6 +52,9 @@
   ],
   "include": ["src/**/*.js", "src/**/*.jsx", "src/**/*.ts", "src/**/*.tsx"],
   "references": [
+    {
+      "path": "../../packages/artist-types/tsconfig.lib.json"
+    },
     {
       "path": "../../packages/ui/components/tsconfig.lib.json"
     },
