@@ -14,6 +14,7 @@
 import * as Effect from 'effect/Effect';
 import * as Logger from 'effect/Logger';
 
+import { artistTypes, artistTypeCleanupEntries } from '@artist-types/database';
 import { auth, authCleanup } from '@auth/database';
 import { runCleanup, runSeed } from '@core/database';
 import { example, exampleCleanup } from '@example/database';
@@ -27,9 +28,13 @@ const isQuizOnly = process.argv.includes('--quiz-only');
 if (isCleanup) {
   // Cleanup mode: remove all data (quiz cleanup first due to dependencies)
   await Effect.runPromise(
-    runCleanup(...quizCleanup(), ...exampleCleanup(), ...todoCleanup(), ...authCleanup()).pipe(
-      Effect.provide(Logger.pretty),
-    ),
+    runCleanup(
+      ...quizCleanup(),
+      ...exampleCleanup(),
+      ...todoCleanup(),
+      ...artistTypeCleanupEntries(),
+      ...authCleanup(),
+    ).pipe(Effect.provide(Logger.pretty)),
   );
 } else if (isQuizOnly) {
   // Quiz-only mode: quiz + responses + analysis, no fake users/todos
@@ -49,6 +54,7 @@ if (isCleanup) {
       ...auth({ users: 50, organizations: 10 }),
       ...todo({ todos: 100 }),
       ...example({ features: 20 }),
+      artistTypes(),
       ...quiz({
         includeTypeformResponses: !isMinimal,
         includeAnalysisResults: !isMinimal,
