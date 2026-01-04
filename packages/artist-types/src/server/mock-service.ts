@@ -13,7 +13,7 @@ import {
   getAllArtistTypeSeedData,
   getArtistTypeSeedData,
   getArtistTypeSeedDataBySlug,
-} from '../data/index.js';
+} from '../database/data/index.js';
 
 const transformSeedDataToArtistType = (seed: ArtistTypeSeedData, now: DateTime.Utc): ArtistType => {
   const metadata = {
