@@ -13,15 +13,22 @@ import { SignedIn, SignedOut, UserButton, isAdminAtom } from '@auth';
 import { lastResponseIdAtom } from '@quiz';
 import { ModeToggle } from '@theme';
 import { motion } from 'motion/react';
-import { useState, type ReactNode, useMemo } from 'react';
+import { useState, useEffect, type ReactNode, useMemo } from 'react';
 import { useAtomValue } from '@effect-atom/atom-react';
 
 export function NavbarHome({ children }: { children?: ReactNode }) {
   const isAdmin = useAtomValue(isAdminAtom);
   const lastResponseId = useAtomValue(lastResponseIdAtom);
 
+  // Track if we're on the client to avoid hydration mismatch
+  const [isClient, setIsClient] = useState(false);
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
   // Determine if user has taken the quiz before
-  const hasResults = lastResponseId !== null;
+  // On SSR, always show default "Take the Quiz!" to match initial client render
+  const hasResults = isClient && lastResponseId !== null;
   const quizButtonText = hasResults ? 'Your Results' : 'Take the Quiz!';
   const quizButtonLink = hasResults ? `/my-response/${lastResponseId}` : '/quiz';
 
