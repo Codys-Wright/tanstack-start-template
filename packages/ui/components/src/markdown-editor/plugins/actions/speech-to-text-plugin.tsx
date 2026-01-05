@@ -42,25 +42,35 @@ const VOICE_COMMANDS: Readonly<
   },
 };
 
-export const SUPPORT_SPEECH_RECOGNITION: boolean =
-  CAN_USE_DOM && ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window);
-
-function SpeechToTextPluginImpl() {
+export function SpeechToTextPlugin() {
   const [editor] = useLexicalComposerContext();
   const [isEnabled, setIsEnabled] = useState<boolean>(false);
   const [isSpeechToText, setIsSpeechToText] = useState<boolean>(false);
-  const SpeechRecognition =
-    // @ts-expect-error missing type
-    CAN_USE_DOM && (window.SpeechRecognition || window.webkitSpeechRecognition);
-  const recognition = useRef<typeof SpeechRecognition | null>(null);
+  const [isSupported, setIsSupported] = useState<boolean>(false);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const recognitionRef = useRef<any>(null);
   const report = useReport();
 
+  // Check for speech recognition support on client only
   useEffect(() => {
-    if (isEnabled && recognition.current === null) {
-      recognition.current = new SpeechRecognition();
-      recognition.current.continuous = true;
-      recognition.current.interimResults = true;
-      recognition.current.addEventListener('result', (event: typeof SpeechRecognition) => {
+    if (CAN_USE_DOM) {
+      setIsSupported('SpeechRecognition' in window || 'webkitSpeechRecognition' in window);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!isSupported) return;
+
+    const SpeechRecognitionClass =
+      // @ts-expect-error missing type
+      window.SpeechRecognition || window.webkitSpeechRecognition;
+
+    if (isEnabled && recognitionRef.current === null) {
+      recognitionRef.current = new SpeechRecognitionClass();
+      recognitionRef.current.continuous = true;
+      recognitionRef.current.interimResults = true;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      recognitionRef.current.addEventListener('result', (event: any) => {
         const resultItem = event.results.item(event.resultIndex);
         const { transcript } = resultItem.item(0);
         report(transcript);
@@ -90,20 +100,21 @@ function SpeechToTextPluginImpl() {
       });
     }
 
-    if (recognition.current) {
+    if (recognitionRef.current) {
       if (isEnabled) {
-        recognition.current.start();
+        recognitionRef.current.start();
       } else {
-        recognition.current.stop();
+        recognitionRef.current.stop();
       }
     }
 
     return () => {
-      if (recognition.current !== null) {
-        recognition.current.stop();
+      if (recognitionRef.current !== null) {
+        recognitionRef.current.stop();
       }
     };
-  }, [SpeechRecognition, editor, isEnabled, report]);
+  }, [editor, isEnabled, isSupported, report]);
+
   useEffect(() => {
     return editor.registerCommand(
       SPEECH_TO_TEXT_COMMAND,
@@ -114,6 +125,11 @@ function SpeechToTextPluginImpl() {
       COMMAND_PRIORITY_EDITOR,
     );
   }, [editor]);
+
+  // Don't render if not supported (checked on client)
+  if (!isSupported) {
+    return null;
+  }
 
   return (
     <Tooltip>
@@ -136,5 +152,3 @@ function SpeechToTextPluginImpl() {
     </Tooltip>
   );
 }
-
-export const SpeechToTextPlugin = SUPPORT_SPEECH_RECOGNITION ? SpeechToTextPluginImpl : () => null;

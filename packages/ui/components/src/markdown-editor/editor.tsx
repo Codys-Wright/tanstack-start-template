@@ -1,22 +1,18 @@
 'use client';
 
+import { useState, useEffect, useMemo } from 'react';
 import { InitialConfigType, LexicalComposer } from '@lexical/react/LexicalComposer';
 import { OnChangePlugin } from '@lexical/react/LexicalOnChangePlugin';
-import {
-  $getRoot,
-  $createParagraphNode,
-  $createTextNode,
-  EditorState,
-  SerializedEditorState,
-} from 'lexical';
+import { EditorState, SerializedEditorState } from 'lexical';
 
 import { editorTheme } from '@components/markdown-editor/themes/editor-theme';
 import { Tooltip } from '@shadcn/components/ui/tooltip';
 
 import { nodes } from './nodes';
 import { Plugins } from './plugins';
+import { InitialMarkdownPlugin } from './plugins/initial-markdown-plugin';
 
-const editorConfig: InitialConfigType = {
+const baseEditorConfig: InitialConfigType = {
   namespace: 'Editor',
   theme: editorTheme,
   nodes,
@@ -38,40 +34,54 @@ export function Editor({
   onChange?: (editorState: EditorState) => void;
   onSerializedChange?: (editorSerializedState: SerializedEditorState) => void;
 }) {
-  // Create initial editor state from markdown if provided
-  const getInitialState = () => {
-    if (editorState) return editorState;
-    if (editorSerializedState) return JSON.stringify(editorSerializedState);
-    if (initialMarkdown) {
-      // Create a simple initial state with markdown as text content
-      // The user can use the markdown toggle to convert it
-      return () => {
-        const root = $getRoot();
-        // Clear the default empty paragraph
-        root.clear();
-        const lines = initialMarkdown.split('\n');
-        lines.forEach((line) => {
-          const paragraph = $createParagraphNode();
-          if (line) {
-            paragraph.append($createTextNode(line));
-          }
-          root.append(paragraph);
-        });
+  // Only render on client to avoid hydration mismatch
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  // Compute the initial config - memoize to avoid re-creating the editor
+  const initialConfig = useMemo((): InitialConfigType => {
+    if (editorState) {
+      return { ...baseEditorConfig, editorState };
+    }
+    if (editorSerializedState) {
+      return {
+        ...baseEditorConfig,
+        editorState: JSON.stringify(editorSerializedState),
       };
     }
-    return undefined;
-  };
+    // For initialMarkdown, start with empty editor and let InitialMarkdownPlugin handle conversion
+    return baseEditorConfig;
+  }, [editorState, editorSerializedState]);
+
+  // Show loading state on server/initial render
+  if (!isMounted) {
+    return (
+      <div className="bg-background overflow-hidden rounded-lg border shadow min-h-[300px] flex items-center justify-center">
+        <p className="text-muted-foreground">Loading editor...</p>
+      </div>
+    );
+  }
+
+  console.log(
+    '[Editor] Rendering with initialMarkdown:',
+    !!initialMarkdown,
+    initialMarkdown?.length,
+  );
 
   return (
-    <div className="bg-background overflow-hidden rounded-lg border shadow">
-      <LexicalComposer
-        initialConfig={{
-          ...editorConfig,
-          editorState: getInitialState(),
-        }}
-      >
+    <div
+      className="bg-background overflow-hidden rounded-lg border shadow"
+      suppressHydrationWarning
+    >
+      <LexicalComposer initialConfig={initialConfig}>
         <Tooltip.Provider>
           <Plugins />
+
+          {/* Convert initial markdown to rich content on mount */}
+          {initialMarkdown ? <InitialMarkdownPlugin markdown={initialMarkdown} /> : null}
 
           <OnChangePlugin
             ignoreSelectionChange={true}

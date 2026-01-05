@@ -31,7 +31,8 @@ import { MarkdownTogglePlugin } from '@components/markdown-editor/plugins/action
 import { MaxLengthPlugin } from '@components/markdown-editor/plugins/actions/max-length-plugin';
 import { ShareContentPlugin } from '@components/markdown-editor/plugins/actions/share-content-plugin';
 import { SpeechToTextPlugin } from '@components/markdown-editor/plugins/actions/speech-to-text-plugin';
-import { TreeViewPlugin } from '@components/markdown-editor/plugins/actions/tree-view-plugin';
+// Disabled: Debug tree view not needed in production
+// import { TreeViewPlugin } from '@components/markdown-editor/plugins/actions/tree-view-plugin';
 import { AutoLinkPlugin } from '@components/markdown-editor/plugins/auto-link-plugin';
 import { AutocompletePlugin } from '@components/markdown-editor/plugins/autocomplete-plugin';
 import { CodeActionMenuPlugin } from '@components/markdown-editor/plugins/code-action-menu-plugin';
@@ -107,7 +108,8 @@ import { ScrollArea, ScrollBar } from '@shadcn/components/ui/scroll-area';
 import { Separator } from '@shadcn/components/ui/separator';
 
 const placeholder = 'Press / for commands...';
-const maxLength = 500;
+// Set high limit for lesson content (effectively unlimited)
+const maxLength = 100000;
 
 export function Plugins({}) {
   const [floatingAnchorElem, setFloatingAnchorElem] = useState<HTMLDivElement | null>(null);
@@ -303,7 +305,7 @@ export function Plugins({}) {
               <ClearEditorActionPlugin />
               <ClearEditorPlugin />
             </>
-            <TreeViewPlugin />
+            {/* TreeViewPlugin removed - debug tree view not needed */}
           </div>
         </div>
       </ActionsPlugin>
