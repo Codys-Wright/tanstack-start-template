@@ -32,7 +32,6 @@ export function TreeViewPlugin(): JSX.Element {
             timeTravelPanelButtonClassName="debug-timetravel-panel-button"
             editor={editor}
           />
-          <ScrollArea.Bar orientation="vertical" />
         </ScrollArea>
       </Dialog.Content>
     </Dialog>
