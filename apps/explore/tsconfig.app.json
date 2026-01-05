@@ -1,5 +1,5 @@
 {
-  "extends": "../../tsconfig.base.json",
+  "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "dist",
     "tsBuildInfoFile": "dist/tsconfig.app.tsbuildinfo",
@@ -11,7 +11,6 @@
       "@nx/react/typings/image.d.ts",
       "vite/client"
     ],
-    "rootDir": "src",
     "module": "esnext",
     "moduleResolution": "bundler"
   },
@@ -30,10 +29,16 @@
   "include": ["src/**/*.js", "src/**/*.jsx", "src/**/*.ts", "src/**/*.tsx"],
   "references": [
     {
+      "path": "../../packages/ui/theme/tsconfig.lib.json"
+    },
+    {
       "path": "../../packages/ui/shadcn/tsconfig.lib.json"
     },
     {
-      "path": "../../packages/playground/tsconfig.lib.json"
+      "path": "../../packages/sse/tsconfig.lib.json"
+    },
+    {
+      "path": "../../packages/chat/tsconfig.lib.json"
     }
   ]
 }

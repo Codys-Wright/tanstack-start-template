@@ -1,0 +1,9 @@
+{
+  "name": "explore",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/explore/src",
+  "projectType": "application",
+  "tags": [],
+  "targets": {
+  }
+}

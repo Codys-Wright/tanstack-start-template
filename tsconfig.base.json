@@ -58,7 +58,18 @@
       "@theme": ["./packages/ui/theme/src/index.ts"],
       "@theme/*": ["./packages/ui/theme/src/*"],
       "@my-artist-type": ["./apps/my-artist-type/src/index.ts"],
-      "@my-artist-type/*": ["./apps/my-artist-type/src/*"]
+      "@my-artist-type/*": ["./apps/my-artist-type/src/*"],
+      "@songmaking": ["./apps/songmaking/src/index.ts"],
+      "@songmaking/*": ["./apps/songmaking/src/*"],
+      "@sse": ["./packages/sse/src/index.ts"],
+      "@sse/server": ["./packages/sse/src/server.ts"],
+      "@sse/client": ["./packages/sse/src/client.ts"],
+      "@sse/*": ["./packages/sse/src/*"],
+      "@chat": ["./packages/chat/src/index.ts"],
+      "@chat/server": ["./packages/chat/src/server.ts"],
+      "@chat/client": ["./packages/chat/src/client.ts"],
+      "@chat/components": ["./packages/chat/src/components/index.ts"],
+      "@chat/*": ["./packages/chat/src/*"]
     },
     "plugins": [
       {
