@@ -12,15 +12,36 @@
       "types": "./src/index.ts",
       "import": "./src/index.ts",
       "default": "./src/index.ts"
+    },
+    "./markdown-editor/editor": {
+      "types": "./src/markdown-editor/editor.tsx",
+      "import": "./src/markdown-editor/editor.tsx",
+      "default": "./src/markdown-editor/editor.tsx"
     }
   },
   "dependencies": {
     "@shadcn": "*",
     "@tanstack/react-router": "*",
+    "@lexical/code": "*",
+    "@lexical/file": "*",
+    "@lexical/hashtag": "*",
+    "@lexical/link": "*",
+    "@lexical/list": "*",
+    "@lexical/markdown": "*",
+    "@lexical/overflow": "*",
+    "@lexical/react": "*",
+    "@lexical/rich-text": "*",
+    "@lexical/selection": "*",
+    "@lexical/table": "*",
+    "@lexical/text": "*",
+    "@lexical/utils": "*",
     "date-fns": "*",
+    "lexical": "*",
+    "lodash": "*",
     "lucide-react": "*",
     "motion": "*",
     "react": "*",
+    "react-error-boundary": "*",
     "react-markdown": "*"
   },
   "devDependencies": {
