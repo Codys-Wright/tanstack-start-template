@@ -3,26 +3,45 @@
   "version": "0.0.1",
   "private": true,
   "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
   "exports": {
-    ".": "./src/index.ts",
-    "./server": "./src/server.ts",
-    "./client": "./src/client.ts",
-    "./components": "./src/components/index.ts"
-  },
-  "scripts": {
-    "typecheck": "tsc --noEmit"
+    ".": {
+      "types": "./src/index.ts",
+      "import": "./src/index.ts",
+      "default": "./src/index.ts"
+    },
+    "./server": {
+      "types": "./src/server.ts",
+      "import": "./src/server.ts",
+      "default": "./src/server.ts"
+    },
+    "./client": {
+      "types": "./src/client.ts",
+      "import": "./src/client.ts",
+      "default": "./src/client.ts"
+    },
+    "./components": {
+      "types": "./src/components/index.ts",
+      "import": "./src/components/index.ts",
+      "default": "./src/components/index.ts"
+    },
+    "./*": {
+      "types": "./src/*.ts",
+      "import": "./src/*.ts",
+      "default": "./src/*.ts"
+    },
+    "./package.json": "./package.json"
   },
   "dependencies": {
-    "@effect/rpc": "catalog:",
-    "@effect/schema": "catalog:",
-    "@shadcn": "workspace:*",
-    "@sse": "workspace:*",
-    "effect": "catalog:",
-    "lucide-react": "catalog:",
-    "react": "catalog:"
+    "@effect/rpc": "*",
+    "@shadcn": "*",
+    "@sse": "*",
+    "effect": "*",
+    "lucide-react": "*",
+    "react": "*"
   },
   "devDependencies": {
-    "@types/react": "catalog:",
-    "typescript": "catalog:"
+    "@types/react": "*"
   }
 }
