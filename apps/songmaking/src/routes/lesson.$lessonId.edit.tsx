@@ -2,29 +2,45 @@
  * Lesson Edit Page
  *
  * Allows editing lesson content using the markdown editor.
+ * Uses Effect Atom for state management and shadcn Sidebar.
  */
 
 import { createFileRoute, Link, useNavigate } from '@tanstack/react-router';
 import { useState } from 'react';
-import { Badge, Button, Card } from '@shadcn';
+import { Badge, Button, Card, Sidebar, SidebarProvider } from '@shadcn';
 import { ArrowLeft, Save, X } from 'lucide-react';
-import { Editor } from '@components/markdown-editor/editor.js';
+import { Editor } from '@components/markdown-editor/editor';
+import type { SerializedEditorState } from 'lexical';
 import { CourseSidebar } from '../components/course-sidebar.js';
 import { getLessonById, getSectionById } from '../data/course.js';
 
 export const Route = createFileRoute('/lesson/$lessonId/edit')({
-  component: LessonEditPage,
+  component: LessonEditPageWrapper,
 });
 
-function LessonEditPage() {
+function LessonEditPageWrapper() {
   const params = Route.useParams() as { lessonId: string };
   const lessonId = params.lessonId;
+
+  return (
+    <SidebarProvider defaultOpen>
+      <CourseSidebar currentLessonId={lessonId} />
+      <Sidebar.Inset>
+        <LessonEditPage lessonId={lessonId} />
+      </Sidebar.Inset>
+    </SidebarProvider>
+  );
+}
+
+function LessonEditPage({ lessonId }: { lessonId: string }) {
   const navigate = useNavigate();
 
   const lesson = getLessonById(lessonId);
   const section = lesson ? getSectionById(lesson.sectionId) : null;
 
-  const [editorState, setEditorState] = useState<any | undefined>(lesson?.editorState);
+  const [editorState, setEditorState] = useState<SerializedEditorState | undefined>(
+    lesson?.editorState as SerializedEditorState | undefined,
+  );
   const [hasChanges, setHasChanges] = useState(false);
 
   if (!lesson || !section) {
@@ -72,65 +88,59 @@ function LessonEditPage() {
   };
 
   return (
-    <div className="min-h-screen flex">
-      {/* Sidebar */}
-      <CourseSidebar currentLessonId={lessonId} />
-
-      {/* Main Content */}
-      <main className="flex-1 overflow-auto">
-        <div className="max-w-5xl mx-auto px-6 py-8">
-          {/* Header */}
-          <div className="mb-6">
-            <div className="flex items-center justify-between mb-4">
-              <div>
-                <div className="flex items-center gap-2 text-sm text-muted-foreground mb-2">
-                  <Link to="/" className="hover:text-foreground transition-colors">
-                    Course
-                  </Link>
-                  <span>/</span>
-                  <span>{section.title}</span>
-                  <span>/</span>
-                  <span>Edit</span>
-                </div>
-                <h1 className="text-2xl font-bold mb-2">Edit: {lesson.title}</h1>
-                <Badge variant="secondary">{lesson.type}</Badge>
+    <main className="flex-1 overflow-auto">
+      <div className="max-w-5xl mx-auto px-6 py-8">
+        {/* Header */}
+        <div className="mb-6">
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <div className="flex items-center gap-2 text-sm text-muted-foreground mb-2">
+                <Link to="/" className="hover:text-foreground transition-colors">
+                  Course
+                </Link>
+                <span>/</span>
+                <span>{section.title}</span>
+                <span>/</span>
+                <span>Edit</span>
               </div>
-              <div className="flex items-center gap-2">
-                <Button variant="outline" onClick={handleCancel}>
-                  <X className="w-4 h-4 mr-2" />
-                  Cancel
-                </Button>
-                <Button onClick={handleSave} disabled={!hasChanges}>
-                  <Save className="w-4 h-4 mr-2" />
-                  Save Changes
-                </Button>
-              </div>
+              <h1 className="text-2xl font-bold mb-2">Edit: {lesson.title}</h1>
+              <Badge variant="secondary">{lesson.type}</Badge>
+            </div>
+            <div className="flex items-center gap-2">
+              <Button variant="outline" onClick={handleCancel}>
+                <X className="w-4 h-4 mr-2" />
+                Cancel
+              </Button>
+              <Button onClick={handleSave} disabled={!hasChanges}>
+                <Save className="w-4 h-4 mr-2" />
+                Save Changes
+              </Button>
             </div>
           </div>
-
-          {/* Editor */}
-          <div className="mb-8">
-            {lesson.type === 'text' || lesson.type === 'assignment' ? (
-              <Editor
-                editorSerializedState={editorState}
-                onSerializedChange={(newState) => {
-                  setEditorState(newState);
-                  setHasChanges(true);
-                }}
-              />
-            ) : (
-              <Card className="p-8 text-center">
-                <p className="text-muted-foreground">
-                  The markdown editor is only available for text and assignment lessons.
-                </p>
-                <p className="text-sm text-muted-foreground mt-2">
-                  This lesson is of type: <strong>{lesson.type}</strong>
-                </p>
-              </Card>
-            )}
-          </div>
         </div>
-      </main>
-    </div>
+
+        {/* Editor */}
+        <div className="mb-8">
+          {lesson.type === 'text' || lesson.type === 'assignment' ? (
+            <Editor
+              editorSerializedState={editorState}
+              onSerializedChange={(newState) => {
+                setEditorState(newState);
+                setHasChanges(true);
+              }}
+            />
+          ) : (
+            <Card className="p-8 text-center">
+              <p className="text-muted-foreground">
+                The markdown editor is only available for text and assignment lessons.
+              </p>
+              <p className="text-sm text-muted-foreground mt-2">
+                This lesson is of type: <strong>{lesson.type}</strong>
+              </p>
+            </Card>
+          )}
+        </div>
+      </div>
+    </main>
   );
 }
