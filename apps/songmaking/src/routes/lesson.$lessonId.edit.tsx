@@ -124,6 +124,7 @@ function LessonEditPage({ lessonId }: { lessonId: string }) {
           {lesson.type === 'text' || lesson.type === 'assignment' ? (
             <Editor
               editorSerializedState={editorState}
+              initialMarkdown={!editorState ? lesson.mdxContent : undefined}
               onSerializedChange={(newState) => {
                 setEditorState(newState);
                 setHasChanges(true);
