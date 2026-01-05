@@ -34,8 +34,6 @@ import { Dialog } from "@shadcn/components/ui/dialog"
 import { Input } from "@shadcn/components/ui/input"
 import {
   Popover,
-  PopoverContent,
-  PopoverTrigger,
 } from "@shadcn/components/ui/popover"
 
 export interface CustomEmbedConfig extends EmbedConfig {
@@ -243,8 +241,8 @@ export function AutoEmbedPlugin(): JSX.Element {
             <Popover open={true}>
               <PopoverPortal container={anchorElementRef.current}>
                 <div className="-translate-y-full transform">
-                  <PopoverTrigger />
-                  <PopoverContent
+                  <Popover.Trigger />
+                  <Popover.Content
                     className="w-[200px] p-0"
                     align="start"
                     side="right"
@@ -267,7 +265,7 @@ export function AutoEmbedPlugin(): JSX.Element {
                         </Command.Group>
                       </Command.List>
                     </Command>
-                  </PopoverContent>
+                  </Popover.Content>
                 </div>
               </PopoverPortal>
             </Popover>

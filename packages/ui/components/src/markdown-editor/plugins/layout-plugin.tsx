@@ -44,10 +44,7 @@ import {
 import { Button } from "@shadcn/components/ui/button"
 import {
   Select,
-  SelectContent,
   SelectItem,
-  SelectTrigger,
-  SelectValue,
 } from "@shadcn/components/ui/select"
 
 const LAYOUTS = [
@@ -76,16 +73,11 @@ export function InsertLayoutDialog({
   return (
     <>
       <Select onValueChange={setLayout} defaultValue={layout}>
-        <SelectTrigger className="w-full">
-          <SelectValue placeholder={buttonLabel} />
-        </SelectTrigger>
-        <SelectContent className="w-full">
           {LAYOUTS.map(({ label, value }) => (
             <Select.Item key={value} value={value}>
               {label}
             </Select.Item>
           ))}
-        </SelectContent>
       </Select>
       <Button onClick={onClick}>Insert</Button>
     </>

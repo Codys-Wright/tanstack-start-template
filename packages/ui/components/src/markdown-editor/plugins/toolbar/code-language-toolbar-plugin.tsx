@@ -20,9 +20,7 @@ import { useToolbarContext } from "@components/markdown-editor/context/toolbar-c
 import { useUpdateToolbarHandler } from "@components/markdown-editor/editor-hooks/use-update-toolbar"
 import {
   Select,
-  SelectContent,
   SelectItem,
-  SelectTrigger,
 } from "@shadcn/components/ui/select"
 
 function getCodeLanguageOptions(): [string, string][] {
@@ -97,12 +95,9 @@ export function CodeLanguageToolbarPlugin() {
 
   return (
     <Select>
-      <SelectTrigger className="!h-8 w-min gap-1">
         <span>
           {getLanguageFriendlyName(codeLanguage) || "Select Language"}
         </span>
-      </SelectTrigger>
-      <SelectContent>
         {CODE_LANGUAGE_OPTIONS.map(([value, label]) => (
           <Select.Item
             key={value}
@@ -114,7 +109,6 @@ export function CodeLanguageToolbarPlugin() {
             {label}
           </Select.Item>
         ))}
-      </SelectContent>
     </Select>
   )
 }

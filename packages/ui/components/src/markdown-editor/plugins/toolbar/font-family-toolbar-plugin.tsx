@@ -12,9 +12,7 @@ import { useToolbarContext } from "@components/markdown-editor/context/toolbar-c
 import { useUpdateToolbarHandler } from "@components/markdown-editor/editor-hooks/use-update-toolbar"
 import {
   Select,
-  SelectContent,
   SelectItem,
-  SelectTrigger,
 } from "@shadcn/components/ui/select"
 
 const FONT_FAMILY_OPTIONS = [
@@ -67,11 +65,8 @@ export function FontFamilyToolbarPlugin() {
       }}
       aria-label={buttonAriaLabel}
     >
-      <SelectTrigger className="!h-8 w-min gap-1">
         <TypeIcon className="size-4" />
         <span style={{ fontFamily }}>{fontFamily}</span>
-      </SelectTrigger>
-      <SelectContent>
         {FONT_FAMILY_OPTIONS.map((option) => (
           <Select.Item
             key={option}
@@ -81,7 +76,6 @@ export function FontFamilyToolbarPlugin() {
             {option}
           </Select.Item>
         ))}
-      </SelectContent>
     </Select>
   )
 }

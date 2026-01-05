@@ -11,15 +11,10 @@ import { Button } from "@shadcn/components/ui/button"
 import { Input } from "@shadcn/components/ui/input"
 import {
   Popover,
-  PopoverContent,
-  PopoverTrigger,
 } from "@shadcn/components/ui/popover"
 import {
   Select,
-  SelectContent,
   SelectItem,
-  SelectTrigger,
-  SelectValue,
 } from "@shadcn/components/ui/select"
 
 /**
@@ -993,7 +988,7 @@ function ColorPickerRootImpl(props: ColorPickerRootImplProps) {
 }
 
 interface ColorPickerTriggerProps
-  extends React.ComponentProps<typeof PopoverTrigger> {}
+  extends React.ComponentProps<typeof Popover.Trigger> {}
 
 function ColorPickerTrigger(props: ColorPickerTriggerProps) {
   const { asChild, ...triggerProps } = props
@@ -1002,14 +997,14 @@ function ColorPickerTrigger(props: ColorPickerTriggerProps) {
   const TriggerPrimitive = asChild ? Slot : Button
 
   return (
-    <PopoverTrigger asChild disabled={context.disabled}>
+    <Popover.Trigger asChild disabled={context.disabled}>
       <TriggerPrimitive data-slot="color-picker-trigger" {...triggerProps} />
-    </PopoverTrigger>
+    </Popover.Trigger>
   )
 }
 
 interface ColorPickerContentProps
-  extends React.ComponentProps<typeof PopoverContent> {}
+  extends React.ComponentProps<typeof Popover.Content> {}
 
 function ColorPickerContent(props: ColorPickerContentProps) {
   const { asChild, className, children, ...popoverContentProps } = props
@@ -1030,14 +1025,14 @@ function ColorPickerContent(props: ColorPickerContentProps) {
   }
 
   return (
-    <PopoverContent
+    <Popover.Content
       data-slot="color-picker-content"
       asChild={asChild}
       {...popoverContentProps}
       className={cn("flex w-[340px] flex-col gap-4 p-4", className)}
     >
       {children}
-    </PopoverContent>
+    </Popover.Content>
   )
 }
 
@@ -1366,7 +1361,6 @@ function ColorPickerEyeDropper(props: ColorPickerEyeDropperProps) {
 
 interface ColorPickerFormatSelectProps
   extends Omit<React.ComponentProps<typeof Select>, "value" | "onValueChange">,
-    Pick<React.ComponentProps<typeof SelectTrigger>, "size" | "className"> {}
 
 function ColorPickerFormatSelect(props: ColorPickerFormatSelectProps) {
   const { size, className, ...selectProps } = props
@@ -1390,20 +1384,15 @@ function ColorPickerFormatSelect(props: ColorPickerFormatSelectProps) {
       onValueChange={onFormatChange}
       disabled={context.disabled}
     >
-      <SelectTrigger
         data-slot="color-picker-format-select-trigger"
         size={size ?? "sm"}
         className={cn(className)}
       >
-        <SelectValue />
-      </SelectTrigger>
-      <SelectContent>
         {colorFormats.map((format) => (
           <Select.Item key={format} value={format}>
             {format.toUpperCase()}
           </Select.Item>
         ))}
-      </SelectContent>
     </Select>
   )
 }

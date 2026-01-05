@@ -10,9 +10,6 @@ import { useUpdateToolbarHandler } from "@components/markdown-editor/editor-hook
 import { blockTypeToBlockName } from "@components/markdown-editor/plugins/toolbar/block-format/block-format-data"
 import {
   Select,
-  SelectContent,
-  SelectGroup,
-  SelectTrigger,
 } from "@shadcn/components/ui/select"
 
 export function BlockFormatDropDown({
@@ -72,13 +69,9 @@ export function BlockFormatDropDown({
         setBlockType(value as keyof typeof blockTypeToBlockName)
       }}
     >
-      <SelectTrigger className="!h-8 w-min gap-1">
         {blockTypeToBlockName[blockType].icon}
         <span>{blockTypeToBlockName[blockType].label}</span>
-      </SelectTrigger>
-      <SelectContent>
-        <SelectGroup>{children}</SelectGroup>
-      </SelectContent>
+        <Select.Group>{children}</Select.Group>
     </Select>
   )
 }
