@@ -1,81 +1,75 @@
-"use client"
+'use client';
 
-import { useCallback, useState } from "react"
-import {
-  $getSelectionStyleValueForProperty,
-  $patchStyleText,
-} from "@lexical/selection"
-import { $getSelection, $isRangeSelection, BaseSelection } from "lexical"
-import { TypeIcon } from "lucide-react"
+import { useCallback, useState } from 'react';
+import { $getSelectionStyleValueForProperty, $patchStyleText } from '@lexical/selection';
+import { $getSelection, $isRangeSelection, BaseSelection } from 'lexical';
+import { TypeIcon } from 'lucide-react';
 
-import { useToolbarContext } from "@components/markdown-editor/context/toolbar-context"
-import { useUpdateToolbarHandler } from "@components/markdown-editor/editor-hooks/use-update-toolbar"
-import {
-  Select,
-  
-} from "@shadcn/components/ui/select"
+import { useToolbarContext } from '@components/markdown-editor/context/toolbar-context';
+import { useUpdateToolbarHandler } from '@components/markdown-editor/editor-hooks/use-update-toolbar';
+import { Select } from '@shadcn/components/ui/select';
 
 const FONT_FAMILY_OPTIONS = [
-  "Arial",
-  "Verdana",
-  "Times New Roman",
-  "Georgia",
-  "Courier New",
-  "Trebuchet MS",
-]
+  'Arial',
+  'Verdana',
+  'Times New Roman',
+  'Georgia',
+  'Courier New',
+  'Trebuchet MS',
+];
 
 export function FontFamilyToolbarPlugin() {
-  const style = "font-family"
-  const [fontFamily, setFontFamily] = useState("Arial")
+  const style = 'font-family';
+  const [fontFamily, setFontFamily] = useState('Arial');
 
-  const { activeEditor } = useToolbarContext()
+  const { activeEditor } = useToolbarContext();
 
   const $updateToolbar = (selection: BaseSelection) => {
     if ($isRangeSelection(selection)) {
-      setFontFamily(
-        $getSelectionStyleValueForProperty(selection, "font-family", "Arial")
-      )
+      setFontFamily($getSelectionStyleValueForProperty(selection, 'font-family', 'Arial'));
     }
-  }
+  };
 
-  useUpdateToolbarHandler($updateToolbar)
+  useUpdateToolbarHandler($updateToolbar);
 
   const handleClick = useCallback(
     (option: string) => {
       activeEditor.update(() => {
-        const selection = $getSelection()
+        const selection = $getSelection();
         if (selection !== null) {
           $patchStyleText(selection, {
             [style]: option,
-          })
+          });
         }
-      })
+      });
     },
-    [activeEditor, style]
-  )
+    [activeEditor, style],
+  );
 
-  const buttonAriaLabel = "Formatting options for font family"
+  const buttonAriaLabel = 'Formatting options for font family';
 
   return (
     <Select
       value={fontFamily}
       onValueChange={(value) => {
-        setFontFamily(value)
-        handleClick(value)
+        setFontFamily(value);
+        handleClick(value);
       }}
       aria-label={buttonAriaLabel}
     >
-        <TypeIcon className="size-4" />
-        <span style={{ fontFamily }}>{fontFamily}</span>
+      <Select.Trigger size="sm">
+        <Select.Value>
+          <TypeIcon className="size-4" />
+          <span style={{ fontFamily }}>{fontFamily}</span>
+        </Select.Value>
+      </Select.Trigger>
+      <Select.Content>
         {FONT_FAMILY_OPTIONS.map((option) => (
-          <Select.Item
-            key={option}
-            value={option}
-            style={{ fontFamily: option }}
-          >
+          <Select.Item key={option} value={option} style={{ fontFamily: option }}>
             {option}
           </Select.Item>
         ))}
+      </Select.Content>
     </Select>
-  )
+  );
 }
