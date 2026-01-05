@@ -356,12 +356,12 @@ function LessonPage() {
           <p className="text-muted-foreground mb-6">
             The lesson you're looking for doesn't exist or has been removed.
           </p>
-          <Button asChild>
-            <Link to="/">
+          <Link to="/">
+            <Button>
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back to Course
-            </Link>
-          </Button>
+            </Button>
+          </Link>
         </Card>
       </div>
     );
@@ -426,39 +426,39 @@ function LessonPage() {
           {/* Navigation */}
           <div className="flex items-center justify-between border-t pt-6">
             {prevLesson ? (
-              <Button variant="outline" asChild>
-                <Link to="/lesson/$lessonId" params={{ lessonId: prevLesson.id }}>
-                  <ChevronLeft className="w-4 h-4 mr-2" />
+              <Link to="/lesson/$lessonId" params={{ lessonId: prevLesson.id }}>
+                <Button variant="outline" className="gap-2">
+                  <ChevronLeft className="w-4 h-4" />
                   <div className="text-left">
                     <div className="text-xs text-muted-foreground">Previous</div>
                     <div className="text-sm">{prevLesson.title}</div>
                   </div>
-                </Link>
-              </Button>
+                </Button>
+              </Link>
             ) : (
               <div />
             )}
 
             {nextLesson ? (
-              <Button asChild>
-                <Link to="/lesson/$lessonId" params={{ lessonId: nextLesson.id }}>
+              <Link to="/lesson/$lessonId" params={{ lessonId: nextLesson.id }}>
+                <Button className="gap-2">
                   <div className="text-right">
                     <div className="text-xs opacity-80">Next</div>
                     <div className="text-sm">{nextLesson.title}</div>
                   </div>
-                  <ChevronRight className="w-4 h-4 ml-2" />
-                </Link>
-              </Button>
+                  <ChevronRight className="w-4 h-4" />
+                </Button>
+              </Link>
             ) : (
-              <Button asChild>
-                <Link to="/">
+              <Link to="/">
+                <Button className="gap-2">
                   <div className="text-right">
                     <div className="text-xs opacity-80">Complete!</div>
                     <div className="text-sm">Back to Course</div>
                   </div>
-                  <ChevronRight className="w-4 h-4 ml-2" />
-                </Link>
-              </Button>
+                  <ChevronRight className="w-4 h-4" />
+                </Button>
+              </Link>
             )}
           </div>
         </div>

@@ -96,12 +96,12 @@ function CourseOverviewPage() {
 
               {/* CTA Button */}
               {firstIncompleteLesson && (
-                <Button size="lg" asChild>
-                  <Link to="/lesson/$lessonId" params={{ lessonId: firstIncompleteLesson.id }}>
+                <Link to="/lesson/$lessonId" params={{ lessonId: firstIncompleteLesson.id }}>
+                  <Button size="lg">
                     <PlayCircle className="w-5 h-5 mr-2" />
                     {completedLessons > 0 ? 'Continue Learning' : 'Start Course'}
-                  </Link>
-                </Button>
+                  </Button>
+                </Link>
               )}
             </div>
 
