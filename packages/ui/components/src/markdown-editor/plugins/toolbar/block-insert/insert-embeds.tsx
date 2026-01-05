@@ -4,12 +4,12 @@ import { INSERT_EMBED_COMMAND } from "@lexical/react/LexicalAutoEmbedPlugin"
 
 import { useToolbarContext } from "@components/markdown-editor/context/toolbar-context"
 import { EmbedConfigs } from "@components/markdown-editor/plugins/embeds/auto-embed-plugin"
-import { SelectItem } from "@shadcn/components/ui/select"
+import { Select } from "@shadcn/components/ui/select"
 
 export function InsertEmbeds() {
   const { activeEditor } = useToolbarContext()
   return EmbedConfigs.map((embedConfig) => (
-    <SelectItem
+    <Select.Item
       key={embedConfig.type}
       value={embedConfig.type}
       onPointerUp={() => {

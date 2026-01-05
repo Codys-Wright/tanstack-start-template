@@ -81,7 +81,7 @@ export function InsertLayoutDialog({
         </SelectTrigger>
         <SelectContent className="w-full">
           {LAYOUTS.map(({ label, value }) => (
-            <SelectItem key={value} value={value}>
+            <Select.Item key={value} value={value}>
               {label}
             </SelectItem>
           ))}

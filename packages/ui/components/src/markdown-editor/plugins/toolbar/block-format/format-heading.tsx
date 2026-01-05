@@ -4,7 +4,7 @@ import { $getSelection } from "lexical"
 
 import { useToolbarContext } from "@components/markdown-editor/context/toolbar-context"
 import { blockTypeToBlockName } from "@components/markdown-editor/plugins/toolbar/block-format/block-format-data"
-import { SelectItem } from "@shadcn/components/ui/select"
+import { Select } from "@shadcn/components/ui/select"
 
 export function FormatHeading({ levels = [] }: { levels: HeadingTagType[] }) {
   const { activeEditor, blockType } = useToolbarContext()
@@ -19,7 +19,7 @@ export function FormatHeading({ levels = [] }: { levels: HeadingTagType[] }) {
   }
 
   return levels.map((level) => (
-    <SelectItem
+    <Select.Item
       key={level}
       value={level}
       onPointerDown={() => formatHeading(level)}

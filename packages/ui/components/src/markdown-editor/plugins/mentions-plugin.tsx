@@ -21,7 +21,7 @@ import { CircleUserRoundIcon } from 'lucide-react';
 import { createPortal } from 'react-dom';
 
 import { $createMentionNode } from '@components/markdown-editor/nodes/mention-node';
-import { Command, CommandGroup, CommandItem, CommandList } from '@shadcn/components/ui/command';
+import { Command } from '@shadcn/components/ui/command';
 
 const PUNCTUATION = '\\.,\\+\\*\\?\\$\\@\\|#{}\\(\\)\\^\\-\\[\\]\\\\/!%\'"~=<>_:;';
 const NAME = '\\b[A-Z][^\\s' + PUNCTUATION + ']';
@@ -652,10 +652,10 @@ export function MentionsPlugin(): JSX.Element | null {
                     }
                   }}
                 >
-                  <CommandList>
-                    <CommandGroup>
+                  <Command.List>
+                    <Command.Group>
                       {options.map((option, index) => (
-                        <CommandItem
+                        <Command.Item
                           key={option.key}
                           value={option.name}
                           onSelect={() => {
@@ -667,10 +667,10 @@ export function MentionsPlugin(): JSX.Element | null {
                         >
                           {option.picture}
                           {option.name}
-                        </CommandItem>
+                        </Command.Item>
                       ))}
-                    </CommandGroup>
-                  </CommandList>
+                    </Command.Group>
+                  </Command.List>
                 </Command>
               </div>,
               anchorElementRef.current,

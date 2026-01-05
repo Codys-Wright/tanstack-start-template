@@ -4,7 +4,7 @@ import { $getSelection } from "lexical"
 
 import { useToolbarContext } from "@components/markdown-editor/context/toolbar-context"
 import { blockTypeToBlockName } from "@components/markdown-editor/plugins/toolbar/block-format/block-format-data"
-import { SelectItem } from "@shadcn/components/ui/select"
+import { Select } from "@shadcn/components/ui/select"
 
 const BLOCK_FORMAT_VALUE = "quote"
 
@@ -21,7 +21,7 @@ export function FormatQuote() {
   }
 
   return (
-    <SelectItem value="quote" onPointerDown={formatQuote}>
+    <Select.Item value="quote" onPointerDown={formatQuote}>
       <div className="flex items-center gap-1 font-normal">
         {blockTypeToBlockName[BLOCK_FORMAT_VALUE].icon}
         {blockTypeToBlockName[BLOCK_FORMAT_VALUE].label}

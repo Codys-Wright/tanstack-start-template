@@ -73,7 +73,7 @@ export function FontFamilyToolbarPlugin() {
       </SelectTrigger>
       <SelectContent>
         {FONT_FAMILY_OPTIONS.map((option) => (
-          <SelectItem
+          <Select.Item
             key={option}
             value={option}
             style={{ fontFamily: option }}

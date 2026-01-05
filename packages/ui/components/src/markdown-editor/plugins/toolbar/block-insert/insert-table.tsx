@@ -4,13 +4,13 @@ import { TableIcon } from "lucide-react"
 
 import { useToolbarContext } from "@components/markdown-editor/context/toolbar-context"
 import { InsertTableDialog } from "@components/markdown-editor/plugins/table-plugin"
-import { SelectItem } from "@shadcn/components/ui/select"
+import { Select } from "@shadcn/components/ui/select"
 
 export function InsertTable() {
   const { activeEditor, showModal } = useToolbarContext()
 
   return (
-    <SelectItem
+    <Select.Item
       value="table"
       onPointerUp={() =>
         showModal("Insert Table", (onClose) => (

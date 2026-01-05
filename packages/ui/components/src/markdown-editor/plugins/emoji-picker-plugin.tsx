@@ -17,7 +17,7 @@ import {
 import { $createTextNode, $getSelection, $isRangeSelection, TextNode } from 'lexical';
 import { createPortal } from 'react-dom';
 
-import { Command, CommandGroup, CommandItem, CommandList } from '@shadcn/components/ui/command';
+import { Command } from '@shadcn/components/ui/command';
 
 class EmojiOption extends MenuOption {
   title: string;
@@ -146,10 +146,10 @@ export function EmojiPickerPlugin() {
                     }
                   }}
                 >
-                  <CommandList>
-                    <CommandGroup>
+                  <Command.List>
+                    <Command.Group>
                       {options.map((option, index) => (
-                        <CommandItem
+                        <Command.Item
                           key={option.key}
                           value={option.title}
                           onSelect={() => {
@@ -160,10 +160,10 @@ export function EmojiPickerPlugin() {
                           }`}
                         >
                           {option.emoji} {option.title}
-                        </CommandItem>
+                        </Command.Item>
                       ))}
-                    </CommandGroup>
-                  </CommandList>
+                    </Command.Group>
+                  </Command.List>
                 </Command>
               </div>,
               anchorElementRef.current,

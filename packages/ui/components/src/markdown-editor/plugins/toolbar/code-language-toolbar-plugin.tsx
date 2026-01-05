@@ -104,7 +104,7 @@ export function CodeLanguageToolbarPlugin() {
       </SelectTrigger>
       <SelectContent>
         {CODE_LANGUAGE_OPTIONS.map(([value, label]) => (
-          <SelectItem
+          <Select.Item
             key={value}
             value={value}
             onPointerUp={() => {

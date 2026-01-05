@@ -4,13 +4,13 @@ import { INSERT_HORIZONTAL_RULE_COMMAND } from "@lexical/react/LexicalHorizontal
 import { ScissorsIcon } from "lucide-react"
 
 import { useToolbarContext } from "@components/markdown-editor/context/toolbar-context"
-import { SelectItem } from "@shadcn/components/ui/select"
+import { Select } from "@shadcn/components/ui/select"
 
 export function InsertHorizontalRule() {
   const { activeEditor } = useToolbarContext()
 
   return (
-    <SelectItem
+    <Select.Item
       value="horizontal-rule"
       onPointerUp={() =>
         activeEditor.dispatchCommand(INSERT_HORIZONTAL_RULE_COMMAND, undefined)

@@ -3,7 +3,7 @@ import { $createParagraphNode, $getSelection, $isRangeSelection } from "lexical"
 
 import { useToolbarContext } from "@components/markdown-editor/context/toolbar-context"
 import { blockTypeToBlockName } from "@components/markdown-editor/plugins/toolbar/block-format/block-format-data"
-import { SelectItem } from "@shadcn/components/ui/select"
+import { Select } from "@shadcn/components/ui/select"
 
 const BLOCK_FORMAT_VALUE = "paragraph"
 
@@ -20,7 +20,7 @@ export function FormatParagraph() {
   }
 
   return (
-    <SelectItem value={BLOCK_FORMAT_VALUE} onPointerDown={formatParagraph}>
+    <Select.Item value={BLOCK_FORMAT_VALUE} onPointerDown={formatParagraph}>
       <div className="flex items-center gap-1 font-normal">
         {blockTypeToBlockName[BLOCK_FORMAT_VALUE].icon}
         {blockTypeToBlockName[BLOCK_FORMAT_VALUE].label}

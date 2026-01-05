@@ -4,13 +4,13 @@ import { Columns3Icon } from "lucide-react"
 
 import { useToolbarContext } from "@components/markdown-editor/context/toolbar-context"
 import { InsertLayoutDialog } from "@components/markdown-editor/plugins/layout-plugin"
-import { SelectItem } from "@shadcn/components/ui/select"
+import { Select } from "@shadcn/components/ui/select"
 
 export function InsertColumnsLayout() {
   const { activeEditor, showModal } = useToolbarContext()
 
   return (
-    <SelectItem
+    <Select.Item
       value="columns"
       onPointerUp={() =>
         showModal("Insert Columns Layout", (onClose) => (

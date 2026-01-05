@@ -4,13 +4,13 @@ import { ImageIcon } from "lucide-react"
 
 import { useToolbarContext } from "@components/markdown-editor/context/toolbar-context"
 import { InsertImageDialog } from "@components/markdown-editor/plugins/images-plugin"
-import { SelectItem } from "@shadcn/components/ui/select"
+import { Select } from "@shadcn/components/ui/select"
 
 export function InsertImage() {
   const { activeEditor, showModal } = useToolbarContext()
 
   return (
-    <SelectItem
+    <Select.Item
       value="image"
       onPointerUp={(e) => {
         showModal("Insert Image", (onClose) => (

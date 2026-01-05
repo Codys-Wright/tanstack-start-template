@@ -26,9 +26,9 @@ import { INSERT_YOUTUBE_COMMAND } from "@components/markdown-editor/plugins/embe
 import { Button } from "@shadcn/components/ui/button"
 import {
   Command,
-  CommandGroup,
-  CommandItem,
-  CommandList,
+  Command.Group,
+  Command.Item,
+  Command.List,
 } from "@shadcn/components/ui/command"
 import { Dialog } from "@shadcn/components/ui/dialog"
 import { Input } from "@shadcn/components/ui/input"
@@ -250,10 +250,10 @@ export function AutoEmbedPlugin(): JSX.Element {
                     side="right"
                   >
                     <Command>
-                      <CommandList>
-                        <CommandGroup>
+                      <Command.List>
+                        <Command.Group>
                           {options.map((option, i: number) => (
-                            <CommandItem
+                            <Command.Item
                               key={option.key}
                               value={option.title}
                               onSelect={() => {
@@ -262,10 +262,10 @@ export function AutoEmbedPlugin(): JSX.Element {
                               className="flex items-center gap-2"
                             >
                               {option.title}
-                            </CommandItem>
+                            </Command.Item>
                           ))}
-                        </CommandGroup>
-                      </CommandList>
+                        </Command.Group>
+                      </Command.List>
                     </Command>
                   </PopoverContent>
                 </div>

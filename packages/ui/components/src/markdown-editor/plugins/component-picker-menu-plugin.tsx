@@ -17,7 +17,7 @@ import { TextNode } from 'lexical';
 import { createPortal } from 'react-dom';
 
 import { useEditorModal } from '@components/markdown-editor/editor-hooks/use-modal';
-import { Command, CommandGroup, CommandItem, CommandList } from '@shadcn/components/ui/command';
+import { Command } from '@shadcn/components/ui/command';
 
 import { ComponentPickerOption } from './picker/component-picker-option';
 
@@ -60,10 +60,10 @@ function ComponentPickerMenu({
           }
         }}
       >
-        <CommandList>
-          <CommandGroup>
+        <Command.List>
+          <Command.Group>
             {options.map((option, index) => (
-              <CommandItem
+              <Command.Item
                 key={option.key}
                 ref={(el) => {
                   itemRefs.current[index] = el;
@@ -78,10 +78,10 @@ function ComponentPickerMenu({
               >
                 {option.icon}
                 {option.title}
-              </CommandItem>
+              </Command.Item>
             ))}
-          </CommandGroup>
-        </CommandList>
+          </Command.Group>
+        </Command.List>
       </Command>
     </div>
   );
