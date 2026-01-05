@@ -20,6 +20,11 @@ import {
   MessageSquare,
   MessageCircle,
   Circle,
+  Megaphone,
+  ChevronDown,
+  ChevronRight,
+  AlertTriangle,
+  AlertCircle,
 } from 'lucide-react';
 
 // =============================================================================
@@ -100,6 +105,20 @@ type ChatEvent =
 
 type ConnectionStatus = 'disconnected' | 'connecting' | 'connected' | 'error';
 
+interface Announcement {
+  id: string;
+  title: string;
+  content: string;
+  priority: 'low' | 'normal' | 'high' | 'urgent';
+  visibility: 'public' | 'members' | 'admins';
+  authorId: string;
+  authorName: string;
+  published: boolean;
+  publishedAt?: number;
+  createdAt: number;
+  updatedAt: number;
+}
+
 // =============================================================================
 // Helpers
 // =============================================================================
@@ -161,6 +180,9 @@ function ChatDemoPage() {
   const [typingUsers, setTypingUsers] = useState<Record<string, Set<string>>>({});
   const [eventCount, setEventCount] = useState(0);
   const [showNewDmDialog, setShowNewDmDialog] = useState(false);
+  const [announcements, setAnnouncements] = useState<Announcement[]>([]);
+  const [announcementsExpanded, setAnnouncementsExpanded] = useState(true);
+  const [selectedAnnouncement, setSelectedAnnouncement] = useState<Announcement | null>(null);
   const eventSourceRef = useRef<EventSource | null>(null);
 
   // Separate channels and DMs
@@ -297,6 +319,23 @@ function ChatDemoPage() {
     };
   }, [connect]);
 
+  // Fetch announcements on mount
+  useEffect(() => {
+    const fetchAnnouncements = async () => {
+      try {
+        // Use 'member' role to see public + member announcements
+        const response = await fetch('/api/announcements?role=member');
+        if (response.ok) {
+          const data = await response.json();
+          setAnnouncements(data.announcements ?? []);
+        }
+      } catch (err) {
+        console.error('Failed to fetch announcements:', err);
+      }
+    };
+    fetchAnnouncements();
+  }, []);
+
   const handleSend = useCallback(async () => {
     if (!inputValue.trim() || status !== 'connected') return;
 
@@ -392,6 +431,59 @@ function ChatDemoPage() {
         {/* Sidebar - Room List */}
         <aside className="w-64 border-r flex flex-col overflow-hidden">
           <div className="flex-1 overflow-y-auto">
+            {/* Announcements Section */}
+            {announcements.length > 0 && (
+              <>
+                <div className="p-3 border-b">
+                  <button
+                    onClick={() => setAnnouncementsExpanded(!announcementsExpanded)}
+                    className="w-full flex items-center justify-between"
+                  >
+                    <h2 className="font-semibold text-sm text-muted-foreground uppercase tracking-wide flex items-center gap-2">
+                      <Megaphone className="w-4 h-4" />
+                      Announcements
+                    </h2>
+                    <div className="flex items-center gap-2">
+                      <Badge variant="secondary" className="text-xs">
+                        {announcements.length}
+                      </Badge>
+                      {announcementsExpanded ? (
+                        <ChevronDown className="w-4 h-4 text-muted-foreground" />
+                      ) : (
+                        <ChevronRight className="w-4 h-4 text-muted-foreground" />
+                      )}
+                    </div>
+                  </button>
+                </div>
+                {announcementsExpanded && (
+                  <nav className="p-2 space-y-1">
+                    {announcements.slice(0, 5).map((announcement) => (
+                      <button
+                        key={announcement.id}
+                        onClick={() => setSelectedAnnouncement(announcement)}
+                        className={`w-full flex items-center gap-2 px-3 py-2 rounded-md text-left transition-colors hover:bg-muted ${
+                          selectedAnnouncement?.id === announcement.id
+                            ? 'bg-accent text-accent-foreground'
+                            : ''
+                        }`}
+                      >
+                        <AnnouncementPriorityIcon priority={announcement.priority} />
+                        <span className="flex-1 truncate text-sm">{announcement.title}</span>
+                      </button>
+                    ))}
+                    {announcements.length > 5 && (
+                      <a
+                        href="/announcements"
+                        className="block text-xs text-muted-foreground text-center py-2 hover:text-foreground transition-colors"
+                      >
+                        View all {announcements.length} announcements
+                      </a>
+                    )}
+                  </nav>
+                )}
+              </>
+            )}
+
             {/* Channels Section */}
             <div className="p-3 border-b">
               <h2 className="font-semibold text-sm text-muted-foreground uppercase tracking-wide">
@@ -689,6 +781,57 @@ function ChatDemoPage() {
           </div>
         </Dialog.Content>
       </Dialog>
+
+      {/* Announcement Detail Dialog */}
+      <Dialog
+        open={!!selectedAnnouncement}
+        onOpenChange={(open) => !open && setSelectedAnnouncement(null)}
+      >
+        <Dialog.Content className="sm:max-w-lg">
+          {selectedAnnouncement && (
+            <>
+              <Dialog.Header>
+                <Dialog.Title className="flex items-center gap-2">
+                  <AnnouncementPriorityIcon priority={selectedAnnouncement.priority} />
+                  {selectedAnnouncement.title}
+                </Dialog.Title>
+                <Dialog.Description>
+                  Posted by {selectedAnnouncement.authorName} •{' '}
+                  {new Date(
+                    selectedAnnouncement.publishedAt ?? selectedAnnouncement.createdAt,
+                  ).toLocaleDateString()}
+                </Dialog.Description>
+              </Dialog.Header>
+              <div className="py-4">
+                <p className="text-sm text-foreground whitespace-pre-wrap">
+                  {selectedAnnouncement.content}
+                </p>
+              </div>
+              <div className="flex justify-between items-center">
+                <div className="flex gap-2">
+                  <Badge
+                    variant={
+                      selectedAnnouncement.priority === 'urgent'
+                        ? 'destructive'
+                        : selectedAnnouncement.priority === 'high'
+                          ? 'default'
+                          : 'secondary'
+                    }
+                  >
+                    {selectedAnnouncement.priority}
+                  </Badge>
+                  <Badge variant="outline">{selectedAnnouncement.visibility}</Badge>
+                </div>
+                <a href="/announcements">
+                  <Button variant="outline" size="sm">
+                    View All Announcements
+                  </Button>
+                </a>
+              </div>
+            </>
+          )}
+        </Dialog.Content>
+      </Dialog>
     </div>
   );
 }
@@ -723,5 +866,19 @@ function ConnectionStatusBadge({ status }: { status: ConnectionStatus }) {
           Disconnected
         </Badge>
       );
+  }
+}
+
+function AnnouncementPriorityIcon({ priority }: { priority: Announcement['priority'] }) {
+  switch (priority) {
+    case 'urgent':
+      return <AlertTriangle className="w-4 h-4 text-red-500 flex-shrink-0" />;
+    case 'high':
+      return <AlertCircle className="w-4 h-4 text-orange-500 flex-shrink-0" />;
+    case 'normal':
+      return <Megaphone className="w-4 h-4 text-blue-500 flex-shrink-0" />;
+    case 'low':
+    default:
+      return <Megaphone className="w-4 h-4 text-muted-foreground flex-shrink-0" />;
   }
 }
