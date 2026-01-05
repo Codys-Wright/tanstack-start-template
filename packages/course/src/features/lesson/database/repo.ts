@@ -2,7 +2,7 @@ import { PgLive } from '@core/database';
 import * as SqlClient from '@effect/sql/SqlClient';
 import * as SqlSchema from '@effect/sql/SqlSchema';
 import * as Effect from 'effect/Effect';
-import * as Schema from 'effect/Schema';
+import * as S from 'effect/Schema';
 
 import { CourseId } from '../../course/domain/schema.js';
 import { SectionId } from '../../section/domain/schema.js';
@@ -19,39 +19,39 @@ import {
 // Internal Input Schemas
 // ─────────────────────────────────────────────────────────────────────────────
 
-const InsertLesson = Schema.Struct({
-  section_id: Schema.UUID,
-  course_id: Schema.UUID,
-  title: Schema.String,
-  description: Schema.NullOr(Schema.String),
+const InsertLesson = S.Struct({
+  section_id: S.UUID,
+  course_id: S.UUID,
+  title: S.String,
+  description: S.NullOr(S.String),
   type: LessonType,
-  mdx_content: Schema.NullOr(Schema.String),
-  video_content: Schema.NullOr(Schema.String),
-  quiz_id: Schema.NullOr(Schema.UUID),
-  quiz_passing_score: Schema.NullOr(Schema.Number),
-  quiz_is_required: Schema.Boolean,
-  download_files: Schema.NullOr(Schema.String),
-  sort_order: Schema.Number,
-  duration_minutes: Schema.Number,
-  is_free: Schema.Boolean,
-  is_preview: Schema.Boolean,
+  mdx_content: S.NullOr(S.String),
+  video_content: S.NullOr(S.String),
+  quiz_id: S.NullOr(S.UUID),
+  quiz_passing_score: S.NullOr(S.Number),
+  quiz_is_required: S.Boolean,
+  download_files: S.NullOr(S.String),
+  sort_order: S.Number,
+  duration_minutes: S.Number,
+  is_free: S.Boolean,
+  is_preview: S.Boolean,
 });
 
-const UpdateLessonDb = Schema.Struct({
+const UpdateLessonDb = S.Struct({
   id: LessonId,
-  title: Schema.optional(Schema.String),
-  description: Schema.optional(Schema.NullOr(Schema.String)),
-  type: Schema.optional(LessonType),
-  mdx_content: Schema.optional(Schema.NullOr(Schema.String)),
-  video_content: Schema.optional(Schema.NullOr(Schema.String)),
-  quiz_id: Schema.optional(Schema.NullOr(Schema.UUID)),
-  quiz_passing_score: Schema.optional(Schema.NullOr(Schema.Number)),
-  quiz_is_required: Schema.optional(Schema.Boolean),
-  download_files: Schema.optional(Schema.NullOr(Schema.String)),
-  sort_order: Schema.optional(Schema.Number),
-  duration_minutes: Schema.optional(Schema.Number),
-  is_free: Schema.optional(Schema.Boolean),
-  is_preview: Schema.optional(Schema.Boolean),
+  title: S.optional(S.String),
+  description: S.optional(S.NullOr(S.String)),
+  type: S.optional(LessonType),
+  mdx_content: S.optional(S.NullOr(S.String)),
+  video_content: S.optional(S.NullOr(S.String)),
+  quiz_id: S.optional(S.NullOr(S.UUID)),
+  quiz_passing_score: S.optional(S.NullOr(S.Number)),
+  quiz_is_required: S.optional(S.Boolean),
+  download_files: S.optional(S.NullOr(S.String)),
+  sort_order: S.optional(S.Number),
+  duration_minutes: S.optional(S.Number),
+  is_free: S.optional(S.Boolean),
+  is_preview: S.optional(S.Boolean),
 });
 type UpdateLessonDb = typeof UpdateLessonDb.Type;
 
@@ -72,7 +72,7 @@ export class LessonRepository extends Effect.Service<LessonRepository>()(
 
       const findById = SqlSchema.single({
         Result: Lesson,
-        Request: Schema.Struct({ id: LessonId }),
+        Request: S.Struct({ id: LessonId }),
         execute: ({ id }) => sql`
         SELECT
           id,
@@ -102,7 +102,7 @@ export class LessonRepository extends Effect.Service<LessonRepository>()(
 
       const findBySection = SqlSchema.findAll({
         Result: Lesson,
-        Request: Schema.Struct({ sectionId: SectionId }),
+        Request: S.Struct({ sectionId: SectionId }),
         execute: ({ sectionId }) => sql`
         SELECT
           id,
@@ -134,7 +134,7 @@ export class LessonRepository extends Effect.Service<LessonRepository>()(
 
       const findByCourse = SqlSchema.findAll({
         Result: Lesson,
-        Request: Schema.Struct({ courseId: CourseId }),
+        Request: S.Struct({ courseId: CourseId }),
         execute: ({ courseId }) => sql`
         SELECT
           id,
@@ -166,7 +166,7 @@ export class LessonRepository extends Effect.Service<LessonRepository>()(
 
       const findFreePreviewLessons = SqlSchema.findAll({
         Result: Lesson,
-        Request: Schema.Struct({ courseId: CourseId }),
+        Request: S.Struct({ courseId: CourseId }),
         execute: ({ courseId }) => sql`
         SELECT
           id,
@@ -198,8 +198,8 @@ export class LessonRepository extends Effect.Service<LessonRepository>()(
       });
 
       const getNextSortOrder = SqlSchema.single({
-        Result: Schema.Struct({ nextOrder: Schema.Number }),
-        Request: Schema.Struct({ sectionId: SectionId }),
+        Result: S.Struct({ nextOrder: S.Number }),
+        Request: S.Struct({ sectionId: SectionId }),
         execute: ({ sectionId }) => sql`
         SELECT COALESCE(MAX(sort_order), 0) + 1 AS "nextOrder"
         FROM course_lessons
@@ -271,9 +271,9 @@ export class LessonRepository extends Effect.Service<LessonRepository>()(
       });
 
       const updateSortOrder = SqlSchema.void({
-        Request: Schema.Struct({
+        Request: S.Struct({
           id: LessonId,
-          sortOrder: Schema.Number,
+          sortOrder: S.Number,
         }),
         execute: ({ id, sortOrder }) => sql`
         UPDATE course_lessons
@@ -286,7 +286,7 @@ export class LessonRepository extends Effect.Service<LessonRepository>()(
       });
 
       const del = SqlSchema.single({
-        Result: Schema.Unknown,
+        Result: S.Unknown,
         Request: LessonId,
         execute: (id) => sql`
         DELETE FROM course_lessons

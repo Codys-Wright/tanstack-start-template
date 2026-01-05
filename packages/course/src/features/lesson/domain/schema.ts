@@ -93,7 +93,7 @@ export class Lesson extends S.Class<Lesson>('Lesson')({
   quizIsRequired: S.optional(S.Boolean),
 
   // Download files for download lessons
-  downloadFiles: S.optional(S.parseJson(S.Array(DownloadFile))),
+  downloadFiles: S.optional(S.NullOr(S.parseJson(S.Array(DownloadFile)))),
 
   // Ordering
   sortOrder: S.Number,

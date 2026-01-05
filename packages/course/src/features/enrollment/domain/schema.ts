@@ -52,7 +52,8 @@ export class Enrollment extends S.Class<Enrollment>('Enrollment')({
   expiresAt: S.optional(S.NullOr(S.DateTimeUtc)),
 
   // Progress summary (denormalized for performance)
-  progressPercent: S.Number,
+  // progressPercent comes as string from DECIMAL column
+  progressPercent: S.NumberFromString,
   completedLessonCount: S.Number,
   lastAccessedAt: S.optional(S.NullOr(S.DateTimeUtc)),
   completedAt: S.optional(S.NullOr(S.DateTimeUtc)),

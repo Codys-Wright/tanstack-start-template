@@ -3,7 +3,7 @@ import * as SqlClient from '@effect/sql/SqlClient';
 import * as SqlSchema from '@effect/sql/SqlSchema';
 import * as Effect from 'effect/Effect';
 import { flow } from 'effect/Function';
-import * as Schema from 'effect/Schema';
+import * as S from 'effect/Schema';
 
 import { CategoryId } from '../../category/domain/schema.js';
 import { InstructorId } from '../../instructor/domain/schema.js';
@@ -20,40 +20,40 @@ import {
 // Internal Input Schemas
 // ─────────────────────────────────────────────────────────────────────────────
 
-const InsertCourse = Schema.Struct({
-  instructor_id: Schema.UUID,
-  title: Schema.String,
-  slug: Schema.String,
-  subtitle: Schema.NullOr(Schema.String),
-  description: Schema.NullOr(Schema.String),
-  thumbnail_url: Schema.NullOr(Schema.String),
-  preview_video_url: Schema.NullOr(Schema.String),
-  category_id: Schema.NullOr(Schema.UUID),
-  tags: Schema.NullOr(Schema.String),
-  level: Schema.String,
-  language: Schema.String,
-  pricing: Schema.String,
-  requirements: Schema.NullOr(Schema.String),
-  learning_outcomes: Schema.NullOr(Schema.String),
+const InsertCourse = S.Struct({
+  instructor_id: S.UUID,
+  title: S.String,
+  slug: S.String,
+  subtitle: S.NullOr(S.String),
+  description: S.NullOr(S.String),
+  thumbnail_url: S.NullOr(S.String),
+  preview_video_url: S.NullOr(S.String),
+  category_id: S.NullOr(S.UUID),
+  tags: S.NullOr(S.String),
+  level: S.String,
+  language: S.String,
+  pricing: S.String,
+  requirements: S.NullOr(S.String),
+  learning_outcomes: S.NullOr(S.String),
   status: CourseStatus,
 });
 
-const UpdateCourseDb = Schema.Struct({
+const UpdateCourseDb = S.Struct({
   id: CourseId,
-  title: Schema.optional(Schema.String),
-  slug: Schema.optional(Schema.String),
-  subtitle: Schema.optional(Schema.NullOr(Schema.String)),
-  description: Schema.optional(Schema.NullOr(Schema.String)),
-  thumbnail_url: Schema.optional(Schema.NullOr(Schema.String)),
-  preview_video_url: Schema.optional(Schema.NullOr(Schema.String)),
-  category_id: Schema.optional(Schema.NullOr(Schema.UUID)),
-  tags: Schema.optional(Schema.NullOr(Schema.String)),
-  level: Schema.optional(Schema.String),
-  language: Schema.optional(Schema.String),
-  pricing: Schema.optional(Schema.String),
-  requirements: Schema.optional(Schema.NullOr(Schema.String)),
-  learning_outcomes: Schema.optional(Schema.NullOr(Schema.String)),
-  status: Schema.optional(CourseStatus),
+  title: S.optional(S.String),
+  slug: S.optional(S.String),
+  subtitle: S.optional(S.NullOr(S.String)),
+  description: S.optional(S.NullOr(S.String)),
+  thumbnail_url: S.optional(S.NullOr(S.String)),
+  preview_video_url: S.optional(S.NullOr(S.String)),
+  category_id: S.optional(S.NullOr(S.UUID)),
+  tags: S.optional(S.NullOr(S.String)),
+  level: S.optional(S.String),
+  language: S.optional(S.String),
+  pricing: S.optional(S.String),
+  requirements: S.optional(S.NullOr(S.String)),
+  learning_outcomes: S.optional(S.NullOr(S.String)),
+  status: S.optional(CourseStatus),
 });
 type UpdateCourseDb = typeof UpdateCourseDb.Type;
 
@@ -74,7 +74,7 @@ export class CourseRepository extends Effect.Service<CourseRepository>()(
 
       const findAll = SqlSchema.findAll({
         Result: Course,
-        Request: Schema.Void,
+        Request: S.Void,
         execute: () => sql`
           SELECT
             id,
@@ -114,7 +114,7 @@ export class CourseRepository extends Effect.Service<CourseRepository>()(
 
       const findById = SqlSchema.single({
         Result: Course,
-        Request: Schema.Struct({ id: CourseId }),
+        Request: S.Struct({ id: CourseId }),
         execute: ({ id }) => sql`
           SELECT
             id,
@@ -153,7 +153,7 @@ export class CourseRepository extends Effect.Service<CourseRepository>()(
 
       const findBySlug = SqlSchema.single({
         Result: Course,
-        Request: Schema.Struct({ slug: Schema.String }),
+        Request: S.Struct({ slug: S.String }),
         execute: ({ slug }) => sql`
           SELECT
             id,
@@ -192,7 +192,7 @@ export class CourseRepository extends Effect.Service<CourseRepository>()(
 
       const findByInstructor = SqlSchema.findAll({
         Result: Course,
-        Request: Schema.Struct({ instructorId: InstructorId }),
+        Request: S.Struct({ instructorId: InstructorId }),
         execute: ({ instructorId }) => sql`
           SELECT
             id,
@@ -233,7 +233,7 @@ export class CourseRepository extends Effect.Service<CourseRepository>()(
 
       const findByCategory = SqlSchema.findAll({
         Result: Course,
-        Request: Schema.Struct({ categoryId: CategoryId }),
+        Request: S.Struct({ categoryId: CategoryId }),
         execute: ({ categoryId }) => sql`
           SELECT
             id,
@@ -275,7 +275,7 @@ export class CourseRepository extends Effect.Service<CourseRepository>()(
 
       const findPublished = SqlSchema.findAll({
         Result: Course,
-        Request: Schema.Void,
+        Request: S.Void,
         execute: () => sql`
           SELECT
             id,
@@ -396,7 +396,7 @@ export class CourseRepository extends Effect.Service<CourseRepository>()(
 
       const publish = SqlSchema.single({
         Result: Course,
-        Request: Schema.Struct({ id: CourseId }),
+        Request: S.Struct({ id: CourseId }),
         execute: ({ id }) => sql`
           UPDATE courses
           SET
@@ -438,7 +438,7 @@ export class CourseRepository extends Effect.Service<CourseRepository>()(
 
       const archive = SqlSchema.single({
         Result: Course,
-        Request: Schema.Struct({ id: CourseId }),
+        Request: S.Struct({ id: CourseId }),
         execute: ({ id }) => sql`
           UPDATE courses
           SET
@@ -478,7 +478,7 @@ export class CourseRepository extends Effect.Service<CourseRepository>()(
       });
 
       const del = SqlSchema.single({
-        Result: Schema.Unknown,
+        Result: S.Unknown,
         Request: CourseId,
         execute: (id) => sql`
           UPDATE courses

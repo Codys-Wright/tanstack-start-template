@@ -3,7 +3,7 @@ import { PgLive } from '@core/database';
 import * as SqlClient from '@effect/sql/SqlClient';
 import * as SqlSchema from '@effect/sql/SqlSchema';
 import * as Effect from 'effect/Effect';
-import * as Schema from 'effect/Schema';
+import * as S from 'effect/Schema';
 
 import { CourseId } from '../../course/domain/schema.js';
 import { EnrollmentId } from '../../enrollment/domain/schema.js';
@@ -18,14 +18,14 @@ import {
 // Internal Input Schemas
 // ─────────────────────────────────────────────────────────────────────────────
 
-const InsertCertificate = Schema.Struct({
-  enrollment_id: Schema.UUID,
-  user_id: Schema.UUID,
-  course_id: Schema.UUID,
-  recipient_name: Schema.String,
-  course_title: Schema.String,
-  instructor_name: Schema.String,
-  verification_code: Schema.String,
+const InsertCertificate = S.Struct({
+  enrollment_id: S.UUID,
+  user_id: UserId,
+  course_id: S.UUID,
+  recipient_name: S.String,
+  course_title: S.String,
+  instructor_name: S.String,
+  verification_code: S.String,
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -45,7 +45,7 @@ export class CertificateRepository extends Effect.Service<CertificateRepository>
 
       const findById = SqlSchema.single({
         Result: Certificate,
-        Request: Schema.Struct({ id: CertificateId }),
+        Request: S.Struct({ id: CertificateId }),
         execute: ({ id }) => sql`
           SELECT
             id,
@@ -67,7 +67,7 @@ export class CertificateRepository extends Effect.Service<CertificateRepository>
 
       const findByVerificationCode = SqlSchema.single({
         Result: Certificate,
-        Request: Schema.Struct({ code: Schema.String }),
+        Request: S.Struct({ code: S.String }),
         execute: ({ code }) => sql`
           SELECT
             id,
@@ -89,7 +89,7 @@ export class CertificateRepository extends Effect.Service<CertificateRepository>
 
       const findByEnrollment = SqlSchema.single({
         Result: Certificate,
-        Request: Schema.Struct({ enrollmentId: EnrollmentId }),
+        Request: S.Struct({ enrollmentId: EnrollmentId }),
         execute: ({ enrollmentId }) => sql`
           SELECT
             id,
@@ -111,7 +111,7 @@ export class CertificateRepository extends Effect.Service<CertificateRepository>
 
       const findByUser = SqlSchema.findAll({
         Result: Certificate,
-        Request: Schema.Struct({ userId: UserId }),
+        Request: S.Struct({ userId: UserId }),
         execute: ({ userId }) => sql`
           SELECT
             id,
@@ -135,7 +135,7 @@ export class CertificateRepository extends Effect.Service<CertificateRepository>
 
       const findByCourse = SqlSchema.findAll({
         Result: Certificate,
-        Request: Schema.Struct({ courseId: CourseId }),
+        Request: S.Struct({ courseId: CourseId }),
         execute: ({ courseId }) => sql`
           SELECT
             id,
@@ -181,7 +181,7 @@ export class CertificateRepository extends Effect.Service<CertificateRepository>
       });
 
       const del = SqlSchema.single({
-        Result: Schema.Unknown,
+        Result: S.Unknown,
         Request: CertificateId,
         execute: (id) => sql`
           DELETE FROM course_certificates

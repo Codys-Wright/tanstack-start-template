@@ -4,7 +4,7 @@ import * as SqlClient from '@effect/sql/SqlClient';
 import * as SqlSchema from '@effect/sql/SqlSchema';
 import * as Effect from 'effect/Effect';
 import { flow } from 'effect/Function';
-import * as Schema from 'effect/Schema';
+import * as S from 'effect/Schema';
 
 import {
   CreateInstructorInput,
@@ -19,30 +19,30 @@ import {
 // Internal Input Schemas
 // ─────────────────────────────────────────────────────────────────────────────
 
-const InsertInstructor = Schema.Struct({
-  user_id: Schema.UUID,
-  display_name: Schema.String,
-  bio: Schema.NullOr(Schema.String),
-  headline: Schema.NullOr(Schema.String),
-  avatar_url: Schema.NullOr(Schema.String),
-  website_url: Schema.NullOr(Schema.String),
-  linkedin_url: Schema.NullOr(Schema.String),
-  twitter_url: Schema.NullOr(Schema.String),
-  youtube_url: Schema.NullOr(Schema.String),
+const InsertInstructor = S.Struct({
+  user_id: UserId,
+  display_name: S.String,
+  bio: S.NullOr(S.String),
+  headline: S.NullOr(S.String),
+  avatar_url: S.NullOr(S.String),
+  website_url: S.NullOr(S.String),
+  linkedin_url: S.NullOr(S.String),
+  twitter_url: S.NullOr(S.String),
+  youtube_url: S.NullOr(S.String),
   status: InstructorStatus,
 });
 
-const UpdateInstructorDb = Schema.Struct({
+const UpdateInstructorDb = S.Struct({
   id: InstructorId,
-  display_name: Schema.optional(Schema.String),
-  bio: Schema.optional(Schema.NullOr(Schema.String)),
-  headline: Schema.optional(Schema.NullOr(Schema.String)),
-  avatar_url: Schema.optional(Schema.NullOr(Schema.String)),
-  website_url: Schema.optional(Schema.NullOr(Schema.String)),
-  linkedin_url: Schema.optional(Schema.NullOr(Schema.String)),
-  twitter_url: Schema.optional(Schema.NullOr(Schema.String)),
-  youtube_url: Schema.optional(Schema.NullOr(Schema.String)),
-  status: Schema.optional(InstructorStatus),
+  display_name: S.optional(S.String),
+  bio: S.optional(S.NullOr(S.String)),
+  headline: S.optional(S.NullOr(S.String)),
+  avatar_url: S.optional(S.NullOr(S.String)),
+  website_url: S.optional(S.NullOr(S.String)),
+  linkedin_url: S.optional(S.NullOr(S.String)),
+  twitter_url: S.optional(S.NullOr(S.String)),
+  youtube_url: S.optional(S.NullOr(S.String)),
+  status: S.optional(InstructorStatus),
 });
 type UpdateInstructorDb = typeof UpdateInstructorDb.Type;
 
@@ -63,7 +63,7 @@ export class InstructorRepository extends Effect.Service<InstructorRepository>()
 
       const findAll = SqlSchema.findAll({
         Result: InstructorProfile,
-        Request: Schema.Void,
+        Request: S.Void,
         execute: () => sql`
           SELECT
             id,
@@ -93,7 +93,7 @@ export class InstructorRepository extends Effect.Service<InstructorRepository>()
 
       const findById = SqlSchema.single({
         Result: InstructorProfile,
-        Request: Schema.Struct({ id: InstructorId }),
+        Request: S.Struct({ id: InstructorId }),
         execute: ({ id }) => sql`
           SELECT
             id,
@@ -123,7 +123,7 @@ export class InstructorRepository extends Effect.Service<InstructorRepository>()
 
       const findByUserId = SqlSchema.single({
         Result: InstructorProfile,
-        Request: Schema.Struct({ userId: UserId }),
+        Request: S.Struct({ userId: UserId }),
         execute: ({ userId }) => sql`
           SELECT
             id,
@@ -153,7 +153,7 @@ export class InstructorRepository extends Effect.Service<InstructorRepository>()
 
       const findApproved = SqlSchema.findAll({
         Result: InstructorProfile,
-        Request: Schema.Void,
+        Request: S.Void,
         execute: () => sql`
           SELECT
             id,
@@ -185,7 +185,7 @@ export class InstructorRepository extends Effect.Service<InstructorRepository>()
 
       const findPending = SqlSchema.findAll({
         Result: InstructorProfile,
-        Request: Schema.Void,
+        Request: S.Void,
         execute: () => sql`
           SELECT
             id,
@@ -280,7 +280,7 @@ export class InstructorRepository extends Effect.Service<InstructorRepository>()
 
       const approve = SqlSchema.single({
         Result: InstructorProfile,
-        Request: Schema.Struct({ id: InstructorId }),
+        Request: S.Struct({ id: InstructorId }),
         execute: ({ id }) => sql`
           UPDATE instructor_profiles
           SET
@@ -313,7 +313,7 @@ export class InstructorRepository extends Effect.Service<InstructorRepository>()
 
       const suspend = SqlSchema.single({
         Result: InstructorProfile,
-        Request: Schema.Struct({ id: InstructorId }),
+        Request: S.Struct({ id: InstructorId }),
         execute: ({ id }) => sql`
           UPDATE instructor_profiles
           SET
@@ -344,7 +344,7 @@ export class InstructorRepository extends Effect.Service<InstructorRepository>()
       });
 
       const del = SqlSchema.single({
-        Result: Schema.Unknown,
+        Result: S.Unknown,
         Request: InstructorId,
         execute: (id) => sql`
           DELETE FROM instructor_profiles

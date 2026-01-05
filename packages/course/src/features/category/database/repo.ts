@@ -3,7 +3,7 @@ import * as SqlClient from '@effect/sql/SqlClient';
 import * as SqlSchema from '@effect/sql/SqlSchema';
 import * as Effect from 'effect/Effect';
 import { flow } from 'effect/Function';
-import * as Schema from 'effect/Schema';
+import * as S from 'effect/Schema';
 
 import {
   Category,
@@ -17,23 +17,23 @@ import {
 // Internal Input Schemas
 // ─────────────────────────────────────────────────────────────────────────────
 
-const InsertCategory = Schema.Struct({
-  name: Schema.String,
-  slug: Schema.String,
-  description: Schema.NullOr(Schema.String),
-  parent_id: Schema.NullOr(Schema.UUID),
-  sort_order: Schema.Number,
-  is_active: Schema.Boolean,
+const InsertCategory = S.Struct({
+  name: S.String,
+  slug: S.String,
+  description: S.NullOr(S.String),
+  parent_id: S.NullOr(S.UUID),
+  sort_order: S.Number,
+  is_active: S.Boolean,
 });
 
-const UpdateCategoryDb = Schema.Struct({
+const UpdateCategoryDb = S.Struct({
   id: CategoryId,
-  name: Schema.optional(Schema.String),
-  slug: Schema.optional(Schema.String),
-  description: Schema.optional(Schema.NullOr(Schema.String)),
-  parent_id: Schema.optional(Schema.NullOr(Schema.UUID)),
-  sort_order: Schema.optional(Schema.Number),
-  is_active: Schema.optional(Schema.Boolean),
+  name: S.optional(S.String),
+  slug: S.optional(S.String),
+  description: S.optional(S.NullOr(S.String)),
+  parent_id: S.optional(S.NullOr(S.UUID)),
+  sort_order: S.optional(S.Number),
+  is_active: S.optional(S.Boolean),
 });
 type UpdateCategoryDb = typeof UpdateCategoryDb.Type;
 
@@ -54,7 +54,7 @@ export class CategoryRepository extends Effect.Service<CategoryRepository>()(
 
       const findAll = SqlSchema.findAll({
         Result: Category,
-        Request: Schema.Void,
+        Request: S.Void,
         execute: () => sql`
           SELECT
             id,
@@ -75,7 +75,7 @@ export class CategoryRepository extends Effect.Service<CategoryRepository>()(
 
       const findById = SqlSchema.single({
         Result: Category,
-        Request: Schema.Struct({ id: CategoryId }),
+        Request: S.Struct({ id: CategoryId }),
         execute: ({ id }) => sql`
           SELECT
             id,
@@ -96,7 +96,7 @@ export class CategoryRepository extends Effect.Service<CategoryRepository>()(
 
       const findBySlug = SqlSchema.single({
         Result: Category,
-        Request: Schema.Struct({ slug: Schema.String }),
+        Request: S.Struct({ slug: S.String }),
         execute: ({ slug }) => sql`
           SELECT
             id,
@@ -117,7 +117,7 @@ export class CategoryRepository extends Effect.Service<CategoryRepository>()(
 
       const findActive = SqlSchema.findAll({
         Result: Category,
-        Request: Schema.Void,
+        Request: S.Void,
         execute: () => sql`
           SELECT
             id,
@@ -140,7 +140,7 @@ export class CategoryRepository extends Effect.Service<CategoryRepository>()(
 
       const findByParent = SqlSchema.findAll({
         Result: Category,
-        Request: Schema.Struct({ parentId: Schema.NullOr(CategoryId) }),
+        Request: S.Struct({ parentId: S.NullOr(CategoryId) }),
         execute: ({ parentId }) => sql`
           SELECT
             id,
@@ -207,7 +207,7 @@ export class CategoryRepository extends Effect.Service<CategoryRepository>()(
       });
 
       const del = SqlSchema.single({
-        Result: Schema.Unknown,
+        Result: S.Unknown,
         Request: CategoryId,
         execute: (id) => sql`
           DELETE FROM course_categories

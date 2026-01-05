@@ -2,7 +2,7 @@ import { PgLive } from '@core/database';
 import * as SqlClient from '@effect/sql/SqlClient';
 import * as SqlSchema from '@effect/sql/SqlSchema';
 import * as Effect from 'effect/Effect';
-import * as Schema from 'effect/Schema';
+import * as S from 'effect/Schema';
 
 import { CourseId } from '../../course/domain/schema.js';
 import {
@@ -17,18 +17,18 @@ import {
 // Internal Input Schemas
 // ─────────────────────────────────────────────────────────────────────────────
 
-const InsertSection = Schema.Struct({
-  course_id: Schema.UUID,
-  title: Schema.String,
-  description: Schema.NullOr(Schema.String),
-  sort_order: Schema.Number,
+const InsertSection = S.Struct({
+  course_id: S.UUID,
+  title: S.String,
+  description: S.NullOr(S.String),
+  sort_order: S.Number,
 });
 
-const UpdateSectionDb = Schema.Struct({
+const UpdateSectionDb = S.Struct({
   id: SectionId,
-  title: Schema.optional(Schema.String),
-  description: Schema.optional(Schema.NullOr(Schema.String)),
-  sort_order: Schema.optional(Schema.Number),
+  title: S.optional(S.String),
+  description: S.optional(S.NullOr(S.String)),
+  sort_order: S.optional(S.Number),
 });
 type UpdateSectionDb = typeof UpdateSectionDb.Type;
 
@@ -49,7 +49,7 @@ export class SectionRepository extends Effect.Service<SectionRepository>()(
 
       const findById = SqlSchema.single({
         Result: Section,
-        Request: Schema.Struct({ id: SectionId }),
+        Request: S.Struct({ id: SectionId }),
         execute: ({ id }) => sql`
           SELECT
             id,
@@ -70,7 +70,7 @@ export class SectionRepository extends Effect.Service<SectionRepository>()(
 
       const findByCourse = SqlSchema.findAll({
         Result: Section,
-        Request: Schema.Struct({ courseId: CourseId }),
+        Request: S.Struct({ courseId: CourseId }),
         execute: ({ courseId }) => sql`
           SELECT
             id,
@@ -92,8 +92,8 @@ export class SectionRepository extends Effect.Service<SectionRepository>()(
       });
 
       const getNextSortOrder = SqlSchema.single({
-        Result: Schema.Struct({ nextOrder: Schema.Number }),
-        Request: Schema.Struct({ courseId: CourseId }),
+        Result: S.Struct({ nextOrder: S.Number }),
+        Request: S.Struct({ courseId: CourseId }),
         execute: ({ courseId }) => sql`
           SELECT COALESCE(MAX(sort_order), 0) + 1 AS "nextOrder"
           FROM course_sections
@@ -147,9 +147,9 @@ export class SectionRepository extends Effect.Service<SectionRepository>()(
       });
 
       const updateSortOrder = SqlSchema.void({
-        Request: Schema.Struct({
+        Request: S.Struct({
           id: SectionId,
-          sortOrder: Schema.Number,
+          sortOrder: S.Number,
         }),
         execute: ({ id, sortOrder }) => sql`
           UPDATE course_sections
@@ -162,7 +162,7 @@ export class SectionRepository extends Effect.Service<SectionRepository>()(
       });
 
       const del = SqlSchema.single({
-        Result: Schema.Unknown,
+        Result: S.Unknown,
         Request: SectionId,
         execute: (id) => sql`
           DELETE FROM course_sections

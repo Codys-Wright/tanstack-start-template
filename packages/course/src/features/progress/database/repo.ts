@@ -3,7 +3,7 @@ import { PgLive } from '@core/database';
 import * as SqlClient from '@effect/sql/SqlClient';
 import * as SqlSchema from '@effect/sql/SqlSchema';
 import * as Effect from 'effect/Effect';
-import * as Schema from 'effect/Schema';
+import * as S from 'effect/Schema';
 
 import { CourseId } from '../../course/domain/schema.js';
 import { EnrollmentId } from '../../enrollment/domain/schema.js';
@@ -20,22 +20,22 @@ import {
 // Internal Input Schemas
 // ─────────────────────────────────────────────────────────────────────────────
 
-const InsertProgress = Schema.Struct({
-  user_id: Schema.UUID,
-  lesson_id: Schema.UUID,
-  course_id: Schema.UUID,
-  enrollment_id: Schema.UUID,
+const InsertProgress = S.Struct({
+  user_id: UserId,
+  lesson_id: S.UUID,
+  course_id: S.UUID,
+  enrollment_id: S.UUID,
   status: ProgressStatus,
 });
 
-const UpdateProgressDb = Schema.Struct({
+const UpdateProgressDb = S.Struct({
   id: ProgressId,
-  status: Schema.optional(ProgressStatus),
-  watched_seconds: Schema.optional(Schema.Number),
-  last_position: Schema.optional(Schema.Number),
-  quiz_attempt_id: Schema.optional(Schema.NullOr(Schema.String)),
-  quiz_score: Schema.optional(Schema.NullOr(Schema.Number)),
-  quiz_passed: Schema.optional(Schema.NullOr(Schema.Boolean)),
+  status: S.optional(ProgressStatus),
+  watched_seconds: S.optional(S.Number),
+  last_position: S.optional(S.Number),
+  quiz_attempt_id: S.optional(S.NullOr(S.String)),
+  quiz_score: S.optional(S.NullOr(S.Number)),
+  quiz_passed: S.optional(S.NullOr(S.Boolean)),
 });
 type UpdateProgressDb = typeof UpdateProgressDb.Type;
 
@@ -56,7 +56,7 @@ export class ProgressRepository extends Effect.Service<ProgressRepository>()(
 
       const findById = SqlSchema.single({
         Result: LessonProgress,
-        Request: Schema.Struct({ id: ProgressId }),
+        Request: S.Struct({ id: ProgressId }),
         execute: ({ id }) => sql`
           SELECT
             id,
@@ -83,7 +83,7 @@ export class ProgressRepository extends Effect.Service<ProgressRepository>()(
 
       const findByUserAndLesson = SqlSchema.single({
         Result: LessonProgress,
-        Request: Schema.Struct({ userId: UserId, lessonId: LessonId }),
+        Request: S.Struct({ userId: UserId, lessonId: LessonId }),
         execute: ({ userId, lessonId }) => sql`
           SELECT
             id,
@@ -111,7 +111,7 @@ export class ProgressRepository extends Effect.Service<ProgressRepository>()(
 
       const findByEnrollment = SqlSchema.findAll({
         Result: LessonProgress,
-        Request: Schema.Struct({ enrollmentId: EnrollmentId }),
+        Request: S.Struct({ enrollmentId: EnrollmentId }),
         execute: ({ enrollmentId }) => sql`
           SELECT
             id,
@@ -140,7 +140,7 @@ export class ProgressRepository extends Effect.Service<ProgressRepository>()(
 
       const findByUserAndCourse = SqlSchema.findAll({
         Result: LessonProgress,
-        Request: Schema.Struct({ userId: UserId, courseId: CourseId }),
+        Request: S.Struct({ userId: UserId, courseId: CourseId }),
         execute: ({ userId, courseId }) => sql`
           SELECT
             id,
@@ -169,8 +169,8 @@ export class ProgressRepository extends Effect.Service<ProgressRepository>()(
       });
 
       const countCompletedByEnrollment = SqlSchema.single({
-        Result: Schema.Struct({ count: Schema.Number }),
-        Request: Schema.Struct({ enrollmentId: EnrollmentId }),
+        Result: S.Struct({ count: S.Number }),
+        Request: S.Struct({ enrollmentId: EnrollmentId }),
         execute: ({ enrollmentId }) => sql`
           SELECT COUNT(*)::int AS count
           FROM lesson_progress
@@ -238,7 +238,7 @@ export class ProgressRepository extends Effect.Service<ProgressRepository>()(
 
       const markStarted = SqlSchema.single({
         Result: LessonProgress,
-        Request: Schema.Struct({ id: ProgressId }),
+        Request: S.Struct({ id: ProgressId }),
         execute: ({ id }) => sql`
           UPDATE lesson_progress
           SET
@@ -268,7 +268,7 @@ export class ProgressRepository extends Effect.Service<ProgressRepository>()(
 
       const markCompleted = SqlSchema.single({
         Result: LessonProgress,
-        Request: Schema.Struct({ id: ProgressId }),
+        Request: S.Struct({ id: ProgressId }),
         execute: ({ id }) => sql`
           UPDATE lesson_progress
           SET
@@ -297,7 +297,7 @@ export class ProgressRepository extends Effect.Service<ProgressRepository>()(
       });
 
       const del = SqlSchema.single({
-        Result: Schema.Unknown,
+        Result: S.Unknown,
         Request: ProgressId,
         execute: (id) => sql`
           DELETE FROM lesson_progress

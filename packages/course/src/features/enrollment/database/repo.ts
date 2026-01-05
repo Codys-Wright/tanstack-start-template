@@ -3,7 +3,7 @@ import { PgLive } from '@core/database';
 import * as SqlClient from '@effect/sql/SqlClient';
 import * as SqlSchema from '@effect/sql/SqlSchema';
 import * as Effect from 'effect/Effect';
-import * as Schema from 'effect/Schema';
+import * as S from 'effect/Schema';
 
 import { CourseId } from '../../course/domain/schema.js';
 import {
@@ -20,20 +20,20 @@ import {
 // Internal Input Schemas
 // ─────────────────────────────────────────────────────────────────────────────
 
-const InsertEnrollment = Schema.Struct({
-  user_id: Schema.UUID,
-  course_id: Schema.UUID,
+const InsertEnrollment = S.Struct({
+  user_id: UserId,
+  course_id: S.UUID,
   status: EnrollmentStatus,
   source: EnrollmentSource,
-  purchase_id: Schema.NullOr(Schema.UUID),
-  subscription_id: Schema.NullOr(Schema.UUID),
-  expires_at: Schema.NullOr(Schema.DateTimeUtc),
+  purchase_id: S.NullOr(S.UUID),
+  subscription_id: S.NullOr(S.UUID),
+  expires_at: S.NullOr(S.DateTimeUtc),
 });
 
-const UpdateEnrollmentDb = Schema.Struct({
+const UpdateEnrollmentDb = S.Struct({
   id: EnrollmentId,
-  status: Schema.optional(EnrollmentStatus),
-  expires_at: Schema.optional(Schema.NullOr(Schema.DateTimeUtc)),
+  status: S.optional(EnrollmentStatus),
+  expires_at: S.optional(S.NullOr(S.DateTimeUtc)),
 });
 type UpdateEnrollmentDb = typeof UpdateEnrollmentDb.Type;
 
@@ -54,7 +54,7 @@ export class EnrollmentRepository extends Effect.Service<EnrollmentRepository>()
 
       const findById = SqlSchema.single({
         Result: Enrollment,
-        Request: Schema.Struct({ id: EnrollmentId }),
+        Request: S.Struct({ id: EnrollmentId }),
         execute: ({ id }) => sql`
           SELECT
             id,
@@ -81,7 +81,7 @@ export class EnrollmentRepository extends Effect.Service<EnrollmentRepository>()
 
       const findByUserAndCourse = SqlSchema.single({
         Result: Enrollment,
-        Request: Schema.Struct({ userId: UserId, courseId: CourseId }),
+        Request: S.Struct({ userId: UserId, courseId: CourseId }),
         execute: ({ userId, courseId }) => sql`
           SELECT
             id,
@@ -109,7 +109,7 @@ export class EnrollmentRepository extends Effect.Service<EnrollmentRepository>()
 
       const findByUser = SqlSchema.findAll({
         Result: Enrollment,
-        Request: Schema.Struct({ userId: UserId }),
+        Request: S.Struct({ userId: UserId }),
         execute: ({ userId }) => sql`
           SELECT
             id,
@@ -138,7 +138,7 @@ export class EnrollmentRepository extends Effect.Service<EnrollmentRepository>()
 
       const findByCourse = SqlSchema.findAll({
         Result: Enrollment,
-        Request: Schema.Struct({ courseId: CourseId }),
+        Request: S.Struct({ courseId: CourseId }),
         execute: ({ courseId }) => sql`
           SELECT
             id,
@@ -167,7 +167,7 @@ export class EnrollmentRepository extends Effect.Service<EnrollmentRepository>()
 
       const findActiveByUser = SqlSchema.findAll({
         Result: Enrollment,
-        Request: Schema.Struct({ userId: UserId }),
+        Request: S.Struct({ userId: UserId }),
         execute: ({ userId }) => sql`
           SELECT
             id,
@@ -254,7 +254,7 @@ export class EnrollmentRepository extends Effect.Service<EnrollmentRepository>()
       });
 
       const updateLastAccessed = SqlSchema.void({
-        Request: Schema.Struct({ id: EnrollmentId }),
+        Request: S.Struct({ id: EnrollmentId }),
         execute: ({ id }) => sql`
           UPDATE course_enrollments
           SET
@@ -267,7 +267,7 @@ export class EnrollmentRepository extends Effect.Service<EnrollmentRepository>()
 
       const markCompleted = SqlSchema.single({
         Result: Enrollment,
-        Request: Schema.Struct({ id: EnrollmentId }),
+        Request: S.Struct({ id: EnrollmentId }),
         execute: ({ id }) => sql`
           UPDATE course_enrollments
           SET
@@ -296,7 +296,7 @@ export class EnrollmentRepository extends Effect.Service<EnrollmentRepository>()
       });
 
       const del = SqlSchema.single({
-        Result: Schema.Unknown,
+        Result: S.Unknown,
         Request: EnrollmentId,
         execute: (id) => sql`
           DELETE FROM course_enrollments

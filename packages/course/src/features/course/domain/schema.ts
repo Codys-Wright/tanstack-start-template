@@ -69,7 +69,7 @@ export class Course extends S.Class<Course>('Course')({
 
   // Categorization
   categoryId: S.optional(S.NullOr(CategoryId)),
-  tags: S.optional(S.parseJson(S.Array(S.String))),
+  tags: S.optional(S.NullOr(S.parseJson(S.Array(S.String)))),
   level: CourseLevel,
   language: S.String,
 
@@ -77,8 +77,8 @@ export class Course extends S.Class<Course>('Course')({
   pricing: S.parseJson(CoursePricing),
 
   // Requirements and outcomes
-  requirements: S.optional(S.parseJson(S.Array(S.String))),
-  learningOutcomes: S.optional(S.parseJson(S.Array(S.String))),
+  requirements: S.optional(S.NullOr(S.parseJson(S.Array(S.String)))),
+  learningOutcomes: S.optional(S.NullOr(S.parseJson(S.Array(S.String)))),
 
   // Stats (denormalized for performance)
   totalDurationMinutes: S.Number,

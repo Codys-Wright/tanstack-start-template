@@ -3,7 +3,7 @@ import { PgLive } from '@core/database';
 import * as SqlClient from '@effect/sql/SqlClient';
 import * as SqlSchema from '@effect/sql/SqlSchema';
 import * as Effect from 'effect/Effect';
-import * as Schema from 'effect/Schema';
+import * as S from 'effect/Schema';
 
 import { CourseId } from '../../course/domain/schema.js';
 import { EnrollmentId } from '../../enrollment/domain/schema.js';
@@ -19,20 +19,20 @@ import {
 // Internal Input Schemas
 // ─────────────────────────────────────────────────────────────────────────────
 
-const InsertReview = Schema.Struct({
-  course_id: Schema.UUID,
-  user_id: Schema.UUID,
-  enrollment_id: Schema.UUID,
-  rating: Schema.Number,
-  title: Schema.NullOr(Schema.String),
-  body: Schema.NullOr(Schema.String),
+const InsertReview = S.Struct({
+  course_id: S.UUID,
+  user_id: UserId,
+  enrollment_id: S.UUID,
+  rating: S.Number,
+  title: S.NullOr(S.String),
+  body: S.NullOr(S.String),
 });
 
-const UpdateReviewDb = Schema.Struct({
+const UpdateReviewDb = S.Struct({
   id: ReviewId,
-  rating: Schema.optional(Schema.Number),
-  title: Schema.optional(Schema.NullOr(Schema.String)),
-  body: Schema.optional(Schema.NullOr(Schema.String)),
+  rating: S.optional(S.Number),
+  title: S.optional(S.NullOr(S.String)),
+  body: S.optional(S.NullOr(S.String)),
 });
 type UpdateReviewDb = typeof UpdateReviewDb.Type;
 
@@ -53,7 +53,7 @@ export class ReviewRepository extends Effect.Service<ReviewRepository>()(
 
       const findById = SqlSchema.single({
         Result: Review,
-        Request: Schema.Struct({ id: ReviewId }),
+        Request: S.Struct({ id: ReviewId }),
         execute: ({ id }) => sql`
         SELECT
           id,
@@ -79,7 +79,7 @@ export class ReviewRepository extends Effect.Service<ReviewRepository>()(
 
       const findByUserAndCourse = SqlSchema.single({
         Result: Review,
-        Request: Schema.Struct({ userId: UserId, courseId: CourseId }),
+        Request: S.Struct({ userId: UserId, courseId: CourseId }),
         execute: ({ userId, courseId }) => sql`
         SELECT
           id,
@@ -106,7 +106,7 @@ export class ReviewRepository extends Effect.Service<ReviewRepository>()(
 
       const findByCourse = SqlSchema.findAll({
         Result: Review,
-        Request: Schema.Struct({ courseId: CourseId }),
+        Request: S.Struct({ courseId: CourseId }),
         execute: ({ courseId }) => sql`
         SELECT
           id,
@@ -135,7 +135,7 @@ export class ReviewRepository extends Effect.Service<ReviewRepository>()(
 
       const findApprovedByCourse = SqlSchema.findAll({
         Result: Review,
-        Request: Schema.Struct({ courseId: CourseId }),
+        Request: S.Struct({ courseId: CourseId }),
         execute: ({ courseId }) => sql`
         SELECT
           id,
@@ -164,7 +164,7 @@ export class ReviewRepository extends Effect.Service<ReviewRepository>()(
 
       const findFeaturedByCourse = SqlSchema.findAll({
         Result: Review,
-        Request: Schema.Struct({ courseId: CourseId }),
+        Request: S.Struct({ courseId: CourseId }),
         execute: ({ courseId }) => sql`
         SELECT
           id,
@@ -193,7 +193,7 @@ export class ReviewRepository extends Effect.Service<ReviewRepository>()(
 
       const findByUser = SqlSchema.findAll({
         Result: Review,
-        Request: Schema.Struct({ userId: UserId }),
+        Request: S.Struct({ userId: UserId }),
         execute: ({ userId }) => sql`
         SELECT
           id,
@@ -276,7 +276,7 @@ export class ReviewRepository extends Effect.Service<ReviewRepository>()(
 
       const addInstructorResponse = SqlSchema.single({
         Result: Review,
-        Request: Schema.Struct({ id: ReviewId, response: Schema.String }),
+        Request: S.Struct({ id: ReviewId, response: S.String }),
         execute: ({ id, response }) => sql`
         UPDATE course_reviews
         SET
@@ -305,7 +305,7 @@ export class ReviewRepository extends Effect.Service<ReviewRepository>()(
 
       const approve = SqlSchema.single({
         Result: Review,
-        Request: Schema.Struct({ id: ReviewId }),
+        Request: S.Struct({ id: ReviewId }),
         execute: ({ id }) => sql`
         UPDATE course_reviews
         SET
@@ -333,7 +333,7 @@ export class ReviewRepository extends Effect.Service<ReviewRepository>()(
 
       const feature = SqlSchema.single({
         Result: Review,
-        Request: Schema.Struct({ id: ReviewId, featured: Schema.Boolean }),
+        Request: S.Struct({ id: ReviewId, featured: S.Boolean }),
         execute: ({ id, featured }) => sql`
         UPDATE course_reviews
         SET
@@ -360,7 +360,7 @@ export class ReviewRepository extends Effect.Service<ReviewRepository>()(
       });
 
       const incrementHelpful = SqlSchema.void({
-        Request: Schema.Struct({ id: ReviewId }),
+        Request: S.Struct({ id: ReviewId }),
         execute: ({ id }) => sql`
         UPDATE course_reviews
         SET
@@ -372,7 +372,7 @@ export class ReviewRepository extends Effect.Service<ReviewRepository>()(
       });
 
       const del = SqlSchema.single({
-        Result: Schema.Unknown,
+        Result: S.Unknown,
         Request: ReviewId,
         execute: (id) => sql`
         DELETE FROM course_reviews
