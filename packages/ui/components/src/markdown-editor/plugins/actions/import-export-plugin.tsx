@@ -6,9 +6,9 @@ import { DownloadIcon, UploadIcon } from "lucide-react"
 
 import { Button } from "@shadcn/components/ui/button"
 import {
-  Tooltip,
-  Tooltip.Content,
-  Tooltip.Trigger,
+  Tooltip
+  
+  
 } from "@shadcn/components/ui/tooltip"
 
 export function ImportExportPlugin() {
