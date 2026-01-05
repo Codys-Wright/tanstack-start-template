@@ -16,7 +16,9 @@ import {
   Sparkles,
   Home,
   LayoutDashboard,
+  Settings,
 } from 'lucide-react';
+import { UserButton, SignedIn, SignedOut } from '@auth';
 import {
   type Section,
   type Lesson,
@@ -380,7 +382,7 @@ export function CourseSidebar({ currentLessonId }: CourseSidebarProps) {
             <Sidebar.MenuItem>
               <Sidebar.MenuButton asChild tooltip="My Dashboard" className="h-10">
                 <Link
-                  to={'/dashboard' as any}
+                  to="/dashboard"
                   onClick={() => {
                     if (isMobile) {
                       setOpenMobile(false);
@@ -422,7 +424,7 @@ export function CourseSidebar({ currentLessonId }: CourseSidebarProps) {
       </div>
 
       {/* Footer */}
-      <Sidebar.Footer className="border-t py-3">
+      <Sidebar.Footer className="border-t py-3 space-y-2">
         <Sidebar.Menu>
           <Sidebar.MenuItem>
             <Sidebar.MenuButton asChild tooltip="Course Overview" className="h-10">
@@ -440,6 +442,28 @@ export function CourseSidebar({ currentLessonId }: CourseSidebarProps) {
             </Sidebar.MenuButton>
           </Sidebar.MenuItem>
         </Sidebar.Menu>
+
+        {/* User Account Card */}
+        <div className="px-2">
+          <SignedIn>
+            <div className="rounded-lg border bg-card p-1">
+              <UserButton size="default" className="w-full justify-start hover:bg-accent" />
+            </div>
+          </SignedIn>
+          <SignedOut>
+            <div className="rounded-lg border bg-card p-3">
+              <p className="text-sm text-muted-foreground mb-3">
+                Sign in to track your progress and save your work.
+              </p>
+              <Link to="/auth/$authView" params={{ authView: 'sign-in' }}>
+                <Sidebar.MenuButton className="h-10 w-full bg-primary text-primary-foreground hover:bg-primary/90">
+                  <Settings className="w-4 h-4" />
+                  <span className="font-medium">Sign In</span>
+                </Sidebar.MenuButton>
+              </Link>
+            </div>
+          </SignedOut>
+        </div>
       </Sidebar.Footer>
     </Sidebar>
   );

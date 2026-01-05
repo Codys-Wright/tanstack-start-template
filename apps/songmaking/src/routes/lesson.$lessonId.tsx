@@ -8,7 +8,7 @@
  * like: text -> quiz -> text -> video, etc.
  */
 
-import { createFileRoute, Link } from '@tanstack/react-router';
+import { createFileRoute, Link, redirect } from '@tanstack/react-router';
 import { useAtomValue, useAtomSet } from '@effect-atom/atom-react';
 import * as Option from 'effect/Option';
 import { Badge, Button, Card, ScrollArea, Sidebar, SidebarProvider, useSidebar } from '@shadcn';
@@ -29,7 +29,6 @@ import {
   Music,
   Sparkles,
   Pencil,
-  Circle,
 } from 'lucide-react';
 import { CourseSidebar } from '../components/course-sidebar.js';
 import { type Lesson, type LessonPart, getLessonParts } from '../data/course.js';
@@ -45,9 +44,25 @@ import {
 } from '../features/course/client/course-atoms.js';
 import { cn } from '@shadcn/lib/utils';
 import * as React from 'react';
+import { authClient } from '@auth';
 
 export const Route = createFileRoute('/lesson/$lessonId')({
   component: LessonPageWrapper,
+  beforeLoad: async ({ location }) => {
+    // Check if user is authenticated
+    const session = await authClient.getSession();
+
+    if (!session.data?.user) {
+      // Redirect to sign-in with return URL
+      throw redirect({
+        to: '/auth/$authView',
+        params: { authView: 'sign-in' },
+        search: {
+          redirect: location.href,
+        },
+      });
+    }
+  },
 });
 
 // =============================================================================
@@ -262,33 +277,37 @@ function LessonPartContent({ part }: { part: LessonPart }) {
 }
 
 // =============================================================================
-// Part Navigation Sidebar
+// Table of Contents Sidebar (for scrolling to parts)
 // =============================================================================
 
-function PartNavigationSidebar({
+function TableOfContentsSidebar({
   parts,
-  currentPartIndex,
-  onPartSelect,
+  activePartId,
 }: {
   parts: readonly LessonPart[];
-  currentPartIndex: number;
-  onPartSelect: (index: number) => void;
+  activePartId: string | null;
 }) {
   if (parts.length <= 1) return null;
+
+  const scrollToPartId = (partId: string) => {
+    const element = document.getElementById(`part-${partId}`);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
 
   return (
     <div className="hidden xl:block w-64 flex-shrink-0">
       <div className="sticky top-6">
-        <h3 className="text-sm font-semibold text-muted-foreground mb-3 px-3">Lesson Parts</h3>
+        <h3 className="text-sm font-semibold text-muted-foreground mb-3 px-3">In This Lesson</h3>
         <nav className="space-y-1">
           {parts.map((part, index) => {
-            const isActive = index === currentPartIndex;
-            const isCompleted = index < currentPartIndex;
+            const isActive = part.id === activePartId;
 
             return (
               <button
                 key={part.id}
-                onClick={() => onPartSelect(index)}
+                onClick={() => scrollToPartId(part.id)}
                 className={cn(
                   'w-full flex items-center gap-3 px-3 py-2 rounded-lg text-left text-sm transition-colors',
                   isActive
@@ -299,14 +318,12 @@ function PartNavigationSidebar({
                 <div
                   className={cn(
                     'flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-xs',
-                    isCompleted
-                      ? 'bg-emerald-500 text-white'
-                      : isActive
-                        ? 'bg-primary text-primary-foreground'
-                        : 'bg-muted-foreground/20 text-muted-foreground',
+                    isActive
+                      ? 'bg-primary text-primary-foreground'
+                      : 'bg-muted-foreground/20 text-muted-foreground',
                   )}
                 >
-                  {isCompleted ? <CheckCircle2 className="w-4 h-4" /> : index + 1}
+                  {index + 1}
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="truncate">{part.title}</div>
@@ -325,88 +342,19 @@ function PartNavigationSidebar({
 }
 
 /**
- * Mobile part navigation - shows at the top on smaller screens
+ * Lesson navigation buttons (Previous/Next Lesson)
  */
-function MobilePartNavigation({
-  parts,
-  currentPartIndex,
-  onPartSelect,
-}: {
-  parts: readonly LessonPart[];
-  currentPartIndex: number;
-  onPartSelect: (index: number) => void;
-}) {
-  if (parts.length <= 1) return null;
-
-  return (
-    <div className="xl:hidden mb-6">
-      <div className="flex items-center gap-2 overflow-x-auto pb-2">
-        {parts.map((part, index) => {
-          const isActive = index === currentPartIndex;
-          const isCompleted = index < currentPartIndex;
-
-          return (
-            <button
-              key={part.id}
-              onClick={() => onPartSelect(index)}
-              className={cn(
-                'flex items-center gap-2 px-3 py-2 rounded-lg text-sm whitespace-nowrap transition-colors flex-shrink-0',
-                isActive
-                  ? 'bg-primary text-primary-foreground'
-                  : isCompleted
-                    ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'
-                    : 'bg-muted text-muted-foreground hover:text-foreground',
-              )}
-            >
-              {isCompleted ? <CheckCircle2 className="w-4 h-4" /> : <Circle className="w-4 h-4" />}
-              <span>{part.title}</span>
-            </button>
-          );
-        })}
-      </div>
-    </div>
-  );
-}
-
-/**
- * Part navigation buttons (Previous/Next Part)
- */
-function PartNavigation({
-  parts,
-  currentPartIndex,
-  onPartSelect,
+function LessonNavigation({
   prevLesson,
   nextLesson,
 }: {
-  parts: readonly LessonPart[];
-  currentPartIndex: number;
-  onPartSelect: (index: number) => void;
   prevLesson: Option.Option<Lesson>;
   nextLesson: Option.Option<Lesson>;
 }) {
-  const hasPrevPart = currentPartIndex > 0;
-  const hasNextPart = currentPartIndex < parts.length - 1;
-
   return (
     <div className="flex items-stretch gap-4 border-t pt-8 mt-8">
-      {/* Previous: either previous part or previous lesson */}
-      {hasPrevPart ? (
-        <button onClick={() => onPartSelect(currentPartIndex - 1)} className="flex-1">
-          <Card className="h-full p-4 hover:bg-muted/50 hover:border-primary/30 transition-all duration-200 group text-left">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-muted flex items-center justify-center group-hover:bg-primary/10 transition-colors">
-                <ChevronLeft className="w-5 h-5 text-muted-foreground group-hover:text-primary" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <div className="text-xs text-muted-foreground mb-0.5">Previous Part</div>
-                <div className="text-sm font-medium truncate">
-                  {parts[currentPartIndex - 1]?.title}
-                </div>
-              </div>
-            </div>
-          </Card>
-        </button>
-      ) : Option.isSome(prevLesson) ? (
+      {/* Previous Lesson */}
+      {Option.isSome(prevLesson) ? (
         <Link to="/lesson/$lessonId" params={{ lessonId: prevLesson.value.id }} className="flex-1">
           <Card className="h-full p-4 hover:bg-muted/50 hover:border-primary/30 transition-all duration-200 group">
             <div className="flex items-center gap-3">
@@ -424,24 +372,8 @@ function PartNavigation({
         <div className="flex-1" />
       )}
 
-      {/* Next: either next part or next lesson */}
-      {hasNextPart ? (
-        <button onClick={() => onPartSelect(currentPartIndex + 1)} className="flex-1">
-          <Card className="h-full p-4 hover:bg-muted/50 hover:border-primary/30 transition-all duration-200 group text-left">
-            <div className="flex items-center gap-3">
-              <div className="flex-1 min-w-0 text-right">
-                <div className="text-xs text-muted-foreground mb-0.5">Next Part</div>
-                <div className="text-sm font-medium truncate">
-                  {parts[currentPartIndex + 1]?.title}
-                </div>
-              </div>
-              <div className="w-10 h-10 rounded-lg bg-muted flex items-center justify-center group-hover:bg-primary/10 transition-colors">
-                <ChevronRight className="w-5 h-5 text-muted-foreground group-hover:text-primary" />
-              </div>
-            </div>
-          </Card>
-        </button>
-      ) : Option.isSome(nextLesson) ? (
+      {/* Next Lesson */}
+      {Option.isSome(nextLesson) ? (
         <Link to="/lesson/$lessonId" params={{ lessonId: nextLesson.value.id }} className="flex-1">
           <Card className="h-full p-4 hover:bg-muted/50 hover:border-primary/30 transition-all duration-200 group">
             <div className="flex items-center gap-3">
@@ -533,20 +465,52 @@ function LessonPage({ lessonId }: { lessonId: string }) {
   const lesson = Option.isSome(currentLesson) ? currentLesson.value : null;
   const parts = lesson ? getLessonParts(lesson.id) : [];
 
-  // Track current part index
-  const [currentPartIndex, setCurrentPartIndex] = React.useState(0);
+  // Track which part is currently visible (for TOC highlighting)
+  const [activePartId, setActivePartId] = React.useState<string | null>(parts[0]?.id ?? null);
 
   // Set current lesson ID when component mounts or lessonId changes
   React.useEffect(() => {
     setCurrentLessonId(lessonId);
-    // Reset to first part when lesson changes
-    setCurrentPartIndex(0);
-  }, [lessonId, setCurrentLessonId]);
+    // Reset active part when lesson changes
+    if (parts.length > 0) {
+      setActivePartId(parts[0]?.id ?? null);
+    }
+  }, [lessonId, setCurrentLessonId, parts]);
+
+  // Track scroll position to highlight active part in TOC
+  React.useEffect(() => {
+    if (parts.length <= 1) return;
+
+    const handleScroll = () => {
+      const scrollContainer = document.getElementById('lesson-scroll-container');
+      if (!scrollContainer) return;
+
+      // Find which part is most visible
+      for (const part of parts) {
+        const element = document.getElementById(`part-${part.id}`);
+        if (element) {
+          const rect = element.getBoundingClientRect();
+          const containerRect = scrollContainer.getBoundingClientRect();
+          // Check if element is in the top half of the viewport
+          if (
+            rect.top >= containerRect.top &&
+            rect.top < containerRect.top + containerRect.height / 2
+          ) {
+            setActivePartId(part.id);
+            break;
+          }
+        }
+      }
+    };
+
+    const scrollContainer = document.getElementById('lesson-scroll-container');
+    scrollContainer?.addEventListener('scroll', handleScroll);
+    return () => scrollContainer?.removeEventListener('scroll', handleScroll);
+  }, [parts]);
 
   const section = Option.isSome(currentSection) ? currentSection.value : null;
   const progress = lesson ? progressMap.get(lesson.id) : undefined;
   const isCompleted = progress?.status === 'completed';
-  const currentPart = parts[currentPartIndex];
 
   const handleMarkComplete = () => {
     if (lesson) {
@@ -554,9 +518,8 @@ function LessonPage({ lessonId }: { lessonId: string }) {
     }
   };
 
-  const handlePartSelect = (index: number) => {
-    setCurrentPartIndex(index);
-  };
+  // Check if any part is editable
+  const hasEditablePart = parts.some((p) => p.type === 'text' || p.type === 'assignment');
 
   if (!lesson || !section) {
     return (
@@ -579,9 +542,6 @@ function LessonPage({ lessonId }: { lessonId: string }) {
       </div>
     );
   }
-
-  // Calculate whether we're on the last part (for showing mark complete button)
-  const isLastPart = currentPartIndex === parts.length - 1;
 
   return (
     <div className="flex flex-col h-screen overflow-hidden">
@@ -610,7 +570,7 @@ function LessonPage({ lessonId }: { lessonId: string }) {
               </div>
               {parts.length > 1 && (
                 <Badge variant="outline" className="gap-1.5">
-                  Part {currentPartIndex + 1} of {parts.length}
+                  {parts.length} parts
                 </Badge>
               )}
               {isCompleted && (
@@ -621,15 +581,14 @@ function LessonPage({ lessonId }: { lessonId: string }) {
               )}
             </div>
             <div className="flex items-center gap-2">
-              {currentPart &&
-                (currentPart.type === 'text' || currentPart.type === 'assignment') && (
-                  <a href={`/lesson_/${lesson.id}/edit`}>
-                    <Button variant="outline" size="sm" className="gap-2">
-                      <Pencil className="w-4 h-4" />
-                      Edit
-                    </Button>
-                  </a>
-                )}
+              {hasEditablePart && (
+                <a href={`/lesson_/${lesson.id}/edit`}>
+                  <Button variant="outline" size="sm" className="gap-2">
+                    <Pencil className="w-4 h-4" />
+                    Edit
+                  </Button>
+                </a>
+              )}
               {/* Quick Navigation */}
               {Option.isSome(prevLesson) && (
                 <Link to="/lesson/$lessonId" params={{ lessonId: prevLesson.value.id }}>
@@ -650,52 +609,34 @@ function LessonPage({ lessonId }: { lessonId: string }) {
         </div>
       </div>
 
-      {/* Main Content Area with Part Sidebar */}
+      {/* Main Content Area with TOC Sidebar */}
       <div className="flex-1 min-h-0 flex">
-        {/* Part Navigation Sidebar (desktop) */}
-        <PartNavigationSidebar
-          parts={parts}
-          currentPartIndex={currentPartIndex}
-          onPartSelect={handlePartSelect}
-        />
+        {/* Table of Contents Sidebar (desktop) */}
+        <TableOfContentsSidebar parts={parts} activePartId={activePartId} />
 
-        {/* Scrollable Content */}
+        {/* Scrollable Content - All parts rendered vertically */}
         <div className="flex-1 min-h-0">
-          <ScrollArea className="h-full">
+          <ScrollArea className="h-full" id="lesson-scroll-container">
             <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-              {/* Mobile Part Navigation */}
-              <MobilePartNavigation
-                parts={parts}
-                currentPartIndex={currentPartIndex}
-                onPartSelect={handlePartSelect}
-              />
-
-              {/* Current Part Title (if multi-part lesson) */}
-              {parts.length > 1 && currentPart && (
-                <div className="mb-6">
-                  <h2 className="text-2xl font-bold">{currentPart.title}</h2>
-                  <div className="flex items-center gap-2 mt-2 text-sm text-muted-foreground">
-                    <PartTypeIcon type={currentPart.type} className="w-4 h-4" />
-                    <span>{currentPart.durationMinutes} min</span>
-                  </div>
+              {/* Render all parts sequentially as a single continuous flow */}
+              {parts.length > 0 ? (
+                <div className="space-y-8">
+                  {parts.map((part) => (
+                    <div key={part.id} id={`part-${part.id}`} className="scroll-mt-6">
+                      <LessonPartContent part={part} />
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="bg-muted rounded-xl p-8 text-center border">
+                  <FileText className="w-12 h-12 mx-auto mb-3 text-muted-foreground/50" />
+                  <p className="text-muted-foreground">No content available for this lesson</p>
                 </div>
               )}
 
-              {/* Part Content */}
-              <div className="mb-8">
-                {currentPart ? (
-                  <LessonPartContent part={currentPart} />
-                ) : (
-                  <div className="bg-muted rounded-xl p-8 text-center border">
-                    <FileText className="w-12 h-12 mx-auto mb-3 text-muted-foreground/50" />
-                    <p className="text-muted-foreground">No content available for this lesson</p>
-                  </div>
-                )}
-              </div>
-
-              {/* Mark Complete Button (show on last part or if there's no parts) */}
-              {!isCompleted && (isLastPart || parts.length === 0) && (
-                <div className="mb-8">
+              {/* Mark Complete Button */}
+              {!isCompleted && (
+                <div className="mt-12 mb-8">
                   <Button
                     className="w-full sm:w-auto gap-2 h-12 px-8"
                     size="lg"
@@ -708,13 +649,7 @@ function LessonPage({ lessonId }: { lessonId: string }) {
               )}
 
               {/* Navigation Cards */}
-              <PartNavigation
-                parts={parts}
-                currentPartIndex={currentPartIndex}
-                onPartSelect={handlePartSelect}
-                prevLesson={prevLesson}
-                nextLesson={nextLesson}
-              />
+              <LessonNavigation prevLesson={prevLesson} nextLesson={nextLesson} />
             </div>
           </ScrollArea>
         </div>

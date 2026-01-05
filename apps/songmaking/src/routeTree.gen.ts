@@ -9,9 +9,25 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TestRouteImport } from './routes/test'
+import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as LessonLessonIdRouteImport } from './routes/lesson.$lessonId'
+import { Route as AuthAuthViewRouteImport } from './routes/auth/$authView'
+import { Route as ApiSplatRouteImport } from './routes/api/$'
+import { Route as AccountAccountViewRouteImport } from './routes/account/$accountView'
+import { Route as LessonLessonIdEditRouteImport } from './routes/lesson_.$lessonId.edit'
 
+const TestRoute = TestRouteImport.update({
+  id: '/test',
+  path: '/test',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardRoute = DashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -22,35 +38,118 @@ const LessonLessonIdRoute = LessonLessonIdRouteImport.update({
   path: '/lesson/$lessonId',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthAuthViewRoute = AuthAuthViewRouteImport.update({
+  id: '/auth/$authView',
+  path: '/auth/$authView',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiSplatRoute = ApiSplatRouteImport.update({
+  id: '/api/$',
+  path: '/api/$',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AccountAccountViewRoute = AccountAccountViewRouteImport.update({
+  id: '/account/$accountView',
+  path: '/account/$accountView',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LessonLessonIdEditRoute = LessonLessonIdEditRouteImport.update({
+  id: '/lesson_/$lessonId/edit',
+  path: '/lesson/$lessonId/edit',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/dashboard': typeof DashboardRoute
+  '/test': typeof TestRoute
+  '/account/$accountView': typeof AccountAccountViewRoute
+  '/api/$': typeof ApiSplatRoute
+  '/auth/$authView': typeof AuthAuthViewRoute
   '/lesson/$lessonId': typeof LessonLessonIdRoute
+  '/lesson/$lessonId/edit': typeof LessonLessonIdEditRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/dashboard': typeof DashboardRoute
+  '/test': typeof TestRoute
+  '/account/$accountView': typeof AccountAccountViewRoute
+  '/api/$': typeof ApiSplatRoute
+  '/auth/$authView': typeof AuthAuthViewRoute
   '/lesson/$lessonId': typeof LessonLessonIdRoute
+  '/lesson/$lessonId/edit': typeof LessonLessonIdEditRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/dashboard': typeof DashboardRoute
+  '/test': typeof TestRoute
+  '/account/$accountView': typeof AccountAccountViewRoute
+  '/api/$': typeof ApiSplatRoute
+  '/auth/$authView': typeof AuthAuthViewRoute
   '/lesson/$lessonId': typeof LessonLessonIdRoute
+  '/lesson_/$lessonId/edit': typeof LessonLessonIdEditRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/lesson/$lessonId'
+  fullPaths:
+    | '/'
+    | '/dashboard'
+    | '/test'
+    | '/account/$accountView'
+    | '/api/$'
+    | '/auth/$authView'
+    | '/lesson/$lessonId'
+    | '/lesson/$lessonId/edit'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/lesson/$lessonId'
-  id: '__root__' | '/' | '/lesson/$lessonId'
+  to:
+    | '/'
+    | '/dashboard'
+    | '/test'
+    | '/account/$accountView'
+    | '/api/$'
+    | '/auth/$authView'
+    | '/lesson/$lessonId'
+    | '/lesson/$lessonId/edit'
+  id:
+    | '__root__'
+    | '/'
+    | '/dashboard'
+    | '/test'
+    | '/account/$accountView'
+    | '/api/$'
+    | '/auth/$authView'
+    | '/lesson/$lessonId'
+    | '/lesson_/$lessonId/edit'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  DashboardRoute: typeof DashboardRoute
+  TestRoute: typeof TestRoute
+  AccountAccountViewRoute: typeof AccountAccountViewRoute
+  ApiSplatRoute: typeof ApiSplatRoute
+  AuthAuthViewRoute: typeof AuthAuthViewRoute
   LessonLessonIdRoute: typeof LessonLessonIdRoute
+  LessonLessonIdEditRoute: typeof LessonLessonIdEditRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/test': {
+      id: '/test'
+      path: '/test'
+      fullPath: '/test'
+      preLoaderRoute: typeof TestRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard': {
+      id: '/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof DashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -65,12 +164,46 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LessonLessonIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/auth/$authView': {
+      id: '/auth/$authView'
+      path: '/auth/$authView'
+      fullPath: '/auth/$authView'
+      preLoaderRoute: typeof AuthAuthViewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/$': {
+      id: '/api/$'
+      path: '/api/$'
+      fullPath: '/api/$'
+      preLoaderRoute: typeof ApiSplatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/account/$accountView': {
+      id: '/account/$accountView'
+      path: '/account/$accountView'
+      fullPath: '/account/$accountView'
+      preLoaderRoute: typeof AccountAccountViewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/lesson_/$lessonId/edit': {
+      id: '/lesson_/$lessonId/edit'
+      path: '/lesson/$lessonId/edit'
+      fullPath: '/lesson/$lessonId/edit'
+      preLoaderRoute: typeof LessonLessonIdEditRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  DashboardRoute: DashboardRoute,
+  TestRoute: TestRoute,
+  AccountAccountViewRoute: AccountAccountViewRoute,
+  ApiSplatRoute: ApiSplatRoute,
+  AuthAuthViewRoute: AuthAuthViewRoute,
   LessonLessonIdRoute: LessonLessonIdRoute,
+  LessonLessonIdEditRoute: LessonLessonIdEditRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

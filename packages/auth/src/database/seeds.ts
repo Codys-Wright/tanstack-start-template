@@ -126,7 +126,7 @@ export const devAdmin = makeSeeder({ name: 'devAdmin', defaultCount: 1, dependsO
  */
 export const users = makeSeeder(
   { name: 'users', defaultCount: 50, dependsOn: ['devAdmin'] },
-  (count) =>
+  (count: number) =>
     Effect.gen(function* () {
       const sql = yield* SqlClient.SqlClient;
 
@@ -193,7 +193,7 @@ export const users = makeSeeder(
  */
 export const organizations = makeSeeder(
   { name: 'organizations', defaultCount: 10, dependsOn: ['users'] },
-  (count) =>
+  (count: number) =>
     Effect.gen(function* () {
       const sql = yield* SqlClient.SqlClient;
 
@@ -294,13 +294,13 @@ export const auth = (options: AuthSeedOptions = {}): ReadonlyArray<SeederEntry> 
  */
 export const cleanupUsers = makeCleanup({
   name: 'users',
-  countSql: (sql) =>
+  countSql: (sql: SqlClient.SqlClient) =>
     sql<{
       count: number;
     }>`SELECT COUNT(*)::int as count FROM "user" WHERE fake = true`.pipe(
       Effect.map((r) => r[0].count),
     ),
-  deleteSql: (sql) =>
+  deleteSql: (sql: SqlClient.SqlClient) =>
     Effect.gen(function* () {
       // Delete accounts first (foreign key)
       yield* sql`
@@ -320,13 +320,13 @@ export const cleanupUsers = makeCleanup({
  */
 export const cleanupOrganizations = makeCleanup({
   name: 'organizations',
-  countSql: (sql) =>
+  countSql: (sql: SqlClient.SqlClient) =>
     sql<{
       count: number;
     }>`SELECT COUNT(*)::int as count FROM organization WHERE fake = true`.pipe(
       Effect.map((r) => r[0].count),
     ),
-  deleteSql: (sql) =>
+  deleteSql: (sql: SqlClient.SqlClient) =>
     Effect.gen(function* () {
       // Delete members first (foreign key)
       yield* sql`
