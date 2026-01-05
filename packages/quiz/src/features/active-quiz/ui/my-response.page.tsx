@@ -391,7 +391,11 @@ const ActionsSection: React.FC<ActionsSectionProps> = ({ shareUrl }) => {
         </Button>
       </Link>
       <Link to="/artist-types" className="w-full">
-        <Button variant="ghost" size="sm" className="w-full text-muted-foreground">
+        <Button
+          variant="outline"
+          size="lg"
+          className="w-full bg-primary/5 border-primary/30 hover:bg-primary/10 hover:border-primary/50 transition-all duration-300"
+        >
           Explore All Artist Types
         </Button>
       </Link>

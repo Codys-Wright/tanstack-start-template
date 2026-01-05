@@ -14,8 +14,57 @@ export const Route = createFileRoute('/test')({
   component: TestPage,
 });
 
+// Initial value matching the reference pattern
+const initialValue = {
+  root: {
+    children: [
+      {
+        children: [
+          {
+            detail: 0,
+            format: 0,
+            mode: 'normal',
+            style: '',
+            text: 'Hello World - This is test content!',
+            type: 'text',
+            version: 1,
+          },
+        ],
+        direction: 'ltr',
+        format: '',
+        indent: 0,
+        type: 'paragraph',
+        version: 1,
+      },
+      {
+        children: [
+          {
+            detail: 0,
+            format: 0,
+            mode: 'normal',
+            style: '',
+            text: 'This is a second paragraph to test the editor.',
+            type: 'text',
+            version: 1,
+          },
+        ],
+        direction: 'ltr',
+        format: '',
+        indent: 0,
+        type: 'paragraph',
+        version: 1,
+      },
+    ],
+    direction: 'ltr',
+    format: '',
+    indent: 0,
+    type: 'root',
+    version: 1,
+  },
+} as unknown as SerializedEditorState;
+
 function TestPage() {
-  const [editorState, setEditorState] = useState<SerializedEditorState | undefined>(undefined);
+  const [editorState, setEditorState] = useState<SerializedEditorState>(initialValue);
 
   return (
     <div className="min-h-screen bg-background p-8">

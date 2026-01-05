@@ -10,12 +10,20 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as ChatRouteImport } from './routes/chat'
+import { Route as AnnouncementsRouteImport } from './routes/announcements'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ApiEventsRouteImport } from './routes/api/events'
+import { Route as ApiChatRouteImport } from './routes/api/chat'
+import { Route as ApiAnnouncementsRouteImport } from './routes/api/announcements'
 
 const ChatRoute = ChatRouteImport.update({
   id: '/chat',
   path: '/chat',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AnnouncementsRoute = AnnouncementsRouteImport.update({
+  id: '/announcements',
+  path: '/announcements',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -28,34 +36,75 @@ const ApiEventsRoute = ApiEventsRouteImport.update({
   path: '/api/events',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiChatRoute = ApiChatRouteImport.update({
+  id: '/api/chat',
+  path: '/api/chat',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAnnouncementsRoute = ApiAnnouncementsRouteImport.update({
+  id: '/api/announcements',
+  path: '/api/announcements',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/announcements': typeof AnnouncementsRoute
   '/chat': typeof ChatRoute
+  '/api/announcements': typeof ApiAnnouncementsRoute
+  '/api/chat': typeof ApiChatRoute
   '/api/events': typeof ApiEventsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/announcements': typeof AnnouncementsRoute
   '/chat': typeof ChatRoute
+  '/api/announcements': typeof ApiAnnouncementsRoute
+  '/api/chat': typeof ApiChatRoute
   '/api/events': typeof ApiEventsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/announcements': typeof AnnouncementsRoute
   '/chat': typeof ChatRoute
+  '/api/announcements': typeof ApiAnnouncementsRoute
+  '/api/chat': typeof ApiChatRoute
   '/api/events': typeof ApiEventsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/chat' | '/api/events'
+  fullPaths:
+    | '/'
+    | '/announcements'
+    | '/chat'
+    | '/api/announcements'
+    | '/api/chat'
+    | '/api/events'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/chat' | '/api/events'
-  id: '__root__' | '/' | '/chat' | '/api/events'
+  to:
+    | '/'
+    | '/announcements'
+    | '/chat'
+    | '/api/announcements'
+    | '/api/chat'
+    | '/api/events'
+  id:
+    | '__root__'
+    | '/'
+    | '/announcements'
+    | '/chat'
+    | '/api/announcements'
+    | '/api/chat'
+    | '/api/events'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AnnouncementsRoute: typeof AnnouncementsRoute
   ChatRoute: typeof ChatRoute
+  ApiAnnouncementsRoute: typeof ApiAnnouncementsRoute
+  ApiChatRoute: typeof ApiChatRoute
   ApiEventsRoute: typeof ApiEventsRoute
 }
 
@@ -66,6 +115,13 @@ declare module '@tanstack/react-router' {
       path: '/chat'
       fullPath: '/chat'
       preLoaderRoute: typeof ChatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/announcements': {
+      id: '/announcements'
+      path: '/announcements'
+      fullPath: '/announcements'
+      preLoaderRoute: typeof AnnouncementsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -82,12 +138,29 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiEventsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/chat': {
+      id: '/api/chat'
+      path: '/api/chat'
+      fullPath: '/api/chat'
+      preLoaderRoute: typeof ApiChatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/announcements': {
+      id: '/api/announcements'
+      path: '/api/announcements'
+      fullPath: '/api/announcements'
+      preLoaderRoute: typeof ApiAnnouncementsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AnnouncementsRoute: AnnouncementsRoute,
   ChatRoute: ChatRoute,
+  ApiAnnouncementsRoute: ApiAnnouncementsRoute,
+  ApiChatRoute: ApiChatRoute,
   ApiEventsRoute: ApiEventsRoute,
 }
 export const routeTree = rootRouteImport

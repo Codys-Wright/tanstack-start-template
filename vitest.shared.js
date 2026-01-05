@@ -116,12 +116,8 @@ export default defineConfig({
     ],
   },
   test: {
-    include: [
-      'src/**/*.test.{ts,tsx}',
-      'packages/**/*.test.{ts,tsx}',
-      'apps/**/*.test.{ts,tsx}',
-      'reference/**/*.test.{ts,tsx}',
-    ],
+    include: ['src/**/*.test.{ts,tsx}', 'packages/**/*.test.{ts,tsx}', 'apps/**/*.test.{ts,tsx}'],
+    exclude: ['**/node_modules/**', '**/reference/**'],
     environment: 'node',
     globals: true,
   },

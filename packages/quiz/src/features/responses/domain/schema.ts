@@ -72,10 +72,18 @@ export class ResponseMetadata extends S.Class<ResponseMetadata>('ResponseMetadat
   customFields: S.optional(S.Record({ key: S.String, value: S.Unknown })),
 }) {}
 
+// User ID type (matches Better Auth user.id which is TEXT)
+export const UserId = S.String.pipe(S.brand('UserId'));
+export type UserId = typeof UserId.Type;
+
 export class QuizResponse extends S.Class<QuizResponse>('QuizResponse')({
   //every entity should have an Id and a version
   id: ResponseId,
   quizId: QuizId,
+
+  // User who submitted this response (nullable for backwards compatibility)
+  // When an anonymous user claims their account, this is updated to the new user's ID
+  userId: S.optional(S.NullOr(UserId)),
 
   // Core response data
   answers: S.optional(S.parseJson(S.Array(QuestionResponse))),
@@ -138,6 +146,7 @@ export class UpsertSessionMetadataPayload extends S.Class<UpsertSessionMetadataP
 export class UpsertResponsePayload extends S.Class<UpsertResponsePayload>('UpsertResponsePayload')({
   id: S.optional(ResponseId),
   quizId: QuizId,
+  userId: S.optional(S.NullOr(UserId)),
 
   answers: S.Array(UpsertQuestionResponsePayload),
   sessionMetadata: UpsertSessionMetadataPayload,

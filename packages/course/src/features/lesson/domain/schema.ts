@@ -6,6 +6,7 @@ import * as S from 'effect/Schema';
 
 import { CourseId } from '../../course/domain/schema.js';
 import { SectionId } from '../../section/domain/schema.js';
+import { PathId } from '../../path/domain/schema.js';
 
 // ===========================================
 // Branded IDs
@@ -72,6 +73,9 @@ export class Lesson extends S.Class<Lesson>('Lesson')({
   id: LessonId,
   sectionId: SectionId,
   courseId: CourseId,
+
+  // Path association (optional - for parallel learning paths)
+  pathId: S.optional(S.NullOr(PathId)),
 
   // Content
   title: S.String,

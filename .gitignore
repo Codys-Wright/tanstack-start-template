@@ -45,3 +45,14 @@ Thumbs.db
 .github/instructions/nx.instructions.md
 
 vite.config.*.timestamp*
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Reference projects (external repos for reference only)
+reference/
+
+# TypeScript build info
+*.tsbuildinfo

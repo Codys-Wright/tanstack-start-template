@@ -34,7 +34,11 @@
     "./package.json": "./package.json"
   },
   "dependencies": {
+    "@core": "*",
+    "@effect/platform": "*",
     "@effect/rpc": "*",
+    "@effect-atom/atom": "*",
+    "@effect-atom/atom-react": "*",
     "@shadcn": "*",
     "@sse": "*",
     "effect": "*",

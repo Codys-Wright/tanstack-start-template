@@ -267,7 +267,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
   return (
     <div className="flex flex-col w-full max-w-3xl h-full md:min-h-0">
       {/* Question Title - Fixed height container to keep card position stable */}
-      <div className="flex-1 flex items-center justify-center py-2 md:py-12 min-h-0 md:min-h-[200px] md:max-h-[300px]">
+      <div className="flex-1 flex items-center justify-center py-2 md:py-12 min-h-[160px] md:min-h-[360px]">
         <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight leading-snug text-center px-4">
           {title ?? content}
         </h2>

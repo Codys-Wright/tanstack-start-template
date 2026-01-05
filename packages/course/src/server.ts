@@ -10,6 +10,7 @@ export * from './features/lesson/server/index.js';
 export * from './features/progress/server/index.js';
 export * from './features/review/server/index.js';
 export * from './features/section/server/index.js';
+export * from './features/room/server/index.js';
 
 // Export combined layer
 export * from './core/server/index.js';

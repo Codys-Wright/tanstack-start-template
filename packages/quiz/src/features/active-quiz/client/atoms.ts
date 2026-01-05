@@ -22,8 +22,10 @@ import {
   UpsertSessionMetadataPayload,
   UpsertQuestionResponsePayload,
   UpsertInteractionLogPayload,
+  UserId,
   type ResponseId,
 } from '@quiz/features/responses/domain/schema.js';
+import { sessionAtom } from '@auth/features/session/client/atoms.js';
 
 const ActiveQuizzesSchema = Schema.Array(ActiveQuiz);
 
@@ -431,6 +433,13 @@ export const submitQuizAndAnalyzeAtom = ResponsesClient.runtime.fn<{
       return yield* Effect.fail(new Error('No quiz loaded'));
     }
 
+    // Get the current user ID from auth session (if authenticated)
+    const authSession = get(sessionAtom);
+    const userId =
+      Result.isSuccess(authSession) && authSession.value?.user?.id
+        ? (authSession.value.user.id as UserId)
+        : undefined;
+
     // Get the current timestamp
     const now = yield* DateTime.now;
     const nowDate = DateTime.toDate(now);
@@ -495,6 +504,7 @@ export const submitQuizAndAnalyzeAtom = ResponsesClient.runtime.fn<{
     // Create the payload using the proper schema class
     const payload = new UpsertResponsePayload({
       quizId: session.currentQuiz.id,
+      userId,
       answers,
       sessionMetadata,
       interactionLogs,

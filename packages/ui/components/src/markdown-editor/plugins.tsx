@@ -122,10 +122,11 @@ export function Plugins({}) {
   };
 
   return (
-    <div className="relative">
+    <div className="flex flex-col h-full">
+      {/* Top Toolbar */}
       <ToolbarPlugin>
         {({ blockType }) => (
-          <ScrollArea className="sticky top-0 z-10 border-b">
+          <ScrollArea className="flex-shrink-0 border-b bg-background">
             <div className="vertical-align-middle flex items-center gap-2 p-1">
               <HistoryToolbarPlugin />
               <Separator orientation="vertical" className="!h-7" />
@@ -171,109 +172,115 @@ export function Plugins({}) {
           </ScrollArea>
         )}
       </ToolbarPlugin>
-      <div className="relative">
-        <AutoFocusPlugin />
-        <RichTextPlugin
-          contentEditable={
-            <div className="">
-              <div className="" ref={onRef}>
-                <ContentEditable
-                  placeholder={placeholder}
-                  className="ContentEditable__root relative block h-[calc(100vh-90px)] min-h-72 overflow-auto px-8 py-4 focus:outline-none"
-                />
-              </div>
-            </div>
-          }
-          ErrorBoundary={LexicalErrorBoundary}
-        />
 
-        <ClickableLinkPlugin />
-        <CheckListPlugin />
-        <HorizontalRulePlugin />
-        <TablePlugin />
-        <ListPlugin />
-        <TabIndentationPlugin />
-        <HashtagPlugin />
-        <HistoryPlugin />
+      {/* Scrollable Content Area */}
+      <div className="flex-1 min-h-0 relative">
+        <ScrollArea className="h-full">
+          <div className="max-w-4xl mx-auto">
+            <AutoFocusPlugin />
+            <RichTextPlugin
+              contentEditable={
+                <div ref={onRef}>
+                  <ContentEditable
+                    placeholder={placeholder}
+                    className="ContentEditable__root relative block min-h-[500px] px-4 sm:px-6 lg:px-8 py-4 focus:outline-none"
+                  />
+                </div>
+              }
+              ErrorBoundary={LexicalErrorBoundary}
+            />
 
-        <MentionsPlugin />
-        <DraggableBlockPlugin anchorElem={floatingAnchorElem} />
-        <KeywordsPlugin />
-        <EmojisPlugin />
-        <ImagesPlugin />
+            <ClickableLinkPlugin />
+            <CheckListPlugin />
+            <HorizontalRulePlugin />
+            <TablePlugin />
+            <ListPlugin />
+            <TabIndentationPlugin />
+            <HashtagPlugin />
+            <HistoryPlugin />
 
-        <LayoutPlugin />
+            <MentionsPlugin />
+            <DraggableBlockPlugin anchorElem={floatingAnchorElem} />
+            <KeywordsPlugin />
+            <EmojisPlugin />
+            <ImagesPlugin />
 
-        <AutoEmbedPlugin />
-        <TwitterPlugin />
-        <YouTubePlugin />
+            <LayoutPlugin />
 
-        <CodeHighlightPlugin />
-        <CodeActionMenuPlugin anchorElem={floatingAnchorElem} />
+            <AutoEmbedPlugin />
+            <TwitterPlugin />
+            <YouTubePlugin />
 
-        <MarkdownShortcutPlugin
-          transformers={[
-            TABLE,
-            HR,
-            IMAGE,
-            EMOJI,
-            TWEET,
-            CHECK_LIST,
-            ...ELEMENT_TRANSFORMERS,
-            ...MULTILINE_ELEMENT_TRANSFORMERS,
-            ...TEXT_FORMAT_TRANSFORMERS,
-            ...TEXT_MATCH_TRANSFORMERS,
-          ]}
-        />
-        {/* <TypingPerfPlugin /> */}
-        <TabFocusPlugin />
-        <AutocompletePlugin />
-        <AutoLinkPlugin />
-        <LinkPlugin />
+            <CodeHighlightPlugin />
+            <CodeActionMenuPlugin anchorElem={floatingAnchorElem} />
 
-        <ComponentPickerMenuPlugin
-          baseOptions={[
-            ParagraphPickerPlugin(),
-            HeadingPickerPlugin({ n: 1 }),
-            HeadingPickerPlugin({ n: 2 }),
-            HeadingPickerPlugin({ n: 3 }),
-            TablePickerPlugin(),
-            CheckListPickerPlugin(),
-            NumberedListPickerPlugin(),
-            BulletedListPickerPlugin(),
-            QuotePickerPlugin(),
-            CodePickerPlugin(),
-            DividerPickerPlugin(),
-            EmbedsPickerPlugin({ embed: 'tweet' }),
-            EmbedsPickerPlugin({ embed: 'youtube-video' }),
-            ImagePickerPlugin(),
-            ColumnsLayoutPickerPlugin(),
-            AlignmentPickerPlugin({ alignment: 'left' }),
-            AlignmentPickerPlugin({ alignment: 'center' }),
-            AlignmentPickerPlugin({ alignment: 'right' }),
-            AlignmentPickerPlugin({ alignment: 'justify' }),
-          ]}
-          dynamicOptionsFn={DynamicTablePickerPlugin}
-        />
+            <MarkdownShortcutPlugin
+              transformers={[
+                TABLE,
+                HR,
+                IMAGE,
+                EMOJI,
+                TWEET,
+                CHECK_LIST,
+                ...ELEMENT_TRANSFORMERS,
+                ...MULTILINE_ELEMENT_TRANSFORMERS,
+                ...TEXT_FORMAT_TRANSFORMERS,
+                ...TEXT_MATCH_TRANSFORMERS,
+              ]}
+            />
+            {/* <TypingPerfPlugin /> */}
+            <TabFocusPlugin />
+            <AutocompletePlugin />
+            <AutoLinkPlugin />
+            <LinkPlugin />
 
-        <ContextMenuPlugin />
-        <DragDropPastePlugin />
-        <EmojiPickerPlugin />
+            <ComponentPickerMenuPlugin
+              baseOptions={[
+                ParagraphPickerPlugin(),
+                HeadingPickerPlugin({ n: 1 }),
+                HeadingPickerPlugin({ n: 2 }),
+                HeadingPickerPlugin({ n: 3 }),
+                TablePickerPlugin(),
+                CheckListPickerPlugin(),
+                NumberedListPickerPlugin(),
+                BulletedListPickerPlugin(),
+                QuotePickerPlugin(),
+                CodePickerPlugin(),
+                DividerPickerPlugin(),
+                EmbedsPickerPlugin({ embed: 'tweet' }),
+                EmbedsPickerPlugin({ embed: 'youtube-video' }),
+                ImagePickerPlugin(),
+                ColumnsLayoutPickerPlugin(),
+                AlignmentPickerPlugin({ alignment: 'left' }),
+                AlignmentPickerPlugin({ alignment: 'center' }),
+                AlignmentPickerPlugin({ alignment: 'right' }),
+                AlignmentPickerPlugin({ alignment: 'justify' }),
+              ]}
+              dynamicOptionsFn={DynamicTablePickerPlugin}
+            />
 
-        <FloatingLinkEditorPlugin
-          anchorElem={floatingAnchorElem}
-          isLinkEditMode={isLinkEditMode}
-          setIsLinkEditMode={setIsLinkEditMode}
-        />
-        <FloatingTextFormatToolbarPlugin
-          anchorElem={floatingAnchorElem}
-          setIsLinkEditMode={setIsLinkEditMode}
-        />
+            <ContextMenuPlugin />
+            <DragDropPastePlugin />
+            <EmojiPickerPlugin />
 
-        <ListMaxIndentLevelPlugin />
+            <FloatingLinkEditorPlugin
+              anchorElem={floatingAnchorElem}
+              isLinkEditMode={isLinkEditMode}
+              setIsLinkEditMode={setIsLinkEditMode}
+            />
+            <FloatingTextFormatToolbarPlugin
+              anchorElem={floatingAnchorElem}
+              setIsLinkEditMode={setIsLinkEditMode}
+            />
+
+            <ListMaxIndentLevelPlugin />
+          </div>
+        </ScrollArea>
       </div>
+
+      {/* Bottom Actions Bar */}
       <ActionsPlugin>
-        <div className="clear-both flex items-center justify-between gap-2 overflow-auto border-t p-1">
+        <div className="flex-shrink-0 clear-both flex items-center justify-between gap-2 overflow-auto border-t bg-background p-1">
           <div className="flex flex-1 justify-start">
             <MaxLengthPlugin maxLength={maxLength} />
             <CharacterLimitPlugin maxLength={maxLength} charset="UTF-16" />

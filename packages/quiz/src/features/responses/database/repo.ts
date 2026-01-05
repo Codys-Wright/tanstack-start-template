@@ -4,17 +4,25 @@ import { PgLive } from '@core/database';
 import * as Effect from 'effect/Effect';
 import { flow } from 'effect/Function';
 import * as Schema from 'effect/Schema';
-import { QuizResponse, ResponseId, ResponseNotFoundError } from '../domain/schema.js';
+import { QuizResponse, ResponseId, ResponseNotFoundError, UserId } from '../domain/schema.js';
 import { QuizId } from '../../quiz/domain/schema.js';
 
 //1) Define the Inputs that the repository is expecting, we map these to UpsertPayload because it decouples them like a DTO and lets us
 //   easily see what our Repo is expecting to deal with
 const CreateResponseInput = QuizResponse.pipe(
-  Schema.pick('quizId', 'answers', 'sessionMetadata', 'interactionLogs', 'metadata'),
+  Schema.pick('quizId', 'userId', 'answers', 'sessionMetadata', 'interactionLogs', 'metadata'),
 );
 
 const UpdateResponseInput = QuizResponse.pipe(
-  Schema.pick('id', 'quizId', 'answers', 'sessionMetadata', 'interactionLogs', 'metadata'),
+  Schema.pick(
+    'id',
+    'quizId',
+    'userId',
+    'answers',
+    'sessionMetadata',
+    'interactionLogs',
+    'metadata',
+  ),
 );
 type UpdateResponseInput = typeof UpdateResponseInput.Type;
 
@@ -198,6 +206,41 @@ export class ResponsesRepo extends Effect.Service<ResponsesRepo>()('ResponsesRep
       `,
     });
 
+    // Find all responses for a specific user
+    const findByUserId = SqlSchema.findAll({
+      Result: QuizResponse,
+      Request: Schema.Struct({ userId: UserId }),
+      execute: ({ userId }) => sql`
+        SELECT
+          *
+        FROM
+          responses
+        WHERE
+          user_id = ${userId}
+          AND deleted_at IS NULL
+        ORDER BY
+          created_at DESC
+      `,
+    });
+
+    // Update user_id for all responses belonging to a user
+    // Used when an anonymous user claims their account
+    const updateUserIdForResponses = SqlSchema.void({
+      Request: Schema.Struct({
+        oldUserId: UserId,
+        newUserId: UserId,
+      }),
+      execute: ({ oldUserId, newUserId }) => sql`
+        UPDATE responses
+        SET
+          user_id = ${newUserId},
+          updated_at = now()
+        WHERE
+          user_id = ${oldUserId}
+          AND deleted_at IS NULL
+      `,
+    });
+
     // 4) Return the public API methods with appropriate error handling
     //    Each method transforms database errors into domain-appropriate responses
     return {
@@ -263,6 +306,25 @@ export class ResponsesRepo extends Effect.Service<ResponsesRepo>()('ResponsesRep
 
       // insert: Insert with custom createdAt timestamp (for seeding)
       insert: flow(insert, Effect.orDie),
+
+      // findByUserId: Get all responses for a specific user
+      findByUserId: (userId: UserId) =>
+        findByUserId({ userId }).pipe(
+          Effect.catchTags({
+            ParseError: Effect.die,
+            SqlError: Effect.die,
+          }),
+        ),
+
+      // updateUserIdForResponses: Update user_id for all responses when account is claimed
+      // This migrates responses from an anonymous user to their claimed account
+      updateUserIdForResponses: (oldUserId: UserId, newUserId: UserId) =>
+        updateUserIdForResponses({ oldUserId, newUserId }).pipe(
+          Effect.catchTags({
+            ParseError: Effect.die,
+            SqlError: Effect.die,
+          }),
+        ),
     } as const;
   }),
 }) {}

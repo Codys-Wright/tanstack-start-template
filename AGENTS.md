@@ -6,9 +6,9 @@
 
 The Effect Solutions CLI provides curated best practices and patterns for Effect TypeScript. Before working on Effect code, check if there's a relevant topic that covers your use case.
 
-- `effect-solutions list` - List all available topics
-- `effect-solutions show <slug...>` - Read one or more topics
-- `effect-solutions search <term>` - Search topics by keyword
+- `bunx effect-solutions list` - List all available topics
+- `bunx effect-solutions show <slug...>` - Read one or more topics
+- `bunx effect-solutions search <term>` - Search topics by keyword
 
 **Local Effect Source:** The Effect repository is cloned to `~/.local/share/effect-solutions/effect` for reference. Use this to explore APIs, find usage examples, and understand implementation details when the documentation isn't enough.
 
@@ -88,21 +88,21 @@ import { Card, Dialog, DropdownMenu } from "@shadcn"
 
 ### Component Reference
 
-| Component | Common Sub-components |
-|-----------|----------------------|
-| `Card` | `.Header`, `.Title`, `.Description`, `.Content`, `.Footer`, `.Action` |
-| `Dialog` | `.Trigger`, `.Content`, `.Header`, `.Title`, `.Description`, `.Footer`, `.Close` |
-| `DropdownMenu` | `.Trigger`, `.Content`, `.Item`, `.Separator`, `.Label`, `.Group` |
-| `AlertDialog` | `.Trigger`, `.Content`, `.Header`, `.Title`, `.Description`, `.Footer`, `.Action`, `.Cancel` |
-| `Tabs` | `.List`, `.Trigger`, `.Content` |
-| `Avatar` | `.Image`, `.Fallback` |
-| `Alert` | `.Title`, `.Description` |
-| `Sheet` | `.Trigger`, `.Content`, `.Header`, `.Title`, `.Description`, `.Footer`, `.Close` |
-| `Popover` | `.Trigger`, `.Content`, `.Anchor` |
-| `Table` | `.Header`, `.Body`, `.Row`, `.Head`, `.Cell`, `.Footer`, `.Caption` |
-| `Select` | `.Trigger`, `.Value`, `.Content`, `.Item`, `.Group`, `.Label`, `.Separator` |
-| `Accordion` | `.Item`, `.Trigger`, `.Content` |
-| `Form` | `.Control`, `.Label`, `.Error`, `.FieldInput`, `.FieldTextarea`, `.FieldSelect` |
+| Component      | Common Sub-components                                                                        |
+| -------------- | -------------------------------------------------------------------------------------------- |
+| `Card`         | `.Header`, `.Title`, `.Description`, `.Content`, `.Footer`, `.Action`                        |
+| `Dialog`       | `.Trigger`, `.Content`, `.Header`, `.Title`, `.Description`, `.Footer`, `.Close`             |
+| `DropdownMenu` | `.Trigger`, `.Content`, `.Item`, `.Separator`, `.Label`, `.Group`                            |
+| `AlertDialog`  | `.Trigger`, `.Content`, `.Header`, `.Title`, `.Description`, `.Footer`, `.Action`, `.Cancel` |
+| `Tabs`         | `.List`, `.Trigger`, `.Content`                                                              |
+| `Avatar`       | `.Image`, `.Fallback`                                                                        |
+| `Alert`        | `.Title`, `.Description`                                                                     |
+| `Sheet`        | `.Trigger`, `.Content`, `.Header`, `.Title`, `.Description`, `.Footer`, `.Close`             |
+| `Popover`      | `.Trigger`, `.Content`, `.Anchor`                                                            |
+| `Table`        | `.Header`, `.Body`, `.Row`, `.Head`, `.Cell`, `.Footer`, `.Caption`                          |
+| `Select`       | `.Trigger`, `.Value`, `.Content`, `.Item`, `.Group`, `.Label`, `.Separator`                  |
+| `Accordion`    | `.Item`, `.Trigger`, `.Content`                                                              |
+| `Form`         | `.Control`, `.Label`, `.Error`, `.FieldInput`, `.FieldTextarea`, `.FieldSelect`              |
 
 ### Simple Components (No Sub-components)
 
