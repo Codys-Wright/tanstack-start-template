@@ -10,7 +10,7 @@ import {
 } from './schema.js';
 import { CourseId } from '../../course/domain/schema.js';
 import { EnrollmentId } from '../../enrollment/domain/schema.js';
-import { LessonId } from '../../lesson/domain/schema.js';
+import { LessonId, LessonNotFoundError } from '../../lesson/domain/schema.js';
 
 export class ProgressRpc extends RpcGroup.make(
   // ─────────────────────────────────────────────────────────────────────────────
@@ -54,6 +54,7 @@ export class ProgressRpc extends RpcGroup.make(
 
   Rpc.make('startLesson', {
     success: LessonProgress,
+    error: S.Union(ProgressNotFoundError, LessonNotFoundError),
     payload: { lessonId: LessonId, enrollmentId: EnrollmentId },
   }),
 
@@ -71,6 +72,7 @@ export class ProgressRpc extends RpcGroup.make(
 
   Rpc.make('markLessonComplete', {
     success: LessonProgress,
+    error: S.Union(ProgressNotFoundError, LessonNotFoundError),
     payload: { lessonId: LessonId },
   }),
 ).prefix('progress_') {}

@@ -9,8 +9,9 @@ import {
   CertificateVerification,
   IssueCertificateInput,
 } from './schema.js';
-import { CourseId } from '../../course/domain/schema.js';
-import { EnrollmentId } from '../../enrollment/domain/schema.js';
+import { CourseId, CourseNotFoundError } from '../../course/domain/schema.js';
+import { EnrollmentId, EnrollmentNotFoundError } from '../../enrollment/domain/schema.js';
+import { InstructorNotFoundError } from '../../instructor/domain/schema.js';
 
 export class CertificateRpc extends RpcGroup.make(
   // ─────────────────────────────────────────────────────────────────────────────
@@ -53,6 +54,7 @@ export class CertificateRpc extends RpcGroup.make(
 
   Rpc.make('issue', {
     success: Certificate,
+    error: S.Union(EnrollmentNotFoundError, CourseNotFoundError, InstructorNotFoundError),
     payload: { input: IssueCertificateInput },
   }),
 

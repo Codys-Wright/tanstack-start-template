@@ -1,15 +1,15 @@
-// Server exports for @course package
-//
-// TODO: Implement and export these when ready:
-// - CourseRpcLive
-// - SectionRpcLive
-// - LessonRpcLive
-// - InstructorRpcLive
-// - EnrollmentRpcLive
-// - ProgressRpcLive
-// - ReviewRpcLive
-// - CertificateRpcLive
-// - CategoryRpcLive
-// - CourseServerLayer (combined layer)
+// Server-side exports for @course/server
 
-export {};
+// Export individual feature server implementations
+export * from './features/category/server/index.js';
+export * from './features/certificate/server/index.js';
+export * from './features/course/server/index.js';
+export * from './features/enrollment/server/index.js';
+export * from './features/instructor/server/index.js';
+export * from './features/lesson/server/index.js';
+export * from './features/progress/server/index.js';
+export * from './features/review/server/index.js';
+export * from './features/section/server/index.js';
+
+// Export combined layer
+export * from './core/server/index.js';

@@ -5,6 +5,7 @@ import { UserId } from '@auth';
 import {
   CourseRatingStats,
   CreateReviewInput,
+  MustBeEnrolledToReviewError,
   RespondToReviewInput,
   Review,
   ReviewId,
@@ -69,6 +70,7 @@ export class ReviewRpc extends RpcGroup.make(
 
   Rpc.make('create', {
     success: Review,
+    error: MustBeEnrolledToReviewError,
     payload: { input: CreateReviewInput },
   }),
 
