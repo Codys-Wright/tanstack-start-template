@@ -112,7 +112,7 @@ export function CodeLanguageToolbarPlugin() {
             }}
           >
             {label}
-          </SelectItem>
+          </Select.Item>
         ))}
       </SelectContent>
     </Select>

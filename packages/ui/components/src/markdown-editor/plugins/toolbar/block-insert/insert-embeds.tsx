@@ -21,6 +21,6 @@ export function InsertEmbeds() {
         {embedConfig.icon}
         <span>{embedConfig.contentName}</span>
       </div>
-    </SelectItem>
+    </Select.Item>
   ))
 }

@@ -26,6 +26,6 @@ export function FormatQuote() {
         {blockTypeToBlockName[BLOCK_FORMAT_VALUE].icon}
         {blockTypeToBlockName[BLOCK_FORMAT_VALUE].label}
       </div>
-    </SelectItem>
+    </Select.Item>
   )
 }

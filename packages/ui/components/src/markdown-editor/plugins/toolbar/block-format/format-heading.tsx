@@ -28,6 +28,6 @@ export function FormatHeading({ levels = [] }: { levels: HeadingTagType[] }) {
         {blockTypeToBlockName[level].icon}
         {blockTypeToBlockName[level].label}
       </div>
-    </SelectItem>
+    </Select.Item>
   ))
 }

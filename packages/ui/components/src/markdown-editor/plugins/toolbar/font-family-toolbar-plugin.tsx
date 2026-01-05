@@ -79,7 +79,7 @@ export function FontFamilyToolbarPlugin() {
             style={{ fontFamily: option }}
           >
             {option}
-          </SelectItem>
+          </Select.Item>
         ))}
       </SelectContent>
     </Select>

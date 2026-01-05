@@ -23,6 +23,6 @@ export function InsertImage() {
         <ImageIcon className="size-4" />
         <span>Image</span>
       </div>
-    </SelectItem>
+    </Select.Item>
   )
 }

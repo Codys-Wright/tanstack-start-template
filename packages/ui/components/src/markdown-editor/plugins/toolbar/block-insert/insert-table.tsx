@@ -23,6 +23,6 @@ export function InsertTable() {
         <TableIcon className="size-4" />
         <span>Table</span>
       </div>
-    </SelectItem>
+    </Select.Item>
   )
 }

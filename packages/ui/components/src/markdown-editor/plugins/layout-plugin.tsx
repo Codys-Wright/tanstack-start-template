@@ -83,7 +83,7 @@ export function InsertLayoutDialog({
           {LAYOUTS.map(({ label, value }) => (
             <Select.Item key={value} value={value}>
               {label}
-            </SelectItem>
+            </Select.Item>
           ))}
         </SelectContent>
       </Select>

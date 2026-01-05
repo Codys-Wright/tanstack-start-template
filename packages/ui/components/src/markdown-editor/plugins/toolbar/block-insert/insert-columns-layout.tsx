@@ -23,6 +23,6 @@ export function InsertColumnsLayout() {
         <Columns3Icon className="size-4" />
         <span>Columns Layout</span>
       </div>
-    </SelectItem>
+    </Select.Item>
   )
 }

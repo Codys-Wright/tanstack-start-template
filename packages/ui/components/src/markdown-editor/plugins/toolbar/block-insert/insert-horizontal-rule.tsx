@@ -21,6 +21,6 @@ export function InsertHorizontalRule() {
         <ScissorsIcon className="size-4" />
         <span>Horizontal Rule</span>
       </div>
-    </SelectItem>
+    </Select.Item>
   )
 }
