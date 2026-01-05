@@ -4,7 +4,7 @@
     "outDir": "dist",
     "tsBuildInfoFile": "dist/tsconfig.app.tsbuildinfo",
     "jsx": "react-jsx",
-    "lib": ["dom"],
+    "lib": ["dom", "es2023"],
     "types": [
       "node",
       "@nx/react/typings/cssmodule.d.ts",
@@ -30,6 +30,9 @@
   "references": [
     {
       "path": "../../packages/auth/tsconfig.lib.json"
+    },
+    {
+      "path": "../../packages/course/tsconfig.lib.json"
     },
     {
       "path": "../../packages/ui/theme/tsconfig.lib.json"

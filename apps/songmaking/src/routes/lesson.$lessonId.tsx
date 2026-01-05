@@ -3,12 +3,15 @@
  *
  * A polished lesson viewer with responsive layout, smooth animations,
  * and beautiful content rendering. Uses Effect Atom for state management.
+ *
+ * Lessons are composed of multiple LessonParts, allowing for sequences
+ * like: text -> quiz -> text -> video, etc.
  */
 
-import { createFileRoute, Link, Outlet, useMatch } from '@tanstack/react-router';
+import { createFileRoute, Link } from '@tanstack/react-router';
 import { useAtomValue, useAtomSet } from '@effect-atom/atom-react';
 import * as Option from 'effect/Option';
-import { Badge, Button, Card, Sidebar, SidebarProvider, useSidebar } from '@shadcn';
+import { Badge, Button, Card, ScrollArea, Sidebar, SidebarProvider, useSidebar } from '@shadcn';
 import {
   ChevronLeft,
   ChevronRight,
@@ -26,9 +29,11 @@ import {
   Music,
   Sparkles,
   Pencil,
+  Circle,
 } from 'lucide-react';
 import { CourseSidebar } from '../components/course-sidebar.js';
-import { type Lesson } from '../data/course.js';
+import { type Lesson, type LessonPart, getLessonParts } from '../data/course.js';
+import { Editor } from '@components/markdown-editor/editor';
 import {
   courseAtom,
   currentLessonIdAtom,
@@ -48,6 +53,22 @@ export const Route = createFileRoute('/lesson/$lessonId')({
 // =============================================================================
 // Helper Components
 // =============================================================================
+
+function PartTypeIcon({ type, className }: { type: LessonPart['type']; className?: string }) {
+  const iconClass = cn('w-5 h-5', className);
+  switch (type) {
+    case 'video':
+      return <PlayCircle className={iconClass} />;
+    case 'text':
+      return <FileText className={iconClass} />;
+    case 'quiz':
+      return <HelpCircle className={iconClass} />;
+    case 'assignment':
+      return <ClipboardList className={iconClass} />;
+    case 'download':
+      return <FileDown className={iconClass} />;
+  }
+}
 
 function LessonTypeIcon({ type, className }: { type: Lesson['type']; className?: string }) {
   const iconClass = cn('w-5 h-5', className);
@@ -94,11 +115,11 @@ function LessonTypeBadge({ type }: { type: Lesson['type'] }) {
 }
 
 // =============================================================================
-// Content Components
+// Part Content Components
 // =============================================================================
 
-function VideoContent({ lesson }: { lesson: Lesson }) {
-  if (!lesson.videoContent) {
+function PartVideoContent({ part }: { part: LessonPart }) {
+  if (!part.videoContent) {
     return (
       <div className="aspect-video bg-muted rounded-xl flex items-center justify-center border">
         <div className="text-center">
@@ -109,7 +130,7 @@ function VideoContent({ lesson }: { lesson: Lesson }) {
     );
   }
 
-  const { provider, videoId } = lesson.videoContent;
+  const { provider, videoId } = part.videoContent;
 
   if (provider === 'youtube') {
     return (
@@ -117,7 +138,7 @@ function VideoContent({ lesson }: { lesson: Lesson }) {
         <iframe
           className="w-full h-full"
           src={`https://www.youtube.com/embed/${videoId}?rel=0&modestbranding=1`}
-          title={lesson.title}
+          title={part.title}
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowFullScreen
         />
@@ -131,7 +152,7 @@ function VideoContent({ lesson }: { lesson: Lesson }) {
         <iframe
           className="w-full h-full"
           src={`https://player.vimeo.com/video/${videoId}`}
-          title={lesson.title}
+          title={part.title}
           allow="autoplay; fullscreen; picture-in-picture"
           allowFullScreen
         />
@@ -148,8 +169,8 @@ function VideoContent({ lesson }: { lesson: Lesson }) {
   );
 }
 
-function TextContent({ lesson }: { lesson: Lesson }) {
-  if (!lesson.mdxContent) {
+function PartTextContent({ part }: { part: LessonPart }) {
+  if (!part.mdxContent) {
     return (
       <div className="bg-muted rounded-xl p-8 text-center border">
         <FileText className="w-12 h-12 mx-auto mb-3 text-muted-foreground/50" />
@@ -158,196 +179,19 @@ function TextContent({ lesson }: { lesson: Lesson }) {
     );
   }
 
-  const content = lesson.mdxContent;
-
-  return (
-    <article className="prose prose-neutral dark:prose-invert max-w-none prose-headings:scroll-mt-20 prose-h1:text-3xl prose-h2:text-2xl prose-h3:text-xl prose-p:leading-relaxed prose-li:leading-relaxed prose-blockquote:border-l-primary prose-blockquote:text-muted-foreground prose-code:bg-muted prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded-md prose-code:before:content-none prose-code:after:content-none prose-pre:bg-muted prose-pre:border">
-      {content.split('\n\n').map((block, i) => {
-        // Headers
-        if (block.startsWith('# ')) {
-          return (
-            <h1 key={i} className="text-3xl font-bold mt-8 mb-4 first:mt-0">
-              {block.slice(2)}
-            </h1>
-          );
-        }
-        if (block.startsWith('## ')) {
-          return (
-            <h2 key={i} className="text-2xl font-bold mt-8 mb-4">
-              {block.slice(3)}
-            </h2>
-          );
-        }
-        if (block.startsWith('### ')) {
-          return (
-            <h3 key={i} className="text-xl font-semibold mt-6 mb-3">
-              {block.slice(4)}
-            </h3>
-          );
-        }
-
-        // Blockquotes
-        if (block.startsWith('> ')) {
-          return (
-            <blockquote
-              key={i}
-              className="border-l-4 border-primary pl-4 py-1 italic text-muted-foreground my-6 bg-muted/30 rounded-r-lg pr-4"
-            >
-              {block.slice(2)}
-            </blockquote>
-          );
-        }
-
-        // Code blocks
-        if (block.startsWith('```')) {
-          const lines = block.split('\n');
-          const code = lines.slice(1, -1).join('\n');
-          return (
-            <pre key={i} className="bg-muted border p-4 rounded-xl overflow-x-auto my-6">
-              <code className="text-sm">{code}</code>
-            </pre>
-          );
-        }
-
-        // Lists
-        if (block.match(/^[-*] /m)) {
-          const items = block.split('\n').filter((line) => line.match(/^[-*] /));
-          return (
-            <ul key={i} className="list-none pl-0 my-6 space-y-2">
-              {items.map((item, j) => (
-                <li key={j} className="flex items-start gap-3">
-                  <div className="w-1.5 h-1.5 rounded-full bg-primary mt-2.5 flex-shrink-0" />
-                  <span>{item.slice(2)}</span>
-                </li>
-              ))}
-            </ul>
-          );
-        }
-
-        // Numbered lists
-        if (block.match(/^\d+\. /m)) {
-          const items = block.split('\n').filter((line) => line.match(/^\d+\. /));
-          return (
-            <ol key={i} className="list-none pl-0 my-6 space-y-2">
-              {items.map((item, j) => (
-                <li key={j} className="flex items-start gap-3">
-                  <span className="w-6 h-6 rounded-full bg-primary/10 text-primary text-xs font-semibold flex items-center justify-center flex-shrink-0 mt-0.5">
-                    {j + 1}
-                  </span>
-                  <span>{item.replace(/^\d+\. /, '')}</span>
-                </li>
-              ))}
-            </ol>
-          );
-        }
-
-        // Tables (simple)
-        if (block.includes('|')) {
-          const rows = block.split('\n').filter((line) => line.includes('|'));
-          if (rows.length > 1) {
-            const headers = rows[0]
-              .split('|')
-              .filter(Boolean)
-              .map((h) => h.trim());
-            const dataRows = rows.slice(2).map((row) =>
-              row
-                .split('|')
-                .filter(Boolean)
-                .map((cell) => cell.trim()),
-            );
-
-            return (
-              <div key={i} className="overflow-x-auto my-6 border rounded-xl">
-                <table className="min-w-full divide-y">
-                  <thead className="bg-muted/50">
-                    <tr>
-                      {headers.map((header, j) => (
-                        <th key={j} className="text-left px-4 py-3 text-sm font-semibold">
-                          {header}
-                        </th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y">
-                    {dataRows.map((row, j) => (
-                      <tr key={j} className="hover:bg-muted/30 transition-colors">
-                        {row.map((cell, k) => (
-                          <td key={k} className="px-4 py-3 text-sm">
-                            {cell}
-                          </td>
-                        ))}
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            );
-          }
-        }
-
-        // Checkboxes
-        if (block.includes('- [ ]') || block.includes('- [x]')) {
-          const items = block.split('\n').filter((line) => line.match(/- \[[ x]\]/));
-          return (
-            <ul key={i} className="list-none pl-0 my-6 space-y-2">
-              {items.map((item, j) => {
-                const isChecked = item.includes('[x]');
-                const text = item.replace(/- \[[ x]\] /, '');
-                return (
-                  <li key={j} className="flex items-center gap-3">
-                    <div
-                      className={cn(
-                        'w-5 h-5 rounded border-2 flex items-center justify-center flex-shrink-0',
-                        isChecked ? 'bg-primary border-primary' : 'border-muted-foreground/30',
-                      )}
-                    >
-                      {isChecked && <CheckCircle2 className="w-3 h-3 text-primary-foreground" />}
-                    </div>
-                    <span className={cn(isChecked && 'line-through text-muted-foreground')}>
-                      {text}
-                    </span>
-                  </li>
-                );
-              })}
-            </ul>
-          );
-        }
-
-        // Regular paragraphs
-        if (block.trim()) {
-          let formatted = block;
-          formatted = formatted.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
-          formatted = formatted.replace(/\*(.+?)\*/g, '<em>$1</em>');
-          formatted = formatted.replace(
-            /`(.+?)`/g,
-            '<code class="bg-muted px-1.5 py-0.5 rounded-md text-sm">$1</code>',
-          );
-
-          return (
-            <p
-              key={i}
-              className="my-4 leading-relaxed"
-              dangerouslySetInnerHTML={{ __html: formatted }}
-            />
-          );
-        }
-
-        return null;
-      })}
-    </article>
-  );
+  return <Editor initialMarkdown={part.mdxContent} readOnly />;
 }
 
-function QuizContent({ lesson }: { lesson: Lesson }) {
+function PartQuizContent({ part }: { part: LessonPart }) {
   return (
     <Card className="p-8 sm:p-12 text-center bg-gradient-to-b from-amber-500/5 to-transparent border-amber-500/20">
       <div className="w-16 h-16 mx-auto mb-6 rounded-2xl bg-amber-500/10 flex items-center justify-center">
         <HelpCircle className="w-8 h-8 text-amber-600 dark:text-amber-400" />
       </div>
-      <h3 className="text-2xl font-bold mb-3">Quiz: {lesson.title}</h3>
+      <h3 className="text-2xl font-bold mb-3">{part.title}</h3>
       <p className="text-muted-foreground mb-8 max-w-md mx-auto">
         Test your knowledge with this quiz. You need to score at least{' '}
-        <span className="font-semibold text-foreground">{lesson.quizPassingScore ?? 70}%</span> to
+        <span className="font-semibold text-foreground">{part.quizPassingScore ?? 70}%</span> to
         pass.
       </p>
       <Button size="lg" className="gap-2 h-12 px-8">
@@ -358,7 +202,7 @@ function QuizContent({ lesson }: { lesson: Lesson }) {
   );
 }
 
-function AssignmentContent({ lesson }: { lesson: Lesson }) {
+function PartAssignmentContent({ part }: { part: LessonPart }) {
   return (
     <div>
       <Card className="p-6 mb-8 bg-gradient-to-r from-purple-500/10 to-transparent border-purple-500/20">
@@ -367,26 +211,28 @@ function AssignmentContent({ lesson }: { lesson: Lesson }) {
             <ClipboardList className="w-6 h-6 text-purple-600 dark:text-purple-400" />
           </div>
           <div>
-            <h3 className="font-bold text-lg">Assignment</h3>
+            <h3 className="font-bold text-lg">{part.title}</h3>
             <p className="text-sm text-muted-foreground">
               Complete this assignment to practice what you've learned
             </p>
           </div>
         </div>
       </Card>
-      <TextContent lesson={lesson} />
+      <PartTextContent part={part} />
     </div>
   );
 }
 
-function DownloadContent({ lesson }: { lesson: Lesson }) {
+function PartDownloadContent({ part }: { part: LessonPart }) {
   return (
     <Card className="p-8 sm:p-12 text-center bg-gradient-to-b from-cyan-500/5 to-transparent border-cyan-500/20">
       <div className="w-16 h-16 mx-auto mb-6 rounded-2xl bg-cyan-500/10 flex items-center justify-center">
         <FileDown className="w-8 h-8 text-cyan-600 dark:text-cyan-400" />
       </div>
-      <h3 className="text-2xl font-bold mb-3">Downloadable Resources</h3>
-      <p className="text-muted-foreground mb-8 max-w-md mx-auto">{lesson.description}</p>
+      <h3 className="text-2xl font-bold mb-3">{part.title}</h3>
+      <p className="text-muted-foreground mb-8 max-w-md mx-auto">
+        Download the resources for this section
+      </p>
       <Button size="lg" className="gap-2 h-12 px-8">
         <FileDown className="w-5 h-5" />
         Download Files
@@ -395,20 +241,172 @@ function DownloadContent({ lesson }: { lesson: Lesson }) {
   );
 }
 
+/**
+ * Renders a single lesson part based on its type
+ */
+function LessonPartContent({ part }: { part: LessonPart }) {
+  switch (part.type) {
+    case 'video':
+      return <PartVideoContent part={part} />;
+    case 'text':
+      return <PartTextContent part={part} />;
+    case 'quiz':
+      return <PartQuizContent part={part} />;
+    case 'assignment':
+      return <PartAssignmentContent part={part} />;
+    case 'download':
+      return <PartDownloadContent part={part} />;
+    default:
+      return null;
+  }
+}
+
 // =============================================================================
-// Navigation Components
+// Part Navigation Sidebar
 // =============================================================================
 
-function LessonNavigation({
+function PartNavigationSidebar({
+  parts,
+  currentPartIndex,
+  onPartSelect,
+}: {
+  parts: readonly LessonPart[];
+  currentPartIndex: number;
+  onPartSelect: (index: number) => void;
+}) {
+  if (parts.length <= 1) return null;
+
+  return (
+    <div className="hidden xl:block w-64 flex-shrink-0">
+      <div className="sticky top-6">
+        <h3 className="text-sm font-semibold text-muted-foreground mb-3 px-3">Lesson Parts</h3>
+        <nav className="space-y-1">
+          {parts.map((part, index) => {
+            const isActive = index === currentPartIndex;
+            const isCompleted = index < currentPartIndex;
+
+            return (
+              <button
+                key={part.id}
+                onClick={() => onPartSelect(index)}
+                className={cn(
+                  'w-full flex items-center gap-3 px-3 py-2 rounded-lg text-left text-sm transition-colors',
+                  isActive
+                    ? 'bg-primary/10 text-primary font-medium'
+                    : 'hover:bg-muted text-muted-foreground hover:text-foreground',
+                )}
+              >
+                <div
+                  className={cn(
+                    'flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-xs',
+                    isCompleted
+                      ? 'bg-emerald-500 text-white'
+                      : isActive
+                        ? 'bg-primary text-primary-foreground'
+                        : 'bg-muted-foreground/20 text-muted-foreground',
+                  )}
+                >
+                  {isCompleted ? <CheckCircle2 className="w-4 h-4" /> : index + 1}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="truncate">{part.title}</div>
+                  <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                    <PartTypeIcon type={part.type} className="w-3 h-3" />
+                    <span>{part.durationMinutes} min</span>
+                  </div>
+                </div>
+              </button>
+            );
+          })}
+        </nav>
+      </div>
+    </div>
+  );
+}
+
+/**
+ * Mobile part navigation - shows at the top on smaller screens
+ */
+function MobilePartNavigation({
+  parts,
+  currentPartIndex,
+  onPartSelect,
+}: {
+  parts: readonly LessonPart[];
+  currentPartIndex: number;
+  onPartSelect: (index: number) => void;
+}) {
+  if (parts.length <= 1) return null;
+
+  return (
+    <div className="xl:hidden mb-6">
+      <div className="flex items-center gap-2 overflow-x-auto pb-2">
+        {parts.map((part, index) => {
+          const isActive = index === currentPartIndex;
+          const isCompleted = index < currentPartIndex;
+
+          return (
+            <button
+              key={part.id}
+              onClick={() => onPartSelect(index)}
+              className={cn(
+                'flex items-center gap-2 px-3 py-2 rounded-lg text-sm whitespace-nowrap transition-colors flex-shrink-0',
+                isActive
+                  ? 'bg-primary text-primary-foreground'
+                  : isCompleted
+                    ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'
+                    : 'bg-muted text-muted-foreground hover:text-foreground',
+              )}
+            >
+              {isCompleted ? <CheckCircle2 className="w-4 h-4" /> : <Circle className="w-4 h-4" />}
+              <span>{part.title}</span>
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+/**
+ * Part navigation buttons (Previous/Next Part)
+ */
+function PartNavigation({
+  parts,
+  currentPartIndex,
+  onPartSelect,
   prevLesson,
   nextLesson,
 }: {
+  parts: readonly LessonPart[];
+  currentPartIndex: number;
+  onPartSelect: (index: number) => void;
   prevLesson: Option.Option<Lesson>;
   nextLesson: Option.Option<Lesson>;
 }) {
+  const hasPrevPart = currentPartIndex > 0;
+  const hasNextPart = currentPartIndex < parts.length - 1;
+
   return (
     <div className="flex items-stretch gap-4 border-t pt-8 mt-8">
-      {Option.isSome(prevLesson) ? (
+      {/* Previous: either previous part or previous lesson */}
+      {hasPrevPart ? (
+        <button onClick={() => onPartSelect(currentPartIndex - 1)} className="flex-1">
+          <Card className="h-full p-4 hover:bg-muted/50 hover:border-primary/30 transition-all duration-200 group text-left">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-lg bg-muted flex items-center justify-center group-hover:bg-primary/10 transition-colors">
+                <ChevronLeft className="w-5 h-5 text-muted-foreground group-hover:text-primary" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="text-xs text-muted-foreground mb-0.5">Previous Part</div>
+                <div className="text-sm font-medium truncate">
+                  {parts[currentPartIndex - 1]?.title}
+                </div>
+              </div>
+            </div>
+          </Card>
+        </button>
+      ) : Option.isSome(prevLesson) ? (
         <Link to="/lesson/$lessonId" params={{ lessonId: prevLesson.value.id }} className="flex-1">
           <Card className="h-full p-4 hover:bg-muted/50 hover:border-primary/30 transition-all duration-200 group">
             <div className="flex items-center gap-3">
@@ -426,7 +424,24 @@ function LessonNavigation({
         <div className="flex-1" />
       )}
 
-      {Option.isSome(nextLesson) ? (
+      {/* Next: either next part or next lesson */}
+      {hasNextPart ? (
+        <button onClick={() => onPartSelect(currentPartIndex + 1)} className="flex-1">
+          <Card className="h-full p-4 hover:bg-muted/50 hover:border-primary/30 transition-all duration-200 group text-left">
+            <div className="flex items-center gap-3">
+              <div className="flex-1 min-w-0 text-right">
+                <div className="text-xs text-muted-foreground mb-0.5">Next Part</div>
+                <div className="text-sm font-medium truncate">
+                  {parts[currentPartIndex + 1]?.title}
+                </div>
+              </div>
+              <div className="w-10 h-10 rounded-lg bg-muted flex items-center justify-center group-hover:bg-primary/10 transition-colors">
+                <ChevronRight className="w-5 h-5 text-muted-foreground group-hover:text-primary" />
+              </div>
+            </div>
+          </Card>
+        </button>
+      ) : Option.isSome(nextLesson) ? (
         <Link to="/lesson/$lessonId" params={{ lessonId: nextLesson.value.id }} className="flex-1">
           <Card className="h-full p-4 hover:bg-muted/50 hover:border-primary/30 transition-all duration-200 group">
             <div className="flex items-center gap-3">
@@ -494,18 +509,6 @@ function MobileHeader({ lesson }: { lesson: Lesson }) {
 function LessonPageWrapper() {
   const { lessonId } = Route.useParams();
 
-  // Check if we're on a child route (like /edit)
-  const editMatch = useMatch({
-    from: '/lesson/$lessonId/edit',
-    shouldThrow: false,
-  });
-  const hasChildRoute = !!editMatch;
-
-  // If there's a child route, just render the Outlet
-  if (hasChildRoute) {
-    return <Outlet />;
-  }
-
   return (
     <SidebarProvider defaultOpen>
       <CourseSidebar currentLessonId={lessonId} />
@@ -526,20 +529,33 @@ function LessonPage({ lessonId }: { lessonId: string }) {
   const prevLesson = useAtomValue(previousLessonAtom);
   const setProgress = useAtomSet(progressAtom);
 
+  // Get lesson parts
+  const lesson = Option.isSome(currentLesson) ? currentLesson.value : null;
+  const parts = lesson ? getLessonParts(lesson.id) : [];
+
+  // Track current part index
+  const [currentPartIndex, setCurrentPartIndex] = React.useState(0);
+
   // Set current lesson ID when component mounts or lessonId changes
   React.useEffect(() => {
     setCurrentLessonId(lessonId);
+    // Reset to first part when lesson changes
+    setCurrentPartIndex(0);
   }, [lessonId, setCurrentLessonId]);
 
-  const lesson = Option.isSome(currentLesson) ? currentLesson.value : null;
   const section = Option.isSome(currentSection) ? currentSection.value : null;
   const progress = lesson ? progressMap.get(lesson.id) : undefined;
   const isCompleted = progress?.status === 'completed';
+  const currentPart = parts[currentPartIndex];
 
   const handleMarkComplete = () => {
     if (lesson) {
       setProgress({ _tag: 'MarkComplete', lessonId: lesson.id });
     }
+  };
+
+  const handlePartSelect = (index: number) => {
+    setCurrentPartIndex(index);
   };
 
   if (!lesson || !section) {
@@ -564,76 +580,145 @@ function LessonPage({ lessonId }: { lessonId: string }) {
     );
   }
 
+  // Calculate whether we're on the last part (for showing mark complete button)
+  const isLastPart = currentPartIndex === parts.length - 1;
+
   return (
-    <>
+    <div className="flex flex-col h-screen overflow-hidden">
       {/* Mobile Header */}
       <MobileHeader lesson={lesson} />
 
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-10">
-        {/* Breadcrumb / Header */}
-        <div className="mb-6 sm:mb-8">
+      {/* Sticky Header */}
+      <div className="flex-shrink-0 border-b bg-background/95 backdrop-blur-sm">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center gap-2 text-sm text-muted-foreground mb-3">
             <Link to="/" className="hover:text-foreground transition-colors">
               {course.title}
             </Link>
             <ChevronRight className="w-4 h-4" />
             <span className="truncate">{section.title}</span>
+            <ChevronRight className="w-4 h-4" />
+            <span className="truncate font-medium text-foreground">{lesson.title}</span>
           </div>
 
-          <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
-            <div>
-              <h1 className="text-2xl sm:text-3xl font-bold mb-3">{lesson.title}</h1>
-              <div className="flex flex-wrap items-center gap-3">
-                <LessonTypeBadge type={lesson.type} />
-                <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
-                  <Clock className="w-4 h-4" />
-                  <span>{lesson.durationMinutes} min</span>
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div className="flex flex-wrap items-center gap-3">
+              <LessonTypeBadge type={lesson.type} />
+              <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
+                <Clock className="w-4 h-4" />
+                <span>{lesson.durationMinutes} min</span>
+              </div>
+              {parts.length > 1 && (
+                <Badge variant="outline" className="gap-1.5">
+                  Part {currentPartIndex + 1} of {parts.length}
+                </Badge>
+              )}
+              {isCompleted && (
+                <Badge className="gap-1.5 bg-emerald-500 hover:bg-emerald-500/90">
+                  <CheckCircle2 className="w-3 h-3" />
+                  Completed
+                </Badge>
+              )}
+            </div>
+            <div className="flex items-center gap-2">
+              {currentPart &&
+                (currentPart.type === 'text' || currentPart.type === 'assignment') && (
+                  <a href={`/lesson_/${lesson.id}/edit`}>
+                    <Button variant="outline" size="sm" className="gap-2">
+                      <Pencil className="w-4 h-4" />
+                      Edit
+                    </Button>
+                  </a>
+                )}
+              {/* Quick Navigation */}
+              {Option.isSome(prevLesson) && (
+                <Link to="/lesson/$lessonId" params={{ lessonId: prevLesson.value.id }}>
+                  <Button variant="ghost" size="icon" className="h-8 w-8">
+                    <ChevronLeft className="w-4 h-4" />
+                  </Button>
+                </Link>
+              )}
+              {Option.isSome(nextLesson) && (
+                <Link to="/lesson/$lessonId" params={{ lessonId: nextLesson.value.id }}>
+                  <Button variant="ghost" size="icon" className="h-8 w-8">
+                    <ChevronRight className="w-4 h-4" />
+                  </Button>
+                </Link>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Main Content Area with Part Sidebar */}
+      <div className="flex-1 min-h-0 flex">
+        {/* Part Navigation Sidebar (desktop) */}
+        <PartNavigationSidebar
+          parts={parts}
+          currentPartIndex={currentPartIndex}
+          onPartSelect={handlePartSelect}
+        />
+
+        {/* Scrollable Content */}
+        <div className="flex-1 min-h-0">
+          <ScrollArea className="h-full">
+            <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+              {/* Mobile Part Navigation */}
+              <MobilePartNavigation
+                parts={parts}
+                currentPartIndex={currentPartIndex}
+                onPartSelect={handlePartSelect}
+              />
+
+              {/* Current Part Title (if multi-part lesson) */}
+              {parts.length > 1 && currentPart && (
+                <div className="mb-6">
+                  <h2 className="text-2xl font-bold">{currentPart.title}</h2>
+                  <div className="flex items-center gap-2 mt-2 text-sm text-muted-foreground">
+                    <PartTypeIcon type={currentPart.type} className="w-4 h-4" />
+                    <span>{currentPart.durationMinutes} min</span>
+                  </div>
                 </div>
-                {isCompleted && (
-                  <Badge className="gap-1.5 bg-emerald-500 hover:bg-emerald-500/90">
-                    <CheckCircle2 className="w-3 h-3" />
-                    Completed
-                  </Badge>
+              )}
+
+              {/* Part Content */}
+              <div className="mb-8">
+                {currentPart ? (
+                  <LessonPartContent part={currentPart} />
+                ) : (
+                  <div className="bg-muted rounded-xl p-8 text-center border">
+                    <FileText className="w-12 h-12 mx-auto mb-3 text-muted-foreground/50" />
+                    <p className="text-muted-foreground">No content available for this lesson</p>
+                  </div>
                 )}
               </div>
+
+              {/* Mark Complete Button (show on last part or if there's no parts) */}
+              {!isCompleted && (isLastPart || parts.length === 0) && (
+                <div className="mb-8">
+                  <Button
+                    className="w-full sm:w-auto gap-2 h-12 px-8"
+                    size="lg"
+                    onClick={handleMarkComplete}
+                  >
+                    <CheckCircle2 className="w-5 h-5" />
+                    Mark as Complete
+                  </Button>
+                </div>
+              )}
+
+              {/* Navigation Cards */}
+              <PartNavigation
+                parts={parts}
+                currentPartIndex={currentPartIndex}
+                onPartSelect={handlePartSelect}
+                prevLesson={prevLesson}
+                nextLesson={nextLesson}
+              />
             </div>
-            {(lesson.type === 'text' || lesson.type === 'assignment') && (
-              <Link to="/lesson/$lessonId/edit" params={{ lessonId: lesson.id }}>
-                <Button variant="outline" size="sm" className="gap-2">
-                  <Pencil className="w-4 h-4" />
-                  Edit
-                </Button>
-              </Link>
-            )}
-          </div>
+          </ScrollArea>
         </div>
-
-        {/* Lesson Content */}
-        <div className="mb-8">
-          {lesson.type === 'video' && <VideoContent lesson={lesson} />}
-          {lesson.type === 'text' && <TextContent lesson={lesson} />}
-          {lesson.type === 'quiz' && <QuizContent lesson={lesson} />}
-          {lesson.type === 'assignment' && <AssignmentContent lesson={lesson} />}
-          {lesson.type === 'download' && <DownloadContent lesson={lesson} />}
-        </div>
-
-        {/* Mark Complete Button */}
-        {!isCompleted && (
-          <div className="mb-8">
-            <Button
-              className="w-full sm:w-auto gap-2 h-12 px-8"
-              size="lg"
-              onClick={handleMarkComplete}
-            >
-              <CheckCircle2 className="w-5 h-5" />
-              Mark as Complete
-            </Button>
-          </div>
-        )}
-
-        {/* Navigation */}
-        <LessonNavigation prevLesson={prevLesson} nextLesson={nextLesson} />
       </div>
-    </>
+    </div>
   );
 }
