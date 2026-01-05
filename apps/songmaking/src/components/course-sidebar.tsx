@@ -5,7 +5,7 @@
  * Shows progress indicators and allows navigation between lessons.
  */
 
-import { Link, useParams } from '@tanstack/react-router';
+import { Link } from '@tanstack/react-router';
 import { useState } from 'react';
 import { Badge, Button, Progress, ScrollArea } from '@shadcn';
 import {
@@ -260,9 +260,11 @@ export function CourseSidebar({ currentLessonId }: CourseSidebarProps) {
 
       {/* Footer */}
       <div className="p-4 border-t">
-        <Button variant="outline" className="w-full" asChild>
-          <Link to="/">Back to Course Overview</Link>
-        </Button>
+        <Link to="/" className="block">
+          <Button variant="outline" className="w-full">
+            Back to Course Overview
+          </Button>
+        </Link>
       </div>
     </div>
   );
