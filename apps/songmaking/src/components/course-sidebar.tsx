@@ -1,271 +1,464 @@
 /**
  * Course Sidebar Component
  *
- * Displays the course sections and lessons in a collapsible sidebar.
- * Shows progress indicators and allows navigation between lessons.
+ * Uses the shadcn Sidebar component with Effect Atom for state management.
+ * Features collapsible sections, progress tracking, path indicators, and responsive design.
  */
 
 import { Link } from '@tanstack/react-router';
-import { useState } from 'react';
-import { Badge, Button, Progress, ScrollArea } from '@shadcn';
+import { useAtomValue, useAtomSet } from '@effect-atom/atom-react';
+import { Sidebar, useSidebar, Collapsible, Badge, Progress, ScrollArea } from '@shadcn';
 import {
-  BookOpen,
   ChevronDown,
-  ChevronRight,
   CheckCircle2,
-  Circle,
-  PlayCircle,
-  FileText,
-  HelpCircle,
-  FileDown,
-  ClipboardList,
   Lock,
+  Music,
+  Sparkles,
+  Home,
+  LayoutDashboard,
 } from 'lucide-react';
 import {
   type Section,
   type Lesson,
   type LessonProgress,
-  SONGMAKING_COURSE,
-  SONGMAKING_SECTIONS,
   getSectionLessons,
-  MOCK_PROGRESS,
+  getPathById,
 } from '../data/course.js';
+import {
+  courseAtom,
+  sectionsAtom,
+  progressAtom,
+  courseProgressAtom,
+  expandedSectionsAtom,
+  sectionProgressAtom,
+} from '../features/course/client/course-atoms.js';
+import { cn } from '@shadcn/lib/utils';
+import * as React from 'react';
 
 // =============================================================================
-// Types
+// Sidebar Width Override - wider for better readability
+// =============================================================================
+
+const SIDEBAR_STYLES = {
+  '--sidebar-width': '20rem',
+  '--sidebar-width-mobile': '22rem',
+} as React.CSSProperties;
+
+// =============================================================================
+// Helper Components
+// =============================================================================
+
+function LessonProgressIcon({
+  progress,
+  isActive,
+}: {
+  progress?: LessonProgress;
+  isActive?: boolean;
+}) {
+  if (!progress || progress.status === 'not_started') {
+    return (
+      <div
+        className={cn(
+          'w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all duration-200',
+          isActive ? 'border-primary-foreground/50' : 'border-muted-foreground/30',
+        )}
+      >
+        <div
+          className={cn(
+            'w-1.5 h-1.5 rounded-full transition-all duration-200',
+            isActive ? 'bg-primary-foreground/50' : 'bg-transparent',
+          )}
+        />
+      </div>
+    );
+  }
+  if (progress.status === 'completed') {
+    return (
+      <div className="w-5 h-5 rounded-full bg-emerald-500 flex items-center justify-center">
+        <CheckCircle2 className="w-3.5 h-3.5 text-white" />
+      </div>
+    );
+  }
+  // in_progress
+  return (
+    <div className="w-5 h-5 rounded-full border-2 border-blue-500 flex items-center justify-center">
+      <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
+    </div>
+  );
+}
+
+// =============================================================================
+// Lesson Item Component
+// =============================================================================
+
+function LessonItem({
+  lesson,
+  progress,
+  isActive,
+  isMobile,
+  setOpenMobile,
+}: {
+  lesson: Lesson;
+  progress?: LessonProgress;
+  isActive: boolean;
+  isMobile: boolean;
+  setOpenMobile: (open: boolean) => void;
+}) {
+  const isLocked = !lesson.isFree && !progress;
+  const path = lesson.pathId ? getPathById(lesson.pathId) : null;
+
+  return (
+    <Link
+      to="/lesson/$lessonId"
+      params={{ lessonId: lesson.id }}
+      onClick={() => {
+        if (isMobile) {
+          setOpenMobile(false);
+        }
+      }}
+      className={cn(
+        'group flex items-center gap-2.5 p-2.5 rounded-lg transition-all duration-200',
+        'hover:bg-sidebar-accent/60',
+        isActive && 'bg-primary text-primary-foreground hover:bg-primary/90',
+        isLocked && 'opacity-50 cursor-not-allowed',
+      )}
+    >
+      {/* Path Color Indicator */}
+      <div
+        className="w-1 self-stretch rounded-full flex-shrink-0"
+        style={{ backgroundColor: path?.color ?? 'transparent' }}
+        title={path?.name}
+      />
+
+      {/* Progress Indicator */}
+      <div className="flex-shrink-0">
+        <LessonProgressIcon progress={progress} isActive={isActive} />
+      </div>
+
+      {/* Lesson Title */}
+      <span
+        className={cn(
+          'flex-1 text-sm font-medium leading-snug break-words min-w-0',
+          isActive ? 'text-primary-foreground' : 'text-foreground',
+        )}
+      >
+        {lesson.title}
+      </span>
+
+      {/* Right side indicators */}
+      <div className="flex items-center gap-1.5 flex-shrink-0">
+        {lesson.isFree && (
+          <Badge
+            variant="secondary"
+            className={cn(
+              'text-[10px] px-1.5 py-0 h-4 font-medium',
+              isActive && 'bg-primary-foreground/20 text-primary-foreground',
+            )}
+          >
+            Free
+          </Badge>
+        )}
+        {isLocked && (
+          <Lock
+            className={cn(
+              'w-3.5 h-3.5',
+              isActive ? 'text-primary-foreground/70' : 'text-muted-foreground',
+            )}
+          />
+        )}
+      </div>
+    </Link>
+  );
+}
+
+// =============================================================================
+// Section Item Component
+// =============================================================================
+
+function SectionItem({
+  section,
+  sectionIndex,
+  currentLessonId,
+}: {
+  section: Section;
+  sectionIndex: number;
+  currentLessonId?: string;
+}) {
+  const lessons = getSectionLessons(section.id);
+  const progressMap = useAtomValue(progressAtom);
+  const expandedSections = useAtomValue(expandedSectionsAtom);
+  const setExpandedSections = useAtomSet(expandedSectionsAtom);
+  const { isMobile, setOpenMobile } = useSidebar();
+
+  const sectionProgress = useAtomValue(sectionProgressAtom(section.id));
+  const isExpanded = expandedSections.has(section.id);
+  const isCurrentSection = lessons.some((l) => l.id === currentLessonId);
+
+  const toggleSection = () => {
+    setExpandedSections({ _tag: 'Toggle', sectionId: section.id });
+  };
+
+  return (
+    <Collapsible open={isExpanded} onOpenChange={toggleSection}>
+      <Sidebar.MenuItem>
+        {/* Section Header */}
+        <Collapsible.Trigger asChild>
+          <Sidebar.MenuButton
+            className={cn(
+              'h-auto py-3.5 px-3',
+              isCurrentSection && !isExpanded && 'bg-sidebar-accent/50',
+            )}
+          >
+            {/* Section Number Badge */}
+            <div
+              className={cn(
+                'w-8 h-8 rounded-lg flex items-center justify-center text-sm font-bold transition-colors flex-shrink-0',
+                sectionProgress.percent === 100
+                  ? 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400'
+                  : isCurrentSection
+                    ? 'bg-primary/15 text-primary'
+                    : 'bg-muted text-muted-foreground',
+              )}
+            >
+              {sectionProgress.percent === 100 ? (
+                <CheckCircle2 className="w-4.5 h-4.5" />
+              ) : (
+                sectionIndex + 1
+              )}
+            </div>
+
+            {/* Section Info */}
+            <div className="flex-1 min-w-0 text-left">
+              <div className="font-semibold text-sm leading-tight mb-1">{section.title}</div>
+              <div className="text-xs text-muted-foreground">
+                <span className="font-medium">
+                  {sectionProgress.completed}/{sectionProgress.total} lessons
+                </span>
+              </div>
+            </div>
+
+            {/* Expand Icon */}
+            <div
+              className={cn(
+                'w-6 h-6 rounded-md flex items-center justify-center transition-colors',
+                'hover:bg-sidebar-accent',
+              )}
+            >
+              <ChevronDown
+                className={cn(
+                  'w-4 h-4 text-muted-foreground transition-transform duration-200',
+                  isExpanded && 'rotate-180',
+                )}
+              />
+            </div>
+          </Sidebar.MenuButton>
+        </Collapsible.Trigger>
+
+        {/* Section Progress Bar */}
+        {sectionProgress.percent > 0 && sectionProgress.percent < 100 && (
+          <div className="px-3 pb-2">
+            <div className="h-1.5 bg-muted rounded-full overflow-hidden">
+              <div
+                className="h-full bg-primary rounded-full transition-all duration-300"
+                style={{ width: `${sectionProgress.percent}%` }}
+              />
+            </div>
+          </div>
+        )}
+
+        {/* Lessons List */}
+        <Collapsible.Content>
+          <div className="px-2 pb-3 pt-1 space-y-1">
+            {lessons.map((lesson) => {
+              const progress = progressMap.get(lesson.id);
+              const isActive = lesson.id === currentLessonId;
+
+              return (
+                <LessonItem
+                  key={lesson.id}
+                  lesson={lesson}
+                  progress={progress}
+                  isActive={isActive}
+                  isMobile={isMobile}
+                  setOpenMobile={setOpenMobile}
+                />
+              );
+            })}
+          </div>
+        </Collapsible.Content>
+      </Sidebar.MenuItem>
+    </Collapsible>
+  );
+}
+
+// =============================================================================
+// Main Sidebar Component
 // =============================================================================
 
 interface CourseSidebarProps {
   currentLessonId?: string;
 }
 
-// =============================================================================
-// Helper Components
-// =============================================================================
-
-function LessonTypeIcon({ type }: { type: Lesson['type'] }) {
-  switch (type) {
-    case 'video':
-      return <PlayCircle className="w-4 h-4" />;
-    case 'text':
-      return <FileText className="w-4 h-4" />;
-    case 'quiz':
-      return <HelpCircle className="w-4 h-4" />;
-    case 'assignment':
-      return <ClipboardList className="w-4 h-4" />;
-    case 'download':
-      return <FileDown className="w-4 h-4" />;
-  }
-}
-
-function LessonProgressIcon({ progress }: { progress?: LessonProgress }) {
-  if (!progress || progress.status === 'not_started') {
-    return <Circle className="w-4 h-4 text-muted-foreground" />;
-  }
-  if (progress.status === 'completed') {
-    return <CheckCircle2 className="w-4 h-4 text-green-500" />;
-  }
-  // in_progress
-  return <Circle className="w-4 h-4 text-blue-500 fill-blue-500/30" />;
-}
-
-function formatDuration(minutes: number): string {
-  if (minutes < 60) {
-    return `${minutes}m`;
-  }
-  const hours = Math.floor(minutes / 60);
-  const mins = minutes % 60;
-  return mins > 0 ? `${hours}h ${mins}m` : `${hours}h`;
-}
-
-// =============================================================================
-// Section Component
-// =============================================================================
-
-function SectionItem({
-  section,
-  isExpanded,
-  onToggle,
-  currentLessonId,
-}: {
-  section: Section;
-  isExpanded: boolean;
-  onToggle: () => void;
-  currentLessonId?: string;
-}) {
-  const lessons = getSectionLessons(section.id);
-  const completedCount = lessons.filter(
-    (l) => MOCK_PROGRESS.get(l.id)?.status === 'completed',
-  ).length;
-  const progressPercent = lessons.length > 0 ? (completedCount / lessons.length) * 100 : 0;
-
-  return (
-    <div className="border-b last:border-b-0">
-      {/* Section Header */}
-      <button
-        onClick={onToggle}
-        className="w-full flex items-center gap-2 p-3 hover:bg-muted/50 transition-colors text-left"
-      >
-        {isExpanded ? (
-          <ChevronDown className="w-4 h-4 text-muted-foreground flex-shrink-0" />
-        ) : (
-          <ChevronRight className="w-4 h-4 text-muted-foreground flex-shrink-0" />
-        )}
-        <div className="flex-1 min-w-0">
-          <div className="font-medium text-sm truncate">{section.title}</div>
-          <div className="flex items-center gap-2 text-xs text-muted-foreground">
-            <span>
-              {completedCount}/{lessons.length} lessons
-            </span>
-            <span>-</span>
-            <span>{formatDuration(section.totalDurationMinutes)}</span>
-          </div>
-        </div>
-        {progressPercent > 0 && (
-          <div className="w-8">
-            <Progress value={progressPercent} className="h-1" />
-          </div>
-        )}
-      </button>
-
-      {/* Lessons */}
-      {isExpanded && (
-        <div className="pb-2">
-          {lessons.map((lesson) => (
-            <LessonItem
-              key={lesson.id}
-              lesson={lesson}
-              isActive={lesson.id === currentLessonId}
-              progress={MOCK_PROGRESS.get(lesson.id)}
-            />
-          ))}
-        </div>
-      )}
-    </div>
-  );
-}
-
-// =============================================================================
-// Lesson Component
-// =============================================================================
-
-function LessonItem({
-  lesson,
-  isActive,
-  progress,
-}: {
-  lesson: Lesson;
-  isActive: boolean;
-  progress?: LessonProgress;
-}) {
-  const isLocked = !lesson.isFree && !progress;
-
-  return (
-    <Link
-      to="/lesson/$lessonId"
-      params={{ lessonId: lesson.id }}
-      className={`flex items-center gap-2 px-3 py-2 mx-2 rounded-md text-sm transition-colors ${
-        isActive
-          ? 'bg-primary text-primary-foreground'
-          : isLocked
-            ? 'text-muted-foreground hover:bg-muted/50'
-            : 'hover:bg-muted'
-      }`}
-    >
-      <div className="flex-shrink-0">
-        {isLocked ? <Lock className="w-4 h-4" /> : <LessonProgressIcon progress={progress} />}
-      </div>
-      <div className="flex-1 min-w-0">
-        <div className="truncate">{lesson.title}</div>
-      </div>
-      <div className="flex items-center gap-1 text-xs text-muted-foreground flex-shrink-0">
-        <LessonTypeIcon type={lesson.type} />
-        <span>{lesson.durationMinutes}m</span>
-      </div>
-      {lesson.isFree && !isActive && (
-        <Badge variant="secondary" className="text-xs">
-          Free
-        </Badge>
-      )}
-    </Link>
-  );
-}
-
-// =============================================================================
-// Main Component
-// =============================================================================
-
 export function CourseSidebar({ currentLessonId }: CourseSidebarProps) {
-  // Expand the section containing the current lesson by default
-  const currentLesson = currentLessonId
-    ? SONGMAKING_SECTIONS.find((s) => getSectionLessons(s.id).some((l) => l.id === currentLessonId))
-    : null;
+  const course = useAtomValue(courseAtom);
+  const sections = useAtomValue(sectionsAtom);
+  const courseProgress = useAtomValue(courseProgressAtom);
+  const setExpandedSections = useAtomSet(expandedSectionsAtom);
+  const { isMobile, setOpenMobile } = useSidebar();
 
-  const [expandedSections, setExpandedSections] = useState<Set<string>>(
-    new Set(currentLesson ? [currentLesson.id] : [SONGMAKING_SECTIONS[0]?.id]),
-  );
-
-  const toggleSection = (sectionId: string) => {
-    setExpandedSections((prev) => {
-      const next = new Set(prev);
-      if (next.has(sectionId)) {
-        next.delete(sectionId);
-      } else {
-        next.add(sectionId);
+  // Auto-expand section containing current lesson
+  React.useEffect(() => {
+    if (currentLessonId) {
+      const currentSection = sections.find((s) =>
+        getSectionLessons(s.id).some((l) => l.id === currentLessonId),
+      );
+      if (currentSection) {
+        setExpandedSections({ _tag: 'Expand', sectionId: currentSection.id });
       }
-      return next;
-    });
-  };
-
-  // Calculate overall progress
-  const totalLessons = SONGMAKING_COURSE.lessonCount;
-  const completedLessons = Array.from(MOCK_PROGRESS.values()).filter(
-    (p) => p.status === 'completed',
-  ).length;
-  const overallProgress = totalLessons > 0 ? (completedLessons / totalLessons) * 100 : 0;
+    }
+  }, [currentLessonId, sections, setExpandedSections]);
 
   return (
-    <div className="w-80 border-r flex flex-col h-full bg-background">
+    <Sidebar
+      collapsible="none"
+      className="border-r overflow-hidden h-svh sticky top-0"
+      style={SIDEBAR_STYLES}
+    >
       {/* Course Header */}
-      <div className="p-4 border-b">
-        <Link to="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
-          <BookOpen className="w-5 h-5 text-primary" />
-          <h1 className="font-bold text-lg">{SONGMAKING_COURSE.title}</h1>
-        </Link>
-        <div className="mt-3">
-          <div className="flex items-center justify-between text-sm text-muted-foreground mb-1">
-            <span>
-              {completedLessons} of {totalLessons} lessons complete
-            </span>
-            <span>{Math.round(overallProgress)}%</span>
-          </div>
-          <Progress value={overallProgress} className="h-2" />
-        </div>
-      </div>
+      <Sidebar.Header className="border-b bg-gradient-to-b from-primary/5 to-transparent">
+        <Sidebar.Menu>
+          <Sidebar.MenuItem>
+            <Sidebar.MenuButton size="lg" asChild tooltip={course.title} className="h-auto py-4">
+              <Link
+                to="/"
+                onClick={() => {
+                  if (isMobile) {
+                    setOpenMobile(false);
+                  }
+                }}
+              >
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center shadow-sm flex-shrink-0">
+                  <Music className="w-5 h-5 text-primary-foreground" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h1 className="font-bold text-base leading-tight truncate">{course.title}</h1>
+                  <p className="text-xs text-muted-foreground truncate">
+                    Master the art of song creation
+                  </p>
+                </div>
+              </Link>
+            </Sidebar.MenuButton>
+          </Sidebar.MenuItem>
+        </Sidebar.Menu>
 
-      {/* Sections List */}
-      <ScrollArea className="flex-1">
-        <div className="py-2">
-          {SONGMAKING_SECTIONS.map((section) => (
-            <SectionItem
-              key={section.id}
-              section={section}
-              isExpanded={expandedSections.has(section.id)}
-              onToggle={() => toggleSection(section.id)}
-              currentLessonId={currentLessonId}
-            />
-          ))}
+        {/* Overall Progress */}
+        <div className="px-4 pb-4">
+          <div className="space-y-3">
+            <div className="flex items-center justify-between text-sm">
+              <span className="font-medium text-muted-foreground">Overall Progress</span>
+              <span className="font-bold text-foreground">
+                {Math.round(courseProgress.percent)}%
+              </span>
+            </div>
+            <Progress value={courseProgress.percent} className="h-2.5" />
+            <p className="text-xs text-muted-foreground">
+              {courseProgress.completed} of {courseProgress.total} lessons complete
+              {courseProgress.completed === courseProgress.total && courseProgress.total > 0 && (
+                <span className="ml-1.5 inline-flex items-center gap-1 text-emerald-600 dark:text-emerald-400">
+                  <Sparkles className="w-3 h-3" /> Complete!
+                </span>
+              )}
+            </p>
+          </div>
         </div>
-      </ScrollArea>
+      </Sidebar.Header>
+
+      {/* Quick Navigation */}
+      <Sidebar.Group className="py-3">
+        <Sidebar.GroupContent>
+          <Sidebar.Menu>
+            <Sidebar.MenuItem>
+              <Sidebar.MenuButton asChild tooltip="My Dashboard" className="h-10">
+                <Link
+                  to={'/dashboard' as any}
+                  onClick={() => {
+                    if (isMobile) {
+                      setOpenMobile(false);
+                    }
+                  }}
+                >
+                  <LayoutDashboard className="w-4 h-4" />
+                  <span className="font-medium">My Dashboard</span>
+                </Link>
+              </Sidebar.MenuButton>
+            </Sidebar.MenuItem>
+          </Sidebar.Menu>
+        </Sidebar.GroupContent>
+      </Sidebar.Group>
+
+      <Sidebar.Separator />
+
+      {/* Course Content - Scrollable */}
+      <div className="flex-1 min-h-0 overflow-hidden">
+        <ScrollArea className="h-full">
+          <Sidebar.Group className="py-3">
+            <Sidebar.GroupLabel className="text-xs font-semibold uppercase tracking-wider text-muted-foreground/70 px-2 mb-1">
+              Course Content
+            </Sidebar.GroupLabel>
+            <Sidebar.GroupContent>
+              <Sidebar.Menu>
+                {sections.map((section, index) => (
+                  <SectionItem
+                    key={section.id}
+                    section={section}
+                    sectionIndex={index}
+                    currentLessonId={currentLessonId}
+                  />
+                ))}
+              </Sidebar.Menu>
+            </Sidebar.GroupContent>
+          </Sidebar.Group>
+        </ScrollArea>
+      </div>
 
       {/* Footer */}
-      <div className="p-4 border-t">
-        <Link to="/" className="block">
-          <Button variant="outline" className="w-full">
-            Back to Course Overview
-          </Button>
-        </Link>
-      </div>
-    </div>
+      <Sidebar.Footer className="border-t py-3">
+        <Sidebar.Menu>
+          <Sidebar.MenuItem>
+            <Sidebar.MenuButton asChild tooltip="Course Overview" className="h-10">
+              <Link
+                to="/"
+                onClick={() => {
+                  if (isMobile) {
+                    setOpenMobile(false);
+                  }
+                }}
+              >
+                <Home className="w-4 h-4" />
+                <span className="font-medium">Course Overview</span>
+              </Link>
+            </Sidebar.MenuButton>
+          </Sidebar.MenuItem>
+        </Sidebar.Menu>
+      </Sidebar.Footer>
+    </Sidebar>
+  );
+}
+
+// =============================================================================
+// App Sidebar Layout - wraps pages that need the sidebar
+// =============================================================================
+
+interface AppSidebarLayoutProps {
+  children: React.ReactNode;
+  currentLessonId?: string;
+}
+
+export function AppSidebarLayout({ children, currentLessonId }: AppSidebarLayoutProps) {
+  return (
+    <Sidebar.Provider defaultOpen>
+      <CourseSidebar currentLessonId={currentLessonId} />
+      <Sidebar.Inset>{children}</Sidebar.Inset>
+    </Sidebar.Provider>
   );
 }

@@ -18,6 +18,8 @@ import {
   LessonPartId,
   VideoContent,
   LessonProgress,
+  Path,
+  PathId,
 } from '@course';
 import * as DateTime from 'effect/DateTime';
 
@@ -50,11 +52,29 @@ const SECTION_IDS = {
 } as const;
 
 const LESSON_IDS = {
+  // Section 1: Getting Started
   welcome: LessonId.make('20000000-0000-0000-0000-000000000001'),
   creativeSpace: LessonId.make('20000000-0000-0000-0000-000000000002'),
   mindset: LessonId.make('20000000-0000-0000-0000-000000000003'),
+  // Section 2: Melody & Harmony
   scales: LessonId.make('20000000-0000-0000-0000-000000000004'),
   chordProgressions: LessonId.make('20000000-0000-0000-0000-000000000005'),
+  melodyWriting: LessonId.make('20000000-0000-0000-0000-000000000006'),
+  hookCreation: LessonId.make('20000000-0000-0000-0000-000000000007'),
+  // Section 3: Writing Lyrics
+  lyricsBasics: LessonId.make('20000000-0000-0000-0000-000000000008'),
+  storytelling: LessonId.make('20000000-0000-0000-0000-000000000009'),
+  rhymeSchemes: LessonId.make('20000000-0000-0000-0000-000000000010'),
+  emotionalConnection: LessonId.make('20000000-0000-0000-0000-000000000011'),
+  // Section 4: Song Structure
+  verseChorus: LessonId.make('20000000-0000-0000-0000-000000000012'),
+  bridgesBreakdowns: LessonId.make('20000000-0000-0000-0000-000000000013'),
+  dynamicArrangement: LessonId.make('20000000-0000-0000-0000-000000000014'),
+  // Section 5: Production Basics
+  demoRecording: LessonId.make('20000000-0000-0000-0000-000000000015'),
+  workingWithProducers: LessonId.make('20000000-0000-0000-0000-000000000016'),
+  releasingMusic: LessonId.make('20000000-0000-0000-0000-000000000017'),
+  buildingFanbase: LessonId.make('20000000-0000-0000-0000-000000000018'),
 } as const;
 
 const PART_IDS = {
@@ -66,6 +86,12 @@ const PART_IDS = {
   mindset_video: LessonPartId.make('30000000-0000-0000-0000-000000000010'),
   scales_video: LessonPartId.make('30000000-0000-0000-0000-000000000020'),
   chordProgressions_text: LessonPartId.make('30000000-0000-0000-0000-000000000030'),
+} as const;
+
+const PATH_IDS = {
+  songwriting: PathId.make('50000000-0000-0000-0000-000000000001'),
+  artistry: PathId.make('50000000-0000-0000-0000-000000000002'),
+  business: PathId.make('50000000-0000-0000-0000-000000000003'),
 } as const;
 
 // =============================================================================
@@ -110,6 +136,49 @@ export const SONGMAKING_COURSE = Course.make({
 });
 
 // =============================================================================
+// Mock Paths
+// =============================================================================
+
+export const SONGMAKING_PATHS: ReadonlyArray<Path> = [
+  Path.make({
+    id: PATH_IDS.songwriting,
+    courseId: COURSE_ID,
+    name: 'Songwriting',
+    slug: 'songwriting',
+    description: 'Learn the craft of writing memorable melodies, harmonies, and lyrics',
+    color: '#3B82F6', // blue
+    icon: 'music',
+    sortOrder: 0,
+    createdAt: now,
+    updatedAt: now,
+  }),
+  Path.make({
+    id: PATH_IDS.artistry,
+    courseId: COURSE_ID,
+    name: 'Artistry',
+    slug: 'artistry',
+    description: 'Develop your creative mindset and unique artistic voice',
+    color: '#8B5CF6', // purple
+    icon: 'palette',
+    sortOrder: 1,
+    createdAt: now,
+    updatedAt: now,
+  }),
+  Path.make({
+    id: PATH_IDS.business,
+    courseId: COURSE_ID,
+    name: 'Music Business',
+    slug: 'business',
+    description: 'Understand how to monetize and market your music',
+    color: '#10B981', // green
+    icon: 'dollar-sign',
+    sortOrder: 2,
+    createdAt: now,
+    updatedAt: now,
+  }),
+];
+
+// =============================================================================
 // Mock Sections
 // =============================================================================
 
@@ -121,18 +190,18 @@ export const SONGMAKING_SECTIONS: ReadonlyArray<Section> = [
     description: 'Set up your creative space and understand the songwriting mindset',
     sortOrder: 0,
     lessonCount: 3,
-    totalDurationMinutes: 35,
+    totalDurationMinutes: 38,
     createdAt: now,
     updatedAt: now,
   }),
   Section.make({
     id: SECTION_IDS.melodyHarmony,
     courseId: COURSE_ID,
-    title: 'Melody & Harmony Basics',
+    title: 'Melody & Harmony',
     description: 'Learn the building blocks of music that make songs memorable',
     sortOrder: 1,
     lessonCount: 4,
-    totalDurationMinutes: 55,
+    totalDurationMinutes: 67,
     createdAt: now,
     updatedAt: now,
   }),
@@ -143,7 +212,7 @@ export const SONGMAKING_SECTIONS: ReadonlyArray<Section> = [
     description: 'Craft meaningful lyrics that connect with your audience',
     sortOrder: 2,
     lessonCount: 4,
-    totalDurationMinutes: 50,
+    totalDurationMinutes: 60,
     createdAt: now,
     updatedAt: now,
   }),
@@ -154,18 +223,18 @@ export const SONGMAKING_SECTIONS: ReadonlyArray<Section> = [
     description: 'Arrange your ideas into compelling song formats',
     sortOrder: 3,
     lessonCount: 3,
-    totalDurationMinutes: 40,
+    totalDurationMinutes: 45,
     createdAt: now,
     updatedAt: now,
   }),
   Section.make({
     id: SECTION_IDS.productionBasics,
     courseId: COURSE_ID,
-    title: 'Production Basics',
-    description: 'Record and produce your songs with professional techniques',
+    title: 'Production & Release',
+    description: 'Record, produce, and release your songs to the world',
     sortOrder: 4,
     lessonCount: 4,
-    totalDurationMinutes: 65,
+    totalDurationMinutes: 75,
     createdAt: now,
     updatedAt: now,
   }),
@@ -176,16 +245,19 @@ export const SONGMAKING_SECTIONS: ReadonlyArray<Section> = [
 // =============================================================================
 
 export const SONGMAKING_LESSONS: ReadonlyArray<Lesson> = [
+  // =============================================================================
   // Section 1: Getting Started
+  // =============================================================================
   Lesson.make({
     id: LESSON_IDS.welcome,
     sectionId: SECTION_IDS.gettingStarted,
     courseId: COURSE_ID,
+    pathId: null, // Intro lesson - no specific path
     title: 'Welcome to Songmaking',
     description: 'An introduction to the course and what you will learn',
     type: 'video',
     mdxContent: null,
-    videoContent: null, // Content is in parts
+    videoContent: null,
     quizId: null,
     quizPassingScore: null,
     quizIsRequired: false,
@@ -201,10 +273,11 @@ export const SONGMAKING_LESSONS: ReadonlyArray<Lesson> = [
     id: LESSON_IDS.creativeSpace,
     sectionId: SECTION_IDS.gettingStarted,
     courseId: COURSE_ID,
+    pathId: PATH_IDS.artistry,
     title: 'Setting Up Your Creative Space',
     description: 'Create an environment that inspires creativity',
     type: 'text',
-    mdxContent: null, // Content is in parts
+    mdxContent: null,
     videoContent: null,
     quizId: null,
     quizPassingScore: null,
@@ -221,6 +294,7 @@ export const SONGMAKING_LESSONS: ReadonlyArray<Lesson> = [
     id: LESSON_IDS.mindset,
     sectionId: SECTION_IDS.gettingStarted,
     courseId: COURSE_ID,
+    pathId: PATH_IDS.artistry,
     title: 'The Songwriting Mindset',
     description: 'Develop habits and attitudes that support creativity',
     type: 'video',
@@ -237,11 +311,15 @@ export const SONGMAKING_LESSONS: ReadonlyArray<Lesson> = [
     createdAt: now,
     updatedAt: now,
   }),
+
+  // =============================================================================
   // Section 2: Melody & Harmony
+  // =============================================================================
   Lesson.make({
     id: LESSON_IDS.scales,
     sectionId: SECTION_IDS.melodyHarmony,
     courseId: COURSE_ID,
+    pathId: PATH_IDS.songwriting,
     title: 'Understanding Scales',
     description: 'The foundation of melody - major and minor scales',
     type: 'video',
@@ -262,6 +340,7 @@ export const SONGMAKING_LESSONS: ReadonlyArray<Lesson> = [
     id: LESSON_IDS.chordProgressions,
     sectionId: SECTION_IDS.melodyHarmony,
     courseId: COURSE_ID,
+    pathId: PATH_IDS.songwriting,
     title: 'Building Chord Progressions',
     description: 'Learn the most common chord progressions in popular music',
     type: 'text',
@@ -272,6 +351,291 @@ export const SONGMAKING_LESSONS: ReadonlyArray<Lesson> = [
     quizIsRequired: false,
     downloadFiles: null,
     sortOrder: 1,
+    durationMinutes: 18,
+    isFree: false,
+    isPreview: false,
+    createdAt: now,
+    updatedAt: now,
+  }),
+  Lesson.make({
+    id: LESSON_IDS.melodyWriting,
+    sectionId: SECTION_IDS.melodyHarmony,
+    courseId: COURSE_ID,
+    pathId: PATH_IDS.songwriting,
+    title: 'Writing Memorable Melodies',
+    description: 'Techniques for crafting melodies that stick',
+    type: 'video',
+    mdxContent: null,
+    videoContent: null,
+    quizId: null,
+    quizPassingScore: null,
+    quizIsRequired: false,
+    downloadFiles: null,
+    sortOrder: 2,
+    durationMinutes: 20,
+    isFree: false,
+    isPreview: false,
+    createdAt: now,
+    updatedAt: now,
+  }),
+  Lesson.make({
+    id: LESSON_IDS.hookCreation,
+    sectionId: SECTION_IDS.melodyHarmony,
+    courseId: COURSE_ID,
+    pathId: PATH_IDS.artistry,
+    title: 'Creating Irresistible Hooks',
+    description: 'The art of writing hooks that captivate listeners',
+    type: 'text',
+    mdxContent: null,
+    videoContent: null,
+    quizId: null,
+    quizPassingScore: null,
+    quizIsRequired: false,
+    downloadFiles: null,
+    sortOrder: 3,
+    durationMinutes: 15,
+    isFree: false,
+    isPreview: false,
+    createdAt: now,
+    updatedAt: now,
+  }),
+
+  // =============================================================================
+  // Section 3: Writing Lyrics
+  // =============================================================================
+  Lesson.make({
+    id: LESSON_IDS.lyricsBasics,
+    sectionId: SECTION_IDS.writingLyrics,
+    courseId: COURSE_ID,
+    pathId: PATH_IDS.songwriting,
+    title: 'Lyrics Fundamentals',
+    description: 'The building blocks of great lyrics',
+    type: 'text',
+    mdxContent: null,
+    videoContent: null,
+    quizId: null,
+    quizPassingScore: null,
+    quizIsRequired: false,
+    downloadFiles: null,
+    sortOrder: 0,
+    durationMinutes: 12,
+    isFree: false,
+    isPreview: false,
+    createdAt: now,
+    updatedAt: now,
+  }),
+  Lesson.make({
+    id: LESSON_IDS.storytelling,
+    sectionId: SECTION_IDS.writingLyrics,
+    courseId: COURSE_ID,
+    pathId: PATH_IDS.artistry,
+    title: 'Storytelling Through Song',
+    description: 'How to tell compelling stories in your lyrics',
+    type: 'video',
+    mdxContent: null,
+    videoContent: null,
+    quizId: null,
+    quizPassingScore: null,
+    quizIsRequired: false,
+    downloadFiles: null,
+    sortOrder: 1,
+    durationMinutes: 18,
+    isFree: false,
+    isPreview: false,
+    createdAt: now,
+    updatedAt: now,
+  }),
+  Lesson.make({
+    id: LESSON_IDS.rhymeSchemes,
+    sectionId: SECTION_IDS.writingLyrics,
+    courseId: COURSE_ID,
+    pathId: PATH_IDS.songwriting,
+    title: 'Rhyme Schemes & Patterns',
+    description: 'Master different rhyming techniques',
+    type: 'text',
+    mdxContent: null,
+    videoContent: null,
+    quizId: null,
+    quizPassingScore: null,
+    quizIsRequired: false,
+    downloadFiles: null,
+    sortOrder: 2,
+    durationMinutes: 14,
+    isFree: false,
+    isPreview: false,
+    createdAt: now,
+    updatedAt: now,
+  }),
+  Lesson.make({
+    id: LESSON_IDS.emotionalConnection,
+    sectionId: SECTION_IDS.writingLyrics,
+    courseId: COURSE_ID,
+    pathId: PATH_IDS.artistry,
+    title: 'Creating Emotional Connection',
+    description: 'Write lyrics that resonate with listeners',
+    type: 'video',
+    mdxContent: null,
+    videoContent: null,
+    quizId: null,
+    quizPassingScore: null,
+    quizIsRequired: false,
+    downloadFiles: null,
+    sortOrder: 3,
+    durationMinutes: 16,
+    isFree: false,
+    isPreview: false,
+    createdAt: now,
+    updatedAt: now,
+  }),
+
+  // =============================================================================
+  // Section 4: Song Structure
+  // =============================================================================
+  Lesson.make({
+    id: LESSON_IDS.verseChorus,
+    sectionId: SECTION_IDS.songStructure,
+    courseId: COURSE_ID,
+    pathId: PATH_IDS.songwriting,
+    title: 'Verse-Chorus Dynamics',
+    description: 'Understanding the relationship between verses and choruses',
+    type: 'video',
+    mdxContent: null,
+    videoContent: null,
+    quizId: null,
+    quizPassingScore: null,
+    quizIsRequired: false,
+    downloadFiles: null,
+    sortOrder: 0,
+    durationMinutes: 15,
+    isFree: false,
+    isPreview: false,
+    createdAt: now,
+    updatedAt: now,
+  }),
+  Lesson.make({
+    id: LESSON_IDS.bridgesBreakdowns,
+    sectionId: SECTION_IDS.songStructure,
+    courseId: COURSE_ID,
+    pathId: PATH_IDS.songwriting,
+    title: 'Bridges & Breakdowns',
+    description: 'Adding variety and interest to your songs',
+    type: 'text',
+    mdxContent: null,
+    videoContent: null,
+    quizId: null,
+    quizPassingScore: null,
+    quizIsRequired: false,
+    downloadFiles: null,
+    sortOrder: 1,
+    durationMinutes: 12,
+    isFree: false,
+    isPreview: false,
+    createdAt: now,
+    updatedAt: now,
+  }),
+  Lesson.make({
+    id: LESSON_IDS.dynamicArrangement,
+    sectionId: SECTION_IDS.songStructure,
+    courseId: COURSE_ID,
+    pathId: PATH_IDS.artistry,
+    title: 'Dynamic Arrangement',
+    description: 'Create energy and flow in your song structure',
+    type: 'video',
+    mdxContent: null,
+    videoContent: null,
+    quizId: null,
+    quizPassingScore: null,
+    quizIsRequired: false,
+    downloadFiles: null,
+    sortOrder: 2,
+    durationMinutes: 18,
+    isFree: false,
+    isPreview: false,
+    createdAt: now,
+    updatedAt: now,
+  }),
+
+  // =============================================================================
+  // Section 5: Production Basics
+  // =============================================================================
+  Lesson.make({
+    id: LESSON_IDS.demoRecording,
+    sectionId: SECTION_IDS.productionBasics,
+    courseId: COURSE_ID,
+    pathId: PATH_IDS.songwriting,
+    title: 'Recording Your Demos',
+    description: 'Capture your ideas with simple recording techniques',
+    type: 'video',
+    mdxContent: null,
+    videoContent: null,
+    quizId: null,
+    quizPassingScore: null,
+    quizIsRequired: false,
+    downloadFiles: null,
+    sortOrder: 0,
+    durationMinutes: 20,
+    isFree: false,
+    isPreview: false,
+    createdAt: now,
+    updatedAt: now,
+  }),
+  Lesson.make({
+    id: LESSON_IDS.workingWithProducers,
+    sectionId: SECTION_IDS.productionBasics,
+    courseId: COURSE_ID,
+    pathId: PATH_IDS.business,
+    title: 'Working with Producers',
+    description: 'How to collaborate effectively with music producers',
+    type: 'text',
+    mdxContent: null,
+    videoContent: null,
+    quizId: null,
+    quizPassingScore: null,
+    quizIsRequired: false,
+    downloadFiles: null,
+    sortOrder: 1,
+    durationMinutes: 15,
+    isFree: false,
+    isPreview: false,
+    createdAt: now,
+    updatedAt: now,
+  }),
+  Lesson.make({
+    id: LESSON_IDS.releasingMusic,
+    sectionId: SECTION_IDS.productionBasics,
+    courseId: COURSE_ID,
+    pathId: PATH_IDS.business,
+    title: 'Releasing Your Music',
+    description: 'Distribution, streaming platforms, and release strategies',
+    type: 'video',
+    mdxContent: null,
+    videoContent: null,
+    quizId: null,
+    quizPassingScore: null,
+    quizIsRequired: false,
+    downloadFiles: null,
+    sortOrder: 2,
+    durationMinutes: 22,
+    isFree: false,
+    isPreview: false,
+    createdAt: now,
+    updatedAt: now,
+  }),
+  Lesson.make({
+    id: LESSON_IDS.buildingFanbase,
+    sectionId: SECTION_IDS.productionBasics,
+    courseId: COURSE_ID,
+    pathId: PATH_IDS.business,
+    title: 'Building Your Fanbase',
+    description: 'Marketing strategies for independent songwriters',
+    type: 'text',
+    mdxContent: null,
+    videoContent: null,
+    quizId: null,
+    quizPassingScore: null,
+    quizIsRequired: false,
+    downloadFiles: null,
+    sortOrder: 3,
     durationMinutes: 18,
     isFree: false,
     isPreview: false,
@@ -576,6 +940,54 @@ export function getPreviousLesson(currentLessonId: LessonId): Lesson | undefined
 }
 
 // =============================================================================
+// Path Helper Functions
+// =============================================================================
+
+export function getPathById(pathId: PathId): Path | undefined {
+  return SONGMAKING_PATHS.find((p) => p.id === pathId);
+}
+
+export function getPathLessons(pathId: PathId): ReadonlyArray<Lesson> {
+  return SONGMAKING_LESSONS.filter((l) => l.pathId === pathId).toSorted(
+    (a, b) => a.sortOrder - b.sortOrder,
+  );
+}
+
+export function getAllPaths(): ReadonlyArray<Path> {
+  return SONGMAKING_PATHS.toSorted((a, b) => a.sortOrder - b.sortOrder);
+}
+
+/**
+ * Get progress stats for a specific path
+ */
+export function getPathProgress(
+  pathId: PathId,
+  progressMap: Map<LessonId, LessonProgress>,
+): { completed: number; total: number; percentage: number } {
+  const pathLessons = getPathLessons(pathId);
+  const total = pathLessons.length;
+  const completed = pathLessons.filter((l) => progressMap.get(l.id)?.status === 'completed').length;
+  const percentage = total > 0 ? Math.round((completed / total) * 100) : 0;
+  return { completed, total, percentage };
+}
+
+/**
+ * Get overall course progress
+ */
+export function getCourseProgress(progressMap: Map<LessonId, LessonProgress>): {
+  completed: number;
+  total: number;
+  percentage: number;
+} {
+  const total = SONGMAKING_LESSONS.length;
+  const completed = SONGMAKING_LESSONS.filter(
+    (l) => progressMap.get(l.id)?.status === 'completed',
+  ).length;
+  const percentage = total > 0 ? Math.round((completed / total) * 100) : 0;
+  return { completed, total, percentage };
+}
+
+// =============================================================================
 // Mock Progress Data
 // =============================================================================
 
@@ -596,4 +1008,6 @@ export type {
   LessonPartId,
   LessonProgress,
   VideoContent,
+  Path,
+  PathId,
 };
