@@ -47,10 +47,14 @@ export function Editor({
       // The user can use the markdown toggle to convert it
       return () => {
         const root = $getRoot();
+        // Clear the default empty paragraph
+        root.clear();
         const lines = initialMarkdown.split('\n');
         lines.forEach((line) => {
           const paragraph = $createParagraphNode();
-          paragraph.append($createTextNode(line));
+          if (line) {
+            paragraph.append($createTextNode(line));
+          }
           root.append(paragraph);
         });
       };
