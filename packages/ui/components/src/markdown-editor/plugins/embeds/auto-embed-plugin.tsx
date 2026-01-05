@@ -1,4 +1,4 @@
-"use client"
+'use client';
 
 /**
  * Copyright (c) Meta Platforms, Inc. and affiliates.
@@ -7,167 +7,156 @@
  * LICENSE file in the root directory of this source tree.
  *
  */
-import { JSX, useMemo, useState } from "react"
+import { JSX, useMemo, useState } from 'react';
 import {
   AutoEmbedOption,
   EmbedConfig,
   EmbedMatchResult,
   LexicalAutoEmbedPlugin,
   URL_MATCHER,
-} from "@lexical/react/LexicalAutoEmbedPlugin"
-import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext"
-import { PopoverPortal } from "@radix-ui/react-popover"
-import type { LexicalEditor } from "lexical"
-import { TwitterIcon, YoutubeIcon } from "lucide-react"
+} from '@lexical/react/LexicalAutoEmbedPlugin';
+import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
+import { PopoverPortal } from '@radix-ui/react-popover';
+import type { LexicalEditor } from 'lexical';
+import { TwitterIcon, YoutubeIcon } from 'lucide-react';
 
-import { useEditorModal } from "@components/markdown-editor/editor-hooks/use-modal"
-import { INSERT_TWEET_COMMAND } from "@components/markdown-editor/plugins/embeds/twitter-plugin"
-import { INSERT_YOUTUBE_COMMAND } from "@components/markdown-editor/plugins/embeds/youtube-plugin"
-import { Button } from "@shadcn/components/ui/button"
-import {
-  Command,
-  Command.Group,
-  Command.Item,
-  Command.List,
-} from "@shadcn/components/ui/command"
-import { Dialog } from "@shadcn/components/ui/dialog"
-import { Input } from "@shadcn/components/ui/input"
-import {
-  Popover,
-} from "@shadcn/components/ui/popover"
+import { useEditorModal } from '@components/markdown-editor/editor-hooks/use-modal';
+import { INSERT_TWEET_COMMAND } from '@components/markdown-editor/plugins/embeds/twitter-plugin';
+import { INSERT_YOUTUBE_COMMAND } from '@components/markdown-editor/plugins/embeds/youtube-plugin';
+import { Button } from '@shadcn/components/ui/button';
+import { Command } from '@shadcn/components/ui/command';
+import { Dialog } from '@shadcn/components/ui/dialog';
+import { Input } from '@shadcn/components/ui/input';
+import { Popover } from '@shadcn/components/ui/popover';
 
 export interface CustomEmbedConfig extends EmbedConfig {
   // Human readable name of the embeded content e.g. Tweet or Google Map.
-  contentName: string
+  contentName: string;
 
   // Icon for display.
-  icon?: JSX.Element
+  icon?: JSX.Element;
 
   // An example of a matching url https://twitter.com/jack/status/20
-  exampleUrl: string
+  exampleUrl: string;
 
   // For extra searching.
-  keywords: Array<string>
+  keywords: Array<string>;
 
   // Embed a Project.
-  description?: string
+  description?: string;
 }
 
 export const YoutubeEmbedConfig: CustomEmbedConfig = {
-  contentName: "Youtube Video",
+  contentName: 'Youtube Video',
 
-  exampleUrl: "https://www.youtube.com/watch?v=jNQXAC9IVRw",
+  exampleUrl: 'https://www.youtube.com/watch?v=jNQXAC9IVRw',
 
   // Icon for display.
   icon: <YoutubeIcon className="size-4" />,
 
   insertNode: (editor: LexicalEditor, result: EmbedMatchResult) => {
-    editor.dispatchCommand(INSERT_YOUTUBE_COMMAND, result.id)
+    editor.dispatchCommand(INSERT_YOUTUBE_COMMAND, result.id);
   },
 
-  keywords: ["youtube", "video"],
+  keywords: ['youtube', 'video'],
 
   // Determine if a given URL is a match and return url data.
   parseUrl: async (url: string) => {
-    const match =
-      /^.*(youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/.exec(url)
+    const match = /^.*(youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/.exec(url);
 
-    const id = match ? (match?.[2].length === 11 ? match[2] : null) : null
+    const id = match ? (match?.[2].length === 11 ? match[2] : null) : null;
 
     if (id != null) {
       return {
         id,
         url,
-      }
+      };
     }
 
-    return null
+    return null;
   },
 
-  type: "youtube-video",
-}
+  type: 'youtube-video',
+};
 
 export const TwitterEmbedConfig: CustomEmbedConfig = {
   // e.g. Tweet or Google Map.
-  contentName: "Tweet",
+  contentName: 'Tweet',
 
-  exampleUrl: "https://twitter.com/jack/status/20",
+  exampleUrl: 'https://twitter.com/jack/status/20',
 
   // Icon for display.
   icon: <TwitterIcon className="size-4" />,
 
   // Create the Lexical embed node from the url data.
   insertNode: (editor: LexicalEditor, result: EmbedMatchResult) => {
-    editor.dispatchCommand(INSERT_TWEET_COMMAND, result.id)
+    editor.dispatchCommand(INSERT_TWEET_COMMAND, result.id);
   },
 
   // For extra searching.
-  keywords: ["tweet", "twitter"],
+  keywords: ['tweet', 'twitter'],
 
   // Determine if a given URL is a match and return url data.
   parseUrl: (text: string) => {
-    const match =
-      /^https:\/\/(twitter|x)\.com\/(#!\/)?(\w+)\/status(es)*\/(\d+)/.exec(text)
+    const match = /^https:\/\/(twitter|x)\.com\/(#!\/)?(\w+)\/status(es)*\/(\d+)/.exec(text);
 
     if (match != null) {
       return {
         id: match[5],
         url: match[1],
-      }
+      };
     }
 
-    return null
+    return null;
   },
 
-  type: "tweet",
-}
+  type: 'tweet',
+};
 
-export const EmbedConfigs = [TwitterEmbedConfig, YoutubeEmbedConfig]
+export const EmbedConfigs = [TwitterEmbedConfig, YoutubeEmbedConfig];
 
 const debounce = (callback: (text: string) => void, delay: number) => {
-  let timeoutId: number
+  let timeoutId: number;
   return (text: string) => {
-    window.clearTimeout(timeoutId)
+    window.clearTimeout(timeoutId);
     timeoutId = window.setTimeout(() => {
-      callback(text)
-    }, delay)
-  }
-}
+      callback(text);
+    }, delay);
+  };
+};
 
 export function AutoEmbedDialog({
   embedConfig,
   onClose,
 }: {
-  embedConfig: CustomEmbedConfig
-  onClose: () => void
+  embedConfig: CustomEmbedConfig;
+  onClose: () => void;
 }): JSX.Element {
-  const [text, setText] = useState("")
-  const [editor] = useLexicalComposerContext()
-  const [embedResult, setEmbedResult] = useState<EmbedMatchResult | null>(null)
+  const [text, setText] = useState('');
+  const [editor] = useLexicalComposerContext();
+  const [embedResult, setEmbedResult] = useState<EmbedMatchResult | null>(null);
 
   const validateText = useMemo(
     () =>
       debounce((inputText: string) => {
-        const urlMatch = URL_MATCHER.exec(inputText)
+        const urlMatch = URL_MATCHER.exec(inputText);
         if (embedConfig != null && inputText != null && urlMatch != null) {
-          Promise.resolve(embedConfig.parseUrl(inputText)).then(
-            (parseResult) => {
-              setEmbedResult(parseResult)
-            }
-          )
+          Promise.resolve(embedConfig.parseUrl(inputText)).then((parseResult) => {
+            setEmbedResult(parseResult);
+          });
         } else if (embedResult != null) {
-          setEmbedResult(null)
+          setEmbedResult(null);
         }
       }, 200),
-    [embedConfig, embedResult]
-  )
+    [embedConfig, embedResult],
+  );
 
   const onClick = () => {
     if (embedResult != null) {
-      embedConfig.insertNode(editor, embedResult)
-      onClose()
+      embedConfig.insertNode(editor, embedResult);
+      onClose();
     }
-  }
+  };
 
   return (
     <div className="">
@@ -178,9 +167,9 @@ export function AutoEmbedDialog({
           value={text}
           data-test-id={`${embedConfig.type}-embed-modal-url`}
           onChange={(e) => {
-            const { value } = e.target
-            setText(value)
-            validateText(value)
+            const { value } = e.target;
+            setText(value);
+            validateText(value);
           }}
         />
         <Dialog.Footer>
@@ -194,32 +183,32 @@ export function AutoEmbedDialog({
         </Dialog.Footer>
       </div>
     </div>
-  )
+  );
 }
 
 export function AutoEmbedPlugin(): JSX.Element {
-  const [modal, showModal] = useEditorModal()
+  const [modal, showModal] = useEditorModal();
 
   const openEmbedModal = (embedConfig: CustomEmbedConfig) => {
     showModal(`Embed ${embedConfig.contentName}`, (onClose) => (
       <AutoEmbedDialog embedConfig={embedConfig} onClose={onClose} />
-    ))
-  }
+    ));
+  };
 
   const getMenuOptions = (
     activeEmbedConfig: CustomEmbedConfig,
     embedFn: () => void,
-    dismissFn: () => void
+    dismissFn: () => void,
   ) => {
     return [
-      new AutoEmbedOption("Dismiss", {
+      new AutoEmbedOption('Dismiss', {
         onSelect: dismissFn,
       }),
       new AutoEmbedOption(`Embed ${activeEmbedConfig.contentName}`, {
         onSelect: embedFn,
       }),
-    ]
-  }
+    ];
+  };
 
   return (
     <>
@@ -230,23 +219,14 @@ export function AutoEmbedPlugin(): JSX.Element {
         getMenuOptions={getMenuOptions}
         menuRenderFn={(
           anchorElementRef,
-          {
-            selectedIndex,
-            options,
-            selectOptionAndCleanUp,
-            setHighlightedIndex,
-          }
+          { selectedIndex, options, selectOptionAndCleanUp, setHighlightedIndex },
         ) => {
           return anchorElementRef.current ? (
             <Popover open={true}>
               <PopoverPortal container={anchorElementRef.current}>
                 <div className="-translate-y-full transform">
                   <Popover.Trigger />
-                  <Popover.Content
-                    className="w-[200px] p-0"
-                    align="start"
-                    side="right"
-                  >
+                  <Popover.Content className="w-[200px] p-0" align="start" side="right">
                     <Command>
                       <Command.List>
                         <Command.Group>
@@ -255,7 +235,7 @@ export function AutoEmbedPlugin(): JSX.Element {
                               key={option.key}
                               value={option.title}
                               onSelect={() => {
-                                selectOptionAndCleanUp(option)
+                                selectOptionAndCleanUp(option);
                               }}
                               className="flex items-center gap-2"
                             >
@@ -269,9 +249,9 @@ export function AutoEmbedPlugin(): JSX.Element {
                 </div>
               </PopoverPortal>
             </Popover>
-          ) : null
+          ) : null;
         }}
       />
     </>
-  )
+  );
 }

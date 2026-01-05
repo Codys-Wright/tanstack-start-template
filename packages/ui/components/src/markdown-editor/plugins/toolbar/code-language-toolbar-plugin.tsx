@@ -20,7 +20,7 @@ import { useToolbarContext } from "@components/markdown-editor/context/toolbar-c
 import { useUpdateToolbarHandler } from "@components/markdown-editor/editor-hooks/use-update-toolbar"
 import {
   Select,
-  SelectItem,
+  
 } from "@shadcn/components/ui/select"
 
 function getCodeLanguageOptions(): [string, string][] {

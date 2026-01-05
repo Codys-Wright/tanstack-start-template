@@ -9,13 +9,8 @@ import { PipetteIcon } from "lucide-react"
 import { cn } from "@shadcn/lib/utils"
 import { Button } from "@shadcn/components/ui/button"
 import { Input } from "@shadcn/components/ui/input"
-import {
-  Popover,
-} from "@shadcn/components/ui/popover"
-import {
-  Select,
-  SelectItem,
-} from "@shadcn/components/ui/select"
+import { Popover } from "@shadcn/components/ui/popover"
+import { Select } from "@shadcn/components/ui/select"
 
 /**
  * @see https://github.com/radix-ui/primitives/blob/main/packages/react/compose-refs/src/compose-refs.tsx
@@ -1361,6 +1356,7 @@ function ColorPickerEyeDropper(props: ColorPickerEyeDropperProps) {
 
 interface ColorPickerFormatSelectProps
   extends Omit<React.ComponentProps<typeof Select>, "value" | "onValueChange">,
+    Pick<React.ComponentProps<typeof Select.Trigger>, "size" | "className"> {}
 
 function ColorPickerFormatSelect(props: ColorPickerFormatSelectProps) {
   const { size, className, ...selectProps } = props
@@ -1384,15 +1380,20 @@ function ColorPickerFormatSelect(props: ColorPickerFormatSelectProps) {
       onValueChange={onFormatChange}
       disabled={context.disabled}
     >
+      <Select.Trigger
         data-slot="color-picker-format-select-trigger"
         size={size ?? "sm"}
         className={cn(className)}
       >
+        <Select.Value />
+      </Select.Trigger>
+      <Select.Content>
         {colorFormats.map((format) => (
           <Select.Item key={format} value={format}>
             {format.toUpperCase()}
           </Select.Item>
         ))}
+      </Select.Content>
     </Select>
   )
 }
