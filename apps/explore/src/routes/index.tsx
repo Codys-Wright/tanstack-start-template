@@ -8,7 +8,7 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { useState, useEffect, useCallback } from 'react';
 import { Card, Button, Badge } from '@shadcn';
-import { MessageCircle } from 'lucide-react';
+import { MessageCircle, Megaphone } from 'lucide-react';
 import { Wifi, WifiOff, Radio, MessageSquare, User, Bell, RefreshCw } from 'lucide-react';
 import { DemoEvent } from '../features/sse-demo/schema.js';
 
@@ -168,26 +168,50 @@ function SseDemoPage() {
         </Card.Content>
       </Card>
 
-      {/* Chat Demo Link */}
-      <Card className="mt-6">
-        <Card.Header>
-          <Card.Title className="flex items-center gap-2">
-            <MessageCircle className="w-5 h-5" />
-            Chat Demo
-          </Card.Title>
-          <Card.Description>
-            Try the real-time chat UI components from the @chat package
-          </Card.Description>
-        </Card.Header>
-        <Card.Content>
-          <a href="/chat">
-            <Button>
-              <MessageCircle className="w-4 h-4 mr-2" />
-              Open Chat Demo
-            </Button>
-          </a>
-        </Card.Content>
-      </Card>
+      {/* Demo Links */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+        {/* Chat Demo Link */}
+        <Card>
+          <Card.Header>
+            <Card.Title className="flex items-center gap-2">
+              <MessageCircle className="w-5 h-5" />
+              Chat Demo
+            </Card.Title>
+            <Card.Description>
+              Try the real-time chat UI components from the @chat package
+            </Card.Description>
+          </Card.Header>
+          <Card.Content>
+            <a href="/chat">
+              <Button>
+                <MessageCircle className="w-4 h-4 mr-2" />
+                Open Chat Demo
+              </Button>
+            </a>
+          </Card.Content>
+        </Card>
+
+        {/* Announcements Demo Link */}
+        <Card>
+          <Card.Header>
+            <Card.Title className="flex items-center gap-2">
+              <Megaphone className="w-5 h-5" />
+              Announcements Demo
+            </Card.Title>
+            <Card.Description>
+              Role-based announcements with visibility levels and permissions
+            </Card.Description>
+          </Card.Header>
+          <Card.Content>
+            <a href="/announcements">
+              <Button>
+                <Megaphone className="w-4 h-4 mr-2" />
+                Open Announcements
+              </Button>
+            </a>
+          </Card.Content>
+        </Card>
+      </div>
 
       {/* Info Section */}
       <Card className="mt-6">
