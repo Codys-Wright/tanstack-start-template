@@ -45,6 +45,7 @@ export interface Lesson {
   isPreview: boolean;
   // Content
   mdxContent?: string;
+  editorState?: any; // Lexical SerializedEditorState
   videoContent?: {
     provider: 'youtube' | 'vimeo' | 'custom';
     videoId: string;

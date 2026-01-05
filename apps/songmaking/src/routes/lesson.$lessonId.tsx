@@ -19,6 +19,7 @@ import {
   FileDown,
   BookOpen,
   ArrowLeft,
+  Edit,
 } from 'lucide-react';
 import { CourseSidebar } from '../components/course-sidebar.js';
 import {
@@ -401,6 +402,14 @@ function LessonPage() {
                   )}
                 </div>
               </div>
+              {(lesson.type === 'text' || lesson.type === 'assignment') && (
+                <Link to="/lesson/$lessonId/edit" params={{ lessonId: lesson.id }}>
+                  <Button variant="outline" size="sm">
+                    <Edit className="w-4 h-4 mr-2" />
+                    Edit Content
+                  </Button>
+                </Link>
+              )}
             </div>
           </div>
 
