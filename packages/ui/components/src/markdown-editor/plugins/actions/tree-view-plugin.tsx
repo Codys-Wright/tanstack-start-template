@@ -7,7 +7,7 @@ import { NotebookPenIcon } from 'lucide-react';
 
 import { Button } from '@shadcn/components/ui/button';
 import { Dialog } from '@shadcn/components/ui/dialog';
-import { ScrollArea } from '@shadcn/components/ui/scroll-area';
+import { ScrollArea, ScrollBar } from '@shadcn/components/ui/scroll-area';
 
 export function TreeViewPlugin(): JSX.Element {
   const [editor] = useLexicalComposerContext();
@@ -32,6 +32,7 @@ export function TreeViewPlugin(): JSX.Element {
             timeTravelPanelButtonClassName="debug-timetravel-panel-button"
             editor={editor}
           />
+          <ScrollBar orientation="vertical" />
         </ScrollArea>
       </Dialog.Content>
     </Dialog>

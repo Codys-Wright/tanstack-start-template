@@ -31,7 +31,7 @@ export { InputOTP } from './input-otp.js';
 export { Menubar } from './menubar.js';
 export { Pagination } from './pagination.js';
 export { ResizablePanelGroup } from './resizable.js';
-export { ScrollArea } from './scroll-area.js';
+export { ScrollArea, ScrollBar } from './scroll-area.js';
 export { ToggleGroup } from './toggle-group.js';
 
 // Sidebar components (from sidebar folder)

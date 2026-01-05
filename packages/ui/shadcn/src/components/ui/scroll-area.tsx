@@ -58,3 +58,5 @@ export const ScrollArea: React.FC<React.ComponentProps<typeof ScrollAreaPrimitiv
 } = Object.assign(ScrollAreaRoot, {
   Bar: ScrollBar,
 });
+
+export { ScrollBar };
