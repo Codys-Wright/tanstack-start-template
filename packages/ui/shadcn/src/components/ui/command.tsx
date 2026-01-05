@@ -4,6 +4,7 @@ import { SearchIcon } from 'lucide-react';
 
 import { cn } from '../../lib/utils.js';
 import { Dialog } from './dialog.js';
+import { ScrollArea, ScrollBar } from './scroll-area.js';
 
 function CommandRoot({ className, ...props }: React.ComponentProps<typeof CommandPrimitive>) {
   return (
@@ -68,13 +69,22 @@ function CommandInput({
   );
 }
 
-function CommandList({ className, ...props }: React.ComponentProps<typeof CommandPrimitive.List>) {
+function CommandList({
+  className,
+  children,
+  ...props
+}: React.ComponentProps<typeof CommandPrimitive.List>) {
   return (
     <CommandPrimitive.List
       data-slot="command-list"
-      className={cn('max-h-[300px] scroll-py-1 overflow-x-hidden overflow-y-auto', className)}
+      className={cn('max-h-[300px] overflow-hidden', className)}
       {...props}
-    />
+    >
+      <ScrollArea className="h-full max-h-[300px]">
+        {children}
+        <ScrollBar orientation="vertical" />
+      </ScrollArea>
+    </CommandPrimitive.List>
   );
 }
 

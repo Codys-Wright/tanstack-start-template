@@ -96,7 +96,8 @@ import { HistoryToolbarPlugin } from '@components/markdown-editor/plugins/toolba
 import { LinkToolbarPlugin } from '@components/markdown-editor/plugins/toolbar/link-toolbar-plugin';
 import { SubSuperToolbarPlugin } from '@components/markdown-editor/plugins/toolbar/subsuper-toolbar-plugin';
 import { ToolbarPlugin } from '@components/markdown-editor/plugins/toolbar/toolbar-plugin';
-import { TypingPerfPlugin } from '@components/markdown-editor/plugins/typing-pref-plugin';
+// Disabled: causes performance issues
+// import { TypingPerfPlugin } from '@components/markdown-editor/plugins/typing-pref-plugin';
 import { EMOJI } from '@components/markdown-editor/transformers/markdown-emoji-transformer';
 import { HR } from '@components/markdown-editor/transformers/markdown-hr-transformer';
 import { IMAGE } from '@components/markdown-editor/transformers/markdown-image-transformer';
@@ -222,7 +223,7 @@ export function Plugins({}) {
             ...TEXT_MATCH_TRANSFORMERS,
           ]}
         />
-        <TypingPerfPlugin />
+        {/* <TypingPerfPlugin /> */}
         <TabFocusPlugin />
         <AutocompletePlugin />
         <AutoLinkPlugin />
