@@ -21,10 +21,6 @@ import {
   MessageCircle,
   Circle,
   Megaphone,
-  ChevronDown,
-  ChevronRight,
-  AlertTriangle,
-  AlertCircle,
 } from 'lucide-react';
 
 // =============================================================================
@@ -42,9 +38,10 @@ interface ChatUser {
 interface ChatRoom {
   id: string;
   name: string;
-  type: 'channel' | 'dm';
+  type: 'channel' | 'dm' | 'announcement';
   participants?: [string, string];
   lastActivity?: number;
+  restricted?: boolean;
 }
 
 interface ChatMessage {
@@ -105,20 +102,6 @@ type ChatEvent =
 
 type ConnectionStatus = 'disconnected' | 'connecting' | 'connected' | 'error';
 
-interface Announcement {
-  id: string;
-  title: string;
-  content: string;
-  priority: 'low' | 'normal' | 'high' | 'urgent';
-  visibility: 'public' | 'members' | 'admins';
-  authorId: string;
-  authorName: string;
-  published: boolean;
-  publishedAt?: number;
-  createdAt: number;
-  updatedAt: number;
-}
-
 // =============================================================================
 // Helpers
 // =============================================================================
@@ -143,6 +126,12 @@ const getSessionUserId = (): string => {
 
 // Default channels (fallback before server sends rooms)
 const DEFAULT_CHANNELS: ChatRoom[] = [
+  {
+    id: 'announcements',
+    name: 'Announcements',
+    type: 'announcement',
+    restricted: true,
+  },
   { id: 'room1', name: 'General', type: 'channel' },
   { id: 'room2', name: 'Random', type: 'channel' },
   { id: 'room3', name: 'Development', type: 'channel' },
@@ -180,13 +169,13 @@ function ChatDemoPage() {
   const [typingUsers, setTypingUsers] = useState<Record<string, Set<string>>>({});
   const [eventCount, setEventCount] = useState(0);
   const [showNewDmDialog, setShowNewDmDialog] = useState(false);
-  const [announcements, setAnnouncements] = useState<Announcement[]>([]);
-  const [announcementsExpanded, setAnnouncementsExpanded] = useState(true);
-  const [selectedAnnouncement, setSelectedAnnouncement] = useState<Announcement | null>(null);
   const eventSourceRef = useRef<EventSource | null>(null);
 
-  // Separate channels and DMs
-  const channels = useMemo(() => rooms.filter((r) => r.type === 'channel'), [rooms]);
+  // Separate channels (including announcements) and DMs
+  const channels = useMemo(
+    () => rooms.filter((r) => r.type === 'channel' || r.type === 'announcement'),
+    [rooms],
+  );
   const dmRooms = useMemo(() => rooms.filter((r) => r.type === 'dm'), [rooms]);
 
   const selectedRoom = useMemo(
@@ -319,23 +308,6 @@ function ChatDemoPage() {
     };
   }, [connect]);
 
-  // Fetch announcements on mount
-  useEffect(() => {
-    const fetchAnnouncements = async () => {
-      try {
-        // Use 'member' role to see public + member announcements
-        const response = await fetch('/api/announcements?role=member');
-        if (response.ok) {
-          const data = await response.json();
-          setAnnouncements(data.announcements ?? []);
-        }
-      } catch (err) {
-        console.error('Failed to fetch announcements:', err);
-      }
-    };
-    fetchAnnouncements();
-  }, []);
-
   const handleSend = useCallback(async () => {
     if (!inputValue.trim() || status !== 'connected') return;
 
@@ -431,59 +403,6 @@ function ChatDemoPage() {
         {/* Sidebar - Room List */}
         <aside className="w-64 border-r flex flex-col overflow-hidden">
           <div className="flex-1 overflow-y-auto">
-            {/* Announcements Section */}
-            {announcements.length > 0 && (
-              <>
-                <div className="p-3 border-b">
-                  <button
-                    onClick={() => setAnnouncementsExpanded(!announcementsExpanded)}
-                    className="w-full flex items-center justify-between"
-                  >
-                    <h2 className="font-semibold text-sm text-muted-foreground uppercase tracking-wide flex items-center gap-2">
-                      <Megaphone className="w-4 h-4" />
-                      Announcements
-                    </h2>
-                    <div className="flex items-center gap-2">
-                      <Badge variant="secondary" className="text-xs">
-                        {announcements.length}
-                      </Badge>
-                      {announcementsExpanded ? (
-                        <ChevronDown className="w-4 h-4 text-muted-foreground" />
-                      ) : (
-                        <ChevronRight className="w-4 h-4 text-muted-foreground" />
-                      )}
-                    </div>
-                  </button>
-                </div>
-                {announcementsExpanded && (
-                  <nav className="p-2 space-y-1">
-                    {announcements.slice(0, 5).map((announcement) => (
-                      <button
-                        key={announcement.id}
-                        onClick={() => setSelectedAnnouncement(announcement)}
-                        className={`w-full flex items-center gap-2 px-3 py-2 rounded-md text-left transition-colors hover:bg-muted ${
-                          selectedAnnouncement?.id === announcement.id
-                            ? 'bg-accent text-accent-foreground'
-                            : ''
-                        }`}
-                      >
-                        <AnnouncementPriorityIcon priority={announcement.priority} />
-                        <span className="flex-1 truncate text-sm">{announcement.title}</span>
-                      </button>
-                    ))}
-                    {announcements.length > 5 && (
-                      <a
-                        href="/announcements"
-                        className="block text-xs text-muted-foreground text-center py-2 hover:text-foreground transition-colors"
-                      >
-                        View all {announcements.length} announcements
-                      </a>
-                    )}
-                  </nav>
-                )}
-              </>
-            )}
-
             {/* Channels Section */}
             <div className="p-3 border-b">
               <h2 className="font-semibold text-sm text-muted-foreground uppercase tracking-wide">
@@ -493,6 +412,7 @@ function ChatDemoPage() {
             <nav className="p-2 space-y-1">
               {channels.map((room) => {
                 const roomMsgCount = messages[room.id]?.length ?? 0;
+                const isAnnouncement = room.type === 'announcement';
                 return (
                   <button
                     key={room.id}
@@ -503,7 +423,11 @@ function ChatDemoPage() {
                         : 'hover:bg-muted'
                     }`}
                   >
-                    <Hash className="w-4 h-4 text-muted-foreground" />
+                    {isAnnouncement ? (
+                      <Megaphone className="w-4 h-4 text-muted-foreground" />
+                    ) : (
+                      <Hash className="w-4 h-4 text-muted-foreground" />
+                    )}
                     <span className="flex-1 truncate">{room.name}</span>
                     {roomMsgCount > 0 && (
                       <Badge variant="secondary" className="text-xs">
@@ -616,6 +540,8 @@ function ChatDemoPage() {
                         <Circle className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 fill-green-500 text-green-500" />
                       )}
                     </div>
+                  ) : selectedRoom.type === 'announcement' ? (
+                    <Megaphone className="w-5 h-5" />
                   ) : (
                     <Hash className="w-5 h-5" />
                   )}
@@ -633,7 +559,7 @@ function ChatDemoPage() {
                   )}
                 </Chat.Header.Main>
                 <Chat.Header.End>
-                  {selectedRoom.type === 'channel' && (
+                  {(selectedRoom.type === 'channel' || selectedRoom.type === 'announcement') && (
                     <Badge variant="outline">
                       <Users className="w-3 h-3 mr-1" />
                       {Object.keys(users).length} users
@@ -781,57 +707,6 @@ function ChatDemoPage() {
           </div>
         </Dialog.Content>
       </Dialog>
-
-      {/* Announcement Detail Dialog */}
-      <Dialog
-        open={!!selectedAnnouncement}
-        onOpenChange={(open) => !open && setSelectedAnnouncement(null)}
-      >
-        <Dialog.Content className="sm:max-w-lg">
-          {selectedAnnouncement && (
-            <>
-              <Dialog.Header>
-                <Dialog.Title className="flex items-center gap-2">
-                  <AnnouncementPriorityIcon priority={selectedAnnouncement.priority} />
-                  {selectedAnnouncement.title}
-                </Dialog.Title>
-                <Dialog.Description>
-                  Posted by {selectedAnnouncement.authorName} •{' '}
-                  {new Date(
-                    selectedAnnouncement.publishedAt ?? selectedAnnouncement.createdAt,
-                  ).toLocaleDateString()}
-                </Dialog.Description>
-              </Dialog.Header>
-              <div className="py-4">
-                <p className="text-sm text-foreground whitespace-pre-wrap">
-                  {selectedAnnouncement.content}
-                </p>
-              </div>
-              <div className="flex justify-between items-center">
-                <div className="flex gap-2">
-                  <Badge
-                    variant={
-                      selectedAnnouncement.priority === 'urgent'
-                        ? 'destructive'
-                        : selectedAnnouncement.priority === 'high'
-                          ? 'default'
-                          : 'secondary'
-                    }
-                  >
-                    {selectedAnnouncement.priority}
-                  </Badge>
-                  <Badge variant="outline">{selectedAnnouncement.visibility}</Badge>
-                </div>
-                <a href="/announcements">
-                  <Button variant="outline" size="sm">
-                    View All Announcements
-                  </Button>
-                </a>
-              </div>
-            </>
-          )}
-        </Dialog.Content>
-      </Dialog>
     </div>
   );
 }
@@ -866,19 +741,5 @@ function ConnectionStatusBadge({ status }: { status: ConnectionStatus }) {
           Disconnected
         </Badge>
       );
-  }
-}
-
-function AnnouncementPriorityIcon({ priority }: { priority: Announcement['priority'] }) {
-  switch (priority) {
-    case 'urgent':
-      return <AlertTriangle className="w-4 h-4 text-red-500 flex-shrink-0" />;
-    case 'high':
-      return <AlertCircle className="w-4 h-4 text-orange-500 flex-shrink-0" />;
-    case 'normal':
-      return <Megaphone className="w-4 h-4 text-blue-500 flex-shrink-0" />;
-    case 'low':
-    default:
-      return <Megaphone className="w-4 h-4 text-muted-foreground flex-shrink-0" />;
   }
 }

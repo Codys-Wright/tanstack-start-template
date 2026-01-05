@@ -21,10 +21,12 @@ export interface ChatUser {
 export interface ChatRoom {
   id: string;
   name: string;
-  type: 'channel' | 'dm';
+  type: 'channel' | 'dm' | 'announcement';
   /** For DMs, the two participant user IDs */
   participants?: [string, string];
   lastActivity?: number;
+  /** For announcement channels, restrict who can post */
+  restricted?: boolean;
 }
 
 export interface ChatMessage {
@@ -154,12 +156,19 @@ const CHAT_MESSAGES = [
 
 /** Default channels */
 export const DEFAULT_CHANNELS: ChatRoom[] = [
+  {
+    id: 'announcements',
+    name: 'Announcements',
+    type: 'announcement',
+    restricted: true,
+  },
   { id: 'room1', name: 'General', type: 'channel' },
   { id: 'room2', name: 'Random', type: 'channel' },
   { id: 'room3', name: 'Development', type: 'channel' },
 ];
 
-const ROOM_IDS = DEFAULT_CHANNELS.map((r) => r.id);
+// Exclude announcement channels from random messages
+const ROOM_IDS = DEFAULT_CHANNELS.filter((r) => r.type === 'channel').map((r) => r.id);
 
 // =============================================================================
 // Helpers
