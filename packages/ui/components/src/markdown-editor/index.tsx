@@ -10,7 +10,7 @@ import { EditorState, SerializedEditorState } from "lexical"
 import { nodes } from "@components/markdown-editor/nodes/nodes"
 import { Plugins } from "@components/markdown-editor/plugins/plugins"
 import { editorTheme } from "@components/markdown-editor/themes/editor-theme"
-import { TooltipProvider } from "@shadcn/components/ui/tooltip"
+import { Tooltip } from "@shadcn/components/ui/tooltip"
 
 const editorConfig: InitialConfigType = {
   namespace: "Editor",
@@ -43,7 +43,7 @@ export function Editor({
             : {}),
         }}
       >
-        <TooltipProvider>
+        <Tooltip.Provider>
           <Plugins />
 
           <OnChangePlugin
@@ -53,7 +53,7 @@ export function Editor({
               onSerializedChange?.(editorState.toJSON())
             }}
           />
-        </TooltipProvider>
+        </Tooltip.Provider>
       </LexicalComposer>
     </div>
   )

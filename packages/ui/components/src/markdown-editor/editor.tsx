@@ -8,7 +8,7 @@ import { OnChangePlugin } from "@lexical/react/LexicalOnChangePlugin"
 import { EditorState, SerializedEditorState } from "lexical"
 
 import { editorTheme } from "@components/markdown-editor/themes/editor-theme"
-import { TooltipProvider } from "@shadcn/components/ui/tooltip"
+import { Tooltip } from "@shadcn/components/ui/tooltip"
 
 import { nodes } from "./nodes"
 import { Plugins } from "./plugins"
@@ -44,7 +44,7 @@ export function Editor({
             : {}),
         }}
       >
-        <TooltipProvider>
+        <Tooltip.Provider>
           <Plugins />
 
           <OnChangePlugin
@@ -54,7 +54,7 @@ export function Editor({
               onSerializedChange?.(editorState.toJSON())
             }}
           />
-        </TooltipProvider>
+        </Tooltip.Provider>
       </LexicalComposer>
     </div>
   )
