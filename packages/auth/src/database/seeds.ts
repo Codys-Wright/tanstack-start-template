@@ -44,11 +44,13 @@ const DEV_ADMIN = {
 
 /**
  * Check if we're in a development environment.
- * Only allows dev admin seeding when NODE_ENV is 'dev', 'development', or 'local'.
+ * Allows dev admin seeding when NODE_ENV is 'dev', 'development', 'local', or undefined.
+ * Only blocks seeding when NODE_ENV is explicitly set to 'production' or 'prod'.
  */
 const isDevEnvironment = (): boolean => {
   const env = process.env.NODE_ENV?.toLowerCase();
-  return env === 'dev' || env === 'development' || env === 'local';
+  // Block only in production - allow in dev, development, local, or when undefined
+  return env !== 'production' && env !== 'prod';
 };
 
 /**
