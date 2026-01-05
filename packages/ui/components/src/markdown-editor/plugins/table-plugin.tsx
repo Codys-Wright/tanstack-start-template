@@ -35,7 +35,7 @@ import {
 
 import { invariant } from "@components/markdown-editor/shared/invariant"
 import { Button } from "@shadcn/components/ui/button"
-import { DialogFooter } from "@shadcn/components/ui/dialog"
+import { Dialog } from "@shadcn/components/ui/dialog"
 import { Input } from "@shadcn/components/ui/input"
 import { Label } from "@shadcn/components/ui/label"
 
@@ -155,11 +155,11 @@ export function InsertTableDialog({
           />
         </div>
       </div>
-      <DialogFooter data-test-id="table-model-confirm-insert">
+      <Dialog.Footer data-test-id="table-model-confirm-insert">
         <Button disabled={isDisabled} onClick={onClick}>
           Confirm
         </Button>
-      </DialogFooter>
+      </Dialog.Footer>
     </>
   )
 }

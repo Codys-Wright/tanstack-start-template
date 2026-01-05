@@ -18,8 +18,8 @@ import {
 import { Button } from "@shadcn/components/ui/button"
 import {
   Tooltip,
-  TooltipContent,
-  TooltipTrigger,
+  Tooltip.Content,
+  Tooltip.Trigger,
 } from "@shadcn/components/ui/tooltip"
 
 export function ShareContentPlugin() {
@@ -42,7 +42,7 @@ export function ShareContentPlugin() {
 
   return (
     <Tooltip>
-      <TooltipTrigger asChild>
+      <Tooltip.Trigger asChild>
         <Button
           variant={"ghost"}
           onClick={() =>
@@ -62,8 +62,8 @@ export function ShareContentPlugin() {
         >
           <SendIcon className="size-4" />
         </Button>
-      </TooltipTrigger>
-      <TooltipContent>Share Content</TooltipContent>
+      </Tooltip.Trigger>
+      <Tooltip.Content>Share Content</Tooltip.Content>
     </Tooltip>
   )
 }

@@ -7,8 +7,8 @@ import { DownloadIcon, UploadIcon } from "lucide-react"
 import { Button } from "@shadcn/components/ui/button"
 import {
   Tooltip,
-  TooltipContent,
-  TooltipTrigger,
+  Tooltip.Content,
+  Tooltip.Trigger,
 } from "@shadcn/components/ui/tooltip"
 
 export function ImportExportPlugin() {
@@ -16,7 +16,7 @@ export function ImportExportPlugin() {
   return (
     <>
       <Tooltip>
-        <TooltipTrigger asChild>
+        <Tooltip.Trigger asChild>
           <Button
             variant={"ghost"}
             onClick={() => importFile(editor)}
@@ -27,12 +27,12 @@ export function ImportExportPlugin() {
           >
             <UploadIcon className="size-4" />
           </Button>
-        </TooltipTrigger>
-        <TooltipContent>Import Content</TooltipContent>
+        </Tooltip.Trigger>
+        <Tooltip.Content>Import Content</Tooltip.Content>
       </Tooltip>
 
       <Tooltip>
-        <TooltipTrigger asChild>
+        <Tooltip.Trigger asChild>
           <Button
             variant={"ghost"}
             onClick={() =>
@@ -48,8 +48,8 @@ export function ImportExportPlugin() {
           >
             <DownloadIcon className="size-4" />
           </Button>
-        </TooltipTrigger>
-        <TooltipContent>Export Content</TooltipContent>
+        </Tooltip.Trigger>
+        <Tooltip.Content>Export Content</Tooltip.Content>
       </Tooltip>
     </>
   )

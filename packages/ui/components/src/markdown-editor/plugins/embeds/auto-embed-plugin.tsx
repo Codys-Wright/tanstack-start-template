@@ -30,7 +30,7 @@ import {
   CommandItem,
   CommandList,
 } from "@shadcn/components/ui/command"
-import { DialogFooter } from "@shadcn/components/ui/dialog"
+import { Dialog } from "@shadcn/components/ui/dialog"
 import { Input } from "@shadcn/components/ui/input"
 import {
   Popover,
@@ -185,7 +185,7 @@ export function AutoEmbedDialog({
             validateText(value)
           }}
         />
-        <DialogFooter>
+        <Dialog.Footer>
           <Button
             disabled={!embedResult}
             onClick={onClick}
@@ -193,7 +193,7 @@ export function AutoEmbedDialog({
           >
             Embed
           </Button>
-        </DialogFooter>
+        </Dialog.Footer>
       </div>
     </div>
   )

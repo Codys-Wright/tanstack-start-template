@@ -1,33 +1,27 @@
-"use client"
+'use client';
 
-import { JSX } from "react"
-import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext"
-import { TreeView } from "@lexical/react/LexicalTreeView"
-import { NotebookPenIcon } from "lucide-react"
+import { JSX } from 'react';
+import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
+import { TreeView } from '@lexical/react/LexicalTreeView';
+import { NotebookPenIcon } from 'lucide-react';
 
-import { Button } from "@shadcn/components/ui/button"
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@shadcn/components/ui/dialog"
-import { ScrollArea, ScrollBar } from "@shadcn/components/ui/scroll-area"
+import { Button } from '@shadcn/components/ui/button';
+import { Dialog } from '@shadcn/components/ui/dialog';
+import { ScrollArea, ScrollBar } from '@shadcn/components/ui/scroll-area';
 
 export function TreeViewPlugin(): JSX.Element {
-  const [editor] = useLexicalComposerContext()
+  const [editor] = useLexicalComposerContext();
   return (
     <Dialog>
-      <DialogTrigger asChild>
-        <Button size={"sm"} variant={"ghost"} className="p-2">
+      <Dialog.Trigger asChild>
+        <Button size={'sm'} variant={'ghost'} className="p-2">
           <NotebookPenIcon className="h-4 w-4" />
         </Button>
-      </DialogTrigger>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Tree View</DialogTitle>
-        </DialogHeader>
+      </Dialog.Trigger>
+      <Dialog.Content>
+        <Dialog.Header>
+          <Dialog.Title>Tree View</Dialog.Title>
+        </Dialog.Header>
         <ScrollArea className="bg-foreground text-background h-96 overflow-hidden rounded-lg p-2">
           <TreeView
             viewClassName="tree-view-output"
@@ -40,7 +34,7 @@ export function TreeViewPlugin(): JSX.Element {
           />
           <ScrollBar orientation="vertical" />
         </ScrollArea>
-      </DialogContent>
+      </Dialog.Content>
     </Dialog>
-  )
+  );
 }

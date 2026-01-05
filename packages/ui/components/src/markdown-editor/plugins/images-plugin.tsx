@@ -38,7 +38,7 @@ import {
 } from "@components/markdown-editor/nodes/image-node"
 import { CAN_USE_DOM } from "@components/markdown-editor/shared/can-use-dom"
 import { Button } from "@shadcn/components/ui/button"
-import { DialogFooter } from "@shadcn/components/ui/dialog"
+import { Dialog } from "@shadcn/components/ui/dialog"
 import { Input } from "@shadcn/components/ui/input"
 import { Label } from "@shadcn/components/ui/label"
 import {
@@ -88,7 +88,7 @@ export function InsertImageUriDialogBody({
           data-test-id="image-modal-alt-text-input"
         />
       </div>
-      <DialogFooter>
+      <Dialog.Footer>
         <Button
           type="submit"
           disabled={isDisabled}
@@ -97,7 +97,7 @@ export function InsertImageUriDialogBody({
         >
           Confirm
         </Button>
-      </DialogFooter>
+      </Dialog.Footer>
     </div>
   )
 }

@@ -25,8 +25,8 @@ import { CAN_USE_DOM } from "@components/markdown-editor/shared/can-use-dom"
 import { Button } from "@shadcn/components/ui/button"
 import {
   Tooltip,
-  TooltipContent,
-  TooltipTrigger,
+  Tooltip.Content,
+  Tooltip.Trigger,
 } from "@shadcn/components/ui/tooltip"
 
 export const SPEECH_TO_TEXT_COMMAND: LexicalCommand<boolean> = createCommand(
@@ -129,7 +129,7 @@ function SpeechToTextPluginImpl() {
 
   return (
     <Tooltip>
-      <TooltipTrigger asChild>
+      <Tooltip.Trigger asChild>
         <Button
           onClick={() => {
             editor.dispatchCommand(SPEECH_TO_TEXT_COMMAND, !isSpeechToText)
@@ -143,8 +143,8 @@ function SpeechToTextPluginImpl() {
         >
           <MicIcon className="size-4" />
         </Button>
-      </TooltipTrigger>
-      <TooltipContent>Speech To Text</TooltipContent>
+      </Tooltip.Trigger>
+      <Tooltip.Content>Speech To Text</Tooltip.Content>
     </Tooltip>
   )
 }

@@ -10,9 +10,9 @@ import * as React from "react"
 
 import {
   Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
+  Dialog.Content,
+  Dialog.Header,
+  Dialog.Title,
 } from "@shadcn/components/ui/dialog"
 
 export function useEditorModal(): [
@@ -36,12 +36,12 @@ export function useEditorModal(): [
     const { title, content } = modalContent
     return (
       <Dialog open={true} onOpenChange={onClose}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>{title}</DialogTitle>
-          </DialogHeader>
+        <Dialog.Content>
+          <Dialog.Header>
+            <Dialog.Title>{title}</Dialog.Title>
+          </Dialog.Header>
           {content}
-        </DialogContent>
+        </Dialog.Content>
       </Dialog>
     )
   }, [modalContent, onClose])

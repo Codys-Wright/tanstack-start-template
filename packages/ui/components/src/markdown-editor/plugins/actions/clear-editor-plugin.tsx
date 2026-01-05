@@ -1,66 +1,51 @@
-"use client"
+'use client';
 
-import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext"
-import { CLEAR_EDITOR_COMMAND } from "lexical"
-import { Trash2Icon } from "lucide-react"
+import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
+import { CLEAR_EDITOR_COMMAND } from 'lexical';
+import { Trash2Icon } from 'lucide-react';
 
-import { Button } from "@shadcn/components/ui/button"
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@shadcn/components/ui/dialog"
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@shadcn/components/ui/tooltip"
+import { Button } from '@shadcn/components/ui/button';
+import { Dialog } from '@shadcn/components/ui/dialog';
+import { Tooltip } from '@shadcn/components/ui/tooltip';
 
 export function ClearEditorActionPlugin() {
-  const [editor] = useLexicalComposerContext()
+  const [editor] = useLexicalComposerContext();
 
   return (
     <Dialog>
       <Tooltip disableHoverableContent>
-        <TooltipTrigger asChild>
-          <DialogTrigger asChild>
-            <Button size={"sm"} variant={"ghost"} className="p-2">
+        <Tooltip.Trigger asChild>
+          <Dialog.Trigger asChild>
+            <Button size={'sm'} variant={'ghost'} className="p-2">
               <Trash2Icon className="h-4 w-4" />
             </Button>
-          </DialogTrigger>
-        </TooltipTrigger>
-        <TooltipContent>Clear Editor</TooltipContent>
+          </Dialog.Trigger>
+        </Tooltip.Trigger>
+        <Tooltip.Content>Clear Editor</Tooltip.Content>
       </Tooltip>
 
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Clear Editor</DialogTitle>
-          <DialogDescription>
-            Are you sure you want to clear the editor?
-          </DialogDescription>
-        </DialogHeader>
-        <DialogFooter>
-          <DialogClose asChild>
+      <Dialog.Content>
+        <Dialog.Header>
+          <Dialog.Title>Clear Editor</Dialog.Title>
+          <Dialog.Description>Are you sure you want to clear the editor?</Dialog.Description>
+        </Dialog.Header>
+        <Dialog.Footer>
+          <Dialog.Close asChild>
             <Button variant="outline">Cancel</Button>
-          </DialogClose>
+          </Dialog.Close>
 
-          <DialogClose asChild>
+          <Dialog.Close asChild>
             <Button
               variant="destructive"
               onClick={() => {
-                editor.dispatchCommand(CLEAR_EDITOR_COMMAND, undefined)
+                editor.dispatchCommand(CLEAR_EDITOR_COMMAND, undefined);
               }}
             >
               Clear
             </Button>
-          </DialogClose>
-        </DialogFooter>
-      </DialogContent>
+          </Dialog.Close>
+        </Dialog.Footer>
+      </Dialog.Content>
     </Dialog>
-  )
+  );
 }

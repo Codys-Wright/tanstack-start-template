@@ -7,8 +7,8 @@ import { LockIcon, UnlockIcon } from "lucide-react"
 import { Button } from "@shadcn/components/ui/button"
 import {
   Tooltip,
-  TooltipContent,
-  TooltipTrigger,
+  Tooltip.Content,
+  Tooltip.Trigger,
 } from "@shadcn/components/ui/tooltip"
 
 export function EditModeTogglePlugin() {
@@ -17,7 +17,7 @@ export function EditModeTogglePlugin() {
 
   return (
     <Tooltip>
-      <TooltipTrigger asChild>
+      <Tooltip.Trigger asChild>
         <Button
           variant={"ghost"}
           onClick={() => {
@@ -35,10 +35,10 @@ export function EditModeTogglePlugin() {
             <UnlockIcon className="size-4" />
           )}
         </Button>
-      </TooltipTrigger>
-      <TooltipContent>
+      </Tooltip.Trigger>
+      <Tooltip.Content>
         {isEditable ? "View Only Mode" : "Edit Mode"}
-      </TooltipContent>
+      </Tooltip.Content>
     </Tooltip>
   )
 }
