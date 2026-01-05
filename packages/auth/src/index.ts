@@ -90,3 +90,8 @@ export * from './features/invitation/ui/user-invitations-card.js';
 // ============================================================================
 export * from './features/admin/domain/schema.js';
 export * from './features/admin/client/atoms.js';
+
+// ============================================================================
+// Permissions - Access Control
+// ============================================================================
+export * from './features/permissions/index.js';

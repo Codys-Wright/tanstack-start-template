@@ -6,6 +6,12 @@ import {
   twoFactorClient,
 } from 'better-auth/client/plugins';
 import { passkeyClient } from '@better-auth/passkey/client';
+import {
+  adminAccessControl,
+  adminRoles,
+  orgAccessControl,
+  orgRoles,
+} from '@auth/features/permissions/index';
 
 /**
  * Better Auth client for React components with admin, organization, passkey, 2FA, and anonymous auth support.
@@ -20,6 +26,7 @@ import { passkeyClient } from '@better-auth/passkey/client';
  * - Teams within organizations
  * - Passkeys (WebAuthn)
  * - Two-factor authentication (TOTP)
+ * - Custom permissions (announcement, course, quiz, content, analytics)
  *
  * @example
  * ```tsx
@@ -38,6 +45,11 @@ import { passkeyClient } from '@better-auth/passkey/client';
  * // Create organization
  * await authClient.organization.create({ name: "My Org" });
  *
+ * // Check permissions
+ * const canCreateAnnouncement = await authClient.organization.hasPermission({
+ *   permissions: { announcement: ["create"] },
+ * });
+ *
  * // Admin: Ban user
  * await authClient.admin.banUser({
  *   userId: "user-id",
@@ -54,9 +66,14 @@ import { passkeyClient } from '@better-auth/passkey/client';
 export const authClient = createAuthClient({
   baseURL: typeof window !== 'undefined' ? window.location.origin : '',
   plugins: [
-    adminClient(),
+    adminClient({
+      ac: adminAccessControl,
+      roles: adminRoles,
+    }),
     anonymousClient(),
     organizationClient({
+      ac: orgAccessControl,
+      roles: orgRoles,
       teams: {
         enabled: true,
       },

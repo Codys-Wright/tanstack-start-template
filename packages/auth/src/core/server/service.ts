@@ -5,6 +5,12 @@ import { getMigrations } from 'better-auth/db';
 import { admin, anonymous, openAPI } from 'better-auth/plugins';
 import { organization } from 'better-auth/plugins/organization';
 import { twoFactor } from 'better-auth/plugins/two-factor';
+import {
+  adminAccessControl,
+  adminRoles,
+  orgAccessControl,
+  orgRoles,
+} from '@auth/features/permissions/index';
 import { getRequestHeaders } from '@tanstack/react-start/server';
 import { EmailService } from '@email';
 import * as Effect from 'effect/Effect';
@@ -16,6 +22,7 @@ import { Unauthenticated, type SessionData } from '@auth/features/session/index'
 import type { UserId } from '@auth/features/user/domain/index';
 import { AuthConfig } from '@auth/core/config';
 import { AuthDatabase } from '@auth/core/database';
+import { OnLinkAccountHandler, OnLinkAccountHandlerNoop } from './on-link-account.js';
 
 // Re-export for backwards compatibility with existing server code
 export { Unauthenticated };
@@ -156,9 +163,12 @@ export const makeBetterAuthOptions = (params: {
 
     admin({
       defaultRole: 'user',
-      adminRoles: ['admin'],
+      adminRoles: ['admin', 'superadmin'],
       impersonationSessionDuration: 60 * 60, // 1 hour
       defaultBanExpiresIn: undefined, // Bans never expire by default
+      // Use custom access control for fine-grained permissions
+      ac: adminAccessControl,
+      roles: adminRoles,
     }),
 
     organization({
@@ -166,6 +176,9 @@ export const makeBetterAuthOptions = (params: {
       creatorRole: 'owner',
       membershipLimit: 100,
       organizationLimit: 10,
+      // Use custom access control for organization permissions
+      ac: orgAccessControl,
+      roles: orgRoles,
 
       sendInvitationEmail: async (data) => {
         await params.sendEmail(
@@ -217,7 +230,8 @@ const makeAuthService = Effect.gen(function* () {
   const env = yield* AuthConfig;
   const kysely = yield* AuthDatabase;
   const emailService = yield* EmailService;
-  const runtime = yield* Effect.runtime<EmailService>();
+  const linkAccountHandler = yield* OnLinkAccountHandler;
+  const runtime = yield* Effect.runtime<never>();
 
   const options = makeBetterAuthOptions({
     baseURL: env.BETTER_AUTH_URL,
@@ -233,6 +247,14 @@ const makeAuthService = Effect.gen(function* () {
     appName: env.APP_NAME,
     sendEmail: async (to, subject, html) => {
       await Runtime.runPromise(runtime)(emailService.send({ to, subject, html }));
+    },
+    onLinkAccount: async ({ anonymousUser, newUser }) => {
+      await Runtime.runPromise(runtime)(
+        linkAccountHandler.handle({
+          anonymousUserId: anonymousUser.user.id,
+          newUserId: newUser.user.id,
+        }),
+      );
     },
   });
 
@@ -350,5 +372,37 @@ export class AuthService extends Effect.Service<AuthService>()('AuthService', {
     AuthDatabase.Default.pipe(Layer.orDie),
     AuthConfig.Default.pipe(Layer.orDie),
     EmailService.Default.pipe(Layer.orDie),
+    // Default no-op handler - apps can override with withLinkAccountHandler()
+    OnLinkAccountHandlerNoop,
   ],
-}) {}
+}) {
+  /**
+   * Creates a custom AuthService layer with a provided OnLinkAccountHandler.
+   * Use this when you need to migrate user data when anonymous users claim their account.
+   *
+   * @example
+   * ```ts
+   * const MyAuthService = AuthService.withLinkAccountHandler(
+   *   makeOnLinkAccountHandler((data) =>
+   *     Effect.gen(function* () {
+   *       const repo = yield* ResponsesRepo;
+   *       yield* repo.updateUserIdForResponses(data.anonymousUserId, data.newUserId);
+   *     })
+   *   )
+   * );
+   * ```
+   */
+  static withLinkAccountHandler<R, E>(
+    handlerLayer: Layer.Layer<OnLinkAccountHandler, E, R>,
+  ): Layer.Layer<AuthService, E, R> {
+    return Layer.provide(AuthService.Default, handlerLayer);
+  }
+}
+
+// Re-export for convenience
+export {
+  OnLinkAccountHandler,
+  OnLinkAccountHandlerNoop,
+  makeOnLinkAccountHandler,
+} from './on-link-account.js';
+export type { LinkAccountData } from './on-link-account.js';

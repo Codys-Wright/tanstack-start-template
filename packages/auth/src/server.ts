@@ -15,6 +15,11 @@ export {
   Unauthenticated,
   type OnLinkAccountCallback,
   makeBetterAuthOptions,
+  // OnLinkAccountHandler for custom data migration when anonymous users claim accounts
+  OnLinkAccountHandler,
+  OnLinkAccountHandlerNoop,
+  makeOnLinkAccountHandler,
+  type LinkAccountData,
 } from './core/server/service.js';
 
 // ============================================================================
@@ -22,3 +27,15 @@ export {
 // ============================================================================
 export { UserService } from './features/user/server/service.js';
 export { SessionService } from './features/session/server/session-service.js';
+
+// ============================================================================
+// Permissions - Server-side permission checking
+// ============================================================================
+export {
+  PermissionService,
+  PermissionDenied,
+  PermissionCheckFailed,
+  type PermissionMap,
+  type CheckPermissionInput,
+  type CheckOrgPermissionInput,
+} from './features/permissions/server/index.js';
