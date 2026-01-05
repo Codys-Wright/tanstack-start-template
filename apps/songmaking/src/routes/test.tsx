@@ -6,49 +6,31 @@
 
 import { createFileRoute } from '@tanstack/react-router';
 import { useState } from 'react';
-import { Editor } from '@components/markdown-editor/editor.js';
+import { Card, Button } from '@shadcn';
+import { Editor } from '@components/markdown-editor/editor';
+import type { SerializedEditorState } from 'lexical';
 
 export const Route = createFileRoute('/test')({
   component: TestPage,
 });
 
-const initialValue = {
-  root: {
-    children: [
-      {
-        children: [
-          {
-            detail: 0,
-            format: 0,
-            mode: 'normal',
-            style: '',
-            text: 'Hello World 🚀',
-            type: 'text',
-            version: 1,
-          },
-        ],
-        direction: 'ltr',
-        format: '',
-        indent: 0,
-        type: 'paragraph',
-        version: 1,
-      },
-    ],
-    direction: 'ltr',
-    format: '',
-    indent: 0,
-    type: 'root',
-    version: 1,
-  },
-} as any;
-
 function TestPage() {
-  const [editorState, setEditorState] = useState<any>(initialValue);
+  const [editorState, setEditorState] = useState<SerializedEditorState | undefined>(undefined);
 
   return (
     <div className="min-h-screen bg-background p-8">
       <div className="max-w-5xl mx-auto">
         <h1 className="text-3xl font-bold mb-6">Markdown Editor Test</h1>
+
+        <Card className="p-6 mb-6">
+          <Button
+            onClick={() => {
+              console.log('Current editor state:', editorState);
+            }}
+          >
+            Log Editor State
+          </Button>
+        </Card>
 
         <div className="mb-6">
           <Editor
