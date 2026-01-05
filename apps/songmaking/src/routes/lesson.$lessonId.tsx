@@ -5,7 +5,7 @@
  * and beautiful content rendering. Uses Effect Atom for state management.
  */
 
-import { createFileRoute, Link } from '@tanstack/react-router';
+import { createFileRoute, Link, Outlet, useMatch } from '@tanstack/react-router';
 import { useAtomValue, useAtomSet } from '@effect-atom/atom-react';
 import * as Option from 'effect/Option';
 import { Badge, Button, Card, Sidebar, SidebarProvider, useSidebar } from '@shadcn';
@@ -493,6 +493,18 @@ function MobileHeader({ lesson }: { lesson: Lesson }) {
 
 function LessonPageWrapper() {
   const { lessonId } = Route.useParams();
+
+  // Check if we're on a child route (like /edit)
+  const editMatch = useMatch({
+    from: '/lesson/$lessonId/edit',
+    shouldThrow: false,
+  });
+  const hasChildRoute = !!editMatch;
+
+  // If there's a child route, just render the Outlet
+  if (hasChildRoute) {
+    return <Outlet />;
+  }
 
   return (
     <SidebarProvider defaultOpen>
